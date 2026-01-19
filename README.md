@@ -45,13 +45,13 @@ Then depend on it from another project:
 
 ```xml
 <dependency>
-  <groupId>com.github.joshmcdonagh</groupId>
+  <groupId>dev.modelarium</groupId>
   <artifactId>modelarium</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
-This dependency is not yet published to Maven Central, and the above will only work after installing the project locally.
+Modelarium is not yet published to Maven Central. The dependency above will work after installing the project locally (as shown), or once it is published to Maven Central.
 
 ## Core concepts
 
