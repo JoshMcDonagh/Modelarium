@@ -127,17 +127,16 @@
                         <goals>
                             <goal>javadoc</goal>
                         </goals>
+                        <configuration>
+                            <release>${maven.compiler.release}</release>
+                            <outputDirectory>${project.build.directory}/site/apidocs</outputDirectory>
+                            <doclint>none</doclint>
+                            <encoding>${project.build.sourceEncoding}</encoding>
+                            <charset>${project.build.sourceEncoding}</charset>
+                            <docencoding>${project.build.sourceEncoding}</docencoding>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <release>${maven.compiler.release}</release>
-                    <reportOutputDirectory>${project.build.directory}/site</reportOutputDirectory>
-                    <destDir>apidocs</destDir>
-                    <doclint>none</doclint>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <charset>${project.build.sourceEncoding}</charset>
-                    <docencoding>${project.build.sourceEncoding}</docencoding>
-                </configuration>
             </plugin>
 
             <plugin>
