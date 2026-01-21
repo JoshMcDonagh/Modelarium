@@ -4,7 +4,7 @@
 
 ## Documentation
 
-**API (Javadoc):** https://joshmcdonagh.github.io/Modelarium/apidocs/
+API (Javadoc): https://joshmcdonagh.github.io/Modelarium/
 
 ## Highlights
 
@@ -20,10 +20,6 @@
 - Maven
 
 > CI is configured for Java 21. If you run tests locally with a newer JDK, Mockito/Byte Buddy may fail when instrumenting classes.
-
-## Repo
-
-GitHub: https://github.com/JoshMcDonagh/Modelarium
 
 ## Install / Build
 
