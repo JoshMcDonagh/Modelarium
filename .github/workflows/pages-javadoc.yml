@@ -38,8 +38,8 @@ jobs:
 
           if [ -f "target/site/apidocs/index.html" ]; then
             cp -R target/site/apidocs/* site/
-          elif [ -f "target/site/apidocs/apidocs/index.html" ]; then
-            cp -R target/site/apidocs/apidocs/* site/
+          elif [ -f "target/reports/apidocs/index.html" ]; then
+            cp -R target/reports/apidocs/* site/
           else
             echo "Could not find Javadocs index.html"
             find target -maxdepth 5 -type f -name index.html -print
