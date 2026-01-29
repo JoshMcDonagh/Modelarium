@@ -21,7 +21,23 @@ API (Javadoc): https://joshmcdonagh.github.io/Modelarium/
 
 > CI is configured for Java 21. If you run tests locally with a newer JDK, Mockito/Byte Buddy may fail when instrumenting classes.
 
-## Install / Build
+## Installation (Maven Central)
+
+Modelarium is published to Maven Central. Add it to your `pom.xml`:
+
+```xml
+<dependency>
+  <groupId>dev.modelarium</groupId>
+  <artifactId>modelarium</artifactId>
+  <version>1.1.2</version>
+</dependency>
+```
+
+Then build your project as usual:
+```bash
+mvn clean package
+```
+## Building from source
 
 Clone and run tests:
 
@@ -40,18 +56,6 @@ Install to your local Maven repository:
 ```bash
 mvn -B install
 ```
-
-Then depend on it from another project:
-
-```xml
-<dependency>
-  <groupId>dev.modelarium</groupId>
-  <artifactId>modelarium</artifactId>
-  <version>1.1.1</version>
-</dependency>
-```
-
-Modelarium is not yet published to Maven Central. The dependency above will work after installing the project locally (as shown), or once it is published to Maven Central.
 
 ## Core concepts
 

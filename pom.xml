@@ -7,7 +7,7 @@
 
     <groupId>dev.modelarium</groupId>
     <artifactId>modelarium</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <packaging>jar</packaging>
 
     <name>Modelarium</name>
@@ -34,7 +34,7 @@
         <connection>scm:git:https://github.com/JoshMcDonagh/Modelarium.git</connection>
         <developerConnection>scm:git:https://github.com/JoshMcDonagh/Modelarium.git</developerConnection>
         <url>https://github.com/JoshMcDonagh/Modelarium</url>
-        <tag>v1.1.1</tag>
+        <tag>v1.1.2</tag>
     </scm>
 
     <properties>
