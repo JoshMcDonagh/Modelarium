@@ -11,30 +11,30 @@
     <packaging>jar</packaging>
 
     <name>Modelarium</name>
-    <description>Modular, extensible, multithreaded agent-based modelling (ABM) framework for Java.</description>
-    <url>https://modelarium.dev</url>
+    <description>Modular, extensible, and multithreaded agent-based modelling framework for Java.</description>
+    <url>https://github.com/JoshMcDonagh/Modelarium</url>
 
     <licenses>
         <license>
             <name>MIT License</name>
-            <url>https://opensource.org/license/mit/</url>
+            <url>https://opensource.org/licenses/MIT</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
 
     <developers>
         <developer>
-            <id>joshmcdonagh</id>
             <name>Joshua McDonagh</name>
-            <url>https://github.com/JoshMcDonagh</url>
+            <email>joshua.mcdonagh@outlook.com</email>
+            <url>https://joshuamcdonagh.com</url>
         </developer>
     </developers>
 
     <scm>
         <connection>scm:git:https://github.com/JoshMcDonagh/Modelarium.git</connection>
-        <developerConnection>scm:git:https://github.com/JoshMcDonagh/Modelarium.git</developerConnection>
+        <developerConnection>scm:git:ssh://github.com/JoshMcDonagh/Modelarium.git</developerConnection>
         <url>https://github.com/JoshMcDonagh/Modelarium</url>
-        <tag>v1.1.2</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
@@ -111,6 +111,7 @@
 
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -145,6 +146,18 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.plugin.version}</version>
+                <configuration>
+                    <argLine>@{argLine} -Xshare:off -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.bom.version}/mockito-core-${mockito.bom.version}.jar</argLine>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven.surefire.plugin.version}</version>
+                <configuration>
+                    <argLine>@{argLine} -Xshare:off -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.bom.version}/mockito-core-${mockito.bom.version}.jar</argLine>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -166,18 +179,6 @@
                             <docencoding>${project.build.sourceEncoding}</docencoding>
                         </configuration>
                     </execution>
-
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <release>${maven.compiler.release}</release>
-                            <doclint>none</doclint>
-                            <encoding>${project.build.sourceEncoding}</encoding>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
 
@@ -188,12 +189,14 @@
                 <executions>
                     <execution>
                         <id>attach-sources</id>
+                        <phase>verify</phase>
                         <goals>
                             <goal>jar-no-fork</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 
@@ -202,30 +205,20 @@
             <id>release</id>
             <build>
                 <plugins>
+
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.2.7</version>
-
+                        <version>${maven.gpg.plugin.version}</version>
                         <executions>
                             <execution>
-                            <id>sign-artifacts</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>sign</goal>
-                            </goals>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
                             </execution>
                         </executions>
-
-                        <configuration>
-                            <passphraseEnvName>MAVEN_GPG_PASSPHRASE</passphraseEnvName>
-                            <gpgArguments>
-                                <arg>--pinentry-mode</arg>
-                                <arg>loopback</arg>
-                                <arg>--batch</arg>
-                                <arg>--yes</arg>
-                            </gpgArguments>
-                        </configuration>
                     </plugin>
 
                     <plugin>
@@ -235,10 +228,10 @@
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>central</publishingServerId>
-                            <tokenAuth>true</tokenAuth>
                             <autoPublish>true</autoPublish>
                         </configuration>
                     </plugin>
+
                 </plugins>
             </build>
         </profile>
