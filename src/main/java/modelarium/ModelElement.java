@@ -1,7 +1,12 @@
 package modelarium;
 
+import modelarium.agents.Agent;
+import modelarium.agents.AgentSet;
 import modelarium.attributes.AttributeSetCollection;
+import modelarium.environments.Environment;
 import utils.DeepCopyable;
+
+import java.util.function.Predicate;
 
 /**
  * Abstract base class for all model elements in the simulation.
@@ -64,6 +69,35 @@ public abstract class ModelElement implements DeepCopyable<ModelElement> {
      */
     public ModelElementAccessor getModelElementAccessor() {
         return modelElementAccessor;
+    }
+
+    /**
+     * Retrieves an external agent by name using the accessor associated with this element.
+     *
+     * @param targetAgentName the name of the agent to retrieve
+     * @return the agent instance, or null if not found or if retrieval failed
+     */
+    protected Agent accessExternalAgentByName(String targetAgentName) {
+        return getModelElementAccessor().getAgentByName(targetAgentName);
+    }
+
+    /**
+     * Retrieves a set of agents that match the given filter predicate.
+     *
+     * @param filter the predicate used to select agents
+     * @return an {@link AgentSet} containing the matching agents, or null if retrieval fails
+     */
+    protected AgentSet accessExternalAgentsByFilter(Predicate<Agent> filter) {
+        return getModelElementAccessor().getFilteredAgents(filter);
+    }
+
+    /**
+     * Retrieves the current environment for the model element.
+     *
+     * @return the environment instance available to this model element
+     */
+    protected Environment accessEnvironment() {
+        return getModelElementAccessor().getEnvironment();
     }
 
     /**
