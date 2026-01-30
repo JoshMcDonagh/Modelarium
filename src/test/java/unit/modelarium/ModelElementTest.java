@@ -2,12 +2,16 @@ package unit.modelarium;
 
 import modelarium.ModelElement;
 import modelarium.ModelElementAccessor;
+import modelarium.agents.Agent;
+import modelarium.agents.AgentSet;
 import modelarium.attributes.AttributeSetCollection;
+import modelarium.environments.Environment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -36,6 +40,18 @@ public class ModelElementTest {
         @Override
         public ModelElement deepCopy() {
             return null;
+        }
+
+        public Agent callAccessExternalAgentByName(String targetAgentName) {
+            return accessExternalAgentByName(targetAgentName);
+        }
+
+        public AgentSet callAccessExternalAgentsByFilter(Predicate<Agent> filter) {
+            return accessExternalAgentsByFilter(filter);
+        }
+
+        public Environment callAccessEnvironment() {
+            return accessEnvironment();
         }
     }
 
@@ -78,14 +94,72 @@ public class ModelElementTest {
     }
 
     @Test
-    public void testModelElementAccessorCanBeSetAndRetrieved() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        ModelElementAccessor mockAccessor = new ModelElementAccessor(
-                dummyElement, null, null, null, null, null
-        );
-        Method setModelElementAccessorMethod = ModelElement.class.getDeclaredMethod(
-                "setModelElementAccessor", ModelElementAccessor.class);
-        setModelElementAccessorMethod.setAccessible(true);
-        setModelElementAccessorMethod.invoke(dummyElement, mockAccessor);
-        assertSame(mockAccessor, dummyElement.getModelElementAccessor(), "Accessor should be retrievable after being set.");
+    public void testModelElementAccessorCanBeSetAndRetrieved() {
+        ModelElementAccessor mockAccessor = mock(ModelElementAccessor.class);
+        dummyElement.setModelElementAccessor(mockAccessor);
+        assertSame(mockAccessor, dummyElement.getModelElementAccessor());
     }
+
+    @Test
+    public void testAccessExternalAgentByNameDelegatesToAccessor() {
+        ModelElementAccessor accessor = mock(ModelElementAccessor.class);
+        Agent agent = mock(Agent.class);
+
+        dummyElement.setModelElementAccessor(accessor);
+        when(accessor.getAgentByName("A")).thenReturn(agent);
+
+        Agent result = dummyElement.callAccessExternalAgentByName("A");
+
+        assertSame(agent, result);
+        verify(accessor).getAgentByName("A");
+    }
+
+    @Test
+    public void testAccessExternalAgentsByFilterDelegatesToAccessor() {
+        ModelElementAccessor accessor = mock(ModelElementAccessor.class);
+        AgentSet agentSet = mock(AgentSet.class);
+
+        dummyElement.setModelElementAccessor(accessor);
+
+        Predicate<Agent> filter = a -> true; // any predicate object is fine
+        when(accessor.getFilteredAgents(filter)).thenReturn(agentSet);
+
+        AgentSet result = dummyElement.callAccessExternalAgentsByFilter(filter);
+
+        assertSame(agentSet, result);
+        verify(accessor).getFilteredAgents(filter);
+    }
+
+    @Test
+    public void testAccessEnvironmentDelegatesToAccessor() {
+        ModelElementAccessor accessor = mock(ModelElementAccessor.class);
+        Environment env = mock(Environment.class);
+
+        dummyElement.setModelElementAccessor(accessor);
+        when(accessor.getEnvironment()).thenReturn(env);
+
+        Environment result = dummyElement.callAccessEnvironment();
+
+        assertSame(env, result);
+        verify(accessor).getEnvironment();
+    }
+
+    @Test
+    public void testAccessExternalAgentByNameThrowsIfAccessorNotSet() {
+        assertThrows(NullPointerException.class,
+                () -> dummyElement.callAccessExternalAgentByName("A"));
+    }
+
+    @Test
+    public void testAccessExternalAgentsByFilterThrowsIfAccessorNotSet() {
+        assertThrows(NullPointerException.class,
+                () -> dummyElement.callAccessExternalAgentsByFilter(a -> true));
+    }
+
+    @Test
+    public void testAccessEnvironmentThrowsIfAccessorNotSet() {
+        assertThrows(NullPointerException.class,
+                () -> dummyElement.callAccessEnvironment());
+    }
+
 }
