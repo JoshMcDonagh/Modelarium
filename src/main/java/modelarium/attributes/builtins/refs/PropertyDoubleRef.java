@@ -2,6 +2,7 @@ package modelarium.attributes.builtins.refs;
 
 import modelarium.ModelElement;
 import modelarium.attributes.Property;
+import modelarium.attributes.builtins.util.BuiltinLookup;
 
 public class PropertyDoubleRef implements DoubleValueRef {
     private final String attributeSetName;
@@ -14,18 +15,6 @@ public class PropertyDoubleRef implements DoubleValueRef {
 
     @Override
     public double resolve(ModelElement element) {
-        if (element == null)
-            throw new IllegalStateException("Cannot resolve property ref without a ModelElement");
-
-        Property<?> property = element.getAttributeSetCollection().get(attributeSetName).getProperties().get(propertyName);
-
-        if (property == null)
-            throw new IllegalStateException("Property not found: " + propertyName + " in " + attributeSetName);
-
-        Object value = property.get();
-        if (!(value instanceof Double doubleValue))
-            throw new IllegalStateException("Property '" + propertyName + " in " + attributeSetName + "' is not a Double");
-
-        return doubleValue;
+        return BuiltinLookup.getRequiredDoublePropertyValue(element, attributeSetName, propertyName);
     }
 }
