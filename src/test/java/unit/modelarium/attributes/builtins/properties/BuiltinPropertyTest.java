@@ -100,7 +100,8 @@ class BuiltinPropertyTest {
         CopyDoubleProperty copy = new CopyDoubleProperty("copy", "sourceSet", "missing");
 
         var element = BuiltinTestSupport.elementWith(
-                BuiltinTestSupport.attributeSet("sourceSet")
+                BuiltinTestSupport.attributeSet("sourceSet"),
+                BuiltinTestSupport.attributeSet("derivedSet", copy)
         );
         BuiltinTestSupport.attachWithoutClock(element);
 

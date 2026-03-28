@@ -31,6 +31,12 @@ public class AddDoubleProperty extends Property<Double> {
         this.delta = delta;
     }
 
+    public AddDoubleProperty(AddDoubleProperty other) {
+        super(other.getName(), other.isRecorded(), Double.class);
+        this.value = other.value;
+        this.delta = other.delta;
+    }
+
     @Override
     public void set(Double value) {
         this.value = value;

@@ -30,6 +30,12 @@ public class CopyDoubleProperty extends Property<Double>  {
         this.sourceAttributeName = sourceAttributeName;
     }
 
+    public CopyDoubleProperty(CopyDoubleProperty other) {
+        super(other.getName(), other.isRecorded(), Double.class);
+        this.sourceAttributeSetName = other.sourceAttributeSetName;
+        this.sourceAttributeName = other.sourceAttributeName;
+    }
+
     @Override
     public void set(Double value) {
         throw new UnsupportedOperationException("CopyDoubleProperty is derived and cannot be set");
