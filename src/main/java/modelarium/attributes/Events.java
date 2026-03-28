@@ -74,4 +74,14 @@ public class Events extends Attributes {
             eventsCopy.add(get(i).deepCopy());
         return eventsCopy;
     }
+
+    /**
+     * Checks if an event of a given name exists.
+     *
+     * @param name  the name of the event to check for
+     * @return  the boolean value reflecting whether the event exists or not
+     */
+    public boolean contains(String name) {
+        return hasAttribute(name);
+    }
 }

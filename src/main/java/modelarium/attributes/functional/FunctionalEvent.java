@@ -27,6 +27,12 @@ public class FunctionalEvent extends Event {
         this.triggerLogic = triggerLogic;
     }
 
+    public FunctionalEvent(FunctionalEvent other) {
+        super(other);
+        this.runLogic = other.runLogic;
+        this.triggerLogic = other.triggerLogic;
+    }
+
     @Override
     public boolean isTriggered() {
         return triggerLogic.isTriggered(getAssociatedModelElement());
@@ -39,6 +45,6 @@ public class FunctionalEvent extends Event {
 
     @Override
     public FunctionalEvent deepCopy() {
-        return new FunctionalEvent(getName(), isRecorded(), runLogic, triggerLogic);
+        return new FunctionalEvent(this);
     }
 }

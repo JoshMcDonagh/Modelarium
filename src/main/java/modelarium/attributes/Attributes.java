@@ -92,6 +92,16 @@ public abstract class Attributes implements DeepCopyable<Attributes> {
     }
 
     /**
+     * Checks whether an attribute of a given name exists.
+     *
+     * @param attributeName the name of the attribute to check for
+     * @return  the boolean value reflecting whether the attribute exists or not
+     */
+    public boolean hasAttribute(String attributeName) {
+        return attributeIndexes.containsKey(attributeName);
+    }
+
+    /**
      * @return the number of attributes held by this collection
      */
     public int size() {

@@ -43,6 +43,14 @@ public class FunctionalProperty<T> extends Property<T> {
         this.runLogic = runLogic;
     }
 
+    public FunctionalProperty(FunctionalProperty<T> other) {
+        super(other);
+        this.getter = other.getter;
+        this.setter = other.setter;
+        this.runLogic = other.runLogic;
+        this.propertyValue = other.propertyValue;
+    }
+
     @Override
     public T get() {
         return getter.get(getAssociatedModelElement(), propertyValue);
@@ -60,13 +68,6 @@ public class FunctionalProperty<T> extends Property<T> {
 
     @Override
     public FunctionalProperty<T> deepCopy() {
-        return new FunctionalProperty<>(
-                getName(),
-                isRecorded(),
-                getType(),
-                getter,
-                setter,
-                runLogic
-        );
+        return new FunctionalProperty<>(this);
     }
 }

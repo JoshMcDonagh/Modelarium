@@ -47,11 +47,15 @@ public class CopyDoubleProperty extends Property<Double>  {
         if (element == null)
             throw new IllegalStateException("CopyDoubleProperty has no associated ModelElement");
 
-        var source = element.getAttributeSetCollection().get(sourceAttributeSetName).getProperties().get(sourceAttributeName);
+        var sourceSet = element.getAttributeSetCollection().get(sourceAttributeSetName);
+        if (sourceSet == null)
+            throw new IllegalStateException("Source attribute set not found: " + sourceAttributeSetName);
 
-        if (source == null)
+        var properties = sourceSet.getProperties();
+        if (!properties.contains(sourceAttributeName))
             throw new IllegalStateException("Source property not found: " + sourceAttributeName + " in " + sourceAttributeSetName);
 
+        var source = properties.get(sourceAttributeName);
         return (Double) source.get();
     }
 

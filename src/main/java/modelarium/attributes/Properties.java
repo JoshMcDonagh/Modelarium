@@ -69,4 +69,14 @@ public class Properties extends Attributes {
             propertiesCopy.add(get(i).deepCopy());
         return propertiesCopy;
     }
+
+    /**
+     * Checks if a property of a given name exists.
+     *
+     * @param name  the name of the property to check for
+     * @return  the boolean value reflecting whether the property exists or not
+     */
+    public boolean contains(String name) {
+        return hasAttribute(name);
+    }
 }
