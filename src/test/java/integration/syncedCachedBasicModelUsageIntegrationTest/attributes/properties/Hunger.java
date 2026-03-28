@@ -10,6 +10,11 @@ public class Hunger extends Property<Double> {
         super("Hunger", true, Double.TYPE);
     }
 
+    public Hunger(Hunger other) {
+        super(other);
+        this.hungerLevel = other.hungerLevel;
+    }
+
     @Override
     public void set(Double aDouble) {
         hungerLevel = aDouble;

@@ -58,7 +58,7 @@ public class ClampDoubleProperty extends Property<Double> {
     }
 
     public ClampDoubleProperty(ClampDoubleProperty other) {
-        super(other.getName(), other.isRecorded(), Double.class);
+        super(other);
         this.value = other.value;
         this.min = other.min;
         this.max = other.max;

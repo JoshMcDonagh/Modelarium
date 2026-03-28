@@ -8,6 +8,11 @@ public class SeenEnvTick extends Property<Integer> {
     private int seen = -1;
     public SeenEnvTick() { super("SeenEnvTick", true, Integer.TYPE); }
 
+    public SeenEnvTick(SeenEnvTick other) {
+        super(other);
+        this.seen = other.seen;
+    }
+
     @Override public Integer get() { return seen; }
     @Override public void set(Integer v) { seen = v; }
 

@@ -51,6 +51,15 @@ public abstract class Event extends Attribute {
     }
 
     /**
+     * Constructs a deep copy event from a given event.
+     *
+     * @param other the event to deep copy
+     */
+    public Event(Event other) {
+        super(other);
+    }
+
+    /**
      * Indicates whether the event has been triggered during this tick.
      *
      * @return true if triggered

@@ -62,6 +62,16 @@ public abstract class Property<T> extends Attribute {
     }
 
     /**
+     * Constructs a deep copy property from a given property.
+     *
+     * @param other the property to deep copy
+     */
+    protected Property(Property<T> other) {
+        super(other);
+        this.type = other.type;
+    }
+
+    /**
      * Gets the runtime type of this property's value.
      *
      * @return the value type class
@@ -95,28 +105,20 @@ public abstract class Property<T> extends Attribute {
     public Property<T> deepCopy() {
         try {
             Class<? extends Property> clazz = this.getClass();
-
-            // Try to find a copy constructor
-            try {
-                Constructor<? extends Property> copyCtor = clazz.getDeclaredConstructor(clazz);
-                copyCtor.setAccessible(true);
-                return copyCtor.newInstance(this);
-            } catch (NoSuchMethodException ignored) {}
-
-            // Try no-arg constructor and copy fields manually
-            Constructor<? extends Property> ctor = clazz.getDeclaredConstructor();
-            ctor.setAccessible(true);
-            Property<T> copy = (Property<T>) ctor.newInstance();
-
-            for (Field field : clazz.getDeclaredFields()) {
-                field.setAccessible(true);
-                field.set(copy, field.get(this));
-            }
-
-            return copy;
-
+            Constructor<? extends Property> copyCtor = clazz.getDeclaredConstructor(clazz);
+            copyCtor.setAccessible(true);
+            return copyCtor.newInstance(this);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(
+                    "Property type " + this.getClass().getName()
+                            + " must provide a copy constructor taking its own type",
+                    e
+            );
         } catch (Exception e) {
-            throw new RuntimeException("Failed to deep copy Property of type " + this.getClass().getName(), e);
+            throw new RuntimeException(
+                    "Failed to deep copy Property of type " + this.getClass().getName(),
+                    e
+            );
         }
     }
 }

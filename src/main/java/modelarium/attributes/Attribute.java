@@ -38,6 +38,17 @@ public abstract class Attribute implements Serializable, DeepCopyable<Attribute>
     }
 
     /**
+     * Constructs a deep copy attribute from a given attribute
+     *
+     * @param other the attribute to deep copy
+     */
+    protected Attribute(Attribute other) {
+        this.name = other.name;
+        this.isRecorded = other.isRecorded;
+        this.associatedModelElement = other.associatedModelElement;
+    }
+
+    /**
      * Associates this attribute with a specific model element.
      * Typically set internally by the simulation engine.
      *

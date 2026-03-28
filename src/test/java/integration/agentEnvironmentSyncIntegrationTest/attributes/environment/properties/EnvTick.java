@@ -5,6 +5,10 @@ import modelarium.attributes.Property;
 public class EnvTick extends Property<Integer> {
     public EnvTick() { super("EnvTick", true, Integer.TYPE); }
 
+    public EnvTick(EnvTick other) {
+        super(other);
+    }
+
     @Override public Integer get() {
         var acc = getAssociatedModelElement().getModelElementAccessor();
         var clock = (acc == null) ? null : acc.getModelClock();

@@ -31,7 +31,7 @@ public class CopyDoubleProperty extends Property<Double>  {
     }
 
     public CopyDoubleProperty(CopyDoubleProperty other) {
-        super(other.getName(), other.isRecorded(), Double.class);
+        super(other);
         this.sourceAttributeSetName = other.sourceAttributeSetName;
         this.sourceAttributeName = other.sourceAttributeName;
     }

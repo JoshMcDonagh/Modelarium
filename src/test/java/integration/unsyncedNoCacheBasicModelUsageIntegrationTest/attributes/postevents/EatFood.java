@@ -9,6 +9,10 @@ public class EatFood extends Event {
         super("Eat Food", false);
     }
 
+    public EatFood(EatFood other) {
+        super(other);
+    }
+
     @Override
     public boolean isTriggered() {
         Property<Double> hunger = (Property<Double>) getAssociatedModelElement().getAttributeSetCollection().get("food").getProperties().get("Hunger");

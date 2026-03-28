@@ -75,13 +75,19 @@ class BuiltinPropertyTest {
     @Test
     void copyDoublePropertyReadsValueFromSourceProperty() {
         var source = BuiltinTestSupport.mutableDoubleProperty("source", 42.0);
-        CopyDoubleProperty copy = new CopyDoubleProperty("copy", "sourceSet", "source");
+        CopyDoubleProperty seedCopy = new CopyDoubleProperty("copy", "sourceSet", "source");
 
         var element = BuiltinTestSupport.elementWith(
                 BuiltinTestSupport.attributeSet("sourceSet", source),
-                BuiltinTestSupport.attributeSet("derivedSet", copy)
+                BuiltinTestSupport.attributeSet("derivedSet", seedCopy)
         );
         BuiltinTestSupport.attachWithoutClock(element);
+
+        CopyDoubleProperty copy = (CopyDoubleProperty) element
+                .getAttributeSetCollection()
+                .get("derivedSet")
+                .getProperties()
+                .get("copy");
 
         assertEquals(42.0, copy.get());
     }
@@ -97,13 +103,19 @@ class BuiltinPropertyTest {
 
     @Test
     void copyDoublePropertyThrowsWhenSourcePropertyMissing() {
-        CopyDoubleProperty copy = new CopyDoubleProperty("copy", "sourceSet", "missing");
+        CopyDoubleProperty seedCopy = new CopyDoubleProperty("copy", "sourceSet", "missing");
 
         var element = BuiltinTestSupport.elementWith(
                 BuiltinTestSupport.attributeSet("sourceSet"),
-                BuiltinTestSupport.attributeSet("derivedSet", copy)
+                BuiltinTestSupport.attributeSet("derivedSet", seedCopy)
         );
         BuiltinTestSupport.attachWithoutClock(element);
+
+        CopyDoubleProperty copy = (CopyDoubleProperty) element
+                .getAttributeSetCollection()
+                .get("derivedSet")
+                .getProperties()
+                .get("copy");
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, copy::get);
 

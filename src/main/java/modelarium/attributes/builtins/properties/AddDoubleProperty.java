@@ -32,7 +32,7 @@ public class AddDoubleProperty extends Property<Double> {
     }
 
     public AddDoubleProperty(AddDoubleProperty other) {
-        super(other.getName(), other.isRecorded(), Double.class);
+        super(other);
         this.value = other.value;
         this.delta = other.delta;
     }

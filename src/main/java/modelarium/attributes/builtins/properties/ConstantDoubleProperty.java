@@ -25,6 +25,11 @@ public class ConstantDoubleProperty extends Property<Double> {
         this.value = value;
     }
 
+    public ConstantDoubleProperty(ConstantDoubleProperty other) {
+        super(other);
+        this.value = other.value;
+    }
+
     @Override
     public void set(Double value) {
         throw new UnsupportedOperationException("ConstantDoubleProperty cannot be modified after construction");
