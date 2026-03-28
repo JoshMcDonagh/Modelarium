@@ -4,60 +4,99 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Concrete implementation of {@link AttributeSetResultsDatabase} that stores results
- * in a temporary SQLite database file.
+ * in an SQLite database file.
  *
- * <p>Each run of the simulation creates a new SQLite database that is deleted on shutdown.
- * Values are serialised to JSON strings to support flexible data types.
+ * <p>This implementation preserves the same public API as the previous version, but uses
+ * a stable row-based schema internally instead of dynamically altering table columns.
  *
- * <p>This class supports both incremental (`addXValue`) and bulk (`setXColumn`) writes.
+ * <p>Each logical property/event "column" is stored as a named ordered series:
+ * <pre>
+ *     (series_name, position_index, value_json)
+ * </pre>
+ *
+ * <p>This avoids repeated ALTER TABLE calls, avoids wiping unrelated data during
+ * bulk replacement, and behaves much more safely under threading.
  */
 public class DiskBasedAttributeSetResultsDatabase extends AttributeSetResultsDatabase {
 
-    /** Thread-safe list of currently active databases to auto-disconnect on JVM shutdown */
-    private static final List<DiskBasedAttributeSetResultsDatabase> activeDatabases = Collections.synchronizedList(new ArrayList<>());
-    private static boolean shutdownHookRegistered = false;
+    /** Thread-safe list of currently active databases to auto-disconnect on JVM shutdown. */
+    private static final List<DiskBasedAttributeSetResultsDatabase> activeDatabases =
+            Collections.synchronizedList(new ArrayList<>());
 
-    private static Class<?> firstNonNullClass(List<?> values) {
-        if (values == null) return null;
-        for (Object v : values) {
-            if (v != null) return v.getClass();
-        }
-        return null;
-    }
+    private static volatile boolean shutdownHookRegistered = false;
 
-    private final String PROPERTIES_TABLE_NAME = "properties_table";
-    private final String PRE_EVENTS_TABLE_NAME = "pre_events_table";
-    private final String POST_EVENTS_TABLE_NAME = "post_events_table";
+    /** Shared mapper; ObjectMapper is thread-safe after configuration. */
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    private final Map<String, Class<?>> propertyClassesMap = new HashMap<>();
-    private final Map<String, Class<?>> preEventClassesMap = new HashMap<>();
-    private final Map<String, Class<?>> postEventClassesMap = new HashMap<>();
+    private static final String PROPERTIES_TABLE_NAME = "properties_table";
+    private static final String PRE_EVENTS_TABLE_NAME = "pre_events_table";
+    private static final String POST_EVENTS_TABLE_NAME = "post_events_table";
+
+    /**
+     * Per-series class maps for deserialisation.
+     * Concurrent maps are used because callers may hit a single database instance from
+     * multiple threads, even though DB access itself is additionally guarded by dbLock.
+     */
+    private final Map<String, Class<?>> propertyClassesMap = new ConcurrentHashMap<>();
+    private final Map<String, Class<?>> preEventClassesMap = new ConcurrentHashMap<>();
+    private final Map<String, Class<?>> postEventClassesMap = new ConcurrentHashMap<>();
+
+    /** Guards connection lifecycle and all database operations for this instance. */
+    private final Object dbLock = new Object();
 
     private Connection connection;
 
-    /** Registers this instance for automatic disconnect on JVM shutdown */
+    private static Class<?> firstNonNullClass(List<?> values) {
+        if (values == null) {
+            return null;
+        }
+
+        for (Object value : values) {
+            if (value != null) {
+                return value.getClass();
+            }
+        }
+
+        return null;
+    }
+
+    /** Registers this instance for automatic disconnect on JVM shutdown. */
     public DiskBasedAttributeSetResultsDatabase() {
         synchronized (activeDatabases) {
             activeDatabases.add(this);
+
             if (!shutdownHookRegistered) {
                 Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                     List<DiskBasedAttributeSetResultsDatabase> snapshot;
                     synchronized (activeDatabases) {
                         snapshot = new ArrayList<>(activeDatabases);
                     }
+
                     for (DiskBasedAttributeSetResultsDatabase db : snapshot) {
                         try {
                             db.disconnect();
                         } catch (Exception e) {
-                            System.err.println("Error while disconnecting database during shutdown: " + e.getMessage());
+                            System.err.println(
+                                    "Error while disconnecting database during shutdown: " + e.getMessage()
+                            );
                         }
                     }
                 }));
+
                 shutdownHookRegistered = true;
             }
         }
@@ -68,14 +107,19 @@ public class DiskBasedAttributeSetResultsDatabase extends AttributeSetResultsDat
      */
     @Override
     public void connect() {
-        if (connection != null)
-            return;
+        synchronized (dbLock) {
+            if (connection != null) {
+                return;
+            }
 
-        try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + getDatabasePath());
-            createAttributeTables();
-        } catch (SQLException e) {
-            System.err.println("Failed to establish SQLite connection: " + e.getMessage());
+            try {
+                connection = DriverManager.getConnection("jdbc:sqlite:" + getDatabasePath());
+                configureConnection(connection);
+                createAttributeTables();
+            } catch (SQLException e) {
+                connection = null;
+                throw new RuntimeException("Failed to establish SQLite connection: " + e.getMessage(), e);
+            }
         }
     }
 
@@ -84,24 +128,22 @@ public class DiskBasedAttributeSetResultsDatabase extends AttributeSetResultsDat
      */
     @Override
     public void disconnect() {
-        synchronized (activeDatabases) {
-            try {
-                if (connection != null) {
-                    try {
-                        connection.close();
-                    } catch (SQLException e) {
-                        System.err.println("Error closing SQLite connection: " + e.getMessage());
+        synchronized (dbLock) {
+            synchronized (activeDatabases) {
+                try {
+                    if (connection != null) {
+                        try {
+                            connection.close();
+                        } catch (SQLException e) {
+                            System.err.println("Error closing SQLite connection: " + e.getMessage());
+                        }
                     }
-                    String databasePath = getDatabasePath();
-                    File databaseFile = new File(databasePath);
-                    if (databaseFile.exists() && !databaseFile.delete()) {
-                        System.err.println("Failed to delete database file: " + databasePath);
-                    }
+
+                    deleteDatabaseFileAndMaybeParentDirectory();
+                } finally {
+                    activeDatabases.remove(this);
+                    connection = null;
                 }
-            } finally {
-                // ALWAYS deregister, even if we were never connected
-                activeDatabases.remove(this);
-                connection = null;
             }
         }
     }
@@ -110,175 +152,344 @@ public class DiskBasedAttributeSetResultsDatabase extends AttributeSetResultsDat
 
     @Override
     public <T> void addPropertyValue(String propertyName, T propertyValue) {
-        propertyClassesMap.put(propertyName, propertyValue.getClass());
-        ensureColumnExists(PROPERTIES_TABLE_NAME, propertyName);
-        insertData(PROPERTIES_TABLE_NAME, propertyName, serialiseValue(propertyValue));
+        Objects.requireNonNull(propertyName, "propertyName must not be null");
+        rememberType(propertyClassesMap, propertyName, propertyValue);
+        addSeriesValue(PROPERTIES_TABLE_NAME, propertyName, propertyValue);
     }
 
     @Override
     public <T> void addPreEventValue(String preEventName, T preEventValue) {
-        preEventClassesMap.put(preEventName, preEventValue.getClass());
-        ensureColumnExists(PRE_EVENTS_TABLE_NAME, preEventName);
-        insertData(PRE_EVENTS_TABLE_NAME, preEventName, serialiseValue(preEventValue));
+        Objects.requireNonNull(preEventName, "preEventName must not be null");
+        rememberType(preEventClassesMap, preEventName, preEventValue);
+        addSeriesValue(PRE_EVENTS_TABLE_NAME, preEventName, preEventValue);
     }
 
     @Override
     public <T> void addPostEventValue(String postEventName, T postEventValue) {
-        postEventClassesMap.put(postEventName, postEventValue.getClass());
-        ensureColumnExists(POST_EVENTS_TABLE_NAME, postEventName);
-        insertData(POST_EVENTS_TABLE_NAME, postEventName, serialiseValue(postEventValue));
+        Objects.requireNonNull(postEventName, "postEventName must not be null");
+        rememberType(postEventClassesMap, postEventName, postEventValue);
+        addSeriesValue(POST_EVENTS_TABLE_NAME, postEventName, postEventValue);
     }
 
     // === Bulk Column Replacement ===
 
     @Override
     public void setPropertyColumn(String propertyName, List<Object> propertyValues) {
-        // Always ensure the column exists
-        ensureColumnExists(PROPERTIES_TABLE_NAME, propertyName);
+        Objects.requireNonNull(propertyName, "propertyName must not be null");
 
-        // Infer and remember the element type if we can (skip if empty/all null)
         Class<?> inferred = firstNonNullClass(propertyValues);
         if (inferred != null) {
             propertyClassesMap.put(propertyName, inferred);
         }
-        // Replace data (handles empty list by clearing the table)
-        setColumn(PROPERTIES_TABLE_NAME, propertyName,
-                (propertyValues == null) ? Collections.emptyList() : propertyValues);
+
+        replaceSeries(PROPERTIES_TABLE_NAME, propertyName,
+                propertyValues == null ? Collections.emptyList() : propertyValues);
     }
 
     @Override
     public void setPreEventColumn(String preEventName, List<Object> preEventValues) {
-        ensureColumnExists(PRE_EVENTS_TABLE_NAME, preEventName);
+        Objects.requireNonNull(preEventName, "preEventName must not be null");
+
         Class<?> inferred = firstNonNullClass(preEventValues);
         if (inferred != null) {
             preEventClassesMap.put(preEventName, inferred);
         }
-        setColumn(PRE_EVENTS_TABLE_NAME, preEventName,
-                (preEventValues == null) ? Collections.emptyList() : preEventValues);
+
+        replaceSeries(PRE_EVENTS_TABLE_NAME, preEventName,
+                preEventValues == null ? Collections.emptyList() : preEventValues);
     }
 
     @Override
     public void setPostEventColumn(String postEventName, List<Object> postEventValues) {
-        ensureColumnExists(POST_EVENTS_TABLE_NAME, postEventName);
+        Objects.requireNonNull(postEventName, "postEventName must not be null");
+
         Class<?> inferred = firstNonNullClass(postEventValues);
         if (inferred != null) {
             postEventClassesMap.put(postEventName, inferred);
         }
-        setColumn(POST_EVENTS_TABLE_NAME, postEventName,
-                (postEventValues == null) ? Collections.emptyList() : postEventValues);
+
+        replaceSeries(POST_EVENTS_TABLE_NAME, postEventName,
+                postEventValues == null ? Collections.emptyList() : postEventValues);
     }
 
     // === Column Retrieval ===
 
     @Override
     public List<Object> getPropertyColumnAsList(String propertyName) {
-        return retrieveColumn(PROPERTIES_TABLE_NAME, propertyName, propertyClassesMap.get(propertyName));
+        Objects.requireNonNull(propertyName, "propertyName must not be null");
+        return retrieveSeries(PROPERTIES_TABLE_NAME, propertyName, propertyClassesMap.get(propertyName));
     }
 
     @Override
     public List<Object> getPreEventColumnAsList(String preEventName) {
-        return retrieveColumn(PRE_EVENTS_TABLE_NAME, preEventName, preEventClassesMap.get(preEventName));
+        Objects.requireNonNull(preEventName, "preEventName must not be null");
+        return retrieveSeries(PRE_EVENTS_TABLE_NAME, preEventName, preEventClassesMap.get(preEventName));
     }
 
     @Override
     public List<Object> getPostEventColumnAsList(String postEventName) {
-        return retrieveColumn(POST_EVENTS_TABLE_NAME, postEventName, postEventClassesMap.get(postEventName));
+        Objects.requireNonNull(postEventName, "postEventName must not be null");
+        return retrieveSeries(POST_EVENTS_TABLE_NAME, postEventName, postEventClassesMap.get(postEventName));
     }
 
-    // === Table & Column Management ===
+    // === Database/Table Management ===
 
-    /** Ensures a table column exists, creating it if needed. */
-    private void ensureColumnExists(String tableName, String columnName) {
-        String sql = "ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " TEXT;";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            if (!e.getMessage().contains("duplicate column name"))
-                throw new RuntimeException("Error ensuring column exists '" + columnName + "': " + e.getMessage(), e);
+    private void configureConnection(Connection connection) throws SQLException {
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute("PRAGMA foreign_keys = ON;");
+            stmt.execute("PRAGMA journal_mode = WAL;");
+            stmt.execute("PRAGMA synchronous = NORMAL;");
+            stmt.execute("PRAGMA temp_store = MEMORY;");
+            stmt.execute("PRAGMA busy_timeout = 5000;");
         }
     }
 
-    /** Creates base tables for properties and events if they do not exist. */
     private void createAttributeTables() {
-        createTable(PROPERTIES_TABLE_NAME);
-        createTable(PRE_EVENTS_TABLE_NAME);
-        createTable(POST_EVENTS_TABLE_NAME);
+        createSeriesTable(PROPERTIES_TABLE_NAME);
+        createSeriesTable(PRE_EVENTS_TABLE_NAME);
+        createSeriesTable(POST_EVENTS_TABLE_NAME);
     }
 
-    /** Creates a new table with a primary key and no columns by default. */
-    private void createTable(String tableName) {
-        String sql = "CREATE TABLE IF NOT EXISTS " + tableName + " (id INTEGER PRIMARY KEY);";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error creating table '" + tableName + "': " + e.getMessage(), e);
-        }
-    }
+    /**
+     * Stable schema:
+     * - series_name: property/event name
+     * - position_index: preserves order within that series
+     * - value_json: serialised value
+     *
+     * Composite primary key ensures one value per position in a given series.
+     */
+    private void createSeriesTable(String tableName) {
+        String createTableSql =
+                "CREATE TABLE IF NOT EXISTS " + tableName + " (" +
+                        "series_name TEXT NOT NULL, " +
+                        "position_index INTEGER NOT NULL, " +
+                        "value_json TEXT, " +
+                        "PRIMARY KEY (series_name, position_index)" +
+                        ");";
 
-    /** Inserts a single value into a column. */
-    private void insertData(String tableName, String columnName, String value) {
-        ensureColumnExists(tableName, columnName);
-        String sql = "INSERT INTO " + tableName + " (" + columnName + ") VALUES (?);";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, value);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error inserting data into '" + tableName + "': " + e.getMessage(), e);
-        }
-    }
+        String createIndexSql =
+                "CREATE INDEX IF NOT EXISTS idx_" + tableName + "_series_position " +
+                        "ON " + tableName + " (series_name, position_index);";
 
-    /** Replaces all rows in a column with the provided values. */
-    private void setColumn(String tableName, String columnName, List<Object> values) {
-        ensureColumnExists(tableName, columnName);
-        String deleteSQL = "DELETE FROM " + tableName + ";";
-        try (PreparedStatement deleteStmt = connection.prepareStatement(deleteSQL)) {
-            deleteStmt.executeUpdate();
-            for (Object value : values)
-                insertData(tableName, columnName, serialiseValue(value));
-        } catch (SQLException e) {
-            throw new RuntimeException("Error replacing column '" + columnName + "': " + e.getMessage(), e);
-        }
-    }
+        synchronized (dbLock) {
+            ensureConnected();
 
-    /** Retrieves all rows from a column, deserialising them to the correct type. */
-    private List<Object> retrieveColumn(String tableName, String columnName, Class<?> type) {
-        ensureColumnExists(tableName, columnName);
-        String sql = "SELECT " + columnName + " FROM " + tableName + ";";
-        List<Object> results = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                String value = rs.getString(columnName);
-                if (value != null)
-                    results.add(type != null ? deserialiseValue(value, type) : value);
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(createTableSql);
+                stmt.executeUpdate(createIndexSql);
+            } catch (SQLException e) {
+                throw new RuntimeException("Error creating table '" + tableName + "': " + e.getMessage(), e);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error retrieving column '" + columnName + "': " + e.getMessage(), e);
         }
-        return results;
+    }
+
+    // === Internal Write Operations ===
+
+    private <T> void addSeriesValue(String tableName, String seriesName, T value) {
+        synchronized (dbLock) {
+            ensureConnected();
+
+            String sql = "INSERT INTO " + tableName + " (series_name, position_index, value_json) VALUES (?, ?, ?);";
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                int nextIndex = getNextPositionIndex(tableName, seriesName);
+                stmt.setString(1, seriesName);
+                stmt.setInt(2, nextIndex);
+                stmt.setString(3, serialiseValue(value));
+                stmt.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(
+                        "Error inserting value into '" + tableName + "' for series '" + seriesName + "': " + e.getMessage(),
+                        e
+                );
+            }
+        }
+    }
+
+    private void replaceSeries(String tableName, String seriesName, List<Object> values) {
+        synchronized (dbLock) {
+            ensureConnected();
+
+            String deleteSql = "DELETE FROM " + tableName + " WHERE series_name = ?;";
+            String insertSql = "INSERT INTO " + tableName + " (series_name, position_index, value_json) VALUES (?, ?, ?);";
+
+            boolean originalAutoCommit;
+            try {
+                originalAutoCommit = connection.getAutoCommit();
+                connection.setAutoCommit(false);
+
+                try (PreparedStatement deleteStmt = connection.prepareStatement(deleteSql);
+                     PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
+
+                    deleteStmt.setString(1, seriesName);
+                    deleteStmt.executeUpdate();
+
+                    for (int i = 0; i < values.size(); i++) {
+                        insertStmt.setString(1, seriesName);
+                        insertStmt.setInt(2, i);
+                        insertStmt.setString(3, serialiseValue(values.get(i)));
+                        insertStmt.addBatch();
+                    }
+
+                    insertStmt.executeBatch();
+                    connection.commit();
+                } catch (SQLException e) {
+                    connection.rollback();
+                    throw e;
+                } finally {
+                    connection.setAutoCommit(originalAutoCommit);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(
+                        "Error replacing series '" + seriesName + "' in '" + tableName + "': " + e.getMessage(),
+                        e
+                );
+            }
+        }
+    }
+
+    private int getNextPositionIndex(String tableName, String seriesName) throws SQLException {
+        String sql = "SELECT COALESCE(MAX(position_index), -1) + 1 FROM " + tableName + " WHERE series_name = ?;";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, seriesName);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    // === Internal Read Operations ===
+
+    private List<Object> retrieveSeries(String tableName, String seriesName, Class<?> type) {
+        synchronized (dbLock) {
+            ensureConnected();
+
+            String sql =
+                    "SELECT value_json " +
+                            "FROM " + tableName + " " +
+                            "WHERE series_name = ? " +
+                            "ORDER BY position_index ASC;";
+
+            List<Object> results = new ArrayList<>();
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setString(1, seriesName);
+
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        String value = rs.getString("value_json");
+                        if (value != null) {
+                            results.add(type != null ? deserialiseValue(value, type) : value);
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(
+                        "Error retrieving series '" + seriesName + "' from '" + tableName + "': " + e.getMessage(),
+                        e
+                );
+            }
+
+            return results;
+        }
+    }
+
+    // === Utility ===
+
+    private void rememberType(Map<String, Class<?>> typeMap, String name, Object value) {
+        if (value != null) {
+            typeMap.put(name, value.getClass());
+        }
+    }
+
+    private void ensureConnected() {
+        if (connection == null) {
+            throw new IllegalStateException("Database connection has not been established. Call connect() first.");
+        }
+    }
+
+    private void deleteDatabaseFileAndMaybeParentDirectory() {
+        String databasePathString = getDatabasePath();
+        if (databasePathString == null || databasePathString.isBlank()) {
+            return;
+        }
+
+        Path databasePath = Paths.get(databasePathString);
+
+        try {
+            Files.deleteIfExists(databasePath);
+        } catch (IOException e) {
+            System.err.println("Failed to delete database file: " + databasePath + " (" + e.getMessage() + ")");
+        }
+
+        /*
+         * If the database lives in a temp subdirectory created for this run, it is nice to clean that up too.
+         * We only attempt parent deletion if:
+         * - there is a parent directory
+         * - it is empty
+         * - it sits under the system temp directory
+         *
+         * That keeps cleanup conservative.
+         */
+        Path parent = databasePath.getParent();
+        if (parent == null) {
+            return;
+        }
+
+        try {
+            Path systemTempDir = Paths.get(System.getProperty("java.io.tmpdir")).toAbsolutePath().normalize();
+            Path normalisedParent = parent.toAbsolutePath().normalize();
+
+            if (normalisedParent.startsWith(systemTempDir) && isDirectoryEmpty(normalisedParent)) {
+                Files.deleteIfExists(normalisedParent);
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to clean up parent temp directory: " + parent + " (" + e.getMessage() + ")");
+        }
+    }
+
+    private boolean isDirectoryEmpty(Path directory) throws IOException {
+        try (var entries = Files.list(directory)) {
+            return entries.findAny().isEmpty();
+        }
     }
 
     // === JSON (De)serialisation Utilities ===
 
     private static String serialiseValue(Object value) {
-        if (value == null)
+        if (value == null) {
             return null;
+        }
+
         try {
-            return new ObjectMapper().writeValueAsString(value);
+            return OBJECT_MAPPER.writeValueAsString(value);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Error serialising value: " + e.getMessage(), e);
         }
     }
 
     private Object deserialiseValue(String value, Class<?> type) {
-        if (value == null)
+        if (value == null) {
             return null;
-        if (type == null)
+        }
+
+        if (type == null) {
             throw new IllegalArgumentException("Cannot deserialise: type is null");
+        }
+
         try {
-            return new ObjectMapper().readValue(value, type);
+            return OBJECT_MAPPER.readValue(value, type);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error deserialising value: " + value + " with type: " + type.getName(), e);
+            throw new RuntimeException(
+                    "Error deserialising value: " + value + " with type: " + type.getName(),
+                    e
+            );
         }
     }
 }
