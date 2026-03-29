@@ -7,7 +7,7 @@
 
     <groupId>dev.modelarium</groupId>
     <artifactId>modelarium</artifactId>
-    <version>1.1.2</version>
+    <version>1.2.1</version>
     <packaging>jar</packaging>
 
     <name>Modelarium</name>
@@ -177,6 +177,17 @@
                             <encoding>${project.build.sourceEncoding}</encoding>
                             <charset>${project.build.sourceEncoding}</charset>
                             <docencoding>${project.build.sourceEncoding}</docencoding>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <release>${maven.compiler.release}</release>
+                            <doclint>none</doclint>
+                            <encoding>${project.build.sourceEncoding}</encoding>
                         </configuration>
                     </execution>
                 </executions>
