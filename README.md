@@ -192,8 +192,6 @@ settings.setModelScheduler(new RandomOrderScheduler());
 Results results = new Model(settings).run();
 ```
 
-The integration tests under `src/test/java/integration/` provide complete, working examples of model setup.
-
 ## Results storage
 
 Results can be stored:
@@ -239,11 +237,7 @@ Disk storage is slower than in-memory storage but avoids memory pressure for lar
 
 ## Examples
 
-The integration tests under: 
-
-src/test/java/integration
-
-provide complete working examples, including:
+The integration tests under `src/test/java/integration` provide complete working examples, including:
 
 - Model setup
 - Multithreaded execution
