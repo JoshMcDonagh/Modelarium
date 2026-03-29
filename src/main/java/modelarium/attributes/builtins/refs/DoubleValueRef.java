@@ -13,5 +13,11 @@ import modelarium.ModelElement;
  * by model state.</p>
  */
 public interface DoubleValueRef {
+    /**
+     * Resolves a numeric value for the supplied model element.
+     *
+     * @param element the model element against which the value should be resolved
+     * @return the resolved value
+     */
     double resolve(ModelElement element);
 }

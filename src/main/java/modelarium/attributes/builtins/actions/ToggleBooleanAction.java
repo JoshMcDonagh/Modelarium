@@ -20,11 +20,24 @@ public class ToggleBooleanAction implements Action {
     private final String attributeSetName;
     private final String propertyName;
 
+    /**
+     * Creates an action that toggles a target boolean property.
+     *
+     * @param attributeSetName the name of the attribute set containing the target property
+     * @param propertyName the name of the target property
+     */
     public ToggleBooleanAction(String attributeSetName, String propertyName) {
         this.attributeSetName = attributeSetName;
         this.propertyName = propertyName;
     }
 
+    /**
+     * Toggles the current value of the target property on the supplied model element.
+     *
+     * @param element the model element whose property should be updated
+     * @throws IllegalStateException if the target property cannot be found or is not a
+     * {@code Boolean} property
+     */
     @Override
     public void apply(ModelElement element) {
         Property<Boolean> property = BuiltinLookup.getRequiredBooleanProperty(element, attributeSetName, propertyName);

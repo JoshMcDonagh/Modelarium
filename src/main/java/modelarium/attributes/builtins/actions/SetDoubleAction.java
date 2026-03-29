@@ -23,12 +23,26 @@ public class SetDoubleAction implements Action {
     private final String propertyName;
     private final DoubleValueRef value;
 
+    /**
+     * Creates an action that assigns a resolved numeric value to a target property.
+     *
+     * @param attributeSetName the name of the attribute set containing the target property
+     * @param propertyName the name of the target property
+     * @param value the value reference supplying the value to assign
+     */
     public SetDoubleAction(String attributeSetName, String propertyName, DoubleValueRef value) {
         this.attributeSetName = attributeSetName;
         this.propertyName = propertyName;
         this.value = value;
     }
 
+    /**
+     * Sets the target property on the supplied model element to the resolved value.
+     *
+     * @param element the model element whose property should be updated
+     * @throws IllegalStateException if the target property cannot be found or is not a
+     * {@code Double} property
+     */
     @Override
     public void apply(ModelElement element) {
         Property<Double> property = BuiltinLookup.getRequiredDoubleProperty(element, attributeSetName, propertyName);

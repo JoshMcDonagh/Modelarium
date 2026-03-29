@@ -14,10 +14,21 @@ import modelarium.ModelElement;
 public final class LiteralDoubleRef implements DoubleValueRef {
     private final double value;
 
+    /**
+     * Creates a literal numeric value reference.
+     *
+     * @param value the constant value to return
+     */
     public LiteralDoubleRef(double value) {
         this.value = value;
     }
 
+    /**
+     * Returns this reference's constant value.
+     *
+     * @param element ignored
+     * @return the literal value
+     */
     @Override
     public double resolve(ModelElement element) {
         return value;

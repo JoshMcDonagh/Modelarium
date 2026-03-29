@@ -35,6 +35,17 @@ public class ThresholdCrossingEvent extends Event {
 
     private Double previousValue = null;
 
+    /**
+     * Creates a threshold-crossing event with an explicit name and recording flag.
+     *
+     * @param name the event name
+     * @param isRecorded whether this event should be recorded in results
+     * @param attributeSetName the name of the attribute set containing the monitored property
+     * @param propertyName the name of the monitored property
+     * @param threshold the threshold value reference
+     * @param direction the direction of crossing to detect
+     * @param actions the actions to apply when the event runs
+     */
     public ThresholdCrossingEvent(
             String name,
             boolean isRecorded,
@@ -52,6 +63,17 @@ public class ThresholdCrossingEvent extends Event {
         this.actions = actions;
     }
 
+    /**
+     * Creates a threshold-crossing event with an auto-generated name and an
+     * explicit recording flag.
+     *
+     * @param isRecorded whether this event should be recorded in results
+     * @param attributeSetName the name of the attribute set containing the monitored property
+     * @param propertyName the name of the monitored property
+     * @param threshold the threshold value reference
+     * @param direction the direction of crossing to detect
+     * @param actions the actions to apply when the event runs
+     */
     public ThresholdCrossingEvent(
             boolean isRecorded,
             String attributeSetName,
@@ -68,6 +90,16 @@ public class ThresholdCrossingEvent extends Event {
         this.actions = actions;
     }
 
+    /**
+     * Creates a threshold-crossing event with an explicit name and default recording behaviour.
+     *
+     * @param name the event name
+     * @param attributeSetName the name of the attribute set containing the monitored property
+     * @param propertyName the name of the monitored property
+     * @param threshold the threshold value reference
+     * @param direction the direction of crossing to detect
+     * @param actions the actions to apply when the event runs
+     */
     public ThresholdCrossingEvent(
             String name,
             String attributeSetName,
@@ -84,6 +116,15 @@ public class ThresholdCrossingEvent extends Event {
         this.actions = actions;
     }
 
+    /**
+     * Creates a threshold-crossing event with default name and recording behaviour.
+     *
+     * @param attributeSetName the name of the attribute set containing the monitored property
+     * @param propertyName the name of the monitored property
+     * @param threshold the threshold value reference
+     * @param direction the direction of crossing to detect
+     * @param actions the actions to apply when the event runs
+     */
     public ThresholdCrossingEvent(
             String attributeSetName,
             String propertyName,
@@ -99,6 +140,35 @@ public class ThresholdCrossingEvent extends Event {
         this.actions = actions;
     }
 
+    /**
+     * Copy constructor.
+     *
+     * <p>Creates a new threshold-crossing event with the same configuration and
+     * stored previous value as the supplied event.</p>
+     *
+     * @param other the event to copy
+     */
+    public ThresholdCrossingEvent(ThresholdCrossingEvent other) {
+        super(other);
+        this.attributeSetName = other.attributeSetName;
+        this.propertyName = other.propertyName;
+        this.threshold = other.threshold;
+        this.direction = other.direction;
+        this.actions = other.actions;
+        this.previousValue = other.previousValue;
+    }
+
+    /**
+     * Returns whether the monitored property has crossed the threshold in the
+     * configured direction since the previous check.
+     *
+     * <p>The first call records the initial value and returns {@code false}.</p>
+     *
+     * @return {@code true} if a threshold crossing has occurred in the configured
+     * direction since the previous call; {@code false} otherwise
+     * @throws IllegalStateException if the monitored property cannot be found,
+     * is not a {@code Double} property, or has a null value
+     */
     @Override
     public boolean isTriggered() {
         double currentValue = BuiltinLookup.getRequiredDoublePropertyValue(
@@ -122,6 +192,9 @@ public class ThresholdCrossingEvent extends Event {
         return triggered;
     }
 
+    /**
+     * Applies each configured action to the associated model element.
+     */
     @Override
     public void run() {
         for (Action action : actions)

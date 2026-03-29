@@ -13,5 +13,10 @@ import modelarium.ModelElement;
  * may also be provided where a reusable mutation is useful.</p>
  */
 public interface Action {
+    /**
+     * Applies this action to the supplied model element.
+     *
+     * @param element the model element to mutate
+     */
     void apply(ModelElement element);
 }

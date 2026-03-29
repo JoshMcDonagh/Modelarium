@@ -22,6 +22,17 @@ import modelarium.attributes.Property;
 public final class BuiltinLookup {
     private BuiltinLookup() {}
 
+    /**
+     * Returns the required property from the supplied model element.
+     *
+     * @param element the model element containing the property
+     * @param attributeSetName the name of the attribute set containing the property
+     * @param propertyName the name of the property
+     * @return the resolved property
+     * @throws IllegalStateException if the model element is {@code null}, the
+     * attribute set cannot be found, the properties collection is missing, or the
+     * property cannot be found
+     */
     public static Property<?> getRequiredProperty(
             ModelElement element,
             String attributeSetName,
@@ -45,6 +56,16 @@ public final class BuiltinLookup {
         return property;
     }
 
+    /**
+     * Returns the required property as a {@code Double} property.
+     *
+     * @param element the model element containing the property
+     * @param attributeSetName the name of the attribute set containing the property
+     * @param propertyName the name of the property
+     * @return the resolved property as a {@code Double} property
+     * @throws IllegalStateException if the property cannot be found or is not of
+     * type {@code Double}
+     */
     @SuppressWarnings("unchecked")
     public static Property<Double> getRequiredDoubleProperty(
             ModelElement element,
@@ -59,6 +80,16 @@ public final class BuiltinLookup {
         return (Property<Double>) property;
     }
 
+    /**
+     * Returns the required property as a {@code Boolean} property.
+     *
+     * @param element the model element containing the property
+     * @param attributeSetName the name of the attribute set containing the property
+     * @param propertyName the name of the property
+     * @return the resolved property as a {@code Boolean} property
+     * @throws IllegalStateException if the property cannot be found or is not of
+     * type {@code Boolean}
+     */
     @SuppressWarnings("unchecked")
     public static Property<Boolean> getRequiredBooleanProperty(
             ModelElement element,
@@ -73,6 +104,16 @@ public final class BuiltinLookup {
         return (Property<Boolean>) property;
     }
 
+    /**
+     * Returns the current value of a required {@code Double} property.
+     *
+     * @param element the model element containing the property
+     * @param attributeSetName the name of the attribute set containing the property
+     * @param propertyName the name of the property
+     * @return the property's current non-null value
+     * @throws IllegalStateException if the property cannot be found, is not of
+     * type {@code Double}, or currently has a {@code null} value
+     */
     public static double getRequiredDoublePropertyValue(
             ModelElement element,
             String attributeSetName,

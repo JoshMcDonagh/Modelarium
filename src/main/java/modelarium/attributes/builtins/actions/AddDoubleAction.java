@@ -17,27 +17,33 @@ import modelarium.attributes.builtins.util.BuiltinLookup;
  *
  * <p>The target property must exist, must be of type {@code Double}, and must be mutable. If not,
  * an exception is thrown at runtime.</p>
- *
- * <p>Example usage:</p>
- * <pre>
- * Action increaseEnergy = new AddDoubleAction(
- *         "state",
- *         "energy",
- *         new LiteralDoubleRef(5.0)
- * );
- * </pre>
  */
 public class AddDoubleAction implements Action {
     private final String attributeSetName;
     private final String propertyName;
     private final DoubleValueRef delta;
 
+    /**
+     * Creates an action that increments a target {@code Double} property by a
+     * resolved delta.
+     *
+     * @param attributeSetName the name of the attribute set containing the target property
+     * @param propertyName the name of the target property
+     * @param delta the value reference supplying the amount to add
+     */
     public AddDoubleAction(String attributeSetName, String propertyName, DoubleValueRef delta) {
         this.attributeSetName = attributeSetName;
         this.propertyName = propertyName;
         this.delta = delta;
     }
 
+    /**
+     * Adds the resolved delta to the target property on the supplied model element.
+     *
+     * @param element the model element whose property should be updated
+     * @throws IllegalStateException if the target property cannot be found or is not a
+     * {@code Double} property
+     */
     @Override
     public void apply(ModelElement element) {
         Property<Double> property = BuiltinLookup.getRequiredDoubleProperty(element, attributeSetName, propertyName);
