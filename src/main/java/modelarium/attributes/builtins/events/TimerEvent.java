@@ -5,6 +5,22 @@ import modelarium.attributes.builtins.actions.Action;
 
 import java.util.List;
 
+/**
+ * An {@link modelarium.attributes.Event} that triggers on a fixed tick schedule.
+ *
+ * <p>A {@code TimerEvent} becomes triggered when the model clock tick is greater than or equal to
+ * the configured offset and satisfies the configured period. When run, the event applies each of
+ * its configured {@link modelarium.attributes.builtins.actions.Action Actions} to the associated
+ * model element.</p>
+ *
+ * <p>This event is useful for recurring behaviours such as consuming resources every few ticks,
+ * performing routine updates, or scheduling periodic state changes.</p>
+ *
+ * <p>For example, with {@code periodTicks = 10} and {@code offsetTicks = 3}, the event triggers
+ * on ticks 3, 13, 23, and so on.</p>
+ *
+ * <p>{@code periodTicks} must be at least 1 and {@code offsetTicks} must be non-negative.</p>
+ */
 public class TimerEvent extends Event {
     private final int periodTicks;
     private final int offsetTicks;

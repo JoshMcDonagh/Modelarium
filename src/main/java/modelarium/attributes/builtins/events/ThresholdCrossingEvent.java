@@ -7,6 +7,25 @@ import modelarium.attributes.builtins.util.BuiltinLookup;
 
 import java.util.List;
 
+/**
+ * An {@link modelarium.attributes.Event} that triggers when a {@code Double} property crosses a
+ * threshold in a specified direction.
+ *
+ * <p>The monitored property is identified by attribute set name and property name. The threshold is
+ * provided by a {@link modelarium.attributes.builtins.refs.DoubleValueRef}, so it may be either a
+ * fixed value or a value obtained dynamically from another property.</p>
+ *
+ * <p>This event detects crossings rather than simple threshold membership. In other words, it only
+ * triggers when the monitored value moves from one side of the threshold to the other in the chosen
+ * direction. It does not repeatedly trigger on every tick while the value remains above or below
+ * the threshold.</p>
+ *
+ * <p>The first call to {@link #isTriggered()} establishes the initial previous value and does not
+ * trigger a crossing by itself.</p>
+ *
+ * <p>Typical uses include detecting when an agent becomes hungry, when stock falls below a minimum,
+ * or when a physiological value rises above or falls below a critical threshold.</p>
+ */
 public class ThresholdCrossingEvent extends Event {
     private final String attributeSetName;
     private final String propertyName;

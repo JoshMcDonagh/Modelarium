@@ -5,6 +5,20 @@ import modelarium.attributes.AttributeSet;
 import modelarium.attributes.Properties;
 import modelarium.attributes.Property;
 
+/**
+ * Utility methods for resolving properties required by built-in actions, properties, and events.
+ *
+ * <p>{@code BuiltinLookup} centralises the common lookup and validation logic needed by the built-in
+ * attribute classes. It provides methods to retrieve required properties from a model element and
+ * to enforce expected types such as {@code Double} and {@code Boolean}.</p>
+ *
+ * <p>If a required model element, attribute set, property collection, property, or property value
+ * is missing or of the wrong type, these methods throw an {@link IllegalStateException}. This keeps
+ * failures explicit and close to the point of misuse.</p>
+ *
+ * <p>This class is an internal support utility for the built-ins package rather than a primary API
+ * type for general model construction.</p>
+ */
 public final class BuiltinLookup {
     private BuiltinLookup() {}
 
