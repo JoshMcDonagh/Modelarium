@@ -1,6 +1,5 @@
 package modelarium.attributes.builtins.events;
 
-import modelarium.attributes.Event;
 import modelarium.attributes.builtins.actions.Action;
 
 import java.util.List;

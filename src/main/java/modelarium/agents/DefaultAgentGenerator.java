@@ -1,7 +1,6 @@
 package modelarium.agents;
 
 import modelarium.ModelSettings;
-import modelarium.attributes.AttributeSetCollection;
 
 /**
  * A basic implementation of {@link AgentGenerator} that creates agents with

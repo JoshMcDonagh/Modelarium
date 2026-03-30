@@ -31,7 +31,7 @@ public class ResultsTest {
     @BeforeEach
     void setUp() {
         agent = mock(Agent.class);
-        when(agent.getName()).thenReturn("Agent1");
+        when(agent.name()).thenReturn("Agent1");
 
         agentSet = new AgentSet();
         agentSet.add(agent);

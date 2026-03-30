@@ -1,8 +1,5 @@
 package integration.syncedCachedBasicModelUsageIntegrationTest.attributes.postevents;
 
-import modelarium.attributes.Event;
-import modelarium.attributes.Property;
-
 public class EatFood extends Event {
 
     public EatFood() {

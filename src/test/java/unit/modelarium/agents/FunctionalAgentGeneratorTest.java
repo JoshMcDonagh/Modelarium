@@ -28,7 +28,7 @@ public class FunctionalAgentGeneratorTest {
     private Function<ModelSettings, Agent> createUniqueMockAgentGenerator() {
         return s -> {
             Agent mockAgent = mock(Agent.class);
-            when(mockAgent.getName()).thenReturn("agent" + idGenerator.getAndIncrement());
+            when(mockAgent.name()).thenReturn("agent" + idGenerator.getAndIncrement());
             return mockAgent;
         };
     }

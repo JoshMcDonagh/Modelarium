@@ -1,8 +1,8 @@
 package modelarium.attributes.functional;
 
-import modelarium.ModelElement;
+import modelarium.Entity;
 
 @FunctionalInterface
 public interface PropertySetterFunction<T> {
-    T set(ModelElement associatedModelElement, T currentPropertyValue, T newValue);
+    T set(Entity associatedEntity, T currentPropertyValue, T newValue);
 }

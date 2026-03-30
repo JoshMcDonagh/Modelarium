@@ -2,7 +2,6 @@ package unit.modelarium.results;
 
 import modelarium.agents.Agent;
 import modelarium.agents.AgentSet;
-import modelarium.attributes.AttributeSetCollection;
 import modelarium.attributes.results.AttributeSetCollectionResults;
 import modelarium.attributes.results.AttributeSetResults;
 import modelarium.results.AgentResults;

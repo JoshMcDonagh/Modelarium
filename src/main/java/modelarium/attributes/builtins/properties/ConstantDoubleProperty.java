@@ -1,7 +1,5 @@
 package modelarium.attributes.builtins.properties;
 
-import modelarium.attributes.Property;
-
 /**
  * A {@link modelarium.attributes.Property} whose {@code Double} value is fixed at construction time
  * and cannot be changed afterwards.

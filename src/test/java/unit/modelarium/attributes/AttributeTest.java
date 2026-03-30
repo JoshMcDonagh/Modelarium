@@ -1,6 +1,5 @@
 package unit.modelarium.attributes;
 
-import modelarium.attributes.Attribute;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

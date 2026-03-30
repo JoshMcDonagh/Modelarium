@@ -1,8 +1,8 @@
 package modelarium.attributes.functional;
 
-import modelarium.ModelElement;
+import modelarium.Entity;
 
 @FunctionalInterface
 public interface PropertyRunFunction<T> {
-    T run(ModelElement associatedModelElement, T propertyValue);
+    T run(Entity associatedEntity, T propertyValue);
 }

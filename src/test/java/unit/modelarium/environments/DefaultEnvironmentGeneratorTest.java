@@ -1,7 +1,6 @@
 package unit.modelarium.environments;
 
 import modelarium.ModelSettings;
-import modelarium.attributes.AttributeSetCollection;
 import modelarium.environments.DefaultEnvironmentGenerator;
 import modelarium.environments.Environment;
 import org.junit.jupiter.api.Test;
@@ -26,7 +25,7 @@ public class DefaultEnvironmentGeneratorTest {
         Environment generatedEnvironment = generator.generateEnvironment(settings);
 
         assertNotNull(generatedEnvironment, "Environment should not be null.");
-        assertEquals("Environment", generatedEnvironment.getName(), "Environment name should be 'Environment'.");
+        assertEquals("Environment", generatedEnvironment.name(), "Environment name should be 'Environment'.");
         assertNotSame(originalAttributes, generatedEnvironment.getAttributeSetCollection(),
                 "The attribute set should be a deep copy, not the same instance.");
     }

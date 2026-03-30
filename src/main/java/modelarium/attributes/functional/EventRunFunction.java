@@ -1,8 +1,8 @@
 package modelarium.attributes.functional;
 
-import modelarium.ModelElement;
+import modelarium.Entity;
 
 @FunctionalInterface
 public interface EventRunFunction {
-    void run(ModelElement associatedModelElement);
+    void run(Entity associatedEntity);
 }

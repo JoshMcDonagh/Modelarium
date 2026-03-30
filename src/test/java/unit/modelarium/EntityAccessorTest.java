@@ -1,11 +1,10 @@
 package unit.modelarium;
 
-import modelarium.ModelElement;
-import modelarium.ModelElementAccessor;
+import modelarium.Entity;
+import modelarium.EntityAccessor;
 import modelarium.ModelSettings;
 import modelarium.agents.Agent;
 import modelarium.agents.AgentSet;
-import modelarium.attributes.AttributeSetCollection;
 import modelarium.attributes.results.AttributeSetCollectionResults;
 import modelarium.environments.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
@@ -19,9 +18,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for {@link ModelElementAccessor}.
+ * Unit tests for {@link EntityAccessor}.
  */
-public class ModelElementAccessorTest {
+public class EntityAccessorTest {
 
     private Agent mockAgent;
     private Environment mockEnvironment;
@@ -29,13 +28,13 @@ public class ModelElementAccessorTest {
     private ModelSettings settings;
     private WorkerCache cache;
     private RequestResponseInterface requestInterface;
-    private ModelElementAccessor accessor;
+    private EntityAccessor accessor;
 
     @BeforeEach
     public void setup() {
         mockAgent = mock(Agent.class);
         mockEnvironment = mock(Environment.class);
-        when(mockAgent.getName()).thenReturn("Agent_X");
+        when(mockAgent.name()).thenReturn("Agent_X");
 
         localAgentSet = new AgentSet();
         settings = new ModelSettings();
@@ -43,17 +42,17 @@ public class ModelElementAccessorTest {
         cache = new WorkerCache(true);
         requestInterface = mock(RequestResponseInterface.class);
 
-        ModelElement modelElement = mock(ModelElement.class);
+        Entity entity = mock(Entity.class);
         AttributeSetCollection mockAttrSetCollection = mock(AttributeSetCollection.class);
         AttributeSetCollectionResults mockResults = mock(AttributeSetCollectionResults.class);
 
-        when(modelElement.getName()).thenReturn("Agent_X");
-        when(modelElement.getAttributeSetCollection()).thenReturn(mockAttrSetCollection);
+        when(entity.name()).thenReturn("Agent_X");
+        when(entity.getAttributeSetCollection()).thenReturn(mockAttrSetCollection);
         when(mockAttrSetCollection.getResults()).thenReturn(mockResults);
         when(mockResults.getModelElementName()).thenReturn("Agent_X");
 
-        accessor = new ModelElementAccessor(
-                modelElement,
+        accessor = new EntityAccessor(
+                entity,
                 localAgentSet,
                 settings,
                 cache,
@@ -74,7 +73,7 @@ public class ModelElementAccessorTest {
         localAgentSet.add(mockAgent);
         Agent agent = accessor.getAgentByName("Agent_X");
         assertNotNull(agent, "Should return the local agent.");
-        assertEquals("Agent_X", agent.getName());
+        assertEquals("Agent_X", agent.name());
     }
 
     @Test
@@ -85,7 +84,7 @@ public class ModelElementAccessorTest {
         cache.addAgent(agent);
         Agent result = accessor.getAgentByName("Agent_X");
         assertNotNull(result, "Should return the agent from cache.");
-        assertEquals("Agent_X", result.getName());
+        assertEquals("Agent_X", result.name());
     }
 
     @Test
@@ -96,7 +95,7 @@ public class ModelElementAccessorTest {
 
         Agent agent = accessor.getAgentByName("Agent_Remote");
         assertNotNull(agent, "Should return the agent from the coordinator.");
-        assertEquals("Agent_X", agent.getName());
+        assertEquals("Agent_X", agent.name());
         assertTrue(cache.doesAgentExist("Agent_X"), "Agent should now be cached.");
     }
 

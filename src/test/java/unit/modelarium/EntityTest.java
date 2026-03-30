@@ -1,30 +1,27 @@
 package unit.modelarium;
 
-import modelarium.ModelElement;
-import modelarium.ModelElementAccessor;
+import modelarium.Entity;
+import modelarium.EntityAccessor;
 import modelarium.agents.Agent;
 import modelarium.agents.AgentSet;
-import modelarium.attributes.AttributeSetCollection;
 import modelarium.environments.Environment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for the {@link ModelElement} abstract class via a dummy subclass.
+ * Unit tests for the {@link Entity} abstract class via a dummy subclass.
  */
-public class ModelElementTest {
+public class EntityTest {
 
-    private static class DummyModelElement extends ModelElement {
+    private static class DummyEntity extends Entity {
         private boolean wasRunCalled = false;
 
-        public DummyModelElement(String name, AttributeSetCollection attributeSetCollection) {
+        public DummyEntity(String name, AttributeSetCollection attributeSetCollection) {
             super(name, attributeSetCollection);
         }
 
@@ -38,7 +35,7 @@ public class ModelElementTest {
         }
 
         @Override
-        public ModelElement deepCopy() {
+        public Entity deepCopy() {
             return null;
         }
 
@@ -56,18 +53,18 @@ public class ModelElementTest {
     }
 
     private AttributeSetCollection attributeSetCollection;
-    private DummyModelElement dummyElement;
+    private DummyEntity dummyElement;
 
     @BeforeEach
     public void setup() {
         attributeSetCollection = mock(AttributeSetCollection.class);
         when(attributeSetCollection.deepCopy()).thenReturn(attributeSetCollection);
-        dummyElement = new DummyModelElement("TestElement", attributeSetCollection);
+        dummyElement = new DummyEntity("TestElement", attributeSetCollection);
     }
 
     @Test
     public void testNameIsStoredCorrectly() {
-        assertEquals("TestElement", dummyElement.getName(), "Model element name should match the constructor input.");
+        assertEquals("TestElement", dummyElement.name(), "Model element name should match the constructor input.");
     }
 
     @Test
@@ -81,7 +78,7 @@ public class ModelElementTest {
         AttributeSetCollection mockAttributeSetCollection = mock(AttributeSetCollection.class);
         when(mockAttributeSetCollection.deepCopy()).thenReturn(mockAttributeSetCollection);
 
-        DummyModelElement dummy = new DummyModelElement("TestElement", mockAttributeSetCollection);
+        DummyEntity dummy = new DummyEntity("TestElement", mockAttributeSetCollection);
         dummy.setup();
 
         verify(mockAttributeSetCollection).setup("TestElement");
@@ -95,14 +92,14 @@ public class ModelElementTest {
 
     @Test
     public void testModelElementAccessorCanBeSetAndRetrieved() {
-        ModelElementAccessor mockAccessor = mock(ModelElementAccessor.class);
+        EntityAccessor mockAccessor = mock(EntityAccessor.class);
         dummyElement.setModelElementAccessor(mockAccessor);
         assertSame(mockAccessor, dummyElement.getModelElementAccessor());
     }
 
     @Test
     public void testAccessExternalAgentByNameDelegatesToAccessor() {
-        ModelElementAccessor accessor = mock(ModelElementAccessor.class);
+        EntityAccessor accessor = mock(EntityAccessor.class);
         Agent agent = mock(Agent.class);
 
         dummyElement.setModelElementAccessor(accessor);
@@ -116,7 +113,7 @@ public class ModelElementTest {
 
     @Test
     public void testAccessExternalAgentsByFilterDelegatesToAccessor() {
-        ModelElementAccessor accessor = mock(ModelElementAccessor.class);
+        EntityAccessor accessor = mock(EntityAccessor.class);
         AgentSet agentSet = mock(AgentSet.class);
 
         dummyElement.setModelElementAccessor(accessor);
@@ -132,7 +129,7 @@ public class ModelElementTest {
 
     @Test
     public void testAccessEnvironmentDelegatesToAccessor() {
-        ModelElementAccessor accessor = mock(ModelElementAccessor.class);
+        EntityAccessor accessor = mock(EntityAccessor.class);
         Environment env = mock(Environment.class);
 
         dummyElement.setModelElementAccessor(accessor);

@@ -1,6 +1,6 @@
 package modelarium.results;
 
-import modelarium.ModelElement;
+import modelarium.Entity;
 import modelarium.attributes.results.AttributeSetCollectionResults;
 
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Container class for storing and accessing results from one or more {@link ModelElement}s,
+ * Container class for storing and accessing results from one or more {@link Entity}s,
  * including agents and the environment.
  *
  * <p>Each model element has an associated {@link AttributeSetCollectionResults} instance,
@@ -31,18 +31,18 @@ public class ModelElementResults {
      *
      * @param modelElements the model elements (agents or environment)
      */
-    public ModelElementResults(List<? extends ModelElement> modelElements) {
-        for (ModelElement modelElement : modelElements)
-            addAttributeSetCollectionResults(modelElement.getAttributeSetCollection().getResults());
+    public ModelElementResults(List<? extends Entity> modelElements) {
+        for (Entity entity : modelElements)
+            addAttributeSetCollectionResults(entity.getAttributeSetCollection().getResults());
     }
 
     /**
      * Constructs a new results container for a single model element.
      *
-     * @param modelElement the agent or environment to track results for
+     * @param entity the agent or environment to track results for
      */
-    public ModelElementResults(ModelElement modelElement) {
-        addAttributeSetCollectionResults(modelElement.getAttributeSetCollection().getResults());
+    public ModelElementResults(Entity entity) {
+        addAttributeSetCollectionResults(entity.getAttributeSetCollection().getResults());
     }
 
     /**

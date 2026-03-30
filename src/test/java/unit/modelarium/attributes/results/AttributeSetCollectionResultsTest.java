@@ -1,6 +1,5 @@
 package unit.modelarium.attributes.results;
 
-import modelarium.attributes.AttributeSet;
 import modelarium.attributes.results.AttributeSetCollectionResults;
 import modelarium.attributes.results.AttributeSetResults;
 import modelarium.attributes.results.databases.AttributeSetResultsDatabase;

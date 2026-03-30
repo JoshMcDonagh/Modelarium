@@ -1,9 +1,6 @@
 package modelarium.attributes.builtins.util;
 
-import modelarium.ModelElement;
-import modelarium.attributes.AttributeSet;
-import modelarium.attributes.Properties;
-import modelarium.attributes.Property;
+import modelarium.Entity;
 
 /**
  * Utility methods for resolving properties required by built-in actions, properties, and events.
@@ -34,7 +31,7 @@ public final class BuiltinLookup {
      * property cannot be found
      */
     public static Property<?> getRequiredProperty(
-            ModelElement element,
+            Entity element,
             String attributeSetName,
             String propertyName
     ) {
@@ -68,7 +65,7 @@ public final class BuiltinLookup {
      */
     @SuppressWarnings("unchecked")
     public static Property<Double> getRequiredDoubleProperty(
-            ModelElement element,
+            Entity element,
             String attributeSetName,
             String propertyName
     ) {
@@ -92,7 +89,7 @@ public final class BuiltinLookup {
      */
     @SuppressWarnings("unchecked")
     public static Property<Boolean> getRequiredBooleanProperty(
-            ModelElement element,
+            Entity element,
             String attributeSetName,
             String propertyName
     ) {
@@ -115,7 +112,7 @@ public final class BuiltinLookup {
      * type {@code Double}, or currently has a {@code null} value
      */
     public static double getRequiredDoublePropertyValue(
-            ModelElement element,
+            Entity element,
             String attributeSetName,
             String propertyName
     ) {

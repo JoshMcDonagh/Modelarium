@@ -1,8 +1,7 @@
 package unit.modelarium.agents;
 
-import modelarium.ModelElement;
+import modelarium.Entity;
 import modelarium.agents.Agent;
-import modelarium.attributes.AttributeSetCollection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +26,7 @@ public class AgentTest {
 
     @Test
     public void testGetName_returnsCorrectName() {
-        assertEquals("Agent_1", agent.getName(), "Agent should return the correct name.");
+        assertEquals("Agent_1", agent.name(), "Agent should return the correct name.");
     }
 
     @Test
@@ -45,13 +44,13 @@ public class AgentTest {
     public void testDeepCopyDuplicate_createsEquivalentAgent() {
         AttributeSetCollection copiedAttributeSetCollection = mock(AttributeSetCollection.class);
         when(mockAttributeSetCollection.deepCopy()).thenReturn(copiedAttributeSetCollection);
-        doNothing().when(copiedAttributeSetCollection).setAssociatedModelElement(any(ModelElement.class));
+        doNothing().when(copiedAttributeSetCollection).setAssociatedModelElement(any(Entity.class));
         when(copiedAttributeSetCollection.deepCopy()).thenReturn((copiedAttributeSetCollection));
 
         Agent copy = agent.deepCopy();
 
         assertNotNull(copy, "Deep copy should not be null.");
-        assertEquals(agent.getName(), copy.getName(), "Copied agent should retain the same name.");
+        assertEquals(agent.name(), copy.name(), "Copied agent should retain the same name.");
         assertNotSame(agent, copy, "Copy should be a different instance.");
         assertNotSame(agent.getAttributeSetCollection(), copy.getAttributeSetCollection(), "Attribute set collection should be a deep copy.");
     }

@@ -1,8 +1,8 @@
 package modelarium.attributes.functional;
 
-import modelarium.ModelElement;
+import modelarium.Entity;
 
 @FunctionalInterface
 public interface EventIsTriggeredFunction {
-    boolean isTriggered(ModelElement associatedModelElement);
+    boolean isTriggered(Entity associatedEntity);
 }

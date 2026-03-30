@@ -1,12 +1,11 @@
 package modelarium.attributes.builtins.refs;
 
-import modelarium.ModelElement;
-import modelarium.attributes.Property;
+import modelarium.Entity;
 import modelarium.attributes.builtins.util.BuiltinLookup;
 
 /**
  * A {@link DoubleValueRef} that resolves to the current value of a {@code Double} property on a
- * {@link modelarium.ModelElement}.
+ * {@link Entity}.
  *
  * <p>The target property is identified by attribute set name and property name. Resolution performs
  * a lookup at runtime, allowing built-in actions, properties, and events to depend dynamically on
@@ -39,7 +38,7 @@ public class PropertyDoubleRef implements DoubleValueRef {
      * {@code Double} property, or has a null value
      */
     @Override
-    public double resolve(ModelElement element) {
+    public double resolve(Entity element) {
         return BuiltinLookup.getRequiredDoublePropertyValue(element, attributeSetName, propertyName);
     }
 }

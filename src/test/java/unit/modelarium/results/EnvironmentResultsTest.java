@@ -1,6 +1,5 @@
 package unit.modelarium.results;
 
-import modelarium.attributes.AttributeSetCollection;
 import modelarium.attributes.results.AttributeSetCollectionResults;
 import modelarium.attributes.results.AttributeSetResults;
 import modelarium.environments.Environment;
@@ -35,7 +34,7 @@ public class EnvironmentResultsTest {
         when(mockCollection.getResults()).thenReturn(mockCollectionResults);
 
         // Stub rest as before
-        when(mockEnvironment.getName()).thenReturn("Env1");
+        when(mockEnvironment.name()).thenReturn("Env1");
         when(mockCollectionResults.getModelElementName()).thenReturn("Env1");
         when(mockCollectionResults.getAttributeSetResults("Weather")).thenReturn(mockSetResults);
         when(mockSetResults.getPropertyValues("temperature")).thenReturn(List.of(23.5));

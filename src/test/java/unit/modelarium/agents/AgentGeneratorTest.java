@@ -34,7 +34,7 @@ public class AgentGeneratorTest {
 
         assertEquals(5, agents.size(), "Should generate the specified number of agents.");
         for (int i = 0; i < agents.size(); i++) {
-            assertEquals("Agent_" + i, agents.get(i).getName(), "Agent name should match expected pattern.");
+            assertEquals("Agent_" + i, agents.get(i).name(), "Agent name should match expected pattern.");
         }
     }
 

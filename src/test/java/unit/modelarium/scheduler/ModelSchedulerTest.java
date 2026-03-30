@@ -31,8 +31,8 @@ public class ModelSchedulerTest {
         Agent mockAgent2 = mock(Agent.class);
 
         // Stub getName() to avoid indexing issues
-        when(mockAgent1.getName()).thenReturn("mock1");
-        when(mockAgent2.getName()).thenReturn("mock2");
+        when(mockAgent1.name()).thenReturn("mock1");
+        when(mockAgent2.name()).thenReturn("mock2");
 
         AgentSet agentSet = new AgentSet();
         agentSet.add(mockAgent1);

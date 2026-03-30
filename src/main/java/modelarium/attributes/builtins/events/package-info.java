@@ -11,7 +11,7 @@
  *
  * <p>
  * Built-in events typically operate on properties belonging to an associated
- * {@link modelarium.ModelElement} and may execute one or more
+ * {@link modelarium.Entity} and may execute one or more
  * built-in or custom actions when triggered.
  * Some event implementations maintain internal state in order to distinguish
  * between a new trigger condition and one that is simply continuing to hold.

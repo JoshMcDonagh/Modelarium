@@ -1,7 +1,5 @@
 package modelarium.attributes.functional;
 
-import modelarium.attributes.Property;
-
 /**
  * A property whose behaviour is defined using functional interfaces.
  *

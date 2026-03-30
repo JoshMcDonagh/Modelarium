@@ -2,7 +2,6 @@ package unit.modelarium.multithreading.utils;
 
 import modelarium.agents.Agent;
 import modelarium.agents.AgentSet;
-import modelarium.attributes.AttributeSetCollection;
 import modelarium.environments.Environment;
 import modelarium.multithreading.utils.WorkerCache;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +35,7 @@ public class WorkerCacheTest {
 
     @Test
     public void testAddAndRetrieveAgentFilter() {
-        Predicate<Agent> filter = a -> a.getName().startsWith("A");
+        Predicate<Agent> filter = a -> a.name().startsWith("A");
         cache.addAgentFilter(filter);
         assertTrue(cache.doesAgentFilterExist(filter));
     }
@@ -52,11 +51,11 @@ public class WorkerCacheTest {
 
         cache.addAgents(set);
 
-        Predicate<Agent> startsWithA = a -> a.getName().startsWith("A");
+        Predicate<Agent> startsWithA = a -> a.name().startsWith("A");
         AgentSet filtered = cache.getFilteredAgents(startsWithA);
 
         assertEquals(1, filtered.size());
-        assertEquals("A", filtered.get(0).getName());
+        assertEquals("A", filtered.get(0).name());
     }
 
     @Test

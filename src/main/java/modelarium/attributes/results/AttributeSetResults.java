@@ -1,8 +1,5 @@
 package modelarium.attributes.results;
 
-import modelarium.attributes.AttributeSet;
-import modelarium.attributes.Event;
-import modelarium.attributes.Property;
 import modelarium.attributes.results.databases.AttributeSetResultsDatabase;
 import modelarium.attributes.results.databases.AttributeSetResultsDatabaseFactory;
 

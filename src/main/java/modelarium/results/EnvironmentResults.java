@@ -23,7 +23,7 @@ public class EnvironmentResults extends ModelElementResults {
      */
     public EnvironmentResults(Environment environment) {
         super(environment);
-        this.environmentName = environment.getName();
+        this.environmentName = environment.name();
     }
 
     /**

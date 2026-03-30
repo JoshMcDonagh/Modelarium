@@ -1,7 +1,5 @@
 package modelarium.attributes.functional;
 
-import modelarium.attributes.Event;
-
 /**
  * An event whose logic is defined via functional interfaces.
  *

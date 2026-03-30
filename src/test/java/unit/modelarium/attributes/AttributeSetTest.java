@@ -1,8 +1,8 @@
 package unit.modelarium.attributes;
 
 import modelarium.ModelClock;
-import modelarium.ModelElement;
-import modelarium.ModelElementAccessor;
+import modelarium.Entity;
+import modelarium.EntityAccessor;
 import modelarium.attributes.*;
 import modelarium.attributes.results.AttributeSetResults;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,20 +27,20 @@ public class AttributeSetTest {
 
     @BeforeEach
     public void setup() {
-        ModelElement mockModelElement = mock(ModelElement.class);
-        ModelElementAccessor mockModelElementAccessor= mock(ModelElementAccessor.class);
+        Entity mockEntity = mock(Entity.class);
+        EntityAccessor mockEntityAccessor = mock(EntityAccessor.class);
         ModelClock mockClock = mock(ModelClock.class);
 
-        when(mockModelElement.getModelElementAccessor()).thenReturn(mockModelElementAccessor);
-        when(mockModelElementAccessor.getModelClock()).thenReturn(mockClock);
+        when(mockEntity.getModelElementAccessor()).thenReturn(mockEntityAccessor);
+        when(mockEntityAccessor.getModelClock()).thenReturn(mockClock);
 
         preEvents = spy(new Events());
         properties = spy(new Properties());
         postEvents = spy(new Events());
 
-        when(preEvents.getAssociatedModelElement()).thenReturn(mockModelElement);
-        when(properties.getAssociatedModelElement()).thenReturn(mockModelElement);
-        when(postEvents.getAssociatedModelElement()).thenReturn(mockModelElement);
+        when(preEvents.getAssociatedModelElement()).thenReturn(mockEntity);
+        when(properties.getAssociatedModelElement()).thenReturn(mockEntity);
+        when(postEvents.getAssociatedModelElement()).thenReturn(mockEntity);
 
         attributeSet = new AttributeSet("TestSet", preEvents, properties, postEvents);
         results = mock(AttributeSetResults.class);

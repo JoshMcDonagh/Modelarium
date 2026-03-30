@@ -1,7 +1,5 @@
 package integration.syncedCachedBasicModelUsageIntegrationTest.attributes.properties;
 
-import modelarium.attributes.Property;
-
 public class Hunger extends Property<Double> {
 
     private double hungerLevel = 1.0;

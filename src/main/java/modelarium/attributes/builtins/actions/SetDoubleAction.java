@@ -1,7 +1,6 @@
 package modelarium.attributes.builtins.actions;
 
-import modelarium.ModelElement;
-import modelarium.attributes.Property;
+import modelarium.Entity;
 import modelarium.attributes.builtins.refs.DoubleValueRef;
 import modelarium.attributes.builtins.util.BuiltinLookup;
 
@@ -44,7 +43,7 @@ public class SetDoubleAction implements Action {
      * {@code Double} property
      */
     @Override
-    public void apply(ModelElement element) {
+    public void apply(Entity element) {
         Property<Double> property = BuiltinLookup.getRequiredDoubleProperty(element, attributeSetName, propertyName);
         property.set(value.resolve(element));
     }

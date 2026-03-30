@@ -1,7 +1,6 @@
 package unit.modelarium.results;
 
-import modelarium.ModelElement;
-import modelarium.attributes.AttributeSetCollection;
+import modelarium.Entity;
 import modelarium.attributes.results.AttributeSetCollectionResults;
 import modelarium.attributes.results.AttributeSetResults;
 import modelarium.results.ModelElementResults;
@@ -16,8 +15,8 @@ import static org.mockito.Mockito.*;
 /**
  * Unit tests for {@link ModelElementResults}.
  */
-public class ModelElementResultsTest {
-    private ModelElement mockElement;
+public class EntityResultsTest {
+    private Entity mockElement;
     private AttributeSetCollection mockCollection;
     private AttributeSetCollectionResults mockCollectionResults;
     private AttributeSetResults mockSetResults;
@@ -25,7 +24,7 @@ public class ModelElementResultsTest {
     @BeforeEach
     void setUp() {
         // Mocks for attribute set structure
-        mockElement = mock(ModelElement.class);
+        mockElement = mock(Entity.class);
         mockCollection = mock(AttributeSetCollection.class); // NEW: mock the collection
         mockCollectionResults = mock(AttributeSetCollectionResults.class);
         mockSetResults = mock(AttributeSetResults.class);
@@ -52,7 +51,7 @@ public class ModelElementResultsTest {
 
     @Test
     void testMultipleModelElementConstruction() {
-        ModelElement anotherElement = mock(ModelElement.class);
+        Entity anotherElement = mock(Entity.class);
         AttributeSetCollection mockAnotherCollection = mock(AttributeSetCollection.class);
         AttributeSetCollectionResults anotherResults = mock(AttributeSetCollectionResults.class);
 
@@ -69,7 +68,7 @@ public class ModelElementResultsTest {
     void testMergeWithAddsAllElements() {
         ModelElementResults results1 = new ModelElementResults(mockElement);
 
-        ModelElement mockOther = mock(ModelElement.class);
+        Entity mockOther = mock(Entity.class);
         AttributeSetCollection mockOtherCollection = mock(AttributeSetCollection.class);
         AttributeSetCollectionResults mockOtherResults = mock(AttributeSetCollectionResults.class);
 

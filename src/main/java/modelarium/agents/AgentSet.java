@@ -79,11 +79,11 @@ public class AgentSet implements Iterable<Agent> {
     public void add(Agent agent) {
         int index;
 
-        if (doesAgentExist(agent.getName())) {
-            index = agentIndexes.get(agent.getName());
+        if (doesAgentExist(agent.name())) {
+            index = agentIndexes.get(agent.name());
         } else {
             index = agents.size();
-            agentIndexes.put(agent.getName(), index);
+            agentIndexes.put(agent.name(), index);
             agents.add(agent); // Ensure list is long enough before setting
         }
 
@@ -114,7 +114,7 @@ public class AgentSet implements Iterable<Agent> {
             throw new IllegalArgumentException("agentSet cannot be null");
 
         for (Agent agent : agentSet) {
-            if (!doesAgentExist(agent.getName()))
+            if (!doesAgentExist(agent.name()))
                 add(agent);
         }
     }

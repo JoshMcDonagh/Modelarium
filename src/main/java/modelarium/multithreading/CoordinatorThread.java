@@ -1,7 +1,7 @@
 package modelarium.multithreading;
 
 import modelarium.ModelClock;
-import modelarium.ModelElementAccessor;
+import modelarium.EntityAccessor;
 import modelarium.ModelSettings;
 import modelarium.agents.AgentSet;
 import modelarium.environments.Environment;
@@ -75,35 +75,35 @@ public class CoordinatorThread implements Runnable {
 
         if (this.environment.getModelElementAccessor() == null) {
             this.environment.setModelElementAccessor(
-                    new ModelElementAccessor(
+                    new EntityAccessor(
                             this.environment,                        // modelElement
                             new AgentSet(),                     // empty global set for env
                             settings,                           // settings
                             new WorkerCache(settings.getDoAgentStoresHoldAgentCopies()),
-                            new RequestResponseInterface(environment.getName(), settings, requestResponseController),
+                            new RequestResponseInterface(environment.name(), settings, requestResponseController),
                             environment                         // localEnvironment
                     )
             );
         }
 
-        ModelElementAccessor modelElementAccessor = this.environment.getModelElementAccessor();
-        if (modelElementAccessor == null) {
-            modelElementAccessor = new ModelElementAccessor(
+        EntityAccessor entityAccessor = this.environment.getModelElementAccessor();
+        if (entityAccessor == null) {
+            entityAccessor = new EntityAccessor(
                     this.environment,
                     new AgentSet(),
                     settings,
                     new WorkerCache(settings.getDoAgentStoresHoldAgentCopies()),
-                    new RequestResponseInterface(environment.getName(), settings, requestResponseController),
+                    new RequestResponseInterface(environment.name(), settings, requestResponseController),
                     environment
             );
 
             try {
-                this.environment.setModelElementAccessor(modelElementAccessor);
+                this.environment.setModelElementAccessor(entityAccessor);
             } catch (Throwable ignore) {}
         }
 
         this.coordinatorClock = new ModelClock(settings.getNumOfTicksToRun(), settings.getNumOfWarmUpTicks());
-        modelElementAccessor.setModelClock(this.coordinatorClock);
+        entityAccessor.setModelClock(this.coordinatorClock);
     }
 
     /**

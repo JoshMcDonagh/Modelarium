@@ -1,7 +1,6 @@
 package modelarium.attributes.builtins.actions;
 
-import modelarium.ModelElement;
-import modelarium.attributes.Property;
+import modelarium.Entity;
 import modelarium.attributes.builtins.util.BuiltinLookup;
 
 /**
@@ -39,7 +38,7 @@ public class ToggleBooleanAction implements Action {
      * {@code Boolean} property
      */
     @Override
-    public void apply(ModelElement element) {
+    public void apply(Entity element) {
         Property<Boolean> property = BuiltinLookup.getRequiredBooleanProperty(element, attributeSetName, propertyName);
         property.set(!property.get());
     }

@@ -2,7 +2,6 @@ package modelarium;
 
 import modelarium.agents.AgentGenerator;
 import modelarium.agents.DefaultAgentGenerator;
-import modelarium.attributes.AttributeSetCollection;
 import modelarium.environments.DefaultEnvironmentGenerator;
 import modelarium.environments.EnvironmentGenerator;
 import modelarium.results.Results;

@@ -1,7 +1,5 @@
 package unit.modelarium.attributes;
 
-import modelarium.attributes.Event;
-import modelarium.attributes.Events;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

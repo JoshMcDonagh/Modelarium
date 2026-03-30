@@ -1,6 +1,5 @@
 package modelarium.attributes.builtins.properties;
 
-import modelarium.attributes.Property;
 import modelarium.attributes.builtins.refs.DoubleValueRef;
 
 /**

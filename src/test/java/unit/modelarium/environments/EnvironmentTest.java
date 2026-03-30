@@ -1,6 +1,5 @@
 package unit.modelarium.environments;
 
-import modelarium.attributes.AttributeSetCollection;
 import modelarium.environments.Environment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,7 @@ public class EnvironmentTest {
 
     @Test
     public void testEnvironmentNameIsSet() {
-        assertEquals("TestEnvironment", environment.getName(),
+        assertEquals("TestEnvironment", environment.name(),
                 "Environment name should match the one provided in the constructor.");
     }
 

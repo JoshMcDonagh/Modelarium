@@ -1,11 +1,11 @@
 package modelarium.attributes.builtins.refs;
 
-import modelarium.ModelElement;
+import modelarium.Entity;
 
 /**
  * A {@link DoubleValueRef} that always resolves to the same literal numeric value.
  *
- * <p>This implementation ignores the supplied {@link modelarium.ModelElement} and simply returns
+ * <p>This implementation ignores the supplied {@link Entity} and simply returns
  * the constant value given at construction time.</p>
  *
  * <p>It is useful when a built-in property, action, or event requires a fixed numeric parameter,
@@ -30,7 +30,7 @@ public final class LiteralDoubleRef implements DoubleValueRef {
      * @return the literal value
      */
     @Override
-    public double resolve(ModelElement element) {
+    public double resolve(Entity element) {
         return value;
     }
 }

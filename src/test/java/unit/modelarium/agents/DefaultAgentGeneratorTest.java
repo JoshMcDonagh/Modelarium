@@ -4,7 +4,6 @@ import modelarium.ModelSettings;
 import modelarium.agents.Agent;
 import modelarium.agents.AgentSet;
 import modelarium.agents.DefaultAgentGenerator;
-import modelarium.attributes.AttributeSetCollection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +39,7 @@ public class DefaultAgentGeneratorTest {
         Agent agent = generator.generateAgent(settings);
 
         assertNotNull(agent, "Generated agent should not be null.");
-        assertTrue(agent.getName().startsWith("Agent_"), "Agent name should follow the 'Agent_X' format.");
+        assertTrue(agent.name().startsWith("Agent_"), "Agent name should follow the 'Agent_X' format.");
         assertNotNull(agent.getAttributeSetCollection(), "Agent should have an attribute set collection.");
     }
 

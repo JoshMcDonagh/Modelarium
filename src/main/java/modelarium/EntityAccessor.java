@@ -21,9 +21,9 @@ import java.util.function.Predicate;
  *     <li>The associated model clock</li>
  * </ul>
  */
-public class ModelElementAccessor {
+public class EntityAccessor {
 
-    private final ModelElement modelElement;
+    private final Entity entity;
     private final AgentSet localAgentSet;
     private final ModelSettings settings;
     private final WorkerCache cache;
@@ -35,22 +35,22 @@ public class ModelElementAccessor {
     /**
      * Constructs a new accessor for a model element.
      *
-     * @param modelElement              the model element (agent or environment) this accessor serves
+     * @param entity              the model element (agent or environment) this accessor serves
      * @param localAgentSet             the set of agents assigned to this core/thread
      * @param settings                  the shared model settings object
      * @param cache                     the local cache for agent/environment access (may be null if not used)
      * @param requestResponseInterface  the communication interface for synchronised coordination
      * @param localEnvironment          the local copy of the environment assigned to this model element
      */
-    public ModelElementAccessor(
-            ModelElement modelElement,
+    public EntityAccessor(
+            Entity entity,
             AgentSet localAgentSet,
             ModelSettings settings,
             WorkerCache cache,
             RequestResponseInterface requestResponseInterface,
             Environment localEnvironment
     ) {
-        this.modelElement = modelElement;
+        this.entity = entity;
         this.localAgentSet = localAgentSet;
         this.settings = settings;
         this.cache = cache;
@@ -108,7 +108,7 @@ public class ModelElementAccessor {
 
         // Request from coordinator
         try {
-            Agent requestedAgent = requestResponseInterface.getAgentFromCoordinator(modelElement.getName(), targetAgentName);
+            Agent requestedAgent = requestResponseInterface.getAgentFromCoordinator(entity.name(), targetAgentName);
             if (settings.getIsCacheUsed())
                 cache.addAgent(requestedAgent);
             return requestedAgent;
@@ -135,7 +135,7 @@ public class ModelElementAccessor {
         if (settings.getAreProcessesSynced()) {
             // Request filtered agents from the coordinator
             try {
-                filteredAgentSet = requestResponseInterface.getFilteredAgentsFromCoordinator(modelElement.getName(), filter);
+                filteredAgentSet = requestResponseInterface.getFilteredAgentsFromCoordinator(entity.name(), filter);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -171,7 +171,7 @@ public class ModelElementAccessor {
         // Request environment from coordinator
         Environment requestedEnvironment;
         try {
-            requestedEnvironment = requestResponseInterface.getEnvironmentFromCoordinator(modelElement.getName());
+            requestedEnvironment = requestResponseInterface.getEnvironmentFromCoordinator(entity.name());
         } catch (Exception e) {
             e.printStackTrace();
             return null;

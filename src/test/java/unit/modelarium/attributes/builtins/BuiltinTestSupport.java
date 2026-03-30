@@ -1,12 +1,8 @@
 package unit.modelarium.attributes.builtins;
 
 import modelarium.ModelClock;
-import modelarium.ModelElement;
-import modelarium.ModelElementAccessor;
-import modelarium.attributes.AttributeSet;
-import modelarium.attributes.AttributeSetCollection;
-import modelarium.attributes.Properties;
-import modelarium.attributes.Property;
+import modelarium.Entity;
+import modelarium.EntityAccessor;
 import modelarium.attributes.functional.FunctionalProperty;
 
 import static org.mockito.Mockito.mock;
@@ -15,8 +11,8 @@ import static org.mockito.Mockito.when;
 public final class BuiltinTestSupport {
     private BuiltinTestSupport() {}
 
-    public static class TestModelElement extends ModelElement {
-        public TestModelElement(AttributeSetCollection attributeSetCollection) {
+    public static class TestEntity extends Entity {
+        public TestEntity(AttributeSetCollection attributeSetCollection) {
             super("test-element", attributeSetCollection);
         }
 
@@ -26,16 +22,16 @@ public final class BuiltinTestSupport {
         }
 
         @Override
-        public ModelElement deepCopy() {
+        public Entity deepCopy() {
             return null;
         }
     }
 
-    public static TestModelElement elementWith(AttributeSet... attributeSets) {
+    public static TestEntity elementWith(AttributeSet... attributeSets) {
         AttributeSetCollection collection = new AttributeSetCollection();
         for (AttributeSet attributeSet : attributeSets)
             collection.add(attributeSet);
-        return new TestModelElement(collection);
+        return new TestEntity(collection);
     }
 
     public static AttributeSet attributeSet(String name, Property<?>... properties) {
@@ -76,14 +72,14 @@ public final class BuiltinTestSupport {
         return property;
     }
 
-    public static void attachWithoutClock(TestModelElement element) {
-        ModelElementAccessor accessor = mock(ModelElementAccessor.class);
+    public static void attachWithoutClock(TestEntity element) {
+        EntityAccessor accessor = mock(EntityAccessor.class);
         element.setModelElementAccessor(accessor);
         element.getAttributeSetCollection().setAssociatedModelElement(element);
     }
 
-    public static void attachClock(TestModelElement element, int tick) {
-        ModelElementAccessor accessor = mock(ModelElementAccessor.class);
+    public static void attachClock(TestEntity element, int tick) {
+        EntityAccessor accessor = mock(EntityAccessor.class);
         ModelClock clock = mock(ModelClock.class);
         when(accessor.getModelClock()).thenReturn(clock);
         when(clock.getTick()).thenReturn(tick);

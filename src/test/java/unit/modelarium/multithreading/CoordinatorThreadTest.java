@@ -66,7 +66,7 @@ public class CoordinatorThreadTest {
 
         // Create dummy agent and ensure its name matches the payload
         Agent dummyAgent = mock(Agent.class);
-        when(dummyAgent.getName()).thenReturn("agent-123");
+        when(dummyAgent.name()).thenReturn("agent-123");
 
         // Add dummy agent to a real agent set
         AgentSet realAgentSet = new AgentSet();

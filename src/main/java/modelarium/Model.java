@@ -80,16 +80,16 @@ public class Model {
         CoordinatorThread coordinator = null;
 
         // Set up accessor for the environment model element
-        ModelElementAccessor environmentModelElementAccessor = new ModelElementAccessor(
+        EntityAccessor environmentEntityAccessor = new EntityAccessor(
                 environment,
                 new AgentSet(),
                 settings,
                 new WorkerCache(settings.getDoAgentStoresHoldAgentCopies()),
-                new RequestResponseInterface(environment.getName(), settings, requestResponseController),
+                new RequestResponseInterface(environment.name(), settings, requestResponseController),
                 environment
         );
 
-        environment.setModelElementAccessor(environmentModelElementAccessor);
+        environment.setModelElementAccessor(environmentEntityAccessor);
 
         // Launch central coordinator if synchronisation is required
         if (settings.getAreProcessesSynced()) {
@@ -124,15 +124,15 @@ public class Model {
             // Prepare agents for this core and assign them accessors
             for (Agent agent : coreAgentSet) {
                 Environment localEnvironment = environment.deepCopy();
-                ModelElementAccessor agentModelElementAccessor = new ModelElementAccessor(
+                EntityAccessor agentEntityAccessor = new EntityAccessor(
                         agent,
                         coreAgentSet,
                         settings,
                         cache,
-                        new RequestResponseInterface(agent.getName(), settings, requestResponseController),
+                        new RequestResponseInterface(agent.name(), settings, requestResponseController),
                         localEnvironment
                 );
-                agent.setModelElementAccessor(agentModelElementAccessor);
+                agent.setModelElementAccessor(agentEntityAccessor);
             }
 
             // Create and submit the worker task

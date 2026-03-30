@@ -1,6 +1,5 @@
 package utils;
 
-import modelarium.attributes.Attribute;
 import com.google.gson.*;
 
 import java.io.*;

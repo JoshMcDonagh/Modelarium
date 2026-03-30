@@ -1,5 +1,6 @@
 package unit.modelarium.attributes.builtins.events;
 
+import modelarium.Entity;
 import modelarium.attributes.builtins.actions.AddDoubleAction;
 import modelarium.attributes.builtins.actions.SetBooleanAction;
 import modelarium.attributes.builtins.events.ThresholdCrossingEvent;
@@ -320,7 +321,7 @@ class BuiltinEventTest {
 
     @SuppressWarnings("unchecked")
     private static modelarium.attributes.Property<Double> getDoubleProperty(
-            modelarium.ModelElement element,
+            Entity element,
             String attributeSetName,
             String propertyName
     ) {

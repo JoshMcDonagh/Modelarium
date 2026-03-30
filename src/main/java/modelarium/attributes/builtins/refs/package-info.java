@@ -5,7 +5,7 @@
  * <p>
  * The classes in this package allow a value to be supplied either as a literal
  * constant or by dynamically reading from a property on an associated
- * {@link modelarium.ModelElement}. This makes it possible to build
+ * {@link modelarium.Entity}. This makes it possible to build
  * reusable built-in components whose behaviour can depend on either fixed values
  * or model state.
  * </p>

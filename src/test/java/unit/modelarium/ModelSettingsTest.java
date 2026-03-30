@@ -2,7 +2,6 @@ package unit.modelarium;
 
 import modelarium.ModelSettings;
 import modelarium.agents.AgentGenerator;
-import modelarium.attributes.AttributeSetCollection;
 import modelarium.environments.EnvironmentGenerator;
 import modelarium.results.Results;
 import modelarium.scheduler.ModelScheduler;

@@ -1,9 +1,9 @@
 package modelarium.attributes.builtins.refs;
 
-import modelarium.ModelElement;
+import modelarium.Entity;
 
 /**
- * Resolves a {@code double} value in the context of a {@link modelarium.ModelElement}.
+ * Resolves a {@code double} value in the context of a {@link Entity}.
  *
  * <p>Built-in properties and actions use {@code DoubleValueRef} to allow numeric inputs to be
  * specified either as literal constants or as values obtained dynamically from another property on
@@ -19,5 +19,5 @@ public interface DoubleValueRef {
      * @param element the model element against which the value should be resolved
      * @return the resolved value
      */
-    double resolve(ModelElement element);
+    double resolve(Entity element);
 }

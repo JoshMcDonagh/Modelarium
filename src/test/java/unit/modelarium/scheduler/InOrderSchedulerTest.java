@@ -22,9 +22,9 @@ public class InOrderSchedulerTest {
         Agent agent2 = mock(Agent.class);
         Agent agent3 = mock(Agent.class);
 
-        when(agent1.getName()).thenReturn("agent1");
-        when(agent2.getName()).thenReturn("agent2");
-        when(agent3.getName()).thenReturn("agent3");
+        when(agent1.name()).thenReturn("agent1");
+        when(agent2.name()).thenReturn("agent2");
+        when(agent3.name()).thenReturn("agent3");
 
         AgentSet agentSet = new AgentSet();
         agentSet.add(agent1);

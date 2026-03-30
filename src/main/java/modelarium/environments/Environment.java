@@ -1,17 +1,16 @@
 package modelarium.environments;
 
-import modelarium.ModelElement;
-import modelarium.attributes.AttributeSetCollection;
+import modelarium.Entity;
 
 /**
  * Represents the simulation environment in the model.
  *
- * <p>The environment is a type of {@link ModelElement} and holds its own
+ * <p>The environment is a type of {@link Entity} and holds its own
  * {@link AttributeSetCollection}, which it runs each simulation tick.
  *
  * <p>Environments typically represent shared state or conditions accessible by agents.
  */
-public class Environment extends ModelElement {
+public class Environment extends Entity {
 
     /**
      * Constructs a new environment with the given name and attribute sets.
@@ -33,6 +32,6 @@ public class Environment extends ModelElement {
 
     @Override
     public Environment deepCopy() {
-        return new Environment(getName(), getAttributeSetCollection().deepCopy());
+        return new Environment(name(), getAttributeSetCollection().deepCopy());
     }
 }

@@ -1,6 +1,6 @@
 package unit.modelarium.multithreading;
 
-import modelarium.ModelElementAccessor;
+import modelarium.EntityAccessor;
 import modelarium.ModelSettings;
 import modelarium.agents.Agent;
 import modelarium.agents.AgentSet;
@@ -46,8 +46,8 @@ public class WorkerThreadTest {
         when(controller.getInterface(any())).thenReturn(requestInterface);
 
         Agent mockAgent = mock(Agent.class);
-        when(mockAgent.getModelElementAccessor()).thenReturn(mock(ModelElementAccessor.class));
-        when(mockAgent.getName()).thenReturn("Agent1");
+        when(mockAgent.getModelElementAccessor()).thenReturn(mock(EntityAccessor.class));
+        when(mockAgent.name()).thenReturn("Agent1");
         when(agents.iterator()).thenReturn(List.of(mockAgent).iterator());
     }
 

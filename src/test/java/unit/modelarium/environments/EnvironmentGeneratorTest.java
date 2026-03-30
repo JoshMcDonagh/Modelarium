@@ -1,7 +1,6 @@
 package unit.modelarium.environments;
 
 import modelarium.ModelSettings;
-import modelarium.attributes.AttributeSetCollection;
 import modelarium.environments.Environment;
 import modelarium.environments.EnvironmentGenerator;
 import org.junit.jupiter.api.Test;
@@ -37,7 +36,7 @@ public class EnvironmentGeneratorTest {
         Environment environment = generator.generateEnvironment(settings);
 
         assertNotNull(environment, "Environment should not be null.");
-        assertEquals("GeneratedEnvironment", environment.getName(), "Environment name should match.");
+        assertEquals("GeneratedEnvironment", environment.name(), "Environment name should match.");
         assertSame(mockAttributes, environment.getAttributeSetCollection(), "Environment should use attribute set from model settings.");
     }
 }

@@ -1,8 +1,8 @@
 package modelarium.attributes.functional;
 
-import modelarium.ModelElement;
+import modelarium.Entity;
 
 @FunctionalInterface
 public interface PropertyGetterFunction<T> {
-    T get(ModelElement associatedModelElement, T propertyValue);
+    T get(Entity associatedEntity, T propertyValue);
 }

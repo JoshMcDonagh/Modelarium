@@ -58,7 +58,7 @@ public abstract class Results implements DeepCopyable<Results> {
             throw new IllegalStateException("Cannot modify Results: object is immutable.");
 
         for (Agent agent : agents)
-            agentNames.add(agent.getName());
+            agentNames.add(agent.name());
     }
 
     /**

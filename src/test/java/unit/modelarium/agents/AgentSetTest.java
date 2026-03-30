@@ -2,7 +2,6 @@ package unit.modelarium.agents;
 
 import modelarium.agents.Agent;
 import modelarium.agents.AgentSet;
-import modelarium.attributes.AttributeSetCollection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -75,10 +74,10 @@ public class AgentSetTest {
     @Test
     public void testGetFilteredAgents() {
         AgentSet agentSet = new AgentSet(Arrays.asList(agentA, agentB, agentC));
-        AgentSet filtered = agentSet.getFilteredAgents(a -> a.getName().equals("B"));
+        AgentSet filtered = agentSet.getFilteredAgents(a -> a.name().equals("B"));
 
         assertEquals(1, filtered.size(), "Only one agent should match the filter.");
-        assertEquals("B", filtered.get(0).getName(), "Filtered agent should be B.");
+        assertEquals("B", filtered.get(0).name(), "Filtered agent should be B.");
     }
 
     @Test
@@ -88,7 +87,7 @@ public class AgentSetTest {
         Iterator<Agent> iterator = agentSet.getRandomIterator();
 
         while (iterator.hasNext())
-            names.add(iterator.next().getName());
+            names.add(iterator.next().name());
 
         assertEquals(3, names.size(), "Random iterator should cover all agents.");
         assertTrue(names.containsAll(Arrays.asList("A", "B", "C")), "All agent names should be included.");
@@ -112,7 +111,7 @@ public class AgentSetTest {
 
         assertEquals(1, duplicate.size(), "Duplicate should contain same number of agents.");
         assertNotSame(agentA, duplicate.get(0), "Agent should be a different instance if deep copy is enabled.");
-        assertEquals(agentA.getName(), duplicate.get(0).getName(), "Agent name should remain the same.");
+        assertEquals(agentA.name(), duplicate.get(0).name(), "Agent name should remain the same.");
     }
 
     @Test

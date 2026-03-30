@@ -1,7 +1,6 @@
 package modelarium.environments;
 
 import modelarium.ModelSettings;
-import modelarium.attributes.AttributeSetCollection;
 
 /**
  * Default generator for creating the simulation environment.

@@ -1,7 +1,5 @@
 package modelarium.attributes.builtins.properties;
 
-import modelarium.attributes.Property;
-
 /**
  * A derived {@link modelarium.attributes.Property} that exposes the current value of another
  * {@code Double} property on the same associated model element.

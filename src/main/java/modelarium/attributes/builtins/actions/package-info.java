@@ -1,7 +1,7 @@
 /**
  * Provides built-in {@link modelarium.attributes.builtins.actions.Action} implementations
  * that perform common mutations on properties belonging to a
- * {@link modelarium.ModelElement}.
+ * {@link modelarium.Entity}.
  *
  * <p>
  * These actions are intended to be used by built-in or custom

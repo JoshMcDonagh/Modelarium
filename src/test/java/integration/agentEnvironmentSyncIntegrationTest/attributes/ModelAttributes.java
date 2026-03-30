@@ -1,9 +1,5 @@
 package integration.agentEnvironmentSyncIntegrationTest.attributes;
 
-import modelarium.attributes.AttributeSet;
-import modelarium.attributes.AttributeSetCollection;
-import modelarium.attributes.Events;
-import modelarium.attributes.Properties;
 import integration.agentEnvironmentSyncIntegrationTest.attributes.environment.properties.EnvTick;
 import integration.agentEnvironmentSyncIntegrationTest.attributes.agent.properties.SeenEnvTick;
 

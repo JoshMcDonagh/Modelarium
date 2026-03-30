@@ -1,7 +1,6 @@
 package modelarium.agents;
 
-import modelarium.ModelElement;
-import modelarium.attributes.AttributeSetCollection;
+import modelarium.Entity;
 
 /**
  * Represents an agent in the agent-based model.
@@ -10,7 +9,7 @@ import modelarium.attributes.AttributeSetCollection;
  * that define its behaviour and internal state. The agent's `run()` method delegates to
  * its attribute set, allowing attribute-driven logic to control execution.
  */
-public class Agent extends ModelElement {
+public class Agent extends Entity {
 
     /**
      * Constructs an agent with the given name and attribute set collection.
@@ -35,6 +34,6 @@ public class Agent extends ModelElement {
 
     @Override
     public Agent deepCopy() {
-        return new Agent(getName(), getAttributeSetCollection().deepCopy());
+        return new Agent(name(), getAttributeSetCollection().deepCopy());
     }
 }

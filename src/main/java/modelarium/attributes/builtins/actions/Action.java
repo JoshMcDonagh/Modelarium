@@ -1,9 +1,9 @@
 package modelarium.attributes.builtins.actions;
 
-import modelarium.ModelElement;
+import modelarium.Entity;
 
 /**
- * Represents a built-in operation that can be applied to a {@link modelarium.ModelElement}.
+ * Represents a built-in operation that can be applied to a {@link Entity}.
  *
  * <p>Built-in events use {@code Action} implementations to modify properties on the model element
  * when the event is triggered. Actions are intentionally lightweight and typically operate by
@@ -18,5 +18,5 @@ public interface Action {
      *
      * @param element the model element to mutate
      */
-    void apply(ModelElement element);
+    void apply(Entity element);
 }

@@ -3,8 +3,6 @@ package unit.modelarium;
 import modelarium.Model;
 import modelarium.ModelSettings;
 import modelarium.agents.DefaultAgentGenerator;
-import modelarium.attributes.AttributeSet;
-import modelarium.attributes.AttributeSetCollection;
 import modelarium.environments.DefaultEnvironmentGenerator;
 import modelarium.results.Results;
 import modelarium.scheduler.InOrderScheduler;
