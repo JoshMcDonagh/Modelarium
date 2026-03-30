@@ -1,5 +1,7 @@
 package modelarium.attributes;
 
+import modelarium.attributes.results.AttributeSetResults;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,10 +82,28 @@ public class AttributeSet {
         return getProperty(attributeIndexMap.get(propertyName));
     }
 
-    public void run() {
+    private void recordEvent(Event event, AttributeSetResults attributeSetResults) {
+        // TODO: Implement...
+    }
+
+    private void recordProperty(Property<?> property, AttributeSetResults attributeSetResults) {
+        // TODO: Implement...
+    }
+
+    public void run(AttributeSetResults attributeSetResults) {
         for (Attribute attribute : attributeList) {
-            if (!(attribute instanceof Event) || ((Event)attribute).isTriggered())
+            if (attribute instanceof Event) {
+                Event event = (Event) attribute;
+                if (event.isTriggered())
+                    event.run();
+                recordEvent(event, attributeSetResults);
+            } else if (attribute instanceof Property) {
+                Property<?> property = (Property<?>) attribute;
+                property.run();
+                recordProperty(property, attributeSetResults);
+            } else {
                 attribute.run();
+            }
         }
     }
 }
