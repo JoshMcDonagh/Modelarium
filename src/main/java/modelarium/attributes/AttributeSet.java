@@ -28,4 +28,62 @@ public class AttributeSet {
     public String name() {
         return name;
     }
+
+    public int size() {
+        return attributeList.size();
+    }
+
+    public Attribute get(int attributeIndex) {
+        return attributeList.get(attributeIndex);
+    }
+
+    public Attribute get(String attributeName) {
+        return get(attributeIndexMap.get(attributeName));
+    }
+
+    public Event getEvent(int eventIndex) {
+        Attribute attribute = get(eventIndex);
+
+        if (!(attribute instanceof Event event))
+            throw new IllegalArgumentException("Expected an Event, but got: " + attribute.getClass().getName());
+
+        return event;
+    }
+
+    public Event getEvent(String eventName) {
+        return getEvent(attributeIndexMap.get(eventName));
+    }
+
+    public Process getProcess(int processIndex) {
+        Attribute attribute = get(processIndex);
+
+        if (!(attribute instanceof Process process))
+            throw new IllegalArgumentException("Expected a Process, but got: " + attribute.getClass().getName());
+
+        return process;
+    }
+
+    public Process getProcess(String processName) {
+        return getProcess(attributeIndexMap.get(processName));
+    }
+
+    public Property<?> getProperty(int propertyIndex) {
+        Attribute attribute = get(propertyIndex);
+
+        if (!(attribute instanceof Property<?> property))
+            throw new IllegalArgumentException("Expected a Property, but got: " + attribute.getClass().getName());
+
+        return property;
+    }
+
+    public Property<?> getProperty(String propertyName) {
+        return getProperty(attributeIndexMap.get(propertyName));
+    }
+
+    public void run() {
+        for (Attribute attribute : attributeList) {
+            if (!(attribute instanceof Event) || ((Event)attribute).isTriggered())
+                attribute.run();
+        }
+    }
 }
