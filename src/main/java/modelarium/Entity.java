@@ -1,7 +1,7 @@
 package modelarium;
 
 import modelarium.attributes.*;
-import modelarium.attributes.Process;
+import modelarium.attributes.Routine;
 import utils.DeepCopyable;
 
 import java.util.HashMap;
@@ -64,7 +64,7 @@ public abstract class Entity implements DeepCopyable<Entity> {
         return getAttributeSet(attributeSetName).getEvent(eventName);
     }
 
-    public Process getProcess(String attributeSetName, String processName) {
+    public Routine getProcess(String attributeSetName, String processName) {
         return getAttributeSet(attributeSetName).getProcess(processName);
     }
 

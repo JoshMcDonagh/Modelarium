@@ -3,7 +3,7 @@ package unit.modelarium.attributes.builtins;
 import modelarium.ModelClock;
 import modelarium.Entity;
 import modelarium.EntityAccessor;
-import modelarium.attributes.functional.FunctionalProperty;
+import modelarium.attributes.functional.properties.FunctionalProperty;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

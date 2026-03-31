@@ -1,8 +1,7 @@
 package unit.modelarium.results;
 
 import modelarium.Entity;
-import modelarium.attributes.results.AttributeSetCollectionResults;
-import modelarium.attributes.results.AttributeSetResults;
+import modelarium.attributes.results.AttributeSetRunLog;
 import modelarium.results.ModelElementResults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,7 @@ public class EntityResultsTest {
     private Entity mockElement;
     private AttributeSetCollection mockCollection;
     private AttributeSetCollectionResults mockCollectionResults;
-    private AttributeSetResults mockSetResults;
+    private AttributeSetRunLog mockSetResults;
 
     @BeforeEach
     void setUp() {
@@ -27,7 +26,7 @@ public class EntityResultsTest {
         mockElement = mock(Entity.class);
         mockCollection = mock(AttributeSetCollection.class); // NEW: mock the collection
         mockCollectionResults = mock(AttributeSetCollectionResults.class);
-        mockSetResults = mock(AttributeSetResults.class);
+        mockSetResults = mock(AttributeSetRunLog.class);
 
         // Setup hierarchy
         when(mockElement.getAttributeSetCollection()).thenReturn(mockCollection); // ← FIXED

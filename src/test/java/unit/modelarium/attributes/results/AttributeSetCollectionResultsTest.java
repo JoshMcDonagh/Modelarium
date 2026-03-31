@@ -1,9 +1,8 @@
 package unit.modelarium.attributes.results;
 
-import modelarium.attributes.results.AttributeSetCollectionResults;
-import modelarium.attributes.results.AttributeSetResults;
-import modelarium.attributes.results.databases.AttributeSetResultsDatabase;
-import modelarium.attributes.results.databases.AttributeSetResultsDatabaseFactory;
+import modelarium.attributes.results.AttributeSetRunLog;
+import modelarium.attributes.results.databases.AttributeSetRunLogDatabase;
+import modelarium.attributes.results.databases.AttributeSetRunLogDatabaseFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,12 +21,12 @@ class AttributeSetCollectionResultsTest {
         collectionResults = new AttributeSetCollectionResults();
 
         // Use a mock database implementation to avoid real disk I/O
-        AttributeSetResultsDatabaseFactory.setCustomFactory(() -> mock(AttributeSetResultsDatabase.class));
+        AttributeSetRunLogDatabaseFactory.setCustomFactory(() -> mock(AttributeSetRunLogDatabase.class));
     }
 
     @AfterEach
     void tearDown() {
-        AttributeSetResultsDatabaseFactory.clearCustomFactory();
+        AttributeSetRunLogDatabaseFactory.clearCustomFactory();
     }
 
     @Test
@@ -57,12 +56,12 @@ class AttributeSetCollectionResultsTest {
         AttributeSet attributeSet = new AttributeSet("ToDisconnect");
 
         // Set up a mock factory to return a mocked database
-        AttributeSetResultsDatabase mockDatabase = mock(AttributeSetResultsDatabase.class);
-        AttributeSetResultsDatabaseFactory.setCustomFactory(() -> mockDatabase);
+        AttributeSetRunLogDatabase mockDatabase = mock(AttributeSetRunLogDatabase.class);
+        AttributeSetRunLogDatabaseFactory.setCustomFactory(() -> mockDatabase);
 
         collectionResults.setup("MockElement", Collections.singletonList(attributeSet));
 
-        AttributeSetResults results = collectionResults.getAttributeSetResults(0);
+        AttributeSetRunLog results = collectionResults.getAttributeSetResults(0);
         assertNotNull(results); // Sanity check
 
         // When disconnectDatabases is called

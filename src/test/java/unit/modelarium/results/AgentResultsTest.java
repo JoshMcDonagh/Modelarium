@@ -2,8 +2,7 @@ package unit.modelarium.results;
 
 import modelarium.agents.Agent;
 import modelarium.agents.AgentSet;
-import modelarium.attributes.results.AttributeSetCollectionResults;
-import modelarium.attributes.results.AttributeSetResults;
+import modelarium.attributes.results.AttributeSetRunLog;
 import modelarium.results.AgentResults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,8 +21,8 @@ public class AgentResultsTest {
     private Agent mockAgent2;
     private AttributeSetCollectionResults results1;
     private AttributeSetCollectionResults results2;
-    private AttributeSetResults mockAttrResults1;
-    private AttributeSetResults mockAttrResults2;
+    private AttributeSetRunLog mockAttrResults1;
+    private AttributeSetRunLog mockAttrResults2;
 
     @BeforeEach
     void setUp() {
@@ -46,8 +45,8 @@ public class AgentResultsTest {
         when(attrCollection2.getResults()).thenReturn(results2);
 
         // Mock attribute set results
-        mockAttrResults1 = mock(AttributeSetResults.class);
-        mockAttrResults2 = mock(AttributeSetResults.class);
+        mockAttrResults1 = mock(AttributeSetRunLog.class);
+        mockAttrResults2 = mock(AttributeSetRunLog.class);
 
         when(results1.getModelElementName()).thenReturn("A1");
         when(results2.getModelElementName()).thenReturn("A2");

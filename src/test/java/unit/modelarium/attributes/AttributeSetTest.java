@@ -4,11 +4,10 @@ import modelarium.ModelClock;
 import modelarium.Entity;
 import modelarium.EntityAccessor;
 import modelarium.attributes.*;
-import modelarium.attributes.results.AttributeSetResults;
+import modelarium.attributes.results.AttributeSetRunLog;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -23,7 +22,7 @@ public class AttributeSetTest {
     private Properties properties;
     private Events postEvents;
 
-    private AttributeSetResults results;
+    private AttributeSetRunLog results;
 
     @BeforeEach
     public void setup() {
@@ -43,7 +42,7 @@ public class AttributeSetTest {
         when(postEvents.getAssociatedModelElement()).thenReturn(mockEntity);
 
         attributeSet = new AttributeSet("TestSet", preEvents, properties, postEvents);
-        results = mock(AttributeSetResults.class);
+        results = mock(AttributeSetRunLog.class);
     }
 
     @Test

@@ -2,7 +2,7 @@ package unit.modelarium.results;
 
 import modelarium.agents.Agent;
 import modelarium.agents.AgentSet;
-import modelarium.attributes.results.databases.AttributeSetResultsDatabase;
+import modelarium.attributes.results.databases.AttributeSetRunLogDatabase;
 import modelarium.results.AgentResults;
 import modelarium.results.EnvironmentResults;
 import modelarium.results.Results;
@@ -98,7 +98,7 @@ public class ResultsTest {
 
     @Test
     void testDisconnectAccumulatedDatabasesClearsInternalMaps() {
-        AttributeSetResultsDatabase mockDb = mock(AttributeSetResultsDatabase.class);
+        AttributeSetRunLogDatabase mockDb = mock(AttributeSetRunLogDatabase.class);
 
         results.injectMockAccumulatedAgentDb("mockSet", mockDb);
         results.injectMockProcessedEnvironmentDb("mockEnv", mockDb);
@@ -131,7 +131,7 @@ public class ResultsTest {
         }
 
         // Inject mock databases using reflection since private fields are not accessible via subclass
-        void injectMockAccumulatedAgentDb(String name, AttributeSetResultsDatabase db) {
+        void injectMockAccumulatedAgentDb(String name, AttributeSetRunLogDatabase db) {
             try {
                 Field mapField = Results.class.getDeclaredField("accumulatedAgentAttributeSetResultsDatabaseMap");
                 Field listField = Results.class.getDeclaredField("accumulatedAgentAttributeSetResultsDatabaseList");
@@ -141,15 +141,15 @@ public class ResultsTest {
                 listField.setAccessible(true);
                 flagField.setAccessible(true);
 
-                ((Map<String, AttributeSetResultsDatabase>) mapField.get(this)).put(name, db);
-                ((List<AttributeSetResultsDatabase>) listField.get(this)).add(db);
+                ((Map<String, AttributeSetRunLogDatabase>) mapField.get(this)).put(name, db);
+                ((List<AttributeSetRunLogDatabase>) listField.get(this)).add(db);
                 flagField.set(this, true);
             } catch (Exception e) {
                 throw new RuntimeException("Reflection injection failed", e);
             }
         }
 
-        void injectMockProcessedEnvironmentDb(String name, AttributeSetResultsDatabase db) {
+        void injectMockProcessedEnvironmentDb(String name, AttributeSetRunLogDatabase db) {
             try {
                 Field mapField = Results.class.getDeclaredField("processedEnvironmentAttributeSetResultsDatabaseMap");
                 Field listField = Results.class.getDeclaredField("processedEnvironmentAttributeSetResultsDatabaseList");
@@ -159,8 +159,8 @@ public class ResultsTest {
                 listField.setAccessible(true);
                 flagField.setAccessible(true);
 
-                ((Map<String, AttributeSetResultsDatabase>) mapField.get(this)).put(name, db);
-                ((List<AttributeSetResultsDatabase>) listField.get(this)).add(db);
+                ((Map<String, AttributeSetRunLogDatabase>) mapField.get(this)).put(name, db);
+                ((List<AttributeSetRunLogDatabase>) listField.get(this)).add(db);
                 flagField.set(this, true);
             } catch (Exception e) {
                 throw new RuntimeException("Reflection injection failed", e);

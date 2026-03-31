@@ -2,10 +2,9 @@ package modelarium.results;
 
 import modelarium.agents.Agent;
 import modelarium.agents.AgentSet;
-import modelarium.attributes.results.AttributeSetCollectionResults;
-import modelarium.attributes.results.AttributeSetResults;
-import modelarium.attributes.results.databases.AttributeSetResultsDatabase;
-import modelarium.attributes.results.databases.AttributeSetResultsDatabaseFactory;
+import modelarium.attributes.results.AttributeSetRunLog;
+import modelarium.attributes.results.databases.AttributeSetRunLogDatabase;
+import modelarium.attributes.results.databases.AttributeSetRunLogDatabaseFactory;
 import utils.DeepCopier;
 import utils.DeepCopyable;
 
@@ -27,10 +26,10 @@ public abstract class Results implements DeepCopyable<Results> {
     private AgentResults agentResults;
     private EnvironmentResults environmentResults;
 
-    private final Map<String, AttributeSetResultsDatabase> accumulatedAgentAttributeSetResultsDatabaseMap = new HashMap<>();
-    private final Map<String, AttributeSetResultsDatabase> processedEnvironmentAttributeSetResultsDatabaseMap = new HashMap<>();
-    private final List<AttributeSetResultsDatabase> accumulatedAgentAttributeSetResultsDatabaseList = new ArrayList<>();
-    private final List<AttributeSetResultsDatabase> processedEnvironmentAttributeSetResultsDatabaseList = new ArrayList<>();
+    private final Map<String, AttributeSetRunLogDatabase> accumulatedAgentAttributeSetResultsDatabaseMap = new HashMap<>();
+    private final Map<String, AttributeSetRunLogDatabase> processedEnvironmentAttributeSetResultsDatabaseMap = new HashMap<>();
+    private final List<AttributeSetRunLogDatabase> accumulatedAgentAttributeSetRunLogDatabaseList = new ArrayList<>();
+    private final List<AttributeSetRunLogDatabase> processedEnvironmentAttributeSetRunLogDatabaseList = new ArrayList<>();
 
     private final List<String> agentNames = new ArrayList<>();
 
@@ -212,17 +211,17 @@ public abstract class Results implements DeepCopyable<Results> {
      */
     public void disconnectAccumulatedDatabases() {
         if (isAccumulatedAgentAttributeSetDataConnected) {
-            for (AttributeSetResultsDatabase db : accumulatedAgentAttributeSetResultsDatabaseList)
+            for (AttributeSetRunLogDatabase db : accumulatedAgentAttributeSetRunLogDatabaseList)
                 db.disconnect();
             accumulatedAgentAttributeSetResultsDatabaseMap.clear();
-            accumulatedAgentAttributeSetResultsDatabaseList.clear();
+            accumulatedAgentAttributeSetRunLogDatabaseList.clear();
             isAccumulatedAgentAttributeSetDataConnected = false;
         }
         if (isProcessedEnvironmentAttributeSetDataConnected) {
-            for (AttributeSetResultsDatabase db : processedEnvironmentAttributeSetResultsDatabaseList)
+            for (AttributeSetRunLogDatabase db : processedEnvironmentAttributeSetRunLogDatabaseList)
                 db.disconnect();
             processedEnvironmentAttributeSetResultsDatabaseMap.clear();
-            processedEnvironmentAttributeSetResultsDatabaseList.clear();
+            processedEnvironmentAttributeSetRunLogDatabaseList.clear();
             isProcessedEnvironmentAttributeSetDataConnected = false;
         }
     }
@@ -247,41 +246,41 @@ public abstract class Results implements DeepCopyable<Results> {
         for (int i = 0; i < agentResults.getAttributeSetCollectionSetCount(); i++) {
             AttributeSetCollectionResults agentAttributeSetCollectionResults = agentResults.getAttributeSetCollectionResults(i);
 
-            if (accumulatedAgentAttributeSetResultsDatabaseList.isEmpty()) {
+            if (accumulatedAgentAttributeSetRunLogDatabaseList.isEmpty()) {
                 for (int j = 0; j < agentAttributeSetCollectionResults.getAttributeSetCount(); j++) {
                     String attributeName = agentAttributeSetCollectionResults.getAttributeSetResults(j).getAttributeSetName();
-                    AttributeSetResultsDatabase newDatabase = Objects.requireNonNull(AttributeSetResultsDatabaseFactory.createDatabase(), "AttributeSetResultsDatabaseFactory.createDatabase() returned null");
+                    AttributeSetRunLogDatabase newDatabase = Objects.requireNonNull(AttributeSetRunLogDatabaseFactory.createDatabase(), "AttributeSetResultsDatabaseFactory.createDatabase() returned null");
                     newDatabase.connect();
                     accumulatedAgentAttributeSetResultsDatabaseMap.put(attributeName, newDatabase);
-                    accumulatedAgentAttributeSetResultsDatabaseList.add(newDatabase);
+                    accumulatedAgentAttributeSetRunLogDatabaseList.add(newDatabase);
                 }
                 isAccumulatedAgentAttributeSetDataConnected = true;
             }
 
             for (int j = 0; j < agentAttributeSetCollectionResults.getAttributeSetCount(); j++) {
-                AttributeSetResults agentAttributeSetResults = agentAttributeSetCollectionResults.getAttributeSetResults(j);
-                String attributeName = agentAttributeSetResults.getAttributeSetName();
+                AttributeSetRunLog agentAttributeSetRunLog = agentAttributeSetCollectionResults.getAttributeSetResults(j);
+                String attributeName = agentAttributeSetRunLog.getAttributeSetName();
 
-                List<String> propertyNamesList = agentAttributeSetResults.getPropertyNamesList();
+                List<String> propertyNamesList = agentAttributeSetRunLog.getPropertyNamesList();
                 for (String propertyName : propertyNamesList) {
                     List<?> accumulatedValues = accumulatedAgentAttributeSetResultsDatabaseMap.get(attributeName).getPropertyColumnAsList(propertyName);
-                    List<?> valuesToBeProcessed = agentAttributeSetResults.getPropertyValues(propertyName);
+                    List<?> valuesToBeProcessed = agentAttributeSetRunLog.getPropertyValues(propertyName);
                     List<?> newAccumulatedValues = accumulateAgentPropertyResults(attributeName, propertyName, accumulatedValues, valuesToBeProcessed);
                     accumulatedAgentAttributeSetResultsDatabaseMap.get(attributeName).setPropertyColumn(propertyName, (List<Object>) newAccumulatedValues);
                 }
 
-                List<String> preEventNamesList = agentAttributeSetResults.getPreEventNamesList();
+                List<String> preEventNamesList = agentAttributeSetRunLog.getPreEventNamesList();
                 for (String preEventName : preEventNamesList) {
                     List<?> accumulatedValues = accumulatedAgentAttributeSetResultsDatabaseMap.get(attributeName).getPreEventColumnAsList(preEventName);
-                    List<Boolean> valuesToBeProcessed = agentAttributeSetResults.getPreEventValues(preEventName);
+                    List<Boolean> valuesToBeProcessed = agentAttributeSetRunLog.getPreEventValues(preEventName);
                     List<?> newAccumulatedValues = accumulateAgentPreEventResults(attributeName, preEventName, accumulatedValues, valuesToBeProcessed);
                     accumulatedAgentAttributeSetResultsDatabaseMap.get(attributeName).setPreEventColumn(preEventName, (List<Object>) newAccumulatedValues);
                 }
 
-                List<String> postEventNamesList = agentAttributeSetResults.getPostEventNamesList();
+                List<String> postEventNamesList = agentAttributeSetRunLog.getPostEventNamesList();
                 for (String postEventName : postEventNamesList) {
                     List<?> accumulatedValues= accumulatedAgentAttributeSetResultsDatabaseMap.get(attributeName).getPostEventColumnAsList(postEventName);
-                    List<Boolean> valuesToBeProcessed = agentAttributeSetResults.getPostEventValues(postEventName);
+                    List<Boolean> valuesToBeProcessed = agentAttributeSetRunLog.getPostEventValues(postEventName);
                     List<?> newAccumulatedValues= accumulateAgentPostEventResults(attributeName, postEventName, accumulatedValues, valuesToBeProcessed);
                     accumulatedAgentAttributeSetResultsDatabaseMap.get(attributeName).setPostEventColumn(postEventName, (List<Object>) newAccumulatedValues);
                 }
@@ -298,38 +297,38 @@ public abstract class Results implements DeepCopyable<Results> {
 
         AttributeSetCollectionResults environmentAttributeSetCollectionResults = environmentResults.getAttributeSetCollectionResults();
 
-        if (processedEnvironmentAttributeSetResultsDatabaseList.isEmpty()) {
+        if (processedEnvironmentAttributeSetRunLogDatabaseList.isEmpty()) {
             for (int i = 0; i < environmentAttributeSetCollectionResults.getAttributeSetCount(); i++) {
                 String attributeName = environmentAttributeSetCollectionResults.getAttributeSetResults(i).getAttributeSetName();
-                AttributeSetResultsDatabase newDatabase = Objects.requireNonNull(AttributeSetResultsDatabaseFactory.createDatabase(), "AttributeSetResultsDatabaseFactory.createDatabase() returned null");
+                AttributeSetRunLogDatabase newDatabase = Objects.requireNonNull(AttributeSetRunLogDatabaseFactory.createDatabase(), "AttributeSetResultsDatabaseFactory.createDatabase() returned null");
                 newDatabase.connect();
                 processedEnvironmentAttributeSetResultsDatabaseMap.put(attributeName, newDatabase);
-                processedEnvironmentAttributeSetResultsDatabaseList.add(newDatabase);
+                processedEnvironmentAttributeSetRunLogDatabaseList.add(newDatabase);
             }
             isProcessedEnvironmentAttributeSetDataConnected = true;
         }
 
         for (int i = 0; i < environmentAttributeSetCollectionResults.getAttributeSetCount(); i++) {
-            AttributeSetResults environmentAttributeSetResults = environmentAttributeSetCollectionResults.getAttributeSetResults(i);
-            String attributeName = environmentAttributeSetResults.getAttributeSetName();
+            AttributeSetRunLog environmentAttributeSetRunLog = environmentAttributeSetCollectionResults.getAttributeSetResults(i);
+            String attributeName = environmentAttributeSetRunLog.getAttributeSetName();
 
-            List<String> propertyNamesList = environmentAttributeSetResults.getPropertyNamesList();
+            List<String> propertyNamesList = environmentAttributeSetRunLog.getPropertyNamesList();
             for (String propertyName : propertyNamesList) {
-                List<?> valuesToBeProcessed = environmentAttributeSetResults.getPropertyValues(propertyName);
+                List<?> valuesToBeProcessed = environmentAttributeSetRunLog.getPropertyValues(propertyName);
                 List<?> newProcessedValues = processEnvironmentPropertyResults(attributeName, propertyName, valuesToBeProcessed);
                 processedEnvironmentAttributeSetResultsDatabaseMap.get(attributeName).setPropertyColumn(propertyName, (List<Object>) newProcessedValues);
             }
 
-            List<String> preEventNamesList = environmentAttributeSetResults.getPreEventNamesList();
+            List<String> preEventNamesList = environmentAttributeSetRunLog.getPreEventNamesList();
             for (String preEventName : preEventNamesList) {
-                List<?> valuesToBeProcessed = environmentAttributeSetResults.getPreEventValues(preEventName);
+                List<?> valuesToBeProcessed = environmentAttributeSetRunLog.getPreEventValues(preEventName);
                 List<?> newProcessedValues = processEnvironmentPreEventResults(attributeName, preEventName, valuesToBeProcessed);
                 processedEnvironmentAttributeSetResultsDatabaseMap.get(attributeName).setPreEventColumn(preEventName, (List<Object>) newProcessedValues);
             }
 
-            List<String> postEventNamesList = environmentAttributeSetResults.getPostEventNamesList();
+            List<String> postEventNamesList = environmentAttributeSetRunLog.getPostEventNamesList();
             for (String postEventName : postEventNamesList) {
-                List<?> valuesToBeProcessed = environmentAttributeSetResults.getPostEventValues(postEventName);
+                List<?> valuesToBeProcessed = environmentAttributeSetRunLog.getPostEventValues(postEventName);
                 List<?> newProcessedValues = processEnvironmentPostEventResults(attributeName, postEventName, valuesToBeProcessed);
                 processedEnvironmentAttributeSetResultsDatabaseMap.get(attributeName).setPostEventColumn(postEventName, (List<Object>) newProcessedValues);
             }

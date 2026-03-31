@@ -5,7 +5,6 @@ import modelarium.EntityAccessor;
 import modelarium.ModelSettings;
 import modelarium.agents.Agent;
 import modelarium.agents.AgentSet;
-import modelarium.attributes.results.AttributeSetCollectionResults;
 import modelarium.environments.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 import modelarium.multithreading.utils.WorkerCache;

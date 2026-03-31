@@ -1,7 +1,7 @@
 package unit.modelarium.attributes.builtins.util;
 
 import modelarium.attributes.builtins.util.BuiltinLookup;
-import modelarium.attributes.functional.FunctionalProperty;
+import modelarium.attributes.functional.properties.FunctionalProperty;
 import org.junit.jupiter.api.Test;
 import unit.modelarium.attributes.builtins.BuiltinTestSupport;
 

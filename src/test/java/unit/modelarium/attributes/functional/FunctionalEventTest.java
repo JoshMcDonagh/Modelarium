@@ -1,8 +1,8 @@
 package unit.modelarium.attributes.functional;
 
-import modelarium.attributes.functional.EventIsTriggeredFunction;
-import modelarium.attributes.functional.EventRunFunction;
-import modelarium.attributes.functional.FunctionalEvent;
+import modelarium.attributes.functional.events.EventIsTriggeredFunction;
+import modelarium.attributes.functional.events.EventRunFunction;
+import modelarium.attributes.functional.events.FunctionalEvent;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;

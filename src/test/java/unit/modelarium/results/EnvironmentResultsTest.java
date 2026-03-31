@@ -1,7 +1,6 @@
 package unit.modelarium.results;
 
-import modelarium.attributes.results.AttributeSetCollectionResults;
-import modelarium.attributes.results.AttributeSetResults;
+import modelarium.attributes.results.AttributeSetRunLog;
 import modelarium.environments.Environment;
 import modelarium.results.EnvironmentResults;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +18,7 @@ public class EnvironmentResultsTest {
 
     private Environment mockEnvironment;
     private AttributeSetCollectionResults mockCollectionResults;
-    private AttributeSetResults mockSetResults;
+    private AttributeSetRunLog mockSetResults;
     private AttributeSetCollection mockCollection;
 
     @BeforeEach
@@ -27,7 +26,7 @@ public class EnvironmentResultsTest {
         mockEnvironment = mock(Environment.class);
         mockCollection = mock(AttributeSetCollection.class); // ← mock it here
         mockCollectionResults = mock(AttributeSetCollectionResults.class);
-        mockSetResults = mock(AttributeSetResults.class);
+        mockSetResults = mock(AttributeSetRunLog.class);
 
         // Chain setup correctly
         when(mockEnvironment.getAttributeSetCollection()).thenReturn(mockCollection);

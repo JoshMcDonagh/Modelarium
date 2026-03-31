@@ -2,7 +2,7 @@ package modelarium;
 
 import modelarium.agents.Agent;
 import modelarium.agents.AgentSet;
-import modelarium.attributes.results.databases.AttributeSetResultsDatabaseFactory;
+import modelarium.attributes.results.databases.AttributeSetRunLogDatabaseFactory;
 import modelarium.environments.Environment;
 import modelarium.multithreading.CoordinatorThread;
 import modelarium.multithreading.WorkerThread;
@@ -51,9 +51,9 @@ public class Model {
             InstantiationException, IllegalAccessException {
 
         if (settings.getAreAttributeSetResultsStoredOnDisk())
-            AttributeSetResultsDatabaseFactory.setDatabaseToDiskBased();
+            AttributeSetRunLogDatabaseFactory.setDatabaseToDiskBased();
         else
-            AttributeSetResultsDatabaseFactory.setDatabaseToMemoryBased();
+            AttributeSetRunLogDatabaseFactory.setDatabaseToMemoryBased();
 
         // Distribute agents among cores
         List<AgentSet> agentsForEachCore = settings.getAgentGenerator().getAgentsForEachCore(settings);

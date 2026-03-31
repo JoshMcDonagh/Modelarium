@@ -60,5 +60,8 @@ public abstract class Property<T> extends Attribute {
     public abstract T get();
 
     @Override
-    public abstract void run();
+    public void run() {
+        // Default implementation: No operation
+        return;
+    }
 }

@@ -1,6 +1,5 @@
 package modelarium.results;
 
-import modelarium.attributes.results.AttributeSetCollectionResults;
 import modelarium.environments.Environment;
 
 import java.util.List;

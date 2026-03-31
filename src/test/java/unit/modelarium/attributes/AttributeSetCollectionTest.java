@@ -1,6 +1,5 @@
 package unit.modelarium.attributes;
 
-import modelarium.attributes.results.AttributeSetCollectionResults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

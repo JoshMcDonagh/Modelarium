@@ -1,6 +1,6 @@
 package modelarium.attributes;
 
-import modelarium.attributes.results.AttributeSetResults;
+import modelarium.attributes.results.AttributeSetRunLog;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,19 +12,21 @@ public class AttributeSet {
     private final String name;
     private final List<Attribute> attributeList;
     private final Map<String, Integer> attributeIndexMap = new HashMap<String, Integer>();
+    private final AttributeSetRunLog log;
 
-    public AttributeSet(String name, List<Attribute> attributeList) {
-        this.name = name;
+    public AttributeSet(String ownerName, String attributeSetName, List<Attribute> attributeList) {
+        this.name = attributeSetName;
         this.attributeList = attributeList;
         for (int i = 0; i < this.attributeList.size(); i++) {
             Attribute attribute = this.attributeList.get(i);
             this.attributeIndexMap.put(attribute.name(), i);
         }
+        this.log = new AttributeSetRunLog(ownerName, this.name, this.attributeList);
         attributeSetCount++;
     }
 
-    public AttributeSet(List<Attribute> attributeList) {
-        this("attribute_set_" + attributeSetCount, attributeList);
+    public AttributeSet(String ownerName, List<Attribute> attributeList) {
+        this(ownerName, "attribute_set_" + attributeSetCount, attributeList);
     }
 
     public String name() {
@@ -56,16 +58,16 @@ public class AttributeSet {
         return getEvent(attributeIndexMap.get(eventName));
     }
 
-    public Process getProcess(int processIndex) {
+    public Routine getProcess(int processIndex) {
         Attribute attribute = get(processIndex);
 
-        if (!(attribute instanceof Process process))
+        if (!(attribute instanceof Routine routine))
             throw new IllegalArgumentException("Expected a Process, but got: " + attribute.getClass().getName());
 
-        return process;
+        return routine;
     }
 
-    public Process getProcess(String processName) {
+    public Routine getProcess(String processName) {
         return getProcess(attributeIndexMap.get(processName));
     }
 
@@ -82,28 +84,28 @@ public class AttributeSet {
         return getProperty(attributeIndexMap.get(propertyName));
     }
 
-    private void recordEvent(Event event, AttributeSetResults attributeSetResults) {
-        // TODO: Implement...
+    public AttributeSetRunLog getLog() {
+        return log;
     }
 
-    private void recordProperty(Property<?> property, AttributeSetResults attributeSetResults) {
-        // TODO: Implement...
-    }
-
-    public void run(AttributeSetResults attributeSetResults) {
+    public void run() {
         for (Attribute attribute : attributeList) {
+
             if (attribute instanceof Event) {
                 Event event = (Event) attribute;
-                if (event.isTriggered())
+                boolean isTriggered = event.isTriggered();
+                if (isTriggered)
                     event.run();
-                recordEvent(event, attributeSetResults);
+
             } else if (attribute instanceof Property) {
                 Property<?> property = (Property<?>) attribute;
                 property.run();
-                recordProperty(property, attributeSetResults);
+
             } else {
                 attribute.run();
             }
+
+            log.record(attribute);
         }
     }
 }

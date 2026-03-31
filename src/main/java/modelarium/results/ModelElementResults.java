@@ -1,7 +1,6 @@
 package modelarium.results;
 
 import modelarium.Entity;
-import modelarium.attributes.results.AttributeSetCollectionResults;
 
 import java.util.ArrayList;
 import java.util.HashMap;
