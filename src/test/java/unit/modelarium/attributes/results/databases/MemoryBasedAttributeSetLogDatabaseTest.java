@@ -1,6 +1,6 @@
 package unit.modelarium.attributes.results.databases;
 
-import modelarium.attributes.results.databases.MemoryBasedAttributeSetRunLogDatabase;
+import modelarium.logging.databases.MemoryBasedAttributeSetRunLogDatabase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * <p>Verifies correct in-memory storage and retrieval of properties and event values.
  */
-public class MemoryBasedAttributeSetRunLogDatabaseTest {
+public class MemoryBasedAttributeSetLogDatabaseTest {
 
     private MemoryBasedAttributeSetRunLogDatabase database;
 

@@ -1,11 +1,11 @@
-package modelarium.attributes.results;
+package modelarium.logging;
 
 import modelarium.attributes.Attribute;
 import modelarium.attributes.AttributeSet;
 import modelarium.attributes.Event;
 import modelarium.attributes.Property;
-import modelarium.attributes.results.databases.AttributeSetRunLogDatabase;
-import modelarium.attributes.results.databases.AttributeSetRunLogDatabaseFactory;
+import modelarium.logging.databases.AttributeSetRunLogDatabase;
+import modelarium.logging.databases.AttributeSetRunLogDatabaseFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ import java.util.Map;
  * <p>This class is responsible for writing tick-level data to the backing database,
  * and for providing access to stored values after simulation.
  */
-public class AttributeSetRunLog {
+public class AttributeSetLog {
 
     /** Name of the agent or environment this result set belongs to */
     private final String ownerName;
@@ -36,7 +36,7 @@ public class AttributeSetRunLog {
     /** Maps property names to their runtime class types */
     private final Map<String, Class<?>> propertyTypesMap = new HashMap<>();
 
-    public AttributeSetRunLog(String ownerName, String attributeSetName, List<Attribute> attributeList) {
+    public AttributeSetLog(String ownerName, String attributeSetName, List<Attribute> attributeList) {
         this.ownerName = ownerName;
         this.attributeSetName = attributeSetName;
         this.database = AttributeSetRunLogDatabaseFactory.createDatabase();

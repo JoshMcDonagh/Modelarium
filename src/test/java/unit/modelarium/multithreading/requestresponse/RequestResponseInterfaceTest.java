@@ -1,6 +1,6 @@
 package unit.modelarium.multithreading.requestresponse;
 
-import modelarium.ModelConfig;
+import modelarium.Config;
 import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
@@ -25,7 +25,7 @@ class RequestResponseInterfaceTest {
 
     @BeforeEach
     void setUp() {
-        ModelConfig settings = mock(ModelConfig.class);
+        Config settings = mock(Config.class);
         when(settings.getAreProcessesSynced()).thenReturn(true);
 
         requestQueue = new ArrayBlockingQueue<>(10);

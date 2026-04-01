@@ -1,6 +1,6 @@
 package unit.modelarium.attributes.builtins;
 
-import modelarium.ModelClock;
+import modelarium.Clock;
 import modelarium.Entity;
 import modelarium.AccessibleContext;
 import modelarium.attributes.functional.properties.FunctionalProperty;
@@ -80,7 +80,7 @@ public final class BuiltinTestSupport {
 
     public static void attachClock(TestEntity element, int tick) {
         AccessibleContext accessor = mock(AccessibleContext.class);
-        ModelClock clock = mock(ModelClock.class);
+        Clock clock = mock(Clock.class);
         when(accessor.getClock()).thenReturn(clock);
         when(clock.getTick()).thenReturn(tick);
 

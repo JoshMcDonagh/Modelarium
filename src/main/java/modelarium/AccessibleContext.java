@@ -26,17 +26,17 @@ public class AccessibleContext {
 
     private final Entity entity;
     private final AgentSet localAgentSet;
-    private final ModelConfig config;
+    private final Config config;
     private final WorkerCache cache;
     private final RequestResponseInterface requestResponseInterface;
     private final Environment localEnvironment;
 
-    private ModelClock clock = null;
+    private Clock clock = null;
 
     public AccessibleContext(
             Entity entity,
             AgentSet localAgentSet,
-            ModelConfig config,
+            Config config,
             WorkerCache cache,
             RequestResponseInterface requestResponseInterface,
             Environment localEnvironment
@@ -49,12 +49,12 @@ public class AccessibleContext {
         this.localEnvironment = localEnvironment;
     }
 
-    public void setClock(ModelClock clock) {
+    public void setClock(Clock clock) {
         if (this.clock == null)
             this.clock = clock;
     }
 
-    public ModelClock getClock() {
+    public Clock getClock() {
         return clock;
     }
 

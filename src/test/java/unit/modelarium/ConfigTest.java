@@ -1,6 +1,6 @@
 package unit.modelarium;
 
-import modelarium.ModelConfig;
+import modelarium.Config;
 import modelarium.agents.generators.AgentGenerator;
 import modelarium.environments.EnvironmentGenerator;
 import modelarium.results.Results;
@@ -12,15 +12,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
- * Unit tests for the {@link ModelConfig} class.
+ * Unit tests for the {@link Config} class.
  */
-public class ModelConfigTest {
+public class ConfigTest {
 
-    private ModelConfig settings;
+    private Config settings;
 
     @BeforeEach
     public void setup() {
-        settings = new ModelConfig();
+        settings = new Config();
     }
 
     @Test
@@ -96,7 +96,7 @@ public class ModelConfigTest {
     public void testAgentGeneratorSetterAndGetter() {
         AgentGenerator mockGenerator = new AgentGenerator() {
             @Override
-            protected modelarium.agents.Agent generateAgent(ModelConfig settings) {
+            protected modelarium.agents.Agent generateAgent(Config settings) {
                 return null;
             }
         };
@@ -108,7 +108,7 @@ public class ModelConfigTest {
     public void testEnvironmentGeneratorSetterAndGetter() {
         EnvironmentGenerator mockGenerator = new EnvironmentGenerator() {
             @Override
-            public modelarium.environments.Environment generateEnvironment(ModelConfig settings) {
+            public modelarium.environments.Environment generateEnvironment(Config settings) {
                 return null;
             }
         };

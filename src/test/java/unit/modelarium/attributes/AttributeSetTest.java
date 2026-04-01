@@ -1,10 +1,11 @@
 package unit.modelarium.attributes;
 
-import modelarium.ModelClock;
+import modelarium.Clock;
 import modelarium.Entity;
 import modelarium.AccessibleContext;
 import modelarium.attributes.*;
-import modelarium.attributes.results.AttributeSetRunLog;
+import modelarium.attributes.AttributeSet;
+import modelarium.logging.AttributeSetLog;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,13 +23,13 @@ public class AttributeSetTest {
     private Properties properties;
     private Events postEvents;
 
-    private AttributeSetRunLog results;
+    private AttributeSetLog results;
 
     @BeforeEach
     public void setup() {
         Entity mockEntity = mock(Entity.class);
         AccessibleContext mockAccessibleContext = mock(AccessibleContext.class);
-        ModelClock mockClock = mock(ModelClock.class);
+        Clock mockClock = mock(Clock.class);
 
         when(mockEntity.getModelElementAccessor()).thenReturn(mockAccessibleContext);
         when(mockAccessibleContext.getClock()).thenReturn(mockClock);
@@ -42,7 +43,7 @@ public class AttributeSetTest {
         when(postEvents.getAssociatedModelElement()).thenReturn(mockEntity);
 
         attributeSet = new AttributeSet("TestSet", preEvents, properties, postEvents);
-        results = mock(AttributeSetRunLog.class);
+        results = mock(AttributeSetLog.class);
     }
 
     @Test

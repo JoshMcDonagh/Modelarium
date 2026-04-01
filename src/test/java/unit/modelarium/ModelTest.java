@@ -1,7 +1,7 @@
 package unit.modelarium;
 
 import modelarium.Model;
-import modelarium.ModelConfig;
+import modelarium.Config;
 import modelarium.results.Results;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ public class ModelTest {
      */
     @Test
     public void testModelRunsSuccessfullyWithDefaultSettings() {
-        ModelConfig settings = new ModelConfig();
+        Config settings = new Config();
         settings.setNumOfAgents(1);
         settings.setNumOfCores(1);
         settings.setNumOfTicksToRun(2);

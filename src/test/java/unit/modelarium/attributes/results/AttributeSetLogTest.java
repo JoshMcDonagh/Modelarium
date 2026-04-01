@@ -1,9 +1,10 @@
 package unit.modelarium.attributes.results;
 
 import modelarium.attributes.*;
-import modelarium.attributes.results.AttributeSetRunLog;
-import modelarium.attributes.results.databases.AttributeSetRunLogDatabase;
-import modelarium.attributes.results.databases.AttributeSetRunLogDatabaseFactory;
+import modelarium.attributes.AttributeSet;
+import modelarium.logging.AttributeSetLog;
+import modelarium.logging.databases.AttributeSetRunLogDatabase;
+import modelarium.logging.databases.AttributeSetRunLogDatabaseFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,14 +14,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Tests for the {@link AttributeSetRunLog} class.
+ * Tests for the {@link AttributeSetLog} class.
  *
  * <p>Ensures correct initialisation, recording, and value retrieval
  * using mocked attributes and backing databases.
  */
-public class AttributeSetRunLogTest {
+public class AttributeSetLogTest {
 
-    private AttributeSetRunLog results;
+    private AttributeSetLog results;
     private AttributeSetRunLogDatabase mockDatabase;
 
     @BeforeEach
@@ -40,7 +41,7 @@ public class AttributeSetRunLogTest {
         postEvents.add(new TestEvent("postEvent1"));
 
         AttributeSet attributeSet = new AttributeSet("testSet", preEvents, properties, postEvents);
-        results = new AttributeSetRunLog("Agent_0", attributeSet);
+        results = new AttributeSetLog("Agent_0", attributeSet);
     }
 
     @Test

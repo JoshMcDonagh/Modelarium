@@ -1,8 +1,8 @@
 package unit.modelarium.results;
 
-import modelarium.attributes.results.AttributeSetRunLog;
+import modelarium.logging.AttributeSetLog;
 import modelarium.environments.Environment;
-import modelarium.results.EnvironmentResults;
+import modelarium.results.EnvironmentLevelResults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,13 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for {@link EnvironmentResults}.
+ * Unit tests for {@link EnvironmentLevelResults}.
  */
 public class EnvironmentResultsTest {
 
     private Environment mockEnvironment;
     private AttributeSetCollectionResults mockCollectionResults;
-    private AttributeSetRunLog mockSetResults;
+    private AttributeSetLog mockSetResults;
     private AttributeSetCollection mockCollection;
 
     @BeforeEach
@@ -26,7 +26,7 @@ public class EnvironmentResultsTest {
         mockEnvironment = mock(Environment.class);
         mockCollection = mock(AttributeSetCollection.class); // ← mock it here
         mockCollectionResults = mock(AttributeSetCollectionResults.class);
-        mockSetResults = mock(AttributeSetRunLog.class);
+        mockSetResults = mock(AttributeSetLog.class);
 
         // Chain setup correctly
         when(mockEnvironment.getAttributeSetCollection()).thenReturn(mockCollection);
@@ -43,7 +43,7 @@ public class EnvironmentResultsTest {
 
     @Test
     void testGetPropertyValuesReturnsExpectedValues() {
-        EnvironmentResults results = new EnvironmentResults(mockEnvironment);
+        EnvironmentLevelResults results = new EnvironmentLevelResults(mockEnvironment);
 
         List<Object> values = results.getPropertyValues("Weather", "temperature");
         assertEquals(List.of(23.5), values);
@@ -51,7 +51,7 @@ public class EnvironmentResultsTest {
 
     @Test
     void testGetPreEventValuesReturnsExpectedValues() {
-        EnvironmentResults results = new EnvironmentResults(mockEnvironment);
+        EnvironmentLevelResults results = new EnvironmentLevelResults(mockEnvironment);
 
         List<Boolean> values = results.getPreEventValues("Weather", "stormWarning");
         assertEquals(List.of(true), values);
@@ -59,7 +59,7 @@ public class EnvironmentResultsTest {
 
     @Test
     void testGetPostEventValuesReturnsExpectedValues() {
-        EnvironmentResults results = new EnvironmentResults(mockEnvironment);
+        EnvironmentLevelResults results = new EnvironmentLevelResults(mockEnvironment);
 
         List<Boolean> values = results.getPostEventValues("Weather", "rainEnd");
         assertEquals(List.of(false), values);
@@ -67,7 +67,7 @@ public class EnvironmentResultsTest {
 
     @Test
     void testGetAttributeSetCollectionResultsReturnsCorrectResults() {
-        EnvironmentResults results = new EnvironmentResults(mockEnvironment);
+        EnvironmentLevelResults results = new EnvironmentLevelResults(mockEnvironment);
 
         AttributeSetCollectionResults retrieved = results.getAttributeSetCollectionResults();
         assertEquals(mockCollectionResults, retrieved);

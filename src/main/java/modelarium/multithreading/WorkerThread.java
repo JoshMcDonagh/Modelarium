@@ -1,13 +1,13 @@
 package modelarium.multithreading;
 
-import modelarium.ModelClock;
-import modelarium.ModelConfig;
+import modelarium.Clock;
+import modelarium.Config;
 import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 import modelarium.multithreading.utils.WorkerCache;
-import modelarium.results.AgentResults;
+import modelarium.results.AgentLevelResults;
 import modelarium.results.Results;
 
 import java.lang.reflect.InvocationTargetException;
@@ -30,7 +30,7 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
     private final String threadName;
 
     /** Global simulation settings shared across threads */
-    private final ModelConfig settings;
+    private final Config settings;
 
     /** Interface to coordinate requests and responses across workers (if sync enabled) */
     private final RequestResponseController requestResponseController;
@@ -50,7 +50,7 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
      * @param agents the agents assigned to this thread
      */
     public WorkerThread(String threadName,
-                        ModelConfig settings,
+                        Config settings,
                         RequestResponseController requestResponseController,
                         AgentSet agents) {
         this.threadName = Objects.requireNonNull(threadName, "threadName");
@@ -70,9 +70,9 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
      */
     @Override
     public Results call() throws InterruptedException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        ModelClock modelClock = new ModelClock(settings.getNumOfTicksToRun(), settings.getNumOfWarmUpTicks());
+        Clock clock = new Clock(settings.getNumOfTicksToRun(), settings.getNumOfWarmUpTicks());
         for (Agent agent : agents)
-            agent.getModelElementAccessor().setModelClock(modelClock);
+            agent.getModelElementAccessor().setModelClock(clock);
 
         WorkerCache cache = settings.getIsCacheUsed()
                 ? new WorkerCache(settings.getDoAgentStoresHoldAgentCopies())
@@ -87,7 +87,7 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
         agents.setup();
 
         // Simulation main loop
-        while (modelClock.isRunning()) {
+        while (clock.isRunning()) {
             settings.getModelScheduler().runTick(agents);
 
             if (settings.getAreProcessesSynced()) {
@@ -100,11 +100,11 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
             if (cache != null)
                 cache.clear();
 
-            modelClock.triggerTick();
+            clock.triggerTick();
         }
 
         // Final setup and result collection
-        AgentResults agentResults = new AgentResults(agents);
+        AgentLevelResults agentResults = new AgentLevelResults(agents);
         Results results = settings.getResults();
         results.setAgentNames(agents);
         results.setAgentResults(agentResults);

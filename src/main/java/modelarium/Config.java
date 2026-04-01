@@ -1,12 +1,12 @@
 package modelarium;
 
 import modelarium.agents.generators.AgentGenerator;
-import modelarium.attributes.results.databases.AttributeSetRunLogDatabase;
+import modelarium.logging.databases.AttributeSetRunLogDatabase;
 import modelarium.environments.EnvironmentGenerator;
 import modelarium.results.Results;
 import modelarium.scheduler.ModelScheduler;
 
-public record ModelConfig(
+public record Config(
         int numOfAgents,
         int numOfCores,
         int numOfTicksToRun,

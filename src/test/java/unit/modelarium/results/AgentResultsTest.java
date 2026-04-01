@@ -2,8 +2,8 @@ package unit.modelarium.results;
 
 import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
-import modelarium.attributes.results.AttributeSetRunLog;
-import modelarium.results.AgentResults;
+import modelarium.logging.AttributeSetLog;
+import modelarium.results.AgentLevelResults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for {@link AgentResults}.
+ * Unit tests for {@link AgentLevelResults}.
  */
 public class AgentResultsTest {
 
@@ -21,8 +21,8 @@ public class AgentResultsTest {
     private Agent mockAgent2;
     private AttributeSetCollectionResults results1;
     private AttributeSetCollectionResults results2;
-    private AttributeSetRunLog mockAttrResults1;
-    private AttributeSetRunLog mockAttrResults2;
+    private AttributeSetLog mockAttrResults1;
+    private AttributeSetLog mockAttrResults2;
 
     @BeforeEach
     void setUp() {
@@ -45,8 +45,8 @@ public class AgentResultsTest {
         when(attrCollection2.getResults()).thenReturn(results2);
 
         // Mock attribute set results
-        mockAttrResults1 = mock(AttributeSetRunLog.class);
-        mockAttrResults2 = mock(AttributeSetRunLog.class);
+        mockAttrResults1 = mock(AttributeSetLog.class);
+        mockAttrResults2 = mock(AttributeSetLog.class);
 
         when(results1.getModelElementName()).thenReturn("A1");
         when(results2.getModelElementName()).thenReturn("A2");
@@ -63,7 +63,7 @@ public class AgentResultsTest {
         AgentSet agentSet = mock(AgentSet.class);
         when(agentSet.getAsList()).thenReturn(List.of(mockAgent1, mockAgent2));
 
-        AgentResults agentResults = new AgentResults(agentSet);
+        AgentLevelResults agentResults = new AgentLevelResults(agentSet);
 
         assertEquals(2, agentResults.getAttributeSetCollectionSetCount());
         assertNotNull(agentResults.getAttributeSetCollectionResults("A1"));
@@ -74,7 +74,7 @@ public class AgentResultsTest {
     void testGetPropertyValuesDelegatesCorrectly() {
         AgentSet agentSet = mock(AgentSet.class);
         when(agentSet.getAsList()).thenReturn(List.of(mockAgent1));
-        AgentResults agentResults = new AgentResults(agentSet);
+        AgentLevelResults agentResults = new AgentLevelResults(agentSet);
 
         List<Object> values = agentResults.getPropertyValues("A1", "behaviour", "prop");
         assertEquals(List.of("X"), values);
@@ -84,7 +84,7 @@ public class AgentResultsTest {
     void testGetPostEventValuesDelegatesCorrectly() {
         AgentSet agentSet = mock(AgentSet.class);
         when(agentSet.getAsList()).thenReturn(List.of(mockAgent2));
-        AgentResults agentResults = new AgentResults(agentSet);
+        AgentLevelResults agentResults = new AgentLevelResults(agentSet);
 
         List<Boolean> values = agentResults.getPostEventValues("A2", "behaviour", "event");
         assertEquals(List.of(true), values);
@@ -95,7 +95,7 @@ public class AgentResultsTest {
         AgentSet agentSet = mock(AgentSet.class);
         when(agentSet.getAsList()).thenReturn(List.of(mockAgent1, mockAgent2));
 
-        AgentResults agentResults = new AgentResults(agentSet);
+        AgentLevelResults agentResults = new AgentLevelResults(agentSet);
         agentResults.disconnectDatabases();
 
         verify(results1).disconnectDatabases();

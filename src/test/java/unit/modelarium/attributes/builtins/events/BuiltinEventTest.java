@@ -8,6 +8,7 @@ import modelarium.attributes.builtins.events.ThresholdDirection;
 import modelarium.attributes.builtins.events.TimerEvent;
 import modelarium.attributes.builtins.refs.LiteralDoubleRef;
 import modelarium.attributes.builtins.refs.PropertyDoubleRef;
+import modelarium.attributes.AttributeSet;
 import org.junit.jupiter.api.Test;
 import unit.modelarium.attributes.builtins.BuiltinTestSupport;
 
@@ -22,7 +23,7 @@ class BuiltinEventTest {
         TimerEvent seedEvent = new TimerEvent("timer", 10, 3, List.of());
 
         var element = BuiltinTestSupport.elementWith(
-                new modelarium.attributes.AttributeSet(
+                new AttributeSet(
                         "core",
                         events(seedEvent),
                         new modelarium.attributes.Properties(),
@@ -44,7 +45,7 @@ class BuiltinEventTest {
         TimerEvent seedEvent = new TimerEvent("timer", 10, 3, List.of());
 
         var element = BuiltinTestSupport.elementWith(
-                new modelarium.attributes.AttributeSet(
+                new AttributeSet(
                         "core",
                         events(seedEvent),
                         new modelarium.attributes.Properties(),
@@ -66,7 +67,7 @@ class BuiltinEventTest {
         TimerEvent seedEvent = new TimerEvent("timer", 10, 3, List.of());
 
         var element = BuiltinTestSupport.elementWith(
-                new modelarium.attributes.AttributeSet(
+                new AttributeSet(
                         "core",
                         events(seedEvent),
                         new modelarium.attributes.Properties(),
@@ -88,7 +89,7 @@ class BuiltinEventTest {
         TimerEvent seedEvent = new TimerEvent("timer", 10, 3, List.of());
 
         var element = BuiltinTestSupport.elementWith(
-                new modelarium.attributes.AttributeSet(
+                new AttributeSet(
                         "core",
                         events(seedEvent),
                         new modelarium.attributes.Properties(),

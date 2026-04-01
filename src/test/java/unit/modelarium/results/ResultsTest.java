@@ -2,9 +2,9 @@ package unit.modelarium.results;
 
 import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
-import modelarium.attributes.results.databases.AttributeSetRunLogDatabase;
-import modelarium.results.AgentResults;
-import modelarium.results.EnvironmentResults;
+import modelarium.logging.databases.AttributeSetRunLogDatabase;
+import modelarium.results.AgentLevelResults;
+import modelarium.results.EnvironmentLevelResults;
 import modelarium.results.Results;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,8 +24,8 @@ public class ResultsTest {
 
     private Agent agent;
     private AgentSet agentSet;
-    private AgentResults mockAgentResults;
-    private EnvironmentResults mockEnvironmentResults;
+    private AgentLevelResults mockAgentResults;
+    private EnvironmentLevelResults mockEnvironmentResults;
     private TestResults results;
 
     @BeforeEach
@@ -36,8 +36,8 @@ public class ResultsTest {
         agentSet = new AgentSet();
         agentSet.add(agent);
 
-        mockAgentResults = mock(AgentResults.class);
-        mockEnvironmentResults = mock(EnvironmentResults.class);
+        mockAgentResults = mock(AgentLevelResults.class);
+        mockEnvironmentResults = mock(EnvironmentLevelResults.class);
 
         results = new TestResults();
     }

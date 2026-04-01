@@ -1,7 +1,7 @@
 package unit.modelarium.attributes.results.databases;
 
-import modelarium.attributes.results.databases.AttributeSetRunLogDatabase;
-import modelarium.attributes.results.databases.DiskBasedAttributeSetRunLogDatabase;
+import modelarium.logging.databases.AttributeSetRunLogDatabase;
+import modelarium.logging.databases.DiskBasedAttributeSetRunLogDatabase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * <p>Verifies that values written to properties and events can be retrieved correctly.
  * Uses a temporary database file that is deleted after each test.
  */
-public class DiskBasedAttributeSetRunLogDatabaseTest {
+public class DiskBasedAttributeSetLogDatabaseTest {
 
     private DiskBasedAttributeSetRunLogDatabase database;
 

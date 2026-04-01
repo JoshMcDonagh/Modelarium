@@ -1,8 +1,8 @@
 package integration.schedulerInvarianceIntegrationTest;
 
 import modelarium.Model;
-import modelarium.ModelConfig;
-import modelarium.attributes.results.databases.AttributeSetRunLogDatabaseFactory;
+import modelarium.Config;
+import modelarium.logging.databases.AttributeSetRunLogDatabaseFactory;
 import modelarium.results.Results;
 import modelarium.scheduler.InOrderScheduler;
 import modelarium.scheduler.RandomOrderScheduler;
@@ -17,14 +17,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SchedulerInvarianceIntegrationTest {
 
-    private ModelConfig base;
+    private Config base;
 
     @BeforeEach
     public void setup() {
         AttributeSetRunLogDatabaseFactory.clearCustomFactory();
         AttributeSetRunLogDatabaseFactory.setDatabaseToMemoryBased();
 
-        base = new ModelConfig();
+        base = new Config();
         base.setNumOfAgents(100);
         base.setNumOfCores(4);
         base.setNumOfTicksToRun(40);

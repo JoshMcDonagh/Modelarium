@@ -7,10 +7,10 @@ import java.util.List;
 /**
  * A concrete results container for the simulation environment.
  *
- * <p>Extends {@link ModelElementResults} to store and access recorded property
+ * <p>Extends {@link EntityLevelResults} to store and access recorded property
  * and event values specific to the environment, using its name to simplify queries.
  */
-public class EnvironmentResults extends ModelElementResults {
+public class EnvironmentLevelResults extends EntityLevelResults {
 
     /** The name of the environment used as a key for data access */
     private final String environmentName;
@@ -20,7 +20,7 @@ public class EnvironmentResults extends ModelElementResults {
      *
      * @param environment the environment whose results are to be stored
      */
-    public EnvironmentResults(Environment environment) {
+    public EnvironmentLevelResults(Environment environment) {
         super(environment);
         this.environmentName = environment.name();
     }

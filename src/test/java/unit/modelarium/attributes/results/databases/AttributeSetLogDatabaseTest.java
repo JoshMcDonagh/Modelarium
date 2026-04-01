@@ -1,6 +1,6 @@
 package unit.modelarium.attributes.results.databases;
 
-import modelarium.attributes.results.databases.AttributeSetRunLogDatabase;
+import modelarium.logging.databases.AttributeSetRunLogDatabase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +8,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AttributeSetRunLogDatabaseTest {
+class AttributeSetLogDatabaseTest {
 
     private TestAttributeSetRunLogDatabase database;
 

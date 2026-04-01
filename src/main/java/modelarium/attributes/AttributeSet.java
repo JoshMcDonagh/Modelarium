@@ -1,6 +1,6 @@
 package modelarium.attributes;
 
-import modelarium.attributes.results.AttributeSetRunLog;
+import modelarium.logging.AttributeSetLog;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +12,7 @@ public class AttributeSet {
     private final String name;
     private final List<Attribute> attributeList;
     private final Map<String, Integer> attributeIndexMap = new HashMap<String, Integer>();
-    private final AttributeSetRunLog log;
+    private final AttributeSetLog log;
 
     public AttributeSet(String ownerName, String attributeSetName, List<Attribute> attributeList) {
         this.name = attributeSetName;
@@ -21,7 +21,7 @@ public class AttributeSet {
             Attribute attribute = this.attributeList.get(i);
             this.attributeIndexMap.put(attribute.name(), i);
         }
-        this.log = new AttributeSetRunLog(ownerName, this.name, this.attributeList);
+        this.log = new AttributeSetLog(ownerName, this.name, this.attributeList);
         attributeSetCount++;
     }
 
@@ -99,7 +99,7 @@ public class AttributeSet {
         return getProperty(attributeIndexMap.get(propertyName));
     }
 
-    public AttributeSetRunLog getLog() {
+    public AttributeSetLog getLog() {
         return log;
     }
 

@@ -1,6 +1,6 @@
 package modelarium.environments;
 
-import modelarium.ModelConfig;
+import modelarium.Config;
 
 import java.util.function.Function;
 
@@ -13,19 +13,19 @@ import java.util.function.Function;
  */
 public class FunctionalEnvironmentGenerator extends EnvironmentGenerator {
 
-    private final Function<ModelConfig, Environment> generatorFunction;
+    private final Function<Config, Environment> generatorFunction;
 
     /**
      * Constructs a new functional generator.
      *
      * @param generatorFunction the function used to generate the environment
      */
-    public FunctionalEnvironmentGenerator(Function<ModelConfig, Environment> generatorFunction) {
+    public FunctionalEnvironmentGenerator(Function<Config, Environment> generatorFunction) {
         this.generatorFunction = generatorFunction;
     }
 
     @Override
-    public Environment generateEnvironment(ModelConfig modelConfig) {
-        return generatorFunction.apply(modelConfig);
+    public Environment generateEnvironment(Config config) {
+        return generatorFunction.apply(config);
     }
 }

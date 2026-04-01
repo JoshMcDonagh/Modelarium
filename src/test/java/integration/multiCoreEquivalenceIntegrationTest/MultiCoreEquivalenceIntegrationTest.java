@@ -1,8 +1,8 @@
 package integration.multiCoreEquivalenceIntegrationTest;
 
 import modelarium.Model;
-import modelarium.ModelConfig;
-import modelarium.attributes.results.databases.AttributeSetRunLogDatabaseFactory;
+import modelarium.Config;
+import modelarium.logging.databases.AttributeSetRunLogDatabaseFactory;
 import modelarium.results.Results;
 import modelarium.scheduler.InOrderScheduler;
 import integration.syncedCachedBasicModelUsageIntegrationTest.attributes.ModelAttributes;
@@ -16,14 +16,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MultiCoreEquivalenceIntegrationTest {
 
-    private ModelConfig base;
+    private Config base;
 
     @BeforeEach
     public void setup() {
         AttributeSetRunLogDatabaseFactory.clearCustomFactory();
         AttributeSetRunLogDatabaseFactory.setDatabaseToMemoryBased();
 
-        base = new ModelConfig();
+        base = new Config();
         base.setNumOfAgents(200);
         base.setNumOfTicksToRun(60);
         base.setNumOfWarmUpTicks(10);
@@ -47,12 +47,12 @@ public class MultiCoreEquivalenceIntegrationTest {
 
     @Test
     public void testSingleCoreMatchesMultiCore() throws Exception {
-        ModelConfig s1 = base;
+        Config s1 = base;
         s1.setNumOfCores(1);
         Results r1 = new Model(s1).run();
         List<Object> h1 = r1.getAccumulatedAgentPropertyValues("food", "Hunger");
 
-        ModelConfig s4 = new ModelConfig();
+        Config s4 = new Config();
         // clone key fields manually (ModelSettings has no deepCopy)
         s4.setNumOfAgents(base.getNumOfAgents());
         s4.setNumOfTicksToRun(base.getNumOfTicksToRun());

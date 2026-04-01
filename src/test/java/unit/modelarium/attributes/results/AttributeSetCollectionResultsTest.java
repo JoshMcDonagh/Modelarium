@@ -1,8 +1,8 @@
 package unit.modelarium.attributes.results;
 
-import modelarium.attributes.results.AttributeSetRunLog;
-import modelarium.attributes.results.databases.AttributeSetRunLogDatabase;
-import modelarium.attributes.results.databases.AttributeSetRunLogDatabaseFactory;
+import modelarium.logging.AttributeSetLog;
+import modelarium.logging.databases.AttributeSetRunLogDatabase;
+import modelarium.logging.databases.AttributeSetRunLogDatabaseFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,7 +61,7 @@ class AttributeSetCollectionResultsTest {
 
         collectionResults.setup("MockElement", Collections.singletonList(attributeSet));
 
-        AttributeSetRunLog results = collectionResults.getAttributeSetResults(0);
+        AttributeSetLog results = collectionResults.getAttributeSetResults(0);
         assertNotNull(results); // Sanity check
 
         // When disconnectDatabases is called

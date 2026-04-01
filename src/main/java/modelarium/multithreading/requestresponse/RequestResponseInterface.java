@@ -1,6 +1,6 @@
 package modelarium.multithreading.requestresponse;
 
-import modelarium.ModelConfig;
+import modelarium.Config;
 import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
@@ -37,7 +37,7 @@ public class RequestResponseInterface {
      * @param settings the shared model settings
      * @param requestResponseController the controller that provides the queues
      */
-    public RequestResponseInterface(String name, ModelConfig settings, RequestResponseController requestResponseController) {
+    public RequestResponseInterface(String name, Config settings, RequestResponseController requestResponseController) {
         this.name = name;
         this.areProcessesSynced = settings.getAreProcessesSynced();
         this.requestQueue = requestResponseController.getRequestQueue();

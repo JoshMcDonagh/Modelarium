@@ -1,6 +1,6 @@
 package unit.modelarium.multithreading.requestresponse;
 
-import modelarium.ModelConfig;
+import modelarium.Config;
 import modelarium.multithreading.requestresponse.Request;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
@@ -16,12 +16,12 @@ import static org.mockito.Mockito.*;
 
 class RequestResponseControllerTest {
 
-    private ModelConfig mockSettings;
+    private Config mockSettings;
     private RequestResponseController controller;
 
     @BeforeEach
     void setUp() {
-        mockSettings = mock(ModelConfig.class);
+        mockSettings = mock(Config.class);
         controller = new RequestResponseController(mockSettings);
     }
 

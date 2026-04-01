@@ -1,8 +1,8 @@
 package modelarium.multithreading;
 
-import modelarium.ModelClock;
+import modelarium.Clock;
 import modelarium.AccessibleContext;
-import modelarium.ModelConfig;
+import modelarium.Config;
 import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
 import modelarium.multithreading.requestresponse.*;
@@ -21,7 +21,7 @@ public class CoordinatorThread implements Runnable {
     private final String threadName;
 
     /** Global simulation configuration */
-    private final ModelConfig settings;
+    private final Config settings;
 
     /** The environment shared across all workers */
     private final Environment environment;
@@ -35,7 +35,7 @@ public class CoordinatorThread implements Runnable {
     /** Flag to control the running state of the thread */
     private volatile boolean isRunning = true;
 
-    private final ModelClock coordinatorClock;
+    private final Clock coordinatorClock;
 
 
     /**
@@ -47,7 +47,7 @@ public class CoordinatorThread implements Runnable {
      * @param requestResponseController the controller managing request/response queues
      */
     public CoordinatorThread(String name,
-                             ModelConfig settings,
+                             Config settings,
                              Environment environment,
                              RequestResponseController requestResponseController) {
         this(name, settings, environment, requestResponseController, null);
@@ -63,7 +63,7 @@ public class CoordinatorThread implements Runnable {
      * @param globalAgentSet the global agent set for the whole model
      */
     public CoordinatorThread(String name,
-                             ModelConfig settings,
+                             Config settings,
                              Environment environment,
                              RequestResponseController requestResponseController,
                              AgentSet globalAgentSet) {
@@ -102,7 +102,7 @@ public class CoordinatorThread implements Runnable {
             } catch (Throwable ignore) {}
         }
 
-        this.coordinatorClock = new ModelClock(settings.getNumOfTicksToRun(), settings.getNumOfWarmUpTicks());
+        this.coordinatorClock = new Clock(settings.getNumOfTicksToRun(), settings.getNumOfWarmUpTicks());
         accessibleContext.setClock(this.coordinatorClock);
     }
 

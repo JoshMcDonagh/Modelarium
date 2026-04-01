@@ -1,6 +1,6 @@
 package unit.modelarium.multithreading;
 
-import modelarium.ModelConfig;
+import modelarium.Config;
 import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
  */
 public class CoordinatorThreadTest {
 
-    private ModelConfig settings;
+    private Config settings;
     private Environment environment;
     private RequestResponseController controller;
     private BlockingQueue<Request> requestQueue;
@@ -32,7 +32,7 @@ public class CoordinatorThreadTest {
 
     @BeforeEach
     void setUp() {
-        settings = mock(ModelConfig.class);
+        settings = mock(Config.class);
         environment = mock(Environment.class);
         controller = mock(RequestResponseController.class);
         requestQueue = new LinkedBlockingQueue<>();

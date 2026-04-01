@@ -1,7 +1,7 @@
 package integration.diskDatabaseSanityIntegrationTest;
 
 import modelarium.Model;
-import modelarium.ModelConfig;
+import modelarium.Config;
 import modelarium.results.Results;
 import modelarium.scheduler.InOrderScheduler;
 import integration.agentEnvironmentSyncIntegrationTest.attributes.ModelAttributes;
@@ -29,7 +29,7 @@ public class DiskDatabaseSanityIntegrationTest {
 
     @Test
     public void testDiskBackedDatabasesExistAndAreReadable() throws Exception {
-        ModelConfig s = new ModelConfig();
+        Config s = new Config();
         s.setNumOfAgents(20);
         s.setNumOfCores(2);
         s.setNumOfTicksToRun(10);

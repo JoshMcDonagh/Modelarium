@@ -1,9 +1,9 @@
 package unit.modelarium.attributes.results.databases;
 
-import modelarium.attributes.results.databases.AttributeSetRunLogDatabase;
-import modelarium.attributes.results.databases.AttributeSetRunLogDatabaseFactory;
-import modelarium.attributes.results.databases.DiskBasedAttributeSetRunLogDatabase;
-import modelarium.attributes.results.databases.MemoryBasedAttributeSetRunLogDatabase;
+import modelarium.logging.databases.AttributeSetRunLogDatabase;
+import modelarium.logging.databases.AttributeSetRunLogDatabaseFactory;
+import modelarium.logging.databases.DiskBasedAttributeSetRunLogDatabase;
+import modelarium.logging.databases.MemoryBasedAttributeSetRunLogDatabase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * <p>Verifies default database type selection, dynamic class assignment,
  * and use of custom factories.
  */
-public class AttributeSetRunLogDatabaseFactoryTest {
+public class AttributeSetLogDatabaseFactoryTest {
 
     @BeforeEach
     public void setUp() {

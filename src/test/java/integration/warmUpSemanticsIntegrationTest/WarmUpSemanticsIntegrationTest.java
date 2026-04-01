@@ -1,7 +1,7 @@
 package integration.warmUpSemanticsIntegrationTest;
 
 import modelarium.Model;
-import modelarium.ModelConfig;
+import modelarium.Config;
 import modelarium.results.Results;
 import modelarium.scheduler.InOrderScheduler;
 import integration.agentEnvironmentSyncIntegrationTest.attributes.ModelAttributes;
@@ -14,8 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class WarmUpSemanticsIntegrationTest {
 
-    private ModelConfig baseSettings(int warmUpTicks) {
-        ModelConfig s = new ModelConfig();
+    private Config baseSettings(int warmUpTicks) {
+        Config s = new Config();
         s.setNumOfAgents(50);
         s.setNumOfCores(2);
 
@@ -43,8 +43,8 @@ public class WarmUpSemanticsIntegrationTest {
 
     @Test
     public void testWarmUpShiftsRecordedTicks() throws Exception {
-        ModelConfig sA = baseSettings(0);
-        ModelConfig sB = baseSettings(10);
+        Config sA = baseSettings(0);
+        Config sB = baseSettings(10);
 
         Results rA = new Model(sA).run();
         Results rB = new Model(sB).run();

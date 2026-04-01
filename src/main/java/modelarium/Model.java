@@ -2,15 +2,15 @@ package modelarium;
 
 import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
-import modelarium.attributes.results.databases.AttributeSetRunLogDatabaseFactory;
+import modelarium.logging.databases.AttributeSetRunLogDatabaseFactory;
 import modelarium.environments.Environment;
 import modelarium.multithreading.CoordinatorThread;
 import modelarium.multithreading.WorkerThread;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 import modelarium.multithreading.utils.WorkerCache;
-import modelarium.results.AgentResults;
-import modelarium.results.EnvironmentResults;
+import modelarium.results.AgentLevelResults;
+import modelarium.results.EnvironmentLevelResults;
 import modelarium.results.Results;
 
 import java.lang.reflect.InvocationTargetException;
@@ -27,14 +27,14 @@ import java.util.concurrent.*;
 public class Model {
 
     /** Configuration settings for this model run */
-    private final ModelConfig settings;
+    private final Config settings;
 
     /**
      * Constructs a new model instance with the specified settings.
      *
      * @param settings the settings to use for model initialisation and execution
      */
-    public Model(ModelConfig settings) {
+    public Model(Config settings) {
         this.settings = settings;
     }
 
@@ -64,7 +64,7 @@ public class Model {
         // Instantiate results container
         Results results = settings.getResults();
         results.setAgentNames(agentsForEachCore);
-        results.setAgentResults(new AgentResults(new AgentSet()));
+        results.setAgentResults(new AgentLevelResults(new AgentSet()));
 
         // Prepare the environment
         environment.setup();
@@ -168,7 +168,7 @@ public class Model {
         }
 
         // Post-processing of results
-        results.setEnvironmentResults(new EnvironmentResults(environment));
+        results.setEnvironmentResults(new EnvironmentLevelResults(environment));
         results.accumulateAgentAttributeData();
         results.processEnvironmentAttributeData();
         results.seal(); // Finalise results

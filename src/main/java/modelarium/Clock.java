@@ -3,7 +3,7 @@ package modelarium;
 /**
  * Class for handling model ticks and storing the model state.
  */
-public class ModelClock {
+public class Clock {
     private final int numOfTicksToRun;
     private final int numOfWarmUpTicks;
 
@@ -15,7 +15,7 @@ public class ModelClock {
      * @param numOfTicksToRun the number of ticks the model will run for
      * @param numOfWarmUpTicks the number of ticks the warm-up phase performs
      */
-    public ModelClock(int numOfTicksToRun, int numOfWarmUpTicks) {
+    public Clock(int numOfTicksToRun, int numOfWarmUpTicks) {
         this.numOfTicksToRun = numOfTicksToRun;
         this.numOfWarmUpTicks = numOfWarmUpTicks;
     }

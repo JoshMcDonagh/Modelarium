@@ -1,4 +1,4 @@
-package modelarium.attributes.results.databases;
+package modelarium.logging.databases;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

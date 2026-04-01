@@ -1,7 +1,7 @@
 package unit.modelarium.multithreading;
 
 import modelarium.AccessibleContext;
-import modelarium.ModelConfig;
+import modelarium.Config;
 import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
 import modelarium.multithreading.WorkerThread;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
  */
 public class WorkerThreadTest {
 
-    private ModelConfig settings;
+    private Config settings;
     private AgentSet agents;
     private AgentSet duplicatedAgents;
     private RequestResponseController controller;
@@ -31,7 +31,7 @@ public class WorkerThreadTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        settings = mock(ModelConfig.class);
+        settings = mock(Config.class);
         agents = mock(AgentSet.class);
         duplicatedAgents = mock(AgentSet.class);
         controller = mock(RequestResponseController.class);

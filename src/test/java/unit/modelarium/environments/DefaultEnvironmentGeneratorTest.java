@@ -1,6 +1,6 @@
 package unit.modelarium.environments;
 
-import modelarium.ModelConfig;
+import modelarium.Config;
 import modelarium.environments.Environment;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,7 @@ public class DefaultEnvironmentGeneratorTest {
 
     @Test
     public void testGenerateEnvironmentReturnsExpectedEnvironment() {
-        ModelConfig settings = new ModelConfig();
+        Config settings = new Config();
         AttributeSetCollection originalAttributes = new AttributeSetCollection();
         settings.setBaseEnvironmentAttributeSetCollection(originalAttributes);
 

@@ -2,7 +2,7 @@ package unit.modelarium;
 
 import modelarium.Entity;
 import modelarium.AccessibleContext;
-import modelarium.ModelConfig;
+import modelarium.Config;
 import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
@@ -24,7 +24,7 @@ public class AccessibleContextTest {
     private Agent mockAgent;
     private Environment mockEnvironment;
     private AgentSet localAgentSet;
-    private ModelConfig settings;
+    private Config settings;
     private WorkerCache cache;
     private RequestResponseInterface requestInterface;
     private AccessibleContext accessor;
@@ -36,7 +36,7 @@ public class AccessibleContextTest {
         when(mockAgent.name()).thenReturn("Agent_X");
 
         localAgentSet = new AgentSet();
-        settings = new ModelConfig();
+        settings = new Config();
         settings.setIsCacheUsed(true);
         cache = new WorkerCache(true);
         requestInterface = mock(RequestResponseInterface.class);

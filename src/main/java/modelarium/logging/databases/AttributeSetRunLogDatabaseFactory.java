@@ -1,4 +1,4 @@
-package modelarium.attributes.results.databases;
+package modelarium.logging.databases;
 
 import utils.RandomStringGenerator;
 

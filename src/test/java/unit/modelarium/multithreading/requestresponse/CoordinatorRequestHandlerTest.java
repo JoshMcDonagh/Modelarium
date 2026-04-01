@@ -1,6 +1,6 @@
 package unit.modelarium.multithreading.requestresponse;
 
-import modelarium.ModelConfig;
+import modelarium.Config;
 import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
@@ -20,7 +20,7 @@ class CoordinatorRequestHandlerTest {
     private BlockingQueue<Response> responseQueue;
     private AgentSet agentSet;
     private Environment environment;
-    private ModelConfig settings;
+    private Config settings;
     private final String coordinatorThreadName = "Coordinator";
 
     @BeforeEach
@@ -28,7 +28,7 @@ class CoordinatorRequestHandlerTest {
         responseQueue = new LinkedBlockingQueue<>();
         agentSet = mock(AgentSet.class);
         environment = mock(Environment.class);
-        settings = mock(ModelConfig.class);
+        settings = mock(Config.class);
 
         when(settings.getNumOfCores()).thenReturn(2);
 

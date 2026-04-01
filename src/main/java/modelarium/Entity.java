@@ -3,7 +3,11 @@ package modelarium;
 import com.rits.cloning.Cloner;
 import modelarium.attributes.*;
 import modelarium.attributes.Routine;
+import modelarium.attributes.AttributeSet;
+import modelarium.logging.AttributeSetLog;
+import modelarium.logging.EntityLog;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,11 +28,9 @@ public abstract class Entity {
 
     private final String name;
     private final List<AttributeSet> attributeSetList;
-    private final Map<String, Integer> attributeSetIndexMap = new HashMap<String, Integer>();
+    private final Map<String, Integer> attributeSetIndexMap = new HashMap<>();
 
     private AccessibleContext context = null;
-
-    private EntityResults results; // TODO: Make sure this works when EntityResults is implemented...
 
     public Entity(String name, List<AttributeSet> attributeSetList) {
         this.name = name;
@@ -88,13 +90,13 @@ public abstract class Entity {
         return getAttributeSet(attributeSetName).getProperty(propertyName);
     }
 
-    public EntityResults results() {
-        return results;
+    public EntityLog getLog() {
+        return new EntityLog(attributeSetList);
     }
 
     public void run() {
         for (AttributeSet attributeSet : attributeSetList)
-            attributeSet.run(results.getAttributeSetResults(attributeSet.name()));
+            attributeSet.run();
     }
 
     public abstract Entity clone();

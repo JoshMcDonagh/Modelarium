@@ -1,6 +1,6 @@
 package modelarium.multithreading.requestresponse;
 
-import modelarium.ModelConfig;
+import modelarium.Config;
 import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
@@ -33,7 +33,7 @@ public abstract class CoordinatorRequestHandler {
      * @param environment the shared environment
      */
     public static void initialise(String threadName,
-                                  ModelConfig settings,
+                                  Config settings,
                                   BlockingQueue<Response> responseQueue,
                                   AgentSet globalAgentSet,
                                   Environment environment) {
@@ -66,14 +66,14 @@ public abstract class CoordinatorRequestHandler {
 
     // Instance fields common to all handlers
     private final String threadName;
-    private final ModelConfig settings;
+    private final Config settings;
     private final BlockingQueue<Response> responseQueue;
     private final AgentSet globalAgentSet;
     private final Environment environment;
     private List<String> workersWaiting = new ArrayList<>();
 
     public CoordinatorRequestHandler(String threadName,
-                                     ModelConfig settings,
+                                     Config settings,
                                      BlockingQueue<Response> responseQueue,
                                      AgentSet globalAgentSet,
                                      Environment environment) {
@@ -90,7 +90,7 @@ public abstract class CoordinatorRequestHandler {
     }
 
     /** @return the global model settings */
-    protected ModelConfig getSettings() {
+    protected Config getSettings() {
         return settings;
     }
 
@@ -132,7 +132,7 @@ public abstract class CoordinatorRequestHandler {
      * Handles synchronisation for when all workers finish a tick.
      */
     public static class AllWorkersFinishTick extends CoordinatorRequestHandler {
-        public AllWorkersFinishTick(String threadName, ModelConfig settings, BlockingQueue<Response> responseQueue, AgentSet globalAgentSet, Environment environment) {
+        public AllWorkersFinishTick(String threadName, Config settings, BlockingQueue<Response> responseQueue, AgentSet globalAgentSet, Environment environment) {
             super(threadName, settings, responseQueue, globalAgentSet, environment);
         }
 
@@ -151,7 +151,7 @@ public abstract class CoordinatorRequestHandler {
      * Handles synchronisation for when all workers have updated the coordinator.
      */
     public static class AllWorkersUpdateCoordinator extends CoordinatorRequestHandler {
-        public AllWorkersUpdateCoordinator(String threadName, ModelConfig settings, BlockingQueue<Response> responseQueue, AgentSet globalAgentSet, Environment environment) {
+        public AllWorkersUpdateCoordinator(String threadName, Config settings, BlockingQueue<Response> responseQueue, AgentSet globalAgentSet, Environment environment) {
             super(threadName, settings, responseQueue, globalAgentSet, environment);
         }
 
@@ -178,7 +178,7 @@ public abstract class CoordinatorRequestHandler {
      * Provides access to an individual agent by name.
      */
     public static class AgentAccess extends CoordinatorRequestHandler {
-        public AgentAccess(String threadName, ModelConfig settings, BlockingQueue<Response> responseQueue, AgentSet globalAgentSet, Environment environment) {
+        public AgentAccess(String threadName, Config settings, BlockingQueue<Response> responseQueue, AgentSet globalAgentSet, Environment environment) {
             super(threadName, settings, responseQueue, globalAgentSet, environment);
         }
 
@@ -193,7 +193,7 @@ public abstract class CoordinatorRequestHandler {
      * Updates the global agent set with new agent states received from workers.
      */
     public static class UpdateCoordinatorAgents extends CoordinatorRequestHandler {
-        public UpdateCoordinatorAgents(String threadName, ModelConfig settings, BlockingQueue<Response> responseQueue, AgentSet globalAgentSet, Environment environment) {
+        public UpdateCoordinatorAgents(String threadName, Config settings, BlockingQueue<Response> responseQueue, AgentSet globalAgentSet, Environment environment) {
             super(threadName, settings, responseQueue, globalAgentSet, environment);
         }
 
@@ -215,7 +215,7 @@ public abstract class CoordinatorRequestHandler {
      * Provides access to a filtered subset of the global agent set.
      */
     public static class FilteredAgentsAccess extends CoordinatorRequestHandler {
-        public FilteredAgentsAccess(String threadName, ModelConfig settings, BlockingQueue<Response> responseQueue, AgentSet globalAgentSet, Environment environment) {
+        public FilteredAgentsAccess(String threadName, Config settings, BlockingQueue<Response> responseQueue, AgentSet globalAgentSet, Environment environment) {
             super(threadName, settings, responseQueue, globalAgentSet, environment);
         }
 
@@ -239,7 +239,7 @@ public abstract class CoordinatorRequestHandler {
      * Provides access to the current environment state.
      */
     public static class EnvironmentAttributesAccess extends CoordinatorRequestHandler {
-        public EnvironmentAttributesAccess(String threadName, ModelConfig settings, BlockingQueue<Response> responseQueue, AgentSet globalAgentSet, Environment environment) {
+        public EnvironmentAttributesAccess(String threadName, Config settings, BlockingQueue<Response> responseQueue, AgentSet globalAgentSet, Environment environment) {
             super(threadName, settings, responseQueue, globalAgentSet, environment);
         }
 

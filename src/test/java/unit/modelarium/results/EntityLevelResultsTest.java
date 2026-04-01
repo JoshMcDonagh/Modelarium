@@ -1,8 +1,8 @@
 package unit.modelarium.results;
 
 import modelarium.Entity;
-import modelarium.attributes.results.AttributeSetRunLog;
-import modelarium.results.ModelElementResults;
+import modelarium.logging.AttributeSetLog;
+import modelarium.results.EntityLevelResults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,13 +12,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for {@link ModelElementResults}.
+ * Unit tests for {@link EntityLevelResults}.
  */
-public class EntityResultsTest {
+public class EntityLevelResultsTest {
     private Entity mockElement;
     private AttributeSetCollection mockCollection;
     private AttributeSetCollectionResults mockCollectionResults;
-    private AttributeSetRunLog mockSetResults;
+    private AttributeSetLog mockSetResults;
 
     @BeforeEach
     void setUp() {
@@ -26,7 +26,7 @@ public class EntityResultsTest {
         mockElement = mock(Entity.class);
         mockCollection = mock(AttributeSetCollection.class); // NEW: mock the collection
         mockCollectionResults = mock(AttributeSetCollectionResults.class);
-        mockSetResults = mock(AttributeSetRunLog.class);
+        mockSetResults = mock(AttributeSetLog.class);
 
         // Setup hierarchy
         when(mockElement.getAttributeSetCollection()).thenReturn(mockCollection); // ← FIXED
@@ -42,7 +42,7 @@ public class EntityResultsTest {
 
     @Test
     void testSingleModelElementConstruction() {
-        ModelElementResults results = new ModelElementResults(mockElement);
+        EntityLevelResults results = new EntityLevelResults(mockElement);
         assertEquals(1, results.getAttributeSetCollectionSetCount());
         assertEquals(mockCollectionResults, results.getAttributeSetCollectionResults("Agent1"));
         assertEquals(mockCollectionResults, results.getAttributeSetCollectionResults(0));
@@ -58,14 +58,14 @@ public class EntityResultsTest {
         when(mockAnotherCollection.getResults()).thenReturn(anotherResults);
         when(anotherResults.getModelElementName()).thenReturn("Agent2");
 
-        ModelElementResults results = new ModelElementResults(List.of(mockElement, anotherElement));
+        EntityLevelResults results = new EntityLevelResults(List.of(mockElement, anotherElement));
         assertEquals(2, results.getAttributeSetCollectionSetCount());
         assertEquals(anotherResults, results.getAttributeSetCollectionResults("Agent2"));
     }
 
     @Test
     void testMergeWithAddsAllElements() {
-        ModelElementResults results1 = new ModelElementResults(mockElement);
+        EntityLevelResults results1 = new EntityLevelResults(mockElement);
 
         Entity mockOther = mock(Entity.class);
         AttributeSetCollection mockOtherCollection = mock(AttributeSetCollection.class);
@@ -75,7 +75,7 @@ public class EntityResultsTest {
         when(mockOtherCollection.getResults()).thenReturn(mockOtherResults);
         when(mockOtherResults.getModelElementName()).thenReturn("Other");
 
-        ModelElementResults results2 = new ModelElementResults(mockOther);
+        EntityLevelResults results2 = new EntityLevelResults(mockOther);
         results1.mergeWith(results2);
 
         assertEquals(2, results1.getAttributeSetCollectionSetCount());
@@ -84,28 +84,28 @@ public class EntityResultsTest {
 
     @Test
     void testGetPropertyValuesDelegatesCorrectly() {
-        ModelElementResults results = new ModelElementResults(mockElement);
+        EntityLevelResults results = new EntityLevelResults(mockElement);
         List<Object> values = results.getPropertyValues("Agent1", "set1", "prop1");
         assertEquals(List.of("value1"), values);
     }
 
     @Test
     void testGetPreEventValuesDelegatesCorrectly() {
-        ModelElementResults results = new ModelElementResults(mockElement);
+        EntityLevelResults results = new EntityLevelResults(mockElement);
         List<Boolean> values = results.getPreEventValues("Agent1", "set1", "eventA");
         assertEquals(List.of(true), values);
     }
 
     @Test
     void testGetPostEventValuesDelegatesCorrectly() {
-        ModelElementResults results = new ModelElementResults(mockElement);
+        EntityLevelResults results = new EntityLevelResults(mockElement);
         List<Boolean> values = results.getPostEventValues("Agent1", "set1", "eventB");
         assertEquals(List.of(false), values);
     }
 
     @Test
     void testDisconnectDatabasesClearsAll() {
-        ModelElementResults results = new ModelElementResults(mockElement);
+        EntityLevelResults results = new EntityLevelResults(mockElement);
         results.disconnectDatabases();
         verify(mockCollectionResults).disconnectDatabases();
         assertEquals(0, results.getAttributeSetCollectionSetCount());

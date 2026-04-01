@@ -1,8 +1,8 @@
 package integration.syncedCachedBasicModelUsageIntegrationTest;
 
 import modelarium.Model;
-import modelarium.ModelConfig;
-import modelarium.attributes.results.databases.AttributeSetRunLogDatabaseFactory;
+import modelarium.Config;
+import modelarium.logging.databases.AttributeSetRunLogDatabaseFactory;
 import modelarium.results.Results;
 import modelarium.scheduler.RandomOrderScheduler;
 import integration.syncedCachedBasicModelUsageIntegrationTest.attributes.ModelAttributes;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SyncedCachedBasicModelUsageIntegrationTest {
 
-    private static ModelConfig settings;
+    private static Config settings;
 
     private static double asDouble(Object v) {
         if (v == null)
@@ -32,8 +32,8 @@ public class SyncedCachedBasicModelUsageIntegrationTest {
         }
     }
 
-    private static ModelConfig getModelSettings() {
-        ModelConfig settings = new ModelConfig();
+    private static Config getModelSettings() {
+        Config settings = new Config();
         settings.setNumOfAgents(10);
         settings.setNumOfCores(2);
         settings.setNumOfTicksToRun(20);

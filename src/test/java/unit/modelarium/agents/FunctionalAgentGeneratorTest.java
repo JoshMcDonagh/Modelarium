@@ -1,6 +1,6 @@
 package unit.modelarium.agents;
 
-import modelarium.ModelConfig;
+import modelarium.Config;
 import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
 import modelarium.agents.generators.FunctionalAgentGenerator;
@@ -25,7 +25,7 @@ public class FunctionalAgentGeneratorTest {
     /**
      * Creates a generator function that returns uniquely named mock agents.
      */
-    private Function<ModelConfig, Agent> createUniqueMockAgentGenerator() {
+    private Function<Config, Agent> createUniqueMockAgentGenerator() {
         return s -> {
             Agent mockAgent = mock(Agent.class);
             when(mockAgent.name()).thenReturn("agent" + idGenerator.getAndIncrement());
@@ -36,7 +36,7 @@ public class FunctionalAgentGeneratorTest {
     @Test
     void testGenerateAgentsCreatesCorrectNumber() {
         // Arrange
-        ModelConfig settings = mock(ModelConfig.class);
+        Config settings = mock(Config.class);
         when(settings.getNumOfAgents()).thenReturn(5);
 
         FunctionalAgentGenerator generator = new FunctionalAgentGenerator(createUniqueMockAgentGenerator());
@@ -51,7 +51,7 @@ public class FunctionalAgentGeneratorTest {
     @Test
     void testGetAgentsForEachCoreDistributesEvenly() {
         // Arrange
-        ModelConfig settings = mock(ModelConfig.class);
+        Config settings = mock(Config.class);
         when(settings.getNumOfAgents()).thenReturn(4);
         when(settings.getNumOfCores()).thenReturn(2);
 
@@ -69,7 +69,7 @@ public class FunctionalAgentGeneratorTest {
     @Test
     void testZeroCoresReturnsEmptyList() {
         // Arrange
-        ModelConfig settings = mock(ModelConfig.class);
+        Config settings = mock(Config.class);
         when(settings.getNumOfAgents()).thenReturn(3);
         when(settings.getNumOfCores()).thenReturn(0);
 
@@ -85,7 +85,7 @@ public class FunctionalAgentGeneratorTest {
     @Test
     void testOneCoreReturnsAllAgentsInSingleSet() {
         // Arrange
-        ModelConfig settings = mock(ModelConfig.class);
+        Config settings = mock(Config.class);
         when(settings.getNumOfAgents()).thenReturn(3);
         when(settings.getNumOfCores()).thenReturn(1);
 
