@@ -2,7 +2,7 @@ package unit.modelarium.multithreading;
 
 import modelarium.ModelConfig;
 import modelarium.agents.Agent;
-import modelarium.agents.AgentSet;
+import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
 import modelarium.multithreading.CoordinatorThread;
 import modelarium.multithreading.requestresponse.*;

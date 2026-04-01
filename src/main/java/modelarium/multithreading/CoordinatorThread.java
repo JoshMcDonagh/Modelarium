@@ -1,9 +1,9 @@
 package modelarium.multithreading;
 
 import modelarium.ModelClock;
-import modelarium.EntityAccessor;
+import modelarium.AccessibleContext;
 import modelarium.ModelConfig;
-import modelarium.agents.AgentSet;
+import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
 import modelarium.multithreading.requestresponse.*;
 import modelarium.multithreading.utils.WorkerCache;
@@ -75,7 +75,7 @@ public class CoordinatorThread implements Runnable {
 
         if (this.environment.getModelElementAccessor() == null) {
             this.environment.setModelElementAccessor(
-                    new EntityAccessor(
+                    new AccessibleContext(
                             this.environment,                        // modelElement
                             new AgentSet(),                     // empty global set for env
                             settings,                           // settings
@@ -86,9 +86,9 @@ public class CoordinatorThread implements Runnable {
             );
         }
 
-        EntityAccessor entityAccessor = this.environment.getModelElementAccessor();
-        if (entityAccessor == null) {
-            entityAccessor = new EntityAccessor(
+        AccessibleContext accessibleContext = this.environment.getModelElementAccessor();
+        if (accessibleContext == null) {
+            accessibleContext = new AccessibleContext(
                     this.environment,
                     new AgentSet(),
                     settings,
@@ -98,12 +98,12 @@ public class CoordinatorThread implements Runnable {
             );
 
             try {
-                this.environment.setModelElementAccessor(entityAccessor);
+                this.environment.setModelElementAccessor(accessibleContext);
             } catch (Throwable ignore) {}
         }
 
         this.coordinatorClock = new ModelClock(settings.getNumOfTicksToRun(), settings.getNumOfWarmUpTicks());
-        entityAccessor.setModelClock(this.coordinatorClock);
+        accessibleContext.setClock(this.coordinatorClock);
     }
 
     /**

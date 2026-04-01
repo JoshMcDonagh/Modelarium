@@ -1,7 +1,7 @@
 package unit.modelarium.scheduler;
 
 import modelarium.agents.Agent;
-import modelarium.agents.AgentSet;
+import modelarium.agents.sets.AgentSet;
 import modelarium.scheduler.RandomOrderScheduler;
 import org.junit.jupiter.api.Test;
 

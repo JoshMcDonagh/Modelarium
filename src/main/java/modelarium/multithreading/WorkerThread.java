@@ -3,7 +3,7 @@ package modelarium.multithreading;
 import modelarium.ModelClock;
 import modelarium.ModelConfig;
 import modelarium.agents.Agent;
-import modelarium.agents.AgentSet;
+import modelarium.agents.sets.AgentSet;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 import modelarium.multithreading.utils.WorkerCache;

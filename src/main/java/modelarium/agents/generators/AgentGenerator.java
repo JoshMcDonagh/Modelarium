@@ -1,6 +1,8 @@
-package modelarium.agents;
+package modelarium.agents.generators;
 
 import modelarium.ModelConfig;
+import modelarium.agents.Agent;
+import modelarium.agents.sets.AgentSet;
 
 import java.util.ArrayList;
 import java.util.List;

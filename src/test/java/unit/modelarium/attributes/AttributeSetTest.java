@@ -2,7 +2,7 @@ package unit.modelarium.attributes;
 
 import modelarium.ModelClock;
 import modelarium.Entity;
-import modelarium.EntityAccessor;
+import modelarium.AccessibleContext;
 import modelarium.attributes.*;
 import modelarium.attributes.results.AttributeSetRunLog;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,11 +27,11 @@ public class AttributeSetTest {
     @BeforeEach
     public void setup() {
         Entity mockEntity = mock(Entity.class);
-        EntityAccessor mockEntityAccessor = mock(EntityAccessor.class);
+        AccessibleContext mockAccessibleContext = mock(AccessibleContext.class);
         ModelClock mockClock = mock(ModelClock.class);
 
-        when(mockEntity.getModelElementAccessor()).thenReturn(mockEntityAccessor);
-        when(mockEntityAccessor.getModelClock()).thenReturn(mockClock);
+        when(mockEntity.getModelElementAccessor()).thenReturn(mockAccessibleContext);
+        when(mockAccessibleContext.getClock()).thenReturn(mockClock);
 
         preEvents = spy(new Events());
         properties = spy(new Properties());

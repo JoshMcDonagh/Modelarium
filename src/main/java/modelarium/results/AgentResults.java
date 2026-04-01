@@ -1,6 +1,6 @@
 package modelarium.results;
 
-import modelarium.agents.AgentSet;
+import modelarium.agents.sets.AgentSet;
 
 /**
  * A concrete results container for a set of agents.

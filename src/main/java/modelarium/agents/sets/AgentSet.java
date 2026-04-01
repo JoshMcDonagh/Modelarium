@@ -1,4 +1,6 @@
-package modelarium.agents;
+package modelarium.agents.sets;
+
+import modelarium.agents.Agent;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -146,7 +148,7 @@ public class AgentSet implements Iterable<Agent> {
      * @return a list of agent instances
      */
     public List<Agent> getAsList() {
-        return agents;
+        return new ArrayList<>(agents);
     }
 
     /**
@@ -218,6 +220,10 @@ public class AgentSet implements Iterable<Agent> {
         List<Agent> shuffledAgents = new ArrayList<>(agents);
         Collections.shuffle(shuffledAgents);
         return shuffledAgents.iterator();
+    }
+
+    public ImmutableAgentSet getAsImmutable() {
+        return new ImmutableAgentSet(this);
     }
 
     /**

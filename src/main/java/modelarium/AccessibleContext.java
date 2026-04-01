@@ -1,7 +1,8 @@
 package modelarium;
 
 import modelarium.agents.Agent;
-import modelarium.agents.AgentSet;
+import modelarium.agents.sets.AgentSet;
+import modelarium.agents.sets.ImmutableAgentSet;
 import modelarium.environments.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 import modelarium.multithreading.utils.WorkerCache;
@@ -21,7 +22,7 @@ import java.util.function.Predicate;
  *     <li>The associated model clock</li>
  * </ul>
  */
-public class EntityAccessor {
+public class AccessibleContext {
 
     private final Entity entity;
     private final AgentSet localAgentSet;
@@ -32,7 +33,7 @@ public class EntityAccessor {
 
     private ModelClock clock = null;
 
-    public EntityAccessor(
+    public AccessibleContext(
             Entity entity,
             AgentSet localAgentSet,
             ModelConfig config,
@@ -48,12 +49,12 @@ public class EntityAccessor {
         this.localEnvironment = localEnvironment;
     }
 
-    public void setModelClock(ModelClock clock) {
+    public void setClock(ModelClock clock) {
         if (this.clock == null)
             this.clock = clock;
     }
 
-    public ModelClock getModelClock() {
+    public ModelClock getClock() {
         return clock;
     }
 
@@ -61,13 +62,13 @@ public class EntityAccessor {
         return localAgentSet.doesAgentExist(agentName);
     }
 
-    public Agent getAgentByName(String targetAgentName) {
+    public Agent getAgent(String targetAgentName) {
         // Check local agent set
         if (doesAgentExistInThisCore(targetAgentName))
             return localAgentSet.get(targetAgentName);
 
         // Check cache if enabled
-        if (config.isCacheUsed() && cache.doesAgentExist(targetAgentName))
+        if (cache.doesAgentExist(targetAgentName))
             return cache.getAgent(targetAgentName);
 
         // If not synchronised, cannot retrieve further
@@ -77,19 +78,17 @@ public class EntityAccessor {
         // Request from coordinator
         try {
             Agent requestedAgent = requestResponseInterface.getAgentFromCoordinator(entity.name(), targetAgentName);
-            if (config.isCacheUsed())
-                cache.addAgent(requestedAgent);
+            cache.addAgent(requestedAgent);
             return requestedAgent;
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
 
-    public AgentSet getFilteredAgents(Predicate<Agent> filter) {
+    public ImmutableAgentSet getFilteredAgents(Predicate<Agent> filter) {
         // Return cached filtered result if available
-        if (config.isCacheUsed() && cache.doesAgentFilterExist(filter))
-            return cache.getFilteredAgents(filter);
+        if (cache.doesAgentFilterExist(filter))
+            return cache.getFilteredAgents(filter).getAsImmutable();
 
         AgentSet filteredAgentSet;
 
@@ -98,7 +97,6 @@ public class EntityAccessor {
             try {
                 filteredAgentSet = requestResponseInterface.getFilteredAgentsFromCoordinator(entity.name(), filter);
             } catch (Exception e) {
-                e.printStackTrace();
                 return null;
             }
         } else {
@@ -106,13 +104,11 @@ public class EntityAccessor {
             filteredAgentSet = localAgentSet.getFilteredAgents(filter);
         }
 
-        // Cache the result for future access if enabled
-        if (config.isCacheUsed()) {
-            cache.addAgentFilter(filter);
-            cache.addAgents(filteredAgentSet);
-        }
+        // Cache the result for future access
+        cache.addAgentFilter(filter);
+        cache.addAgents(filteredAgentSet);
 
-        return filteredAgentSet;
+        return filteredAgentSet.getAsImmutable();
     }
 
     public Environment getEnvironment() {
@@ -120,7 +116,7 @@ public class EntityAccessor {
             return localEnvironment;
 
         // Return cached environment if available
-        if (config.isCacheUsed() && cache.doesEnvironmentExist())
+        if (cache.doesEnvironmentExist())
             return cache.getEnvironment();
 
         // Request environment from coordinator
@@ -128,13 +124,11 @@ public class EntityAccessor {
         try {
             requestedEnvironment = requestResponseInterface.getEnvironmentFromCoordinator(entity.name());
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
 
         // Cache the result
-        if (config.isCacheUsed())
-            cache.addEnvironment(requestedEnvironment);
+        cache.addEnvironment(requestedEnvironment);
 
         return requestedEnvironment;
     }

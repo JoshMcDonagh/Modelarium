@@ -38,46 +38,61 @@ public class AttributeSet {
     }
 
     public Attribute get(int attributeIndex) {
-        return attributeList.get(attributeIndex);
+        Attribute attribute = attributeList.get(attributeIndex);
+        if (attribute.accessLevel() == AttributeAccessLevel.PUBLIC)
+            return attribute;
+        return null;
     }
 
     public Attribute get(String attributeName) {
-        return get(attributeIndexMap.get(attributeName));
+        Attribute attribute = attributeList.get(attributeIndexMap.get(attributeName));
+        if (attribute.accessLevel() == AttributeAccessLevel.PUBLIC)
+            return attribute;
+        return null;
     }
 
     public Event getEvent(int eventIndex) {
         Attribute attribute = get(eventIndex);
 
-        if (!(attribute instanceof Event event))
-            throw new IllegalArgumentException("Expected an Event, but got: " + attribute.getClass().getName());
+        if (attribute instanceof Event event)
+            return event;
 
-        return event;
+        if (attribute == null)
+            return null;
+
+        throw new IllegalArgumentException("Expected an Event, but got: " + attribute.getClass().getName());
     }
 
     public Event getEvent(String eventName) {
         return getEvent(attributeIndexMap.get(eventName));
     }
 
-    public Routine getProcess(int processIndex) {
+    public Routine getRoutine(int processIndex) {
         Attribute attribute = get(processIndex);
 
-        if (!(attribute instanceof Routine routine))
-            throw new IllegalArgumentException("Expected a Process, but got: " + attribute.getClass().getName());
+        if (attribute instanceof Routine routine)
+            return routine;
 
-        return routine;
+        if (attribute == null)
+            return null;
+
+        throw new IllegalArgumentException("Expected a Routine, but got: " + attribute.getClass().getName());
     }
 
-    public Routine getProcess(String processName) {
-        return getProcess(attributeIndexMap.get(processName));
+    public Routine getRoutine(String processName) {
+        return getRoutine(attributeIndexMap.get(processName));
     }
 
     public Property<?> getProperty(int propertyIndex) {
         Attribute attribute = get(propertyIndex);
 
-        if (!(attribute instanceof Property<?> property))
-            throw new IllegalArgumentException("Expected a Property, but got: " + attribute.getClass().getName());
+        if (attribute instanceof Property<?> property)
+            return property;
 
-        return property;
+        if (attribute == null)
+            return null;
+
+        throw new IllegalArgumentException("Expected a Property, but got: " + attribute.getClass().getName());
     }
 
     public Property<?> getProperty(String propertyName) {

@@ -1,6 +1,7 @@
-package modelarium.agents;
+package modelarium.agents.generators;
 
 import modelarium.ModelConfig;
+import modelarium.agents.Agent;
 
 import java.util.function.Function;
 

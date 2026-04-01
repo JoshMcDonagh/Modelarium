@@ -2,7 +2,7 @@ package modelarium.multithreading.requestresponse;
 
 import modelarium.ModelConfig;
 import modelarium.agents.Agent;
-import modelarium.agents.AgentSet;
+import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
 
 import java.util.*;

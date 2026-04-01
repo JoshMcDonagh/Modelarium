@@ -1,7 +1,7 @@
 package unit.modelarium;
 
 import modelarium.ModelConfig;
-import modelarium.agents.AgentGenerator;
+import modelarium.agents.generators.AgentGenerator;
 import modelarium.environments.EnvironmentGenerator;
 import modelarium.results.Results;
 import modelarium.scheduler.ModelScheduler;
@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the {@link ModelConfig} class.

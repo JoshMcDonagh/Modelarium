@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * <p>Each model element represents either an {@link modelarium.agents.Agent}
  * or the {@link modelarium.environments.Environment} and holds a unique name,
- * a set of attributes, and a reference to its {@link EntityAccessor}.
+ * a set of attributes, and a reference to its {@link AccessibleContext}.
  */
 public abstract class Entity {
     private static final Cloner cloner = new Cloner();
@@ -26,6 +26,8 @@ public abstract class Entity {
     private final List<AttributeSet> attributeSetList;
     private final Map<String, Integer> attributeSetIndexMap = new HashMap<String, Integer>();
 
+    private AccessibleContext context = null;
+
     private EntityResults results; // TODO: Make sure this works when EntityResults is implemented...
 
     public Entity(String name, List<AttributeSet> attributeSetList) {
@@ -35,6 +37,14 @@ public abstract class Entity {
             AttributeSet attributeSet = this.attributeSetList.get(i);
             this.attributeSetIndexMap.put(attributeSet.name(), i);
         }
+    }
+
+    public void setContext(AccessibleContext context) {
+        this.context = context;
+    }
+
+    public AccessibleContext accessibleContext() {
+        return context;
     }
 
     public String name() {
@@ -70,8 +80,8 @@ public abstract class Entity {
         return getAttributeSet(attributeSetName).getEvent(eventName);
     }
 
-    public Routine getProcess(String attributeSetName, String processName) {
-        return getAttributeSet(attributeSetName).getProcess(processName);
+    public Routine getRoutine(String attributeSetName, String routineName) {
+        return getAttributeSet(attributeSetName).getRoutine(routineName);
     }
 
     public Property<?> getProperty(String attributeSetName, String propertyName) {

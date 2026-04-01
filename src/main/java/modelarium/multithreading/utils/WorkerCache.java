@@ -1,7 +1,7 @@
 package modelarium.multithreading.utils;
 
 import modelarium.agents.Agent;
-import modelarium.agents.AgentSet;
+import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
 
 import java.util.ArrayList;

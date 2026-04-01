@@ -1,7 +1,7 @@
 package unit.modelarium.multithreading.utils;
 
 import modelarium.agents.Agent;
-import modelarium.agents.AgentSet;
+import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
 import modelarium.multithreading.utils.WorkerCache;
 import org.junit.jupiter.api.BeforeEach;

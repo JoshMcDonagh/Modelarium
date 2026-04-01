@@ -1,9 +1,9 @@
 package unit.modelarium;
 
 import modelarium.Entity;
-import modelarium.EntityAccessor;
+import modelarium.AccessibleContext;
 import modelarium.agents.Agent;
-import modelarium.agents.AgentSet;
+import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -92,28 +92,28 @@ public class EntityTest {
 
     @Test
     public void testModelElementAccessorCanBeSetAndRetrieved() {
-        EntityAccessor mockAccessor = mock(EntityAccessor.class);
+        AccessibleContext mockAccessor = mock(AccessibleContext.class);
         dummyElement.setModelElementAccessor(mockAccessor);
         assertSame(mockAccessor, dummyElement.getModelElementAccessor());
     }
 
     @Test
     public void testAccessExternalAgentByNameDelegatesToAccessor() {
-        EntityAccessor accessor = mock(EntityAccessor.class);
+        AccessibleContext accessor = mock(AccessibleContext.class);
         Agent agent = mock(Agent.class);
 
         dummyElement.setModelElementAccessor(accessor);
-        when(accessor.getAgentByName("A")).thenReturn(agent);
+        when(accessor.getAgent("A")).thenReturn(agent);
 
         Agent result = dummyElement.callAccessExternalAgentByName("A");
 
         assertSame(agent, result);
-        verify(accessor).getAgentByName("A");
+        verify(accessor).getAgent("A");
     }
 
     @Test
     public void testAccessExternalAgentsByFilterDelegatesToAccessor() {
-        EntityAccessor accessor = mock(EntityAccessor.class);
+        AccessibleContext accessor = mock(AccessibleContext.class);
         AgentSet agentSet = mock(AgentSet.class);
 
         dummyElement.setModelElementAccessor(accessor);
@@ -129,7 +129,7 @@ public class EntityTest {
 
     @Test
     public void testAccessEnvironmentDelegatesToAccessor() {
-        EntityAccessor accessor = mock(EntityAccessor.class);
+        AccessibleContext accessor = mock(AccessibleContext.class);
         Environment env = mock(Environment.class);
 
         dummyElement.setModelElementAccessor(accessor);

@@ -1,7 +1,7 @@
 package unit.modelarium.results;
 
 import modelarium.agents.Agent;
-import modelarium.agents.AgentSet;
+import modelarium.agents.sets.AgentSet;
 import modelarium.attributes.results.databases.AttributeSetRunLogDatabase;
 import modelarium.results.AgentResults;
 import modelarium.results.EnvironmentResults;

@@ -1,10 +1,10 @@
 package unit.modelarium;
 
 import modelarium.Entity;
-import modelarium.EntityAccessor;
+import modelarium.AccessibleContext;
 import modelarium.ModelConfig;
 import modelarium.agents.Agent;
-import modelarium.agents.AgentSet;
+import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 import modelarium.multithreading.utils.WorkerCache;
@@ -17,9 +17,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for {@link EntityAccessor}.
+ * Unit tests for {@link AccessibleContext}.
  */
-public class EntityAccessorTest {
+public class AccessibleContextTest {
 
     private Agent mockAgent;
     private Environment mockEnvironment;
@@ -27,7 +27,7 @@ public class EntityAccessorTest {
     private ModelConfig settings;
     private WorkerCache cache;
     private RequestResponseInterface requestInterface;
-    private EntityAccessor accessor;
+    private AccessibleContext accessor;
 
     @BeforeEach
     public void setup() {
@@ -50,7 +50,7 @@ public class EntityAccessorTest {
         when(mockAttrSetCollection.getResults()).thenReturn(mockResults);
         when(mockResults.getModelElementName()).thenReturn("Agent_X");
 
-        accessor = new EntityAccessor(
+        accessor = new AccessibleContext(
                 entity,
                 localAgentSet,
                 settings,
@@ -68,31 +68,31 @@ public class EntityAccessorTest {
     }
 
     @Test
-    public void testGetAgentByName_returnsFromLocal() {
+    public void testGetAgent_returnsFromLocal() {
         localAgentSet.add(mockAgent);
-        Agent agent = accessor.getAgentByName("Agent_X");
+        Agent agent = accessor.getAgent("Agent_X");
         assertNotNull(agent, "Should return the local agent.");
         assertEquals("Agent_X", agent.name());
     }
 
     @Test
-    public void testGetAgentByName_returnsFromCache() {
+    public void testGetAgent_returnsFromCache() {
         settings.setIsCacheUsed(true);
         settings.setAreProcessesSynced(false); // optional; cache access doesn't need this
         Agent agent = new Agent("Agent_X", new AttributeSetCollection());
         cache.addAgent(agent);
-        Agent result = accessor.getAgentByName("Agent_X");
+        Agent result = accessor.getAgent("Agent_X");
         assertNotNull(result, "Should return the agent from cache.");
         assertEquals("Agent_X", result.name());
     }
 
     @Test
-    public void testGetAgentByName_returnsFromCoordinator() throws Exception {
+    public void testGetAgent_returnsFromCoordinator() throws Exception {
         settings.setAreProcessesSynced(true);
         settings.setIsCacheUsed(true);
         when(requestInterface.getAgentFromCoordinator("Agent_X", "Agent_Remote")).thenReturn(mockAgent);
 
-        Agent agent = accessor.getAgentByName("Agent_Remote");
+        Agent agent = accessor.getAgent("Agent_Remote");
         assertNotNull(agent, "Should return the agent from the coordinator.");
         assertEquals("Agent_X", agent.name());
         assertTrue(cache.doesAgentExist("Agent_X"), "Agent should now be cached.");

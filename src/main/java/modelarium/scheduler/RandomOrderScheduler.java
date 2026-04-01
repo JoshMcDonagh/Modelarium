@@ -1,7 +1,7 @@
 package modelarium.scheduler;
 
 import modelarium.agents.Agent;
-import modelarium.agents.AgentSet;
+import modelarium.agents.sets.AgentSet;
 
 import java.util.Iterator;
 

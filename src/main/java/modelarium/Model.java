@@ -1,7 +1,7 @@
 package modelarium;
 
 import modelarium.agents.Agent;
-import modelarium.agents.AgentSet;
+import modelarium.agents.sets.AgentSet;
 import modelarium.attributes.results.databases.AttributeSetRunLogDatabaseFactory;
 import modelarium.environments.Environment;
 import modelarium.multithreading.CoordinatorThread;
@@ -80,7 +80,7 @@ public class Model {
         CoordinatorThread coordinator = null;
 
         // Set up accessor for the environment model element
-        EntityAccessor environmentEntityAccessor = new EntityAccessor(
+        AccessibleContext environmentAccessibleContext = new AccessibleContext(
                 environment,
                 new AgentSet(),
                 settings,
@@ -89,7 +89,7 @@ public class Model {
                 environment
         );
 
-        environment.setModelElementAccessor(environmentEntityAccessor);
+        environment.setModelElementAccessor(environmentAccessibleContext);
 
         // Launch central coordinator if synchronisation is required
         if (settings.getAreProcessesSynced()) {
@@ -124,7 +124,7 @@ public class Model {
             // Prepare agents for this core and assign them accessors
             for (Agent agent : coreAgentSet) {
                 Environment localEnvironment = environment.clone();
-                EntityAccessor agentEntityAccessor = new EntityAccessor(
+                AccessibleContext agentAccessibleContext = new AccessibleContext(
                         agent,
                         coreAgentSet,
                         settings,
@@ -132,7 +132,7 @@ public class Model {
                         new RequestResponseInterface(agent.name(), settings, requestResponseController),
                         localEnvironment
                 );
-                agent.setModelElementAccessor(agentEntityAccessor);
+                agent.setModelElementAccessor(agentAccessibleContext);
             }
 
             // Create and submit the worker task

@@ -1,6 +1,6 @@
 package modelarium;
 
-import modelarium.agents.AgentGenerator;
+import modelarium.agents.generators.AgentGenerator;
 import modelarium.attributes.results.databases.AttributeSetRunLogDatabase;
 import modelarium.environments.EnvironmentGenerator;
 import modelarium.results.Results;
@@ -16,8 +16,6 @@ public record ModelConfig(
         ModelScheduler modelScheduler,
         AttributeSetRunLogDatabase runLogDatabase,
         boolean areProcessesSynced,
-        boolean doAgentStoresHoldAgentClones,
-        boolean isCacheUsed,
         Class<? extends Results> resultsClass,
         Results results
 ) {}
