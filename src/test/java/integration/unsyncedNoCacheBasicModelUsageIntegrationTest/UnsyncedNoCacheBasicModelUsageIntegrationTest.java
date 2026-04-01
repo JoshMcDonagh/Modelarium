@@ -2,7 +2,6 @@ package integration.unsyncedNoCacheBasicModelUsageIntegrationTest;
 
 import modelarium.Model;
 import modelarium.ModelSettings;
-import modelarium.agents.DefaultAgentGenerator;
 import modelarium.attributes.results.databases.AttributeSetRunLogDatabaseFactory;
 import modelarium.environments.DefaultEnvironmentGenerator;
 import modelarium.results.Results;

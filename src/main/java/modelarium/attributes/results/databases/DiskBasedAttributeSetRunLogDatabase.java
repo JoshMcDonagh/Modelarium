@@ -19,16 +19,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * Concrete implementation of {@link AttributeSetRunLogDatabase} that stores results
  * in an SQLite database file.
  *
- * <p>This implementation preserves the same public API as the previous version, but uses
- * a stable row-based schema internally instead of dynamically altering table columns.
+ * <p>This implementation uses a stable row-based schema internally instead of
+ * dynamically altering table columns.
  *
- * <p>Each logical property/event "column" is stored as a named ordered series:
+ * <p>Each logical attribute "column" is stored as a named ordered series:
  * <pre>
  *     (series_name, position_index, value_json)
  * </pre>
- *
- * <p>This avoids repeated ALTER TABLE calls, avoids wiping unrelated data during
- * bulk replacement, and behaves much more safely under threading.
  */
 public class DiskBasedAttributeSetRunLogDatabase extends AttributeSetRunLogDatabase {
 
@@ -41,18 +38,14 @@ public class DiskBasedAttributeSetRunLogDatabase extends AttributeSetRunLogDatab
     /** Shared mapper; ObjectMapper is thread-safe after configuration. */
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    private static final String PROPERTIES_TABLE_NAME = "properties_table";
-    private static final String PRE_EVENTS_TABLE_NAME = "pre_events_table";
-    private static final String POST_EVENTS_TABLE_NAME = "post_events_table";
+    private static final String ATTRIBUTES_TABLE_NAME = "attributes_table";
 
     /**
-     * Per-series class maps for deserialisation.
-     * Concurrent maps are used because callers may hit a single database instance from
+     * Per-series class map for deserialisation.
+     * Concurrent map is used because callers may hit a single database instance from
      * multiple threads, even though DB access itself is additionally guarded by dbLock.
      */
-    private final Map<String, Class<?>> propertyClassesMap = new ConcurrentHashMap<>();
-    private final Map<String, Class<?>> preEventClassesMap = new ConcurrentHashMap<>();
-    private final Map<String, Class<?>> postEventClassesMap = new ConcurrentHashMap<>();
+    private final Map<String, Class<?>> attributeClassesMap = new ConcurrentHashMap<>();
 
     /** Guards connection lifecycle and all database operations for this instance. */
     private final Object dbLock = new Object();
@@ -102,7 +95,7 @@ public class DiskBasedAttributeSetRunLogDatabase extends AttributeSetRunLogDatab
     }
 
     /**
-     * Establishes an SQLite connection and creates the required tables.
+     * Establishes an SQLite connection and creates the required table.
      */
     @Override
     public void connect() {
@@ -114,7 +107,7 @@ public class DiskBasedAttributeSetRunLogDatabase extends AttributeSetRunLogDatab
             try {
                 connection = DriverManager.getConnection("jdbc:sqlite:" + getDatabasePath());
                 configureConnection(connection);
-                createAttributeTables();
+                createAttributeTable();
             } catch (SQLException e) {
                 connection = null;
                 throw new RuntimeException("Failed to establish SQLite connection: " + e.getMessage(), e);
@@ -147,88 +140,36 @@ public class DiskBasedAttributeSetRunLogDatabase extends AttributeSetRunLogDatab
         }
     }
 
-    // === Property/Event Value Recording (Per-Tick) ===
+    // === Attribute Value Recording (Per-Tick) ===
 
     @Override
-    public <T> void addPropertyValue(String propertyName, T propertyValue) {
-        Objects.requireNonNull(propertyName, "propertyName must not be null");
-        rememberType(propertyClassesMap, propertyName, propertyValue);
-        addSeriesValue(PROPERTIES_TABLE_NAME, propertyName, propertyValue);
-    }
-
-    @Override
-    public <T> void addPreEventValue(String preEventName, T preEventValue) {
-        Objects.requireNonNull(preEventName, "preEventName must not be null");
-        rememberType(preEventClassesMap, preEventName, preEventValue);
-        addSeriesValue(PRE_EVENTS_TABLE_NAME, preEventName, preEventValue);
-    }
-
-    @Override
-    public <T> void addPostEventValue(String postEventName, T postEventValue) {
-        Objects.requireNonNull(postEventName, "postEventName must not be null");
-        rememberType(postEventClassesMap, postEventName, postEventValue);
-        addSeriesValue(POST_EVENTS_TABLE_NAME, postEventName, postEventValue);
+    public <T> void addAttributeValue(String attributeName, T attributeValue) {
+        Objects.requireNonNull(attributeName, "attributeName must not be null");
+        rememberType(attributeClassesMap, attributeName, attributeValue);
+        addSeriesValue(ATTRIBUTES_TABLE_NAME, attributeName, attributeValue);
     }
 
     // === Bulk Column Replacement ===
 
     @Override
-    public void setPropertyColumn(String propertyName, List<Object> propertyValues) {
-        Objects.requireNonNull(propertyName, "propertyName must not be null");
+    public void setAttributeColumn(String attributeName, List<Object> attributeValues) {
+        Objects.requireNonNull(attributeName, "attributeName must not be null");
 
-        Class<?> inferred = firstNonNullClass(propertyValues);
+        Class<?> inferred = firstNonNullClass(attributeValues);
         if (inferred != null) {
-            propertyClassesMap.put(propertyName, inferred);
+            attributeClassesMap.put(attributeName, inferred);
         }
 
-        replaceSeries(PROPERTIES_TABLE_NAME, propertyName,
-                propertyValues == null ? Collections.emptyList() : propertyValues);
-    }
-
-    @Override
-    public void setPreEventColumn(String preEventName, List<Object> preEventValues) {
-        Objects.requireNonNull(preEventName, "preEventName must not be null");
-
-        Class<?> inferred = firstNonNullClass(preEventValues);
-        if (inferred != null) {
-            preEventClassesMap.put(preEventName, inferred);
-        }
-
-        replaceSeries(PRE_EVENTS_TABLE_NAME, preEventName,
-                preEventValues == null ? Collections.emptyList() : preEventValues);
-    }
-
-    @Override
-    public void setPostEventColumn(String postEventName, List<Object> postEventValues) {
-        Objects.requireNonNull(postEventName, "postEventName must not be null");
-
-        Class<?> inferred = firstNonNullClass(postEventValues);
-        if (inferred != null) {
-            postEventClassesMap.put(postEventName, inferred);
-        }
-
-        replaceSeries(POST_EVENTS_TABLE_NAME, postEventName,
-                postEventValues == null ? Collections.emptyList() : postEventValues);
+        replaceSeries(ATTRIBUTES_TABLE_NAME, attributeName,
+                attributeValues == null ? Collections.emptyList() : attributeValues);
     }
 
     // === Column Retrieval ===
 
     @Override
-    public List<Object> getPropertyColumnAsList(String propertyName) {
-        Objects.requireNonNull(propertyName, "propertyName must not be null");
-        return retrieveSeries(PROPERTIES_TABLE_NAME, propertyName, propertyClassesMap.get(propertyName));
-    }
-
-    @Override
-    public List<Object> getPreEventColumnAsList(String preEventName) {
-        Objects.requireNonNull(preEventName, "preEventName must not be null");
-        return retrieveSeries(PRE_EVENTS_TABLE_NAME, preEventName, preEventClassesMap.get(preEventName));
-    }
-
-    @Override
-    public List<Object> getPostEventColumnAsList(String postEventName) {
-        Objects.requireNonNull(postEventName, "postEventName must not be null");
-        return retrieveSeries(POST_EVENTS_TABLE_NAME, postEventName, postEventClassesMap.get(postEventName));
+    public List<Object> getAttributeColumnAsList(String attributeName) {
+        Objects.requireNonNull(attributeName, "attributeName must not be null");
+        return retrieveSeries(ATTRIBUTES_TABLE_NAME, attributeName, attributeClassesMap.get(attributeName));
     }
 
     // === Database/Table Management ===
@@ -243,15 +184,13 @@ public class DiskBasedAttributeSetRunLogDatabase extends AttributeSetRunLogDatab
         }
     }
 
-    private void createAttributeTables() {
-        createSeriesTable(PROPERTIES_TABLE_NAME);
-        createSeriesTable(PRE_EVENTS_TABLE_NAME);
-        createSeriesTable(POST_EVENTS_TABLE_NAME);
+    private void createAttributeTable() {
+        createSeriesTable(ATTRIBUTES_TABLE_NAME);
     }
 
     /**
      * Stable schema:
-     * - series_name: property/event name
+     * - series_name: attribute name
      * - position_index: preserves order within that series
      * - value_json: serialised value
      *
@@ -427,15 +366,6 @@ public class DiskBasedAttributeSetRunLogDatabase extends AttributeSetRunLogDatab
             System.err.println("Failed to delete database file: " + databasePath + " (" + e.getMessage() + ")");
         }
 
-        /*
-         * If the database lives in a temp subdirectory created for this run, it is nice to clean that up too.
-         * We only attempt parent deletion if:
-         * - there is a parent directory
-         * - it is empty
-         * - it sits under the system temp directory
-         *
-         * That keeps cleanup conservative.
-         */
         Path parent = databasePath.getParent();
         if (parent == null) {
             return;

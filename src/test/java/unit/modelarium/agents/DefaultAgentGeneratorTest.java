@@ -3,7 +3,6 @@ package unit.modelarium.agents;
 import modelarium.ModelSettings;
 import modelarium.agents.Agent;
 import modelarium.agents.AgentSet;
-import modelarium.agents.DefaultAgentGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
