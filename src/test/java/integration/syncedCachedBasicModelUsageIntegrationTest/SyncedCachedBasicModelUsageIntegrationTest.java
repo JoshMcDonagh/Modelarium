@@ -3,7 +3,6 @@ package integration.syncedCachedBasicModelUsageIntegrationTest;
 import modelarium.Model;
 import modelarium.ModelSettings;
 import modelarium.attributes.results.databases.AttributeSetRunLogDatabaseFactory;
-import modelarium.environments.DefaultEnvironmentGenerator;
 import modelarium.results.Results;
 import modelarium.scheduler.RandomOrderScheduler;
 import integration.syncedCachedBasicModelUsageIntegrationTest.attributes.ModelAttributes;

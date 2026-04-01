@@ -1,7 +1,6 @@
 package unit.modelarium.environments;
 
 import modelarium.ModelSettings;
-import modelarium.environments.DefaultEnvironmentGenerator;
 import modelarium.environments.Environment;
 import org.junit.jupiter.api.Test;
 

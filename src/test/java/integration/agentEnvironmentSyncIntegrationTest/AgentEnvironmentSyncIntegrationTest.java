@@ -2,7 +2,6 @@ package integration.agentEnvironmentSyncIntegrationTest;
 
 import modelarium.Model;
 import modelarium.ModelSettings;
-import modelarium.environments.DefaultEnvironmentGenerator;
 import modelarium.results.Results;
 import modelarium.scheduler.InOrderScheduler; // or RandomOrderScheduler — either is fine
 import integration.agentEnvironmentSyncIntegrationTest.attributes.ModelAttributes;

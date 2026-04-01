@@ -2,7 +2,6 @@ package integration.diskDatabaseSanityIntegrationTest;
 
 import modelarium.Model;
 import modelarium.ModelSettings;
-import modelarium.environments.DefaultEnvironmentGenerator;
 import modelarium.results.Results;
 import modelarium.scheduler.InOrderScheduler;
 import integration.agentEnvironmentSyncIntegrationTest.attributes.ModelAttributes;
