@@ -35,7 +35,7 @@ public class EntityTest {
         }
 
         @Override
-        public Entity deepCopy() {
+        public Entity clone() {
             return null;
         }
 

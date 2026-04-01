@@ -41,13 +41,13 @@ public class AgentTest {
     }
 
     @Test
-    public void testDeepCopyDuplicate_createsEquivalentAgent() {
+    public void testCloneDuplicate_createsEquivalentAgent() {
         AttributeSetCollection copiedAttributeSetCollection = mock(AttributeSetCollection.class);
         when(mockAttributeSetCollection.deepCopy()).thenReturn(copiedAttributeSetCollection);
         doNothing().when(copiedAttributeSetCollection).setAssociatedModelElement(any(Entity.class));
         when(copiedAttributeSetCollection.deepCopy()).thenReturn((copiedAttributeSetCollection));
 
-        Agent copy = agent.deepCopy();
+        Agent copy = agent.clone();
 
         assertNotNull(copy, "Deep copy should not be null.");
         assertEquals(agent.name(), copy.name(), "Copied agent should retain the same name.");

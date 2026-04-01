@@ -123,7 +123,7 @@ public class Model {
 
             // Prepare agents for this core and assign them accessors
             for (Agent agent : coreAgentSet) {
-                Environment localEnvironment = environment.deepCopy();
+                Environment localEnvironment = environment.clone();
                 EntityAccessor agentEntityAccessor = new EntityAccessor(
                         agent,
                         coreAgentSet,

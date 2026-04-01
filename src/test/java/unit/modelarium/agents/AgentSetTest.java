@@ -94,7 +94,7 @@ public class AgentSetTest {
     }
 
     @Test
-    public void testDuplicateWithDeepCopyDisabled() {
+    public void testDuplicateWithCloneDisabled() {
         AgentSet agentSet = new AgentSet(false);
         agentSet.add(agentA);
         AgentSet duplicate = agentSet.duplicate();
@@ -104,7 +104,7 @@ public class AgentSetTest {
     }
 
     @Test
-    public void testDuplicateWithDeepCopyEnabled() {
+    public void testDuplicateWithCloneEnabled() {
         AgentSet agentSet = new AgentSet(true);
         agentSet.add(agentA);
         AgentSet duplicate = agentSet.duplicate();

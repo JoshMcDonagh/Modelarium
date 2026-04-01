@@ -22,7 +22,7 @@ public final class BuiltinTestSupport {
         }
 
         @Override
-        public Entity deepCopy() {
+        public Entity clone() {
             return null;
         }
     }

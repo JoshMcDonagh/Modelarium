@@ -31,7 +31,7 @@ public class Environment extends Entity {
     }
 
     @Override
-    public Environment deepCopy() {
+    public Environment clone() {
         return new Environment(name(), getAttributeSetCollection().deepCopy());
     }
 }

@@ -5,8 +5,6 @@ import modelarium.agents.AgentSet;
 import modelarium.attributes.results.AttributeSetRunLog;
 import modelarium.attributes.results.databases.AttributeSetRunLogDatabase;
 import modelarium.attributes.results.databases.AttributeSetRunLogDatabaseFactory;
-import utils.DeepCopier;
-import utils.DeepCopyable;
 
 import java.util.*;
 

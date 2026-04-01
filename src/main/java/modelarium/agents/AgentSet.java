@@ -88,7 +88,7 @@ public class AgentSet implements Iterable<Agent> {
         }
 
         if (isStoringAgentCopies)
-            agents.set(index, agent.deepCopy());
+            agents.set(index, agent.clone());
         else
             agents.set(index, agent);
     }
@@ -218,15 +218,6 @@ public class AgentSet implements Iterable<Agent> {
         List<Agent> shuffledAgents = new ArrayList<>(agents);
         Collections.shuffle(shuffledAgents);
         return shuffledAgents.iterator();
-    }
-
-    /**
-     * Calls {@code setup()} on all agents in the set.
-     * Should be called before the simulation begins.
-     */
-    public void setup() {
-        for (Agent agent : agents)
-            agent.setup();
     }
 
     /**

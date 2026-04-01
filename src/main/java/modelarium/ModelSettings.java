@@ -7,7 +7,6 @@ import modelarium.environments.EnvironmentGenerator;
 import modelarium.results.Results;
 import modelarium.scheduler.ModelScheduler;
 import com.google.gson.reflect.TypeToken;
-import utils.DeepCopier;
 
 import java.lang.reflect.InvocationTargetException;
 

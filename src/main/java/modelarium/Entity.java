@@ -1,8 +1,8 @@
 package modelarium;
 
+import com.rits.cloning.Cloner;
 import modelarium.attributes.*;
 import modelarium.attributes.Routine;
-import utils.DeepCopyable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +15,13 @@ import java.util.Map;
  * or the {@link modelarium.environments.Environment} and holds a unique name,
  * a set of attributes, and a reference to its {@link EntityAccessor}.
  */
-public abstract class Entity implements DeepCopyable<Entity> {
+public abstract class Entity {
+    private static final Cloner cloner = new Cloner();
+
+    protected static Cloner getCloner() {
+        return cloner;
+    }
+
     private final String name;
     private final List<AttributeSet> attributeSetList;
     private final Map<String, Integer> attributeSetIndexMap = new HashMap<String, Integer>();
@@ -80,4 +86,6 @@ public abstract class Entity implements DeepCopyable<Entity> {
         for (AttributeSet attributeSet : attributeSetList)
             attributeSet.run(results.getAttributeSetResults(attributeSet.name()));
     }
+
+    public abstract Entity clone();
 }
