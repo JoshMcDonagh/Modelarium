@@ -1,6 +1,6 @@
 package modelarium.agents;
 
-import modelarium.ModelSettings;
+import modelarium.ModelConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
  *     <li>Distribute agents evenly across multiple processing cores</li>
  * </ul>
  *
- * <p>Concrete subclasses must implement the {@link #generateAgent(ModelSettings)} method,
+ * <p>Concrete subclasses must implement the {@link #generateAgent(ModelConfig)} method,
  * which defines how individual agents are constructed.
  */
 public abstract class AgentGenerator {
@@ -22,15 +22,15 @@ public abstract class AgentGenerator {
     /**
      * Generates a complete {@link AgentSet} based on the number of agents specified in the model settings.
      *
-     * @param modelSettings the simulation configuration containing the agent count
+     * @param modelConfig the simulation configuration containing the agent count
      * @return an {@link AgentSet} containing all generated agents
      */
-    public AgentSet generateAgents(ModelSettings modelSettings) {
+    public AgentSet generateAgents(ModelConfig modelConfig) {
         AgentSet agents = new AgentSet();
-        int numOfAgents = modelSettings.getNumOfAgents();
+        int numOfAgents = modelConfig.getNumOfAgents();
 
         for (int i = 0; i < numOfAgents; i++)
-            agents.add(generateAgent(modelSettings));
+            agents.add(generateAgent(modelConfig));
 
         return agents;
     }
@@ -39,12 +39,12 @@ public abstract class AgentGenerator {
      * Distributes agents across processing cores in a round-robin fashion.
      * This ensures an even workload split for multithreaded simulations.
      *
-     * @param modelSettings the simulation settings containing agent and core counts
+     * @param modelConfig the simulation settings containing agent and core counts
      * @return a list of {@link AgentSet} objects, one per core
      */
-    public List<AgentSet> getAgentsForEachCore(ModelSettings modelSettings) {
-        AgentSet agents = generateAgents(modelSettings);
-        int numOfCores = modelSettings.getNumOfCores();
+    public List<AgentSet> getAgentsForEachCore(ModelConfig modelConfig) {
+        AgentSet agents = generateAgents(modelConfig);
+        int numOfCores = modelConfig.getNumOfCores();
 
         // If no cores are defined, return an empty list
         if (numOfCores < 1)
@@ -76,8 +76,8 @@ public abstract class AgentGenerator {
      * Abstract method for generating a single agent instance.
      * Must be implemented by concrete subclasses.
      *
-     * @param modelSettings the model settings passed to the agent during creation
+     * @param modelConfig the model settings passed to the agent during creation
      * @return a new {@link Agent} instance
      */
-    protected abstract Agent generateAgent(ModelSettings modelSettings);
+    protected abstract Agent generateAgent(ModelConfig modelConfig);
 }

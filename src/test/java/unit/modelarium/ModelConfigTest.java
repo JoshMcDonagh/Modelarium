@@ -1,6 +1,6 @@
 package unit.modelarium;
 
-import modelarium.ModelSettings;
+import modelarium.ModelConfig;
 import modelarium.agents.AgentGenerator;
 import modelarium.environments.EnvironmentGenerator;
 import modelarium.results.Results;
@@ -14,15 +14,15 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link ModelSettings} class.
+ * Unit tests for the {@link ModelConfig} class.
  */
-public class ModelSettingsTest {
+public class ModelConfigTest {
 
-    private ModelSettings settings;
+    private ModelConfig settings;
 
     @BeforeEach
     public void setup() {
-        settings = new ModelSettings();
+        settings = new ModelConfig();
     }
 
     @Test
@@ -98,7 +98,7 @@ public class ModelSettingsTest {
     public void testAgentGeneratorSetterAndGetter() {
         AgentGenerator mockGenerator = new AgentGenerator() {
             @Override
-            protected modelarium.agents.Agent generateAgent(ModelSettings settings) {
+            protected modelarium.agents.Agent generateAgent(ModelConfig settings) {
                 return null;
             }
         };
@@ -110,7 +110,7 @@ public class ModelSettingsTest {
     public void testEnvironmentGeneratorSetterAndGetter() {
         EnvironmentGenerator mockGenerator = new EnvironmentGenerator() {
             @Override
-            public modelarium.environments.Environment generateEnvironment(ModelSettings settings) {
+            public modelarium.environments.Environment generateEnvironment(ModelConfig settings) {
                 return null;
             }
         };

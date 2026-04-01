@@ -2,7 +2,7 @@ package modelarium.multithreading;
 
 import modelarium.ModelClock;
 import modelarium.EntityAccessor;
-import modelarium.ModelSettings;
+import modelarium.ModelConfig;
 import modelarium.agents.AgentSet;
 import modelarium.environments.Environment;
 import modelarium.multithreading.requestresponse.*;
@@ -21,7 +21,7 @@ public class CoordinatorThread implements Runnable {
     private final String threadName;
 
     /** Global simulation configuration */
-    private final ModelSettings settings;
+    private final ModelConfig settings;
 
     /** The environment shared across all workers */
     private final Environment environment;
@@ -47,7 +47,7 @@ public class CoordinatorThread implements Runnable {
      * @param requestResponseController the controller managing request/response queues
      */
     public CoordinatorThread(String name,
-                             ModelSettings settings,
+                             ModelConfig settings,
                              Environment environment,
                              RequestResponseController requestResponseController) {
         this(name, settings, environment, requestResponseController, null);
@@ -63,7 +63,7 @@ public class CoordinatorThread implements Runnable {
      * @param globalAgentSet the global agent set for the whole model
      */
     public CoordinatorThread(String name,
-                             ModelSettings settings,
+                             ModelConfig settings,
                              Environment environment,
                              RequestResponseController requestResponseController,
                              AgentSet globalAgentSet) {

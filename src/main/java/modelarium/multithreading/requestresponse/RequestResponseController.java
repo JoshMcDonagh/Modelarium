@@ -1,6 +1,6 @@
 package modelarium.multithreading.requestresponse;
 
-import modelarium.ModelSettings;
+import modelarium.ModelConfig;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -18,7 +18,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class RequestResponseController {
 
     /** Simulation settings, accessible to interfaces and handlers */
-    private final ModelSettings settings;
+    private final ModelConfig settings;
 
     /** Queue for incoming requests from worker threads */
     private final BlockingQueue<Request> requestQueue = new LinkedBlockingQueue<>();
@@ -31,7 +31,7 @@ public class RequestResponseController {
      *
      * @param settings the shared model settings used across threads
      */
-    public RequestResponseController(ModelSettings settings) {
+    public RequestResponseController(ModelConfig settings) {
         this.settings = settings;
     }
 

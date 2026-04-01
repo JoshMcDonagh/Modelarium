@@ -1,6 +1,6 @@
 package unit.modelarium.environments;
 
-import modelarium.ModelSettings;
+import modelarium.ModelConfig;
 import modelarium.environments.Environment;
 import modelarium.environments.EnvironmentGenerator;
 import org.junit.jupiter.api.Test;
@@ -20,14 +20,14 @@ public class EnvironmentGeneratorTest {
      */
     private static class TestEnvironmentGenerator extends EnvironmentGenerator {
         @Override
-        public Environment generateEnvironment(ModelSettings modelSettings) {
-            return new Environment("GeneratedEnvironment", modelSettings.getBaseEnvironmentAttributeSetCollection());
+        public Environment generateEnvironment(ModelConfig modelConfig) {
+            return new Environment("GeneratedEnvironment", modelConfig.getBaseEnvironmentAttributeSetCollection());
         }
     }
 
     @Test
     public void testGenerateEnvironmentReturnsExpectedEnvironment() {
-        ModelSettings settings = new ModelSettings();
+        ModelConfig settings = new ModelConfig();
         AttributeSetCollection mockAttributes = mock(AttributeSetCollection.class);
         when(mockAttributes.deepCopy()).thenReturn(mockAttributes);
         settings.setBaseEnvironmentAttributeSetCollection(mockAttributes);

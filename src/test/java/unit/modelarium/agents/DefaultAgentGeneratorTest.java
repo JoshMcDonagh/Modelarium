@@ -1,6 +1,6 @@
 package unit.modelarium.agents;
 
-import modelarium.ModelSettings;
+import modelarium.ModelConfig;
 import modelarium.agents.Agent;
 import modelarium.agents.AgentSet;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class DefaultAgentGeneratorTest {
 
-    private ModelSettings settings;
+    private ModelConfig settings;
     private DefaultAgentGenerator generator;
 
     @BeforeEach
@@ -26,7 +26,7 @@ public class DefaultAgentGeneratorTest {
         agentCountField.setAccessible(true);
         agentCountField.setInt(null, 0); // static field, so pass null as instance
 
-        settings = new ModelSettings();
+        settings = new ModelConfig();
         settings.setBaseAgentAttributeSetCollection(new AttributeSetCollection());
         settings.setNumOfAgents(5);
         settings.setNumOfCores(2);

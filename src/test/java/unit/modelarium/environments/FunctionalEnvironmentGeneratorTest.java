@@ -1,6 +1,6 @@
 package unit.modelarium.environments;
 
-import modelarium.ModelSettings;
+import modelarium.ModelConfig;
 import modelarium.environments.Environment;
 import modelarium.environments.FunctionalEnvironmentGenerator;
 import org.junit.jupiter.api.Test;
@@ -20,9 +20,9 @@ public class FunctionalEnvironmentGeneratorTest {
     @Test
     void testGenerateEnvironmentReturnsExpectedObject() {
         Environment mockEnvironment = mock(Environment.class);
-        ModelSettings mockSettings = mock(ModelSettings.class);
+        ModelConfig mockSettings = mock(ModelConfig.class);
 
-        Function<ModelSettings, Environment> generatorFunction = settings -> mockEnvironment;
+        Function<ModelConfig, Environment> generatorFunction = settings -> mockEnvironment;
 
         FunctionalEnvironmentGenerator generator = new FunctionalEnvironmentGenerator(generatorFunction);
 

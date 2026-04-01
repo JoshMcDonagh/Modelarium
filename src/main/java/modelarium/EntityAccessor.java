@@ -25,7 +25,7 @@ public class EntityAccessor {
 
     private final Entity entity;
     private final AgentSet localAgentSet;
-    private final ModelSettings settings;
+    private final ModelConfig settings;
     private final WorkerCache cache;
     private final RequestResponseInterface requestResponseInterface;
     private final Environment localEnvironment;
@@ -45,7 +45,7 @@ public class EntityAccessor {
     public EntityAccessor(
             Entity entity,
             AgentSet localAgentSet,
-            ModelSettings settings,
+            ModelConfig settings,
             WorkerCache cache,
             RequestResponseInterface requestResponseInterface,
             Environment localEnvironment

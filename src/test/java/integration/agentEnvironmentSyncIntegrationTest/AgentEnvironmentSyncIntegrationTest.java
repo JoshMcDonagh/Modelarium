@@ -1,7 +1,7 @@
 package integration.agentEnvironmentSyncIntegrationTest;
 
 import modelarium.Model;
-import modelarium.ModelSettings;
+import modelarium.ModelConfig;
 import modelarium.results.Results;
 import modelarium.scheduler.InOrderScheduler; // or RandomOrderScheduler — either is fine
 import integration.agentEnvironmentSyncIntegrationTest.attributes.ModelAttributes;
@@ -15,11 +15,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class AgentEnvironmentSyncIntegrationTest {
 
-    private ModelSettings base;
+    private ModelConfig base;
 
     @BeforeEach
     public void setup() {
-        base = new ModelSettings();
+        base = new ModelConfig();
         base.setNumOfAgents(100);
         base.setNumOfCores(4);
         base.setNumOfTicksToRun(20);
@@ -39,7 +39,7 @@ public class AgentEnvironmentSyncIntegrationTest {
         base.setModelScheduler(new InOrderScheduler()); // deterministic; Random also OK
     }
 
-    private void runAndAssert(ModelSettings s) throws Exception {
+    private void runAndAssert(ModelConfig s) throws Exception {
         Results results = new Model(s).run();
 
         // After run(), Results has already: setEnvironmentResults, accumulateAgentAttributeData, processEnvironmentAttributeData, seal()

@@ -1,6 +1,6 @@
 package modelarium.agents;
 
-import modelarium.ModelSettings;
+import modelarium.ModelConfig;
 
 import java.util.function.Function;
 
@@ -12,19 +12,19 @@ import java.util.function.Function;
  */
 public class FunctionalAgentGenerator extends AgentGenerator {
 
-    private final Function<ModelSettings, Agent> generatorFunction;
+    private final Function<ModelConfig, Agent> generatorFunction;
 
     /**
      * Constructs a new generator with the specified logic.
      *
      * @param generatorFunction the function used to generate each agent
      */
-    public FunctionalAgentGenerator(Function<ModelSettings, Agent> generatorFunction) {
+    public FunctionalAgentGenerator(Function<ModelConfig, Agent> generatorFunction) {
         this.generatorFunction = generatorFunction;
     }
 
     @Override
-    protected Agent generateAgent(ModelSettings modelSettings) {
-        return generatorFunction.apply(modelSettings);
+    protected Agent generateAgent(ModelConfig modelConfig) {
+        return generatorFunction.apply(modelConfig);
     }
 }

@@ -27,14 +27,14 @@ import java.util.concurrent.*;
 public class Model {
 
     /** Configuration settings for this model run */
-    private final ModelSettings settings;
+    private final ModelConfig settings;
 
     /**
      * Constructs a new model instance with the specified settings.
      *
      * @param settings the settings to use for model initialisation and execution
      */
-    public Model(ModelSettings settings) {
+    public Model(ModelConfig settings) {
         this.settings = settings;
     }
 

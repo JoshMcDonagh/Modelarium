@@ -2,7 +2,7 @@ package unit.modelarium;
 
 import modelarium.Entity;
 import modelarium.EntityAccessor;
-import modelarium.ModelSettings;
+import modelarium.ModelConfig;
 import modelarium.agents.Agent;
 import modelarium.agents.AgentSet;
 import modelarium.environments.Environment;
@@ -24,7 +24,7 @@ public class EntityAccessorTest {
     private Agent mockAgent;
     private Environment mockEnvironment;
     private AgentSet localAgentSet;
-    private ModelSettings settings;
+    private ModelConfig settings;
     private WorkerCache cache;
     private RequestResponseInterface requestInterface;
     private EntityAccessor accessor;
@@ -36,7 +36,7 @@ public class EntityAccessorTest {
         when(mockAgent.name()).thenReturn("Agent_X");
 
         localAgentSet = new AgentSet();
-        settings = new ModelSettings();
+        settings = new ModelConfig();
         settings.setIsCacheUsed(true);
         cache = new WorkerCache(true);
         requestInterface = mock(RequestResponseInterface.class);

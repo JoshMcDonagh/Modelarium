@@ -1,6 +1,6 @@
 package unit.modelarium.agents;
 
-import modelarium.ModelSettings;
+import modelarium.ModelConfig;
 import modelarium.agents.Agent;
 import modelarium.agents.AgentGenerator;
 import modelarium.agents.AgentSet;
@@ -18,19 +18,19 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AgentGeneratorTest {
 
     private TestAgentGenerator testAgentGenerator;
-    private ModelSettings modelSettings;
+    private ModelConfig modelConfig;
 
     @BeforeEach
     public void setUp() {
         testAgentGenerator = new TestAgentGenerator();
-        modelSettings = new ModelSettings();
+        modelConfig = new ModelConfig();
     }
 
     @Test
     public void testGenerateAgents_returnsCorrectNumberOfAgents() {
-        modelSettings.setNumOfAgents(5);
+        modelConfig.setNumOfAgents(5);
 
-        AgentSet agents = testAgentGenerator.generateAgents(modelSettings);
+        AgentSet agents = testAgentGenerator.generateAgents(modelConfig);
 
         assertEquals(5, agents.size(), "Should generate the specified number of agents.");
         for (int i = 0; i < agents.size(); i++) {
@@ -40,10 +40,10 @@ public class AgentGeneratorTest {
 
     @Test
     public void testGetAgentsForEachCore_singleCore_allAgentsAssigned() {
-        modelSettings.setNumOfAgents(4);
-        modelSettings.setNumOfCores(1);
+        modelConfig.setNumOfAgents(4);
+        modelConfig.setNumOfCores(1);
 
-        List<AgentSet> cores = testAgentGenerator.getAgentsForEachCore(modelSettings);
+        List<AgentSet> cores = testAgentGenerator.getAgentsForEachCore(modelConfig);
 
         assertEquals(1, cores.size(), "Should return a single agent set for one core.");
         assertEquals(4, cores.get(0).size(), "All agents should be in the one agent set.");
@@ -51,10 +51,10 @@ public class AgentGeneratorTest {
 
     @Test
     public void testGetAgentsForEachCore_multipleCores_evenDistribution() {
-        modelSettings.setNumOfAgents(4);
-        modelSettings.setNumOfCores(2);
+        modelConfig.setNumOfAgents(4);
+        modelConfig.setNumOfCores(2);
 
-        List<AgentSet> cores = testAgentGenerator.getAgentsForEachCore(modelSettings);
+        List<AgentSet> cores = testAgentGenerator.getAgentsForEachCore(modelConfig);
 
         assertEquals(2, cores.size(), "Should return one agent set per core.");
         assertEquals(2, cores.get(0).size(), "Each core should receive 2 agents.");
@@ -63,10 +63,10 @@ public class AgentGeneratorTest {
 
     @Test
     public void testGetAgentsForEachCore_zeroCores_returnsEmptyList() {
-        modelSettings.setNumOfAgents(3);
-        modelSettings.setNumOfCores(0);
+        modelConfig.setNumOfAgents(3);
+        modelConfig.setNumOfCores(0);
 
-        List<AgentSet> cores = testAgentGenerator.getAgentsForEachCore(modelSettings);
+        List<AgentSet> cores = testAgentGenerator.getAgentsForEachCore(modelConfig);
 
         assertTrue(cores.isEmpty(), "Should return an empty list when zero cores are specified.");
     }
@@ -76,7 +76,7 @@ public class AgentGeneratorTest {
         private int count = 0;
 
         @Override
-        protected Agent generateAgent(ModelSettings modelSettings) {
+        protected Agent generateAgent(ModelConfig modelConfig) {
             return new Agent("Agent_" + count++, new modelarium.attributes.AttributeSetCollection());
         }
     }

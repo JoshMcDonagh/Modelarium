@@ -1,7 +1,7 @@
 package modelarium.multithreading;
 
 import modelarium.ModelClock;
-import modelarium.ModelSettings;
+import modelarium.ModelConfig;
 import modelarium.agents.Agent;
 import modelarium.agents.AgentSet;
 import modelarium.multithreading.requestresponse.RequestResponseController;
@@ -30,7 +30,7 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
     private final String threadName;
 
     /** Global simulation settings shared across threads */
-    private final ModelSettings settings;
+    private final ModelConfig settings;
 
     /** Interface to coordinate requests and responses across workers (if sync enabled) */
     private final RequestResponseController requestResponseController;
@@ -50,7 +50,7 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
      * @param agents the agents assigned to this thread
      */
     public WorkerThread(String threadName,
-                        ModelSettings settings,
+                        ModelConfig settings,
                         RequestResponseController requestResponseController,
                         AgentSet agents) {
         this.threadName = Objects.requireNonNull(threadName, "threadName");
