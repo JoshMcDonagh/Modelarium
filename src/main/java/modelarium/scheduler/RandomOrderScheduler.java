@@ -12,7 +12,7 @@ import java.util.Iterator;
  * orders and may more closely reflect stochastic processes in real-world systems.
  * </p>
  */
-public class RandomOrderScheduler implements ModelScheduler {
+public class RandomOrderScheduler implements Scheduler {
 
     /**
      * Executes each agent's {@code run()} method in a randomised order.

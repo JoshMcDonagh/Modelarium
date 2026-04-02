@@ -4,6 +4,7 @@ import com.rits.cloning.Cloner;
 import modelarium.attributes.*;
 import modelarium.attributes.Routine;
 import modelarium.attributes.AttributeSet;
+import modelarium.contexts.AgentContext;
 import modelarium.contexts.Context;
 import modelarium.logging.EntityLog;
 
@@ -31,7 +32,7 @@ public abstract class Entity {
         }
     }
 
-    protected void setContext(Context context) {
+    public void setContext(Context context) {
         for (AttributeSet attributeSet : attributeSetList)
             attributeSet.setContext(context);
     }

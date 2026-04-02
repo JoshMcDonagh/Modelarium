@@ -4,7 +4,7 @@ import modelarium.Config;
 import modelarium.agents.generators.AgentGenerator;
 import modelarium.environments.EnvironmentGenerator;
 import modelarium.results.Results;
-import modelarium.scheduler.ModelScheduler;
+import modelarium.scheduler.Scheduler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -118,7 +118,7 @@ public class ConfigTest {
 
     @Test
     public void testModelSchedulerSetterAndGetter() {
-        ModelScheduler scheduler = agentSet -> { };
+        Scheduler scheduler = agentSet -> { };
         settings.setModelScheduler(scheduler);
         assertSame(scheduler, settings.getModelScheduler(), "Should return the same model scheduler that was set.");
     }

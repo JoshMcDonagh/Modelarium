@@ -39,6 +39,7 @@ public abstract class Context {
             AgentSet localAgentSet,
             Config config,
             ContextCache cache,
+            Clock clock,
             RequestResponseInterface requestResponseInterface
     ) {
         this.entity = entity;
@@ -46,11 +47,6 @@ public abstract class Context {
         this.config = config;
         this.cache = cache;
         this.requestResponseInterface = requestResponseInterface;
-    }
-
-    public void setClock(Clock clock) {
-        if (this.clock == null)
-            this.clock = clock;
     }
 
     public Clock getClock() {

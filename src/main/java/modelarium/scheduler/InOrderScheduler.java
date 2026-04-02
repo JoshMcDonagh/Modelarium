@@ -10,7 +10,7 @@ import modelarium.agents.sets.AgentSet;
  * and predictably for each simulation tick.
  * </p>
  */
-public class InOrderScheduler implements ModelScheduler {
+public class InOrderScheduler implements Scheduler {
 
     /**
      * Executes each agent's {@code run()} method in the order they are stored in the agent set.

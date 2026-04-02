@@ -10,7 +10,7 @@ import modelarium.agents.sets.AgentSet;
  * a given set of agents.
  * </p>
  */
-public interface ModelScheduler {
+public interface Scheduler {
 
     /**
      * Executes a single simulation tick for the provided agent set.

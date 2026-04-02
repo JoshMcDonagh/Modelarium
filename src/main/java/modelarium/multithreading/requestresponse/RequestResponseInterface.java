@@ -34,12 +34,12 @@ public class RequestResponseInterface {
      * Constructs a new interface bound to the given model element or thread.
      *
      * @param name the name of this component (typically the thread or agent name)
-     * @param settings the shared model settings
+     * @param config the shared model config
      * @param requestResponseController the controller that provides the queues
      */
-    public RequestResponseInterface(String name, Config settings, RequestResponseController requestResponseController) {
+    public RequestResponseInterface(String name, Config config, RequestResponseController requestResponseController) {
         this.name = name;
-        this.areProcessesSynced = settings.getAreProcessesSynced();
+        this.areProcessesSynced = config.areProcessesSynced();
         this.requestQueue = requestResponseController.getRequestQueue();
         this.responseQueue = requestResponseController.getResponseQueue();
     }

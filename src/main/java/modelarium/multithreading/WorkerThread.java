@@ -4,6 +4,8 @@ import modelarium.Clock;
 import modelarium.Config;
 import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
+import modelarium.contexts.AgentContext;
+import modelarium.environments.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 import modelarium.contexts.ContextCache;
@@ -30,13 +32,15 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
     private final String threadName;
 
     /** Global simulation settings shared across threads */
-    private final Config settings;
+    private final Config config;
 
     /** Interface to coordinate requests and responses across workers (if sync enabled) */
     private final RequestResponseController requestResponseController;
 
+    private final Environment environment;
+
     /** The original set of agents this worker is responsible for simulating */
-    private final AgentSet agents;
+    private final AgentSet agentsInThread;
 
     /** A duplicate of the agent set to allow for safe merging during synchronisation */
     private final AgentSet updatedAgents;
@@ -45,19 +49,21 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
      * Constructs a new worker thread to simulate a subset of agents.
      *
      * @param threadName the thread's name (typically its numeric ID as a string)
-     * @param settings the simulation settings
+     * @param config the simulation settings
      * @param requestResponseController the controller for cross-thread coordination
-     * @param agents the agents assigned to this thread
+     * @param agentsInThread the agents assigned to this thread
      */
     public WorkerThread(String threadName,
-                        Config settings,
+                        Config config,
                         RequestResponseController requestResponseController,
-                        AgentSet agents) {
+                        Environment environment,
+                        AgentSet agentsInThread) {
         this.threadName = Objects.requireNonNull(threadName, "threadName");
-        this.settings = Objects.requireNonNull(settings, "settings");
+        this.config = Objects.requireNonNull(config, "settings");
         this.requestResponseController = Objects.requireNonNull(requestResponseController, "requestResponseController");
-        this.agents = Objects.requireNonNull(agents, "agents");
-        this.updatedAgents = this.agents.duplicate();
+        this.environment = environment;
+        this.agentsInThread = Objects.requireNonNull(agentsInThread, "agents");
+        this.updatedAgents = this.agentsInThread.duplicate();
     }
 
     /**
@@ -70,43 +76,53 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
      */
     @Override
     public Results call() throws InterruptedException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        Clock clock = new Clock(settings.getNumOfTicksToRun(), settings.getNumOfWarmUpTicks());
-        for (Agent agent : agents)
-            agent.getModelElementAccessor().setModelClock(clock);
+        Clock clock = new Clock(config.epochs());
+        ContextCache cache = new ContextCache();
 
-        ContextCache cache = settings.getIsCacheUsed()
-                ? new ContextCache(settings.getDoAgentStoresHoldAgentCopies())
-                : null;
+        for (Agent agent : agentsInThread) {
+            Environment localEnvironment = null;
+
+            if (config.areProcessesSynced())
+                localEnvironment = environment.clone();
+
+            AgentContext agentContext = new AgentContext(
+                    agent,
+                    agentsInThread,
+                    config,
+                    cache,
+                    clock,
+                    new RequestResponseInterface(agent.name(), config, requestResponseController),
+                    localEnvironment
+            );
+
+            agent.setContext(agentContext);
+        }
 
         RequestResponseInterface requestResponseInterface = requestResponseController.getInterface(threadName);
 
         // Initial broadcast of agent state to coordinator
-        if (settings.getAreProcessesSynced())
-            requestResponseInterface.updateCoordinatorAgents(agents);
-
-        agents.setup();
+        if (config.areProcessesSynced())
+            requestResponseInterface.updateCoordinatorAgents(agentsInThread);
 
         // Simulation main loop
-        while (clock.isRunning()) {
-            settings.getModelScheduler().runTick(agents);
+        while (!clock.isFinished()) {
+            config.scheduler().runTick(agentsInThread);
 
-            if (settings.getAreProcessesSynced()) {
+            if (config.areProcessesSynced()) {
                 requestResponseInterface.waitUntilAllWorkersFinishTick();
-                agents.add(updatedAgents); // Merge agent updates
-                requestResponseInterface.updateCoordinatorAgents(agents);
+                agentsInThread.add(updatedAgents); // Merge agent updates
+                requestResponseInterface.updateCoordinatorAgents(agentsInThread);
                 requestResponseInterface.waitUntilAllWorkersUpdateCoordinator();
             }
 
-            if (cache != null)
-                cache.clear();
-
+            cache.clear();
             clock.triggerTick();
         }
 
         // Final setup and result collection
-        AgentLevelResults agentResults = new AgentLevelResults(agents);
-        Results results = settings.getResults();
-        results.setAgentNames(agents);
+        AgentLevelResults agentResults = new AgentLevelResults(agentsInThread);
+        Results results = config.results();
+        results.setAgentNames(agentsInThread);
         results.setAgentResults(agentResults);
 
         return results;

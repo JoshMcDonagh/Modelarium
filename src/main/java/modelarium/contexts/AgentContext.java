@@ -1,5 +1,6 @@
 package modelarium.contexts;
 
+import modelarium.Clock;
 import modelarium.Config;
 import modelarium.Entity;
 import modelarium.agents.Agent;
@@ -15,10 +16,11 @@ public class AgentContext extends Context {
             AgentSet localAgentSet,
             Config config,
             ContextCache cache,
+            Clock clock,
             RequestResponseInterface requestResponseInterface,
             Environment localEnvironment
     ) {
-        super(entity, localAgentSet, config, cache, requestResponseInterface);
+        super(entity, localAgentSet, config, cache, clock, requestResponseInterface);
         this.localEnvironment = localEnvironment;
     }
 

@@ -31,6 +31,8 @@ public class Model {
     /** Configuration settings for this model run */
     private final Config config;
 
+    private final Results results;
+
     /**
      * Constructs a new model instance with the specified settings.
      *
@@ -38,18 +40,18 @@ public class Model {
      */
     public Model(Config config) {
         this.config = config;
+        this.results = config.results();
     }
 
     /**
      * Runs the agent-based model according to the configured settings.
      *
-     * @return a {@link Results} object containing accumulated simulation data
      * @throws NoSuchMethodException if the results class has no default constructor
      * @throws InvocationTargetException if constructor invocation fails
      * @throws InstantiationException if instantiating the results class fails
      * @throws IllegalAccessException if the constructor is not accessible
      */
-    public Results run() throws NoSuchMethodException, InvocationTargetException,
+    public void run() throws NoSuchMethodException, InvocationTargetException,
             InstantiationException, IllegalAccessException {
 
         // Distribute agents among cores
@@ -59,7 +61,6 @@ public class Model {
         Environment environment = config.environmentGenerator().generateEnvironment(config);
 
         // Instantiate results container
-        Results results = config.results();
         results.setAgentNames(agentsForEachCore);
         results.setAgentResults(new AgentLevelResults(new AgentSet()));
 
@@ -74,11 +75,12 @@ public class Model {
         CoordinatorThread coordinator = null;
 
         // Set up accessor for the environment model element
-        Context environmentContext = new EnvironmentContext(
+        EnvironmentContext environmentContext = new EnvironmentContext(
                 environment,
                 new AgentSet(),
                 config,
                 new ContextCache(),
+                new Clock(config.epochs()),
                 new RequestResponseInterface(environment.name(), config, requestResponseController)
         );
 
@@ -90,6 +92,7 @@ public class Model {
                     String.valueOf(config.threadCount()),
                     config,
                     environment,
+                    environmentContext,
                     requestResponseController
             );
             coordinatorThread = new Thread(coordinator);
@@ -99,6 +102,7 @@ public class Model {
         // Launch worker threads
         for (int threadIndex = 0; threadIndex < config.threadCount(); threadIndex++) {
             ContextCache cache = new ContextCache();
+            Clock clock = new Clock(config.epochs());
 
             // Create an agent set for the current core
             AgentSet threadAgentSet = new AgentSet(true);
@@ -111,27 +115,15 @@ public class Model {
             // Add the pre-assigned agent set for this core
             threadAgentSet.add(perThreadAgentSet);
 
-            // Prepare agents for this core and assign them accessors
-            for (Agent agent : threadAgentSet) {
-                Environment localEnvironment = environment.clone();
-                Context agentContext = new AgentContext(
-                        agent,
-                        threadAgentSet,
-                        config,
-                        cache,
-                        new RequestResponseInterface(agent.name(), config, requestResponseController),
-                        localEnvironment
-                );
-                agent.setContext(agentContext);
-            }
-
             // Create and submit the worker task
             Callable<Results> worker = new WorkerThread<>(
                     String.valueOf(threadIndex),
                     config,
                     requestResponseController,
+                    environment,
                     threadAgentSet
             );
+
             futures.add(executorService.submit(worker));
         }
 
@@ -162,7 +154,9 @@ public class Model {
         results.accumulateAgentAttributeData();
         results.processEnvironmentAttributeData();
         results.seal(); // Finalise results
+    }
 
+    public Results getResults() {
         return results;
     }
 }

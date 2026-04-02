@@ -4,6 +4,7 @@ import modelarium.Clock;
 import modelarium.contexts.Context;
 import modelarium.Config;
 import modelarium.agents.sets.AgentSet;
+import modelarium.contexts.EnvironmentContext;
 import modelarium.environments.Environment;
 import modelarium.multithreading.requestresponse.*;
 import modelarium.contexts.ContextCache;
@@ -26,6 +27,8 @@ public class CoordinatorThread implements Runnable {
     /** The environment shared across all workers */
     private final Environment environment;
 
+    private final EnvironmentContext environmentContext;
+
     /** Controller that manages the request and response queues for inter-thread communication */
     private final RequestResponseController requestResponseController;
 
@@ -34,8 +37,6 @@ public class CoordinatorThread implements Runnable {
 
     /** Flag to control the running state of the thread */
     private volatile boolean isRunning = true;
-
-    private final Clock coordinatorClock;
 
 
     /**
@@ -49,8 +50,9 @@ public class CoordinatorThread implements Runnable {
     public CoordinatorThread(String name,
                              Config settings,
                              Environment environment,
+                             EnvironmentContext environmentContext,
                              RequestResponseController requestResponseController) {
-        this(name, settings, environment, requestResponseController, null);
+        this(name, settings, environment, environmentContext, requestResponseController, null);
     }
 
     /**
@@ -65,45 +67,15 @@ public class CoordinatorThread implements Runnable {
     public CoordinatorThread(String name,
                              Config settings,
                              Environment environment,
+                             EnvironmentContext environmentContext,
                              RequestResponseController requestResponseController,
                              AgentSet globalAgentSet) {
         this.threadName = name;
         this.settings = settings;
         this.environment = environment;
+        this.environmentContext = environmentContext;
         this.requestResponseController = requestResponseController;
         this.predefinedGlobalAgentSet = globalAgentSet;
-
-        if (this.environment.getModelElementAccessor() == null) {
-            this.environment.setModelElementAccessor(
-                    new Context(
-                            this.environment,                        // modelElement
-                            new AgentSet(),                     // empty global set for env
-                            settings,                           // settings
-                            new ContextCache(settings.getDoAgentStoresHoldAgentCopies()),
-                            new RequestResponseInterface(environment.name(), settings, requestResponseController),
-                            environment                         // localEnvironment
-                    )
-            );
-        }
-
-        Context context = this.environment.getModelElementAccessor();
-        if (context == null) {
-            context = new Context(
-                    this.environment,
-                    new AgentSet(),
-                    settings,
-                    new ContextCache(settings.getDoAgentStoresHoldAgentCopies()),
-                    new RequestResponseInterface(environment.name(), settings, requestResponseController),
-                    environment
-            );
-
-            try {
-                this.environment.setModelElementAccessor(context);
-            } catch (Throwable ignore) {}
-        }
-
-        this.coordinatorClock = new Clock(settings.getNumOfTicksToRun(), settings.getNumOfWarmUpTicks());
-        context.setClock(this.coordinatorClock);
     }
 
     /**
@@ -134,7 +106,8 @@ public class CoordinatorThread implements Runnable {
                 settings,
                 requestResponseController.getResponseQueue(),
                 globalAgentSet,
-                environment
+                environment,
+                environmentContext
         );
 
         // Continuously poll for and handle incoming requests from workers

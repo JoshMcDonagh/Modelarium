@@ -8,7 +8,7 @@ import java.util.function.Consumer;
  * to a user-defined function.
  *
  * <p>This allows flexible tick behaviour without requiring subclassing
- * or direct implementation of the {@link ModelScheduler} interface.
+ * or direct implementation of the {@link Scheduler} interface.
  * The user provides a {@link Consumer} that defines what should happen
  * during a single simulation tick for a given set of agents.</p>
  *
@@ -16,7 +16,7 @@ import java.util.function.Consumer;
  * to customise the tick logic externally, for example from another Java module
  * or from Python via JPype with a proxy.</p>
  */
-public class FunctionalScheduler implements ModelScheduler {
+public class FunctionalScheduler implements Scheduler {
 
     /** The function to be executed on each tick, taking an AgentSet as input */
     private final Consumer<AgentSet> tickFunction;
