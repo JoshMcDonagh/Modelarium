@@ -1,7 +1,6 @@
 package unit.modelarium.attributes.results.databases;
 
 import modelarium.logging.databases.AttributeSetRunLogDatabase;
-import modelarium.logging.databases.AttributeSetRunLogDatabaseFactory;
 import modelarium.logging.databases.DiskBasedAttributeSetRunLogDatabase;
 import modelarium.logging.databases.MemoryBasedAttributeSetRunLogDatabase;
 import org.junit.jupiter.api.AfterEach;

@@ -8,7 +8,6 @@ import modelarium.agents.sets.AgentSet;
 import modelarium.agents.sets.ImmutableAgentSet;
 import modelarium.environments.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
-import modelarium.multithreading.utils.WorkerCache;
 
 import java.util.function.Predicate;
 
@@ -30,7 +29,7 @@ public abstract class Context {
     private final Entity entity;
     private final AgentSet localAgentSet;
     private final Config config;
-    private final WorkerCache cache;
+    private final ContextCache cache;
     private final RequestResponseInterface requestResponseInterface;
 
     private Clock clock = null;
@@ -39,7 +38,7 @@ public abstract class Context {
             Entity entity,
             AgentSet localAgentSet,
             Config config,
-            WorkerCache cache,
+            ContextCache cache,
             RequestResponseInterface requestResponseInterface
     ) {
         this.entity = entity;
@@ -70,7 +69,7 @@ public abstract class Context {
         return config;
     }
 
-    protected WorkerCache cache() {
+    protected ContextCache cache() {
         return cache;
     }
 
@@ -78,7 +77,7 @@ public abstract class Context {
         return requestResponseInterface;
     }
 
-    public abstract Entity getThis();
+    public abstract Entity getThisEntity();
 
     public abstract Environment getEnvironment();
 

@@ -4,7 +4,6 @@ import modelarium.attributes.*;
 import modelarium.attributes.AttributeSet;
 import modelarium.logging.AttributeSetLog;
 import modelarium.logging.databases.AttributeSetRunLogDatabase;
-import modelarium.logging.databases.AttributeSetRunLogDatabaseFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

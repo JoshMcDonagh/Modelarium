@@ -82,7 +82,7 @@ public final class BuiltinTestSupport {
         Context accessor = mock(Context.class);
         Clock clock = mock(Clock.class);
         when(accessor.getClock()).thenReturn(clock);
-        when(clock.getTick()).thenReturn(tick);
+        when(clock.currentTick()).thenReturn(tick);
 
         element.setModelElementAccessor(accessor);
         element.getAttributeSetCollection().setAssociatedModelElement(element);

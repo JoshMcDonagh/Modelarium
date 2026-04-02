@@ -4,7 +4,6 @@ import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
 import modelarium.logging.AttributeSetLog;
 import modelarium.logging.databases.AttributeSetRunLogDatabase;
-import modelarium.logging.databases.AttributeSetRunLogDatabaseFactory;
 
 import java.util.*;
 

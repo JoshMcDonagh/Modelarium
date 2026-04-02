@@ -2,7 +2,6 @@ package integration.syncedCachedBasicModelUsageIntegrationTest;
 
 import modelarium.Model;
 import modelarium.Config;
-import modelarium.logging.databases.AttributeSetRunLogDatabaseFactory;
 import modelarium.results.Results;
 import modelarium.scheduler.RandomOrderScheduler;
 import integration.syncedCachedBasicModelUsageIntegrationTest.attributes.ModelAttributes;

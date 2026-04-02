@@ -6,7 +6,7 @@ import modelarium.Config;
 import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
 import modelarium.multithreading.requestresponse.*;
-import modelarium.multithreading.utils.WorkerCache;
+import modelarium.contexts.ContextCache;
 
 /**
  * Coordinator thread responsible for managing synchronised access to shared simulation state
@@ -79,7 +79,7 @@ public class CoordinatorThread implements Runnable {
                             this.environment,                        // modelElement
                             new AgentSet(),                     // empty global set for env
                             settings,                           // settings
-                            new WorkerCache(settings.getDoAgentStoresHoldAgentCopies()),
+                            new ContextCache(settings.getDoAgentStoresHoldAgentCopies()),
                             new RequestResponseInterface(environment.name(), settings, requestResponseController),
                             environment                         // localEnvironment
                     )
@@ -92,7 +92,7 @@ public class CoordinatorThread implements Runnable {
                     this.environment,
                     new AgentSet(),
                     settings,
-                    new WorkerCache(settings.getDoAgentStoresHoldAgentCopies()),
+                    new ContextCache(settings.getDoAgentStoresHoldAgentCopies()),
                     new RequestResponseInterface(environment.name(), settings, requestResponseController),
                     environment
             );

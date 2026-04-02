@@ -7,7 +7,7 @@ import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
-import modelarium.multithreading.utils.WorkerCache;
+import modelarium.contexts.ContextCache;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +25,7 @@ public class ContextTest {
     private Environment mockEnvironment;
     private AgentSet localAgentSet;
     private Config settings;
-    private WorkerCache cache;
+    private ContextCache cache;
     private RequestResponseInterface requestInterface;
     private Context accessor;
 
@@ -38,7 +38,7 @@ public class ContextTest {
         localAgentSet = new AgentSet();
         settings = new Config();
         settings.setIsCacheUsed(true);
-        cache = new WorkerCache(true);
+        cache = new ContextCache(true);
         requestInterface = mock(RequestResponseInterface.class);
 
         Entity entity = mock(Entity.class);

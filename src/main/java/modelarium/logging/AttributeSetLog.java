@@ -5,7 +5,6 @@ import modelarium.attributes.AttributeSet;
 import modelarium.attributes.Event;
 import modelarium.attributes.Property;
 import modelarium.logging.databases.AttributeSetRunLogDatabase;
-import modelarium.logging.databases.AttributeSetRunLogDatabaseFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;

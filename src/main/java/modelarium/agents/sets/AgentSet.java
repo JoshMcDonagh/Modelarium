@@ -65,15 +65,6 @@ public class AgentSet implements Iterable<Agent> {
     }
 
     /**
-     * Updates the internal flag for whether agent copies should be stored.
-     *
-     * @param isStoringAgentCopies true to enable deep copy on addition
-     */
-    public void setIsStoringAgentCopiesFlag(boolean isStoringAgentCopies) {
-        this.isStoringAgentCopies = isStoringAgentCopies;
-    }
-
-    /**
      * Adds an agent to the set. If the agent already exists, it will be replaced.
      *
      * @param agent the agent to add

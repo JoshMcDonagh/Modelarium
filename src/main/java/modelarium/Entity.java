@@ -31,7 +31,7 @@ public abstract class Entity {
         }
     }
 
-    public void setContext(Context context) {
+    protected void setContext(Context context) {
         for (AttributeSet attributeSet : attributeSetList)
             attributeSet.setContext(context);
     }

@@ -6,7 +6,7 @@ import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
-import modelarium.multithreading.utils.WorkerCache;
+import modelarium.contexts.ContextCache;
 import modelarium.results.AgentLevelResults;
 import modelarium.results.Results;
 
@@ -19,7 +19,7 @@ import java.util.concurrent.Callable;
  * across the configured number of ticks.
  *
  * <p>Each {@code WorkerThread} operates on its own {@link AgentSet}, may use a local
- * {@link WorkerCache} for caching, and optionally communicates with a coordinator via
+ * {@link ContextCache} for caching, and optionally communicates with a coordinator via
  * {@link RequestResponseInterface} if synchronisation is enabled.
  *
  * @param <T> the type of {@link Results} this worker will return
@@ -74,8 +74,8 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
         for (Agent agent : agents)
             agent.getModelElementAccessor().setModelClock(clock);
 
-        WorkerCache cache = settings.getIsCacheUsed()
-                ? new WorkerCache(settings.getDoAgentStoresHoldAgentCopies())
+        ContextCache cache = settings.getIsCacheUsed()
+                ? new ContextCache(settings.getDoAgentStoresHoldAgentCopies())
                 : null;
 
         RequestResponseInterface requestResponseInterface = requestResponseController.getInterface(threadName);

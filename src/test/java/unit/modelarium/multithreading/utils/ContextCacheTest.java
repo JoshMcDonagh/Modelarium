@@ -3,7 +3,7 @@ package unit.modelarium.multithreading.utils;
 import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
-import modelarium.multithreading.utils.WorkerCache;
+import modelarium.contexts.ContextCache;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,17 +12,17 @@ import java.util.function.Predicate;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link WorkerCache} class.
+ * Unit tests for the {@link ContextCache} class.
  *
  * <p>Tests caching behaviour for agents, agent filters, and environment data.
  */
-public class WorkerCacheTest {
+public class ContextCacheTest {
 
-    private WorkerCache cache;
+    private ContextCache cache;
 
     @BeforeEach
     public void setup() {
-        cache = new WorkerCache(false);
+        cache = new ContextCache(false);
     }
 
     @Test

@@ -6,7 +6,6 @@ import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
-import modelarium.multithreading.utils.WorkerCache;
 
 public class AgentContext extends Context {
     private final Environment localEnvironment;
@@ -15,7 +14,7 @@ public class AgentContext extends Context {
             Entity entity,
             AgentSet localAgentSet,
             Config config,
-            WorkerCache cache,
+            ContextCache cache,
             RequestResponseInterface requestResponseInterface,
             Environment localEnvironment
     ) {
@@ -24,7 +23,7 @@ public class AgentContext extends Context {
     }
 
     @Override
-    public Agent getThis() {
+    public Agent getThisEntity() {
         return (Agent) entity();
     }
 

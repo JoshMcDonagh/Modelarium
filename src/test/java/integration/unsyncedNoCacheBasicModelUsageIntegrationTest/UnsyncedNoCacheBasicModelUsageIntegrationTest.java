@@ -2,7 +2,6 @@ package integration.unsyncedNoCacheBasicModelUsageIntegrationTest;
 
 import modelarium.Model;
 import modelarium.Config;
-import modelarium.logging.databases.AttributeSetRunLogDatabaseFactory;
 import modelarium.results.Results;
 import modelarium.scheduler.InOrderScheduler;
 import integration.unsyncedNoCacheBasicModelUsageIntegrationTest.attributes.ModelAttributes;

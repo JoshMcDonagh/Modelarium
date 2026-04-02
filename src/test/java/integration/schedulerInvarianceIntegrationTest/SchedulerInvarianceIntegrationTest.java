@@ -2,7 +2,6 @@ package integration.schedulerInvarianceIntegrationTest;
 
 import modelarium.Model;
 import modelarium.Config;
-import modelarium.logging.databases.AttributeSetRunLogDatabaseFactory;
 import modelarium.results.Results;
 import modelarium.scheduler.InOrderScheduler;
 import modelarium.scheduler.RandomOrderScheduler;

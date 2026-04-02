@@ -1,4 +1,4 @@
-package modelarium.multithreading.utils;
+package modelarium.contexts;
 
 import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
@@ -8,14 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-/**
- * Provides local, thread-specific caching for a simulation worker.
- *
- * <p>This cache is used to reduce the cost of repeatedly fetching agents or environment data
- * from the coordinator during simulation ticks. It supports storing agent queries and
- * environmental state locally for reuse within a tick.
- */
-public class WorkerCache {
+public class ContextCache {
 
     /** List of previously applied agent filters (for caching filtered sets) */
     private final List<Predicate<Agent>> agentFiltersCacheList = new ArrayList<>();
@@ -28,11 +21,9 @@ public class WorkerCache {
 
     /**
      * Constructs a new worker cache.
-     *
-     * @param isAgentCopiesHeld whether this cache should hold deep copies of agents
      */
-    public WorkerCache(boolean isAgentCopiesHeld) {
-        agentSetCache = new AgentSet(isAgentCopiesHeld);
+    public ContextCache() {
+        agentSetCache = new AgentSet(true);
     }
 
     /**

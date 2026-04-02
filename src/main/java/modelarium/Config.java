@@ -7,10 +7,9 @@ import modelarium.results.Results;
 import modelarium.scheduler.ModelScheduler;
 
 public record Config(
-        int numOfAgents,
-        int numOfCores,
-        int numOfTicksToRun,
-        int numOfWarmUpTicks,
+        int populationSize,
+        int runLength,
+        int threadCount,
         AgentGenerator agentGenerator,
         EnvironmentGenerator environmentGenerator,
         ModelScheduler modelScheduler,

@@ -15,11 +15,6 @@ public class ImmutableAgentSet extends AgentSet {
     }
 
     @Override
-    public void setIsStoringAgentCopiesFlag(boolean isStoringAgentCopies) {
-        throwUnsupportedOperationException();
-    }
-
-    @Override
     public void add(Agent agent) {
         throwUnsupportedOperationException();
     }

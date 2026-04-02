@@ -9,7 +9,7 @@ public class ClockTest {
     @Test
     void newClock_startAtTickZero() {
         Clock clock = new Clock(10, 3);
-        assertEquals(0, clock.getTick());
+        assertEquals(0, clock.currentTick());
     }
 
     @Test
@@ -37,11 +37,11 @@ public class ClockTest {
         Clock clock = new Clock(runTicks, warmUpTicks);
 
         for (int i = 0; i < totalTicks; i++) {
-            assertTrue(clock.isRunning(), "Expected running at tick " + clock.getTick());
+            assertTrue(clock.isRunning(), "Expected running at tick " + clock.currentTick());
             clock.triggerTick();
         }
 
-        assertEquals(totalTicks, clock.getTick());
+        assertEquals(totalTicks, clock.currentTick());
         assertFalse(clock.isRunning(), "Expected not running after total ticks elapsed");
     }
 
@@ -49,13 +49,13 @@ public class ClockTest {
     void triggerTick_incrementsTickWhileRunning() {
         Clock clock = new Clock(2, 1);
 
-        assertEquals(0, clock.getTick());
+        assertEquals(0, clock.currentTick());
         clock.triggerTick();
-        assertEquals(1, clock.getTick());
+        assertEquals(1, clock.currentTick());
         clock.triggerTick();
-        assertEquals(2, clock.getTick());
+        assertEquals(2, clock.currentTick());
         clock.triggerTick();
-        assertEquals(3, clock.getTick());
+        assertEquals(3, clock.currentTick());
     }
 
     @Test
@@ -65,11 +65,11 @@ public class ClockTest {
         while (clock.isRunning())
             clock.triggerTick();
 
-        int finishedTick = clock.getTick();
+        int finishedTick = clock.currentTick();
         assertEquals(3, finishedTick);
 
         clock.triggerTick();
 
-        assertEquals(finishedTick, clock.getTick(), "Tick should not advance after the modelClock stops running");
+        assertEquals(finishedTick, clock.currentTick(), "Tick should not advance after the modelClock stops running");
     }
 }
