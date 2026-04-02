@@ -1,7 +1,7 @@
 package unit.modelarium;
 
 import modelarium.Entity;
-import modelarium.AccessibleContext;
+import modelarium.contexts.Context;
 import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
@@ -92,14 +92,14 @@ public class EntityTest {
 
     @Test
     public void testModelElementAccessorCanBeSetAndRetrieved() {
-        AccessibleContext mockAccessor = mock(AccessibleContext.class);
+        Context mockAccessor = mock(Context.class);
         dummyElement.setModelElementAccessor(mockAccessor);
         assertSame(mockAccessor, dummyElement.getModelElementAccessor());
     }
 
     @Test
     public void testAccessExternalAgentByNameDelegatesToAccessor() {
-        AccessibleContext accessor = mock(AccessibleContext.class);
+        Context accessor = mock(Context.class);
         Agent agent = mock(Agent.class);
 
         dummyElement.setModelElementAccessor(accessor);
@@ -113,7 +113,7 @@ public class EntityTest {
 
     @Test
     public void testAccessExternalAgentsByFilterDelegatesToAccessor() {
-        AccessibleContext accessor = mock(AccessibleContext.class);
+        Context accessor = mock(Context.class);
         AgentSet agentSet = mock(AgentSet.class);
 
         dummyElement.setModelElementAccessor(accessor);
@@ -129,7 +129,7 @@ public class EntityTest {
 
     @Test
     public void testAccessEnvironmentDelegatesToAccessor() {
-        AccessibleContext accessor = mock(AccessibleContext.class);
+        Context accessor = mock(Context.class);
         Environment env = mock(Environment.class);
 
         dummyElement.setModelElementAccessor(accessor);

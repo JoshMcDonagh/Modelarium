@@ -1,7 +1,7 @@
 package unit.modelarium;
 
 import modelarium.Entity;
-import modelarium.AccessibleContext;
+import modelarium.contexts.Context;
 import modelarium.Config;
 import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
@@ -17,9 +17,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for {@link AccessibleContext}.
+ * Unit tests for {@link Context}.
  */
-public class AccessibleContextTest {
+public class ContextTest {
 
     private Agent mockAgent;
     private Environment mockEnvironment;
@@ -27,7 +27,7 @@ public class AccessibleContextTest {
     private Config settings;
     private WorkerCache cache;
     private RequestResponseInterface requestInterface;
-    private AccessibleContext accessor;
+    private Context accessor;
 
     @BeforeEach
     public void setup() {
@@ -50,7 +50,7 @@ public class AccessibleContextTest {
         when(mockAttrSetCollection.getResults()).thenReturn(mockResults);
         when(mockResults.getModelElementName()).thenReturn("Agent_X");
 
-        accessor = new AccessibleContext(
+        accessor = new Context(
                 entity,
                 localAgentSet,
                 settings,

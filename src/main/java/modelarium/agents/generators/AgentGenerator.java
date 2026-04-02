@@ -29,7 +29,7 @@ public abstract class AgentGenerator {
      */
     public AgentSet generateAgents(Config config) {
         AgentSet agents = new AgentSet();
-        int numOfAgents = config.getNumOfAgents();
+        int numOfAgents = config.numOfAgents();
 
         for (int i = 0; i < numOfAgents; i++)
             agents.add(generateAgent(config));
@@ -46,7 +46,7 @@ public abstract class AgentGenerator {
      */
     public List<AgentSet> getAgentsForEachCore(Config config) {
         AgentSet agents = generateAgents(config);
-        int numOfCores = config.getNumOfCores();
+        int numOfCores = config.numOfCores();
 
         // If no cores are defined, return an empty list
         if (numOfCores < 1)

@@ -1,5 +1,8 @@
-package modelarium;
+package modelarium.contexts;
 
+import modelarium.Clock;
+import modelarium.Config;
+import modelarium.Entity;
 import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
 import modelarium.agents.sets.ImmutableAgentSet;
@@ -22,31 +25,28 @@ import java.util.function.Predicate;
  *     <li>The associated model clock</li>
  * </ul>
  */
-public class AccessibleContext {
+public abstract class Context {
 
     private final Entity entity;
     private final AgentSet localAgentSet;
     private final Config config;
     private final WorkerCache cache;
     private final RequestResponseInterface requestResponseInterface;
-    private final Environment localEnvironment;
 
     private Clock clock = null;
 
-    public AccessibleContext(
+    public Context(
             Entity entity,
             AgentSet localAgentSet,
             Config config,
             WorkerCache cache,
-            RequestResponseInterface requestResponseInterface,
-            Environment localEnvironment
+            RequestResponseInterface requestResponseInterface
     ) {
         this.entity = entity;
         this.localAgentSet = localAgentSet;
         this.config = config;
         this.cache = cache;
         this.requestResponseInterface = requestResponseInterface;
-        this.localEnvironment = localEnvironment;
     }
 
     public void setClock(Clock clock) {
@@ -61,6 +61,26 @@ public class AccessibleContext {
     public boolean doesAgentExistInThisCore(String agentName) {
         return localAgentSet.doesAgentExist(agentName);
     }
+
+    protected Entity entity() {
+        return entity;
+    }
+
+    protected Config config() {
+        return config;
+    }
+
+    protected WorkerCache cache() {
+        return cache;
+    }
+
+    protected RequestResponseInterface requestResponseInterface() {
+        return requestResponseInterface;
+    }
+
+    public abstract Entity getThis();
+
+    public abstract Environment getEnvironment();
 
     public Agent getAgent(String targetAgentName) {
         // Check local agent set
@@ -109,27 +129,5 @@ public class AccessibleContext {
         cache.addAgents(filteredAgentSet);
 
         return filteredAgentSet.getAsImmutable();
-    }
-
-    public Environment getEnvironment() {
-        if (!config.areProcessesSynced())
-            return localEnvironment;
-
-        // Return cached environment if available
-        if (cache.doesEnvironmentExist())
-            return cache.getEnvironment();
-
-        // Request environment from coordinator
-        Environment requestedEnvironment;
-        try {
-            requestedEnvironment = requestResponseInterface.getEnvironmentFromCoordinator(entity.name());
-        } catch (Exception e) {
-            return null;
-        }
-
-        // Cache the result
-        cache.addEnvironment(requestedEnvironment);
-
-        return requestedEnvironment;
     }
 }

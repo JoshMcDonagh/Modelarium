@@ -1,5 +1,6 @@
 package modelarium.attributes;
 
+import modelarium.contexts.Context;
 import modelarium.logging.AttributeSetLog;
 
 import java.util.HashMap;
@@ -35,6 +36,11 @@ public class AttributeSet {
 
     public int size() {
         return attributeList.size();
+    }
+
+    public void setContext(Context context) {
+        for (Attribute attribute : attributeList)
+            attribute.setContext(context);
     }
 
     public Attribute get(int attributeIndex) {

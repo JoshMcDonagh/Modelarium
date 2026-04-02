@@ -1,6 +1,7 @@
 package integration.agentEnvironmentSyncIntegrationTest.attributes.agent.properties;
 
-import modelarium.AccessibleContext;
+import modelarium.contexts.Context;
+import modelarium.attributes.Property;
 import modelarium.environments.Environment;
 
 public class SeenEnvTick extends Property<Integer> {
@@ -17,7 +18,7 @@ public class SeenEnvTick extends Property<Integer> {
 
     @Override
     public void run() {
-        AccessibleContext acc = getAssociatedModelElement().getModelElementAccessor();
+        Context acc = getAssociatedModelElement().getModelElementAccessor();
         Environment env = acc.getEnvironment();  // goes through coordinator/cache
         if (env != null) {
             Integer envTick = (Integer) env.getAttributeSetCollection()

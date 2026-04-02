@@ -2,7 +2,7 @@ package unit.modelarium.attributes;
 
 import modelarium.Clock;
 import modelarium.Entity;
-import modelarium.AccessibleContext;
+import modelarium.contexts.Context;
 import modelarium.attributes.*;
 import modelarium.attributes.AttributeSet;
 import modelarium.logging.AttributeSetLog;
@@ -28,11 +28,11 @@ public class AttributeSetTest {
     @BeforeEach
     public void setup() {
         Entity mockEntity = mock(Entity.class);
-        AccessibleContext mockAccessibleContext = mock(AccessibleContext.class);
+        Context mockContext = mock(Context.class);
         Clock mockClock = mock(Clock.class);
 
-        when(mockEntity.getModelElementAccessor()).thenReturn(mockAccessibleContext);
-        when(mockAccessibleContext.getClock()).thenReturn(mockClock);
+        when(mockEntity.getModelElementAccessor()).thenReturn(mockContext);
+        when(mockContext.getClock()).thenReturn(mockClock);
 
         preEvents = spy(new Events());
         properties = spy(new Properties());

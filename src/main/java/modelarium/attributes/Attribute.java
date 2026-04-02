@@ -1,13 +1,13 @@
 package modelarium.attributes;
 
-import modelarium.Entity;
+import modelarium.contexts.Context;
 
 public abstract class Attribute {
     private final String name;
     private final boolean isLogged;
     private final AttributeAccessLevel accessLevel;
 
-    private Entity owner;
+    private Context context = null;
 
     public Attribute(String name, boolean isLogged, AttributeAccessLevel accessLevel) {
         this.name = name;
@@ -23,12 +23,15 @@ public abstract class Attribute {
         return isLogged;
     }
 
-    public void setOwner(Entity owner) {
-        this.owner = owner;
+    protected Context context() {
+        return context;
     }
 
-    protected Entity owner() {
-        return owner;
+    public void setContext(Context context) {
+        if (this.context != null)
+            return;
+
+        this.context = context;
     }
 
     public AttributeAccessLevel accessLevel() {

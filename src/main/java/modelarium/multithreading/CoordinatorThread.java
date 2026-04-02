@@ -1,7 +1,7 @@
 package modelarium.multithreading;
 
 import modelarium.Clock;
-import modelarium.AccessibleContext;
+import modelarium.contexts.Context;
 import modelarium.Config;
 import modelarium.agents.sets.AgentSet;
 import modelarium.environments.Environment;
@@ -75,7 +75,7 @@ public class CoordinatorThread implements Runnable {
 
         if (this.environment.getModelElementAccessor() == null) {
             this.environment.setModelElementAccessor(
-                    new AccessibleContext(
+                    new Context(
                             this.environment,                        // modelElement
                             new AgentSet(),                     // empty global set for env
                             settings,                           // settings
@@ -86,9 +86,9 @@ public class CoordinatorThread implements Runnable {
             );
         }
 
-        AccessibleContext accessibleContext = this.environment.getModelElementAccessor();
-        if (accessibleContext == null) {
-            accessibleContext = new AccessibleContext(
+        Context context = this.environment.getModelElementAccessor();
+        if (context == null) {
+            context = new Context(
                     this.environment,
                     new AgentSet(),
                     settings,
@@ -98,12 +98,12 @@ public class CoordinatorThread implements Runnable {
             );
 
             try {
-                this.environment.setModelElementAccessor(accessibleContext);
+                this.environment.setModelElementAccessor(context);
             } catch (Throwable ignore) {}
         }
 
         this.coordinatorClock = new Clock(settings.getNumOfTicksToRun(), settings.getNumOfWarmUpTicks());
-        accessibleContext.setClock(this.coordinatorClock);
+        context.setClock(this.coordinatorClock);
     }
 
     /**

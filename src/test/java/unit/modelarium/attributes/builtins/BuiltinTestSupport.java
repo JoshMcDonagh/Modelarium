@@ -2,7 +2,7 @@ package unit.modelarium.attributes.builtins;
 
 import modelarium.Clock;
 import modelarium.Entity;
-import modelarium.AccessibleContext;
+import modelarium.contexts.Context;
 import modelarium.attributes.functional.properties.FunctionalProperty;
 
 import static org.mockito.Mockito.mock;
@@ -73,13 +73,13 @@ public final class BuiltinTestSupport {
     }
 
     public static void attachWithoutClock(TestEntity element) {
-        AccessibleContext accessor = mock(AccessibleContext.class);
+        Context accessor = mock(Context.class);
         element.setModelElementAccessor(accessor);
         element.getAttributeSetCollection().setAssociatedModelElement(element);
     }
 
     public static void attachClock(TestEntity element, int tick) {
-        AccessibleContext accessor = mock(AccessibleContext.class);
+        Context accessor = mock(Context.class);
         Clock clock = mock(Clock.class);
         when(accessor.getClock()).thenReturn(clock);
         when(clock.getTick()).thenReturn(tick);
