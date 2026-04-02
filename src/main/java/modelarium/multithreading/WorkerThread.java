@@ -75,7 +75,7 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
      * @return a {@link Results} object containing final agent-level outputs
      */
     @Override
-    public Results call() throws InterruptedException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public Results call() throws InterruptedException {
         Clock clock = new Clock(config.epochs());
         ContextCache cache = new ContextCache();
 
