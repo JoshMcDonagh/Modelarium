@@ -54,22 +54,26 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
     private Connection connection;
 
     private static Class<?> firstNonNullClass(List<?> values) {
-        if (values == null) {
+        if (values == null)
             return null;
-        }
 
         for (Object value : values) {
-            if (value != null) {
+            if (value != null)
                 return value.getClass();
-            }
         }
 
         return null;
     }
 
+    private static String createTempDatabasePath() {
+        String folderName = "temp_" + RandomStringGenerator.generateUniqueRandomString(20);
+        Path tempDir = Paths.get(System.getProperty("java.io.tmpdir"), folderName);
+        return tempDir.resolve(RandomStringGenerator.generateUniqueRandomString(20) + ".db").toString();
+    }
+
     /** Registers this instance for automatic disconnect on JVM shutdown. */
     public DiskBasedAttributeSetLogDatabase() {
-        super(RandomStringGenerator.generateUniqueRandomString(20) + ".db");
+        super(createTempDatabasePath());
 
         synchronized (activeDatabases) {
             activeDatabases.add(this);
@@ -103,17 +107,21 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
     @Override
     public void connect() {
         synchronized (dbLock) {
-            if (connection != null) {
+            if (connection != null)
                 return;
-            }
 
             try {
+                Path dbPath = Paths.get(getDatabasePath());
+                Files.createDirectories(dbPath.getParent());
+
                 connection = DriverManager.getConnection("jdbc:sqlite:" + getDatabasePath());
                 configureConnection(connection);
                 createAttributeTable();
             } catch (SQLException e) {
                 connection = null;
                 throw new RuntimeException("Failed to establish SQLite connection: " + e.getMessage(), e);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to create database directory: " + e.getMessage(), e);
             }
         }
     }
@@ -344,22 +352,19 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
     // === Utility ===
 
     private void rememberType(Map<String, Class<?>> typeMap, String name, Object value) {
-        if (value != null) {
+        if (value != null)
             typeMap.put(name, value.getClass());
-        }
     }
 
     private void ensureConnected() {
-        if (connection == null) {
+        if (connection == null)
             throw new IllegalStateException("Database connection has not been established. Call connect() first.");
-        }
     }
 
     private void deleteDatabaseFileAndMaybeParentDirectory() {
         String databasePathString = getDatabasePath();
-        if (databasePathString == null || databasePathString.isBlank()) {
+        if (databasePathString == null || databasePathString.isBlank())
             return;
-        }
 
         Path databasePath = Paths.get(databasePathString);
 
@@ -370,15 +375,24 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
         }
 
         Path parent = databasePath.getParent();
-        if (parent == null) {
+        if (parent == null)
             return;
-        }
 
         try {
             Path systemTempDir = Paths.get(System.getProperty("java.io.tmpdir")).toAbsolutePath().normalize();
             Path normalisedParent = parent.toAbsolutePath().normalize();
 
-            if (normalisedParent.startsWith(systemTempDir) && isDirectoryEmpty(normalisedParent)) {
+            if (normalisedParent.startsWith(systemTempDir)) {
+                try (var entries = Files.list(normalisedParent)) {
+                    entries.forEach(file -> {
+                        try {
+                            Files.deleteIfExists(file);
+                        } catch (IOException ex) {
+                            System.err.println("Failed to delete file: " + file + " (" + ex.getMessage() + ")");
+                        }
+                    });
+                }
+
                 Files.deleteIfExists(normalisedParent);
             }
         } catch (Exception e) {
@@ -395,9 +409,8 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
     // === JSON (De)serialisation Utilities ===
 
     private static String serialiseValue(Object value) {
-        if (value == null) {
+        if (value == null)
             return null;
-        }
 
         try {
             return OBJECT_MAPPER.writeValueAsString(value);
@@ -407,13 +420,11 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
     }
 
     private Object deserialiseValue(String value, Class<?> type) {
-        if (value == null) {
+        if (value == null)
             return null;
-        }
 
-        if (type == null) {
+        if (type == null)
             throw new IllegalArgumentException("Cannot deserialise: type is null");
-        }
 
         try {
             return OBJECT_MAPPER.readValue(value, type);

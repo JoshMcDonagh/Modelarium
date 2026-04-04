@@ -1,8 +1,5 @@
 package modelarium.entities.logging.databases;
 
-import com.rits.cloning.Cloner;
-import utils.RandomStringGenerator;
-
 import java.util.List;
 
 /**
@@ -13,7 +10,7 @@ import java.util.List;
  * This class supports both tick-by-tick updates and full-column writes.
  */
 public abstract class AttributeSetLogDatabase {
-    private String databasePath = null;
+    private final String databasePath;
 
     public AttributeSetLogDatabase(String databasePath) {
         this.databasePath = databasePath;

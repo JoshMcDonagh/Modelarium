@@ -129,8 +129,8 @@ public class Model {
         // Collect results from each worker thread
         try {
             for (Future<Results> future : futures) {
-                Results coreResult = future.get();
-                results.mergeWith(coreResult);
+                Results resultsForThread = future.get();
+                results.mergeWith(resultsForThread);
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
