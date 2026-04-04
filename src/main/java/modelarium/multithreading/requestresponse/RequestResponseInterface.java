@@ -1,9 +1,9 @@
 package modelarium.multithreading.requestresponse;
 
 import modelarium.Config;
-import modelarium.agents.Agent;
-import modelarium.agents.sets.AgentSet;
-import modelarium.environments.Environment;
+import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.environments.Environment;
 
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
@@ -39,7 +39,7 @@ public class RequestResponseInterface {
      */
     public RequestResponseInterface(String name, Config config, RequestResponseController requestResponseController) {
         this.name = name;
-        this.areProcessesSynced = config.areProcessesSynced();
+        this.areProcessesSynced = config.areThreadsSynced();
         this.requestQueue = requestResponseController.getRequestQueue();
         this.responseQueue = requestResponseController.getResponseQueue();
     }

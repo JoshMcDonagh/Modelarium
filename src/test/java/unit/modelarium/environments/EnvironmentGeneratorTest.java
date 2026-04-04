@@ -1,8 +1,8 @@
 package unit.modelarium.environments;
 
 import modelarium.Config;
-import modelarium.environments.Environment;
-import modelarium.environments.EnvironmentGenerator;
+import modelarium.entities.environments.Environment;
+import modelarium.entities.environments.EnvironmentGenerator;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

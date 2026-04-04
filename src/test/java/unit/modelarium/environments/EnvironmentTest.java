@@ -1,6 +1,6 @@
 package unit.modelarium.environments;
 
-import modelarium.environments.Environment;
+import modelarium.entities.environments.Environment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

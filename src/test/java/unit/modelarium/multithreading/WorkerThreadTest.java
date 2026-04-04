@@ -1,9 +1,9 @@
 package unit.modelarium.multithreading;
 
-import modelarium.contexts.Context;
+import modelarium.entities.contexts.Context;
 import modelarium.Config;
-import modelarium.agents.Agent;
-import modelarium.agents.sets.AgentSet;
+import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.sets.AgentSet;
 import modelarium.multithreading.WorkerThread;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;

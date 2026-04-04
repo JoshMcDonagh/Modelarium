@@ -1,13 +1,13 @@
 package unit.modelarium;
 
-import modelarium.Entity;
-import modelarium.contexts.Context;
+import modelarium.entities.Entity;
+import modelarium.entities.contexts.Context;
 import modelarium.Config;
-import modelarium.agents.Agent;
-import modelarium.agents.sets.AgentSet;
-import modelarium.environments.Environment;
+import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.environments.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
-import modelarium.contexts.ContextCache;
+import modelarium.entities.contexts.ContextCache;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

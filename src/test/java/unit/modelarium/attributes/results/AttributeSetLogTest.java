@@ -1,9 +1,9 @@
 package unit.modelarium.attributes.results;
 
-import modelarium.attributes.*;
-import modelarium.attributes.AttributeSet;
-import modelarium.logging.AttributeSetLog;
-import modelarium.logging.databases.AttributeSetLogDatabase;
+import modelarium.entities.attributes.*;
+import modelarium.entities.attributes.AttributeSet;
+import modelarium.entities.logging.AttributeSetLog;
+import modelarium.entities.logging.databases.AttributeSetLogDatabase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

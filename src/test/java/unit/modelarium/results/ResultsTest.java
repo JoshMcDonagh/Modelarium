@@ -1,10 +1,10 @@
 package unit.modelarium.results;
 
-import modelarium.agents.Agent;
-import modelarium.agents.sets.AgentSet;
-import modelarium.logging.databases.AttributeSetLogDatabase;
-import modelarium.results.AgentLevelResults;
-import modelarium.results.EnvironmentLevelResults;
+import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.logging.databases.AttributeSetLogDatabase;
+import modelarium.results.ResultsForAgents;
+import modelarium.results.ResultsForEnvironment;
 import modelarium.results.Results;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,8 +24,8 @@ public class ResultsTest {
 
     private Agent agent;
     private AgentSet agentSet;
-    private AgentLevelResults mockAgentResults;
-    private EnvironmentLevelResults mockEnvironmentResults;
+    private ResultsForAgents mockAgentsResults;
+    private ResultsForEnvironment mockEnvironmentResults;
     private TestResults results;
 
     @BeforeEach
@@ -36,8 +36,8 @@ public class ResultsTest {
         agentSet = new AgentSet();
         agentSet.add(agent);
 
-        mockAgentResults = mock(AgentLevelResults.class);
-        mockEnvironmentResults = mock(EnvironmentLevelResults.class);
+        mockAgentsResults = mock(ResultsForAgents.class);
+        mockEnvironmentResults = mock(ResultsForEnvironment.class);
 
         results = new TestResults();
     }
@@ -57,8 +57,8 @@ public class ResultsTest {
 
     @Test
     void testSetAgentResultsConnectsDatabase() {
-        results.setAgentResults(mockAgentResults);
-        when(mockAgentResults.getPropertyValues("Agent1", "attr", "prop")).thenReturn(List.of("val"));
+        results.setAgentResults(mockAgentsResults);
+        when(mockAgentsResults.getPropertyValues("Agent1", "attr", "prop")).thenReturn(List.of("val"));
 
         List<Object> values = results.getAgentPropertyValues("Agent1", "attr", "prop");
         assertEquals(List.of("val"), values);
@@ -86,13 +86,13 @@ public class ResultsTest {
     }
 
     @Test
-    void testDisconnectRawDatabasesDisconnectsAgentsAndEnvironment() {
-        results.setAgentResults(mockAgentResults);
+    void testDisconnectDatabasesDisconnectsAgentsAndEnvironment() {
+        results.setAgentResults(mockAgentsResults);
         results.setEnvironmentResults(mockEnvironmentResults);
 
-        results.disconnectRawDatabases();
+        results.disconnectDatabases();
 
-        verify(mockAgentResults).disconnectDatabases();
+        verify(mockAgentsResults).disconnectDatabases();
         verify(mockEnvironmentResults).disconnectDatabases();
     }
 

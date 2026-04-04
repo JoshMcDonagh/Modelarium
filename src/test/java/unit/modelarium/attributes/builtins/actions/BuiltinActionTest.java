@@ -1,11 +1,11 @@
 package unit.modelarium.attributes.builtins.actions;
 
-import modelarium.attributes.builtins.actions.AddDoubleAction;
-import modelarium.attributes.builtins.actions.SetBooleanAction;
-import modelarium.attributes.builtins.actions.SetDoubleAction;
-import modelarium.attributes.builtins.actions.ToggleBooleanAction;
-import modelarium.attributes.builtins.refs.LiteralDoubleRef;
-import modelarium.attributes.builtins.refs.PropertyDoubleRef;
+import modelarium.entities.attributes.builtins.actions.AddDoubleAction;
+import modelarium.entities.attributes.builtins.actions.SetBooleanAction;
+import modelarium.entities.attributes.builtins.actions.SetDoubleAction;
+import modelarium.entities.attributes.builtins.actions.ToggleBooleanAction;
+import modelarium.entities.attributes.builtins.refs.LiteralDoubleRef;
+import modelarium.entities.attributes.builtins.refs.PropertyDoubleRef;
 import org.junit.jupiter.api.Test;
 import unit.modelarium.attributes.builtins.BuiltinTestSupport;
 

@@ -1,16 +1,16 @@
 package modelarium;
 
-import modelarium.agents.sets.AgentSet;
-import modelarium.contexts.EnvironmentContext;
-import modelarium.environments.Environment;
-import modelarium.logging.databases.factories.AttributeSetLogDatabaseFactory;
+import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.contexts.EnvironmentContext;
+import modelarium.entities.environments.Environment;
+import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 import modelarium.multithreading.CoordinatorThread;
 import modelarium.multithreading.WorkerThread;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
-import modelarium.contexts.ContextCache;
-import modelarium.results.AgentLevelResults;
-import modelarium.results.EnvironmentLevelResults;
+import modelarium.entities.contexts.ContextCache;
+import modelarium.results.ResultsForAgents;
+import modelarium.results.ResultsForEnvironment;
 import modelarium.results.Results;
 
 import java.lang.reflect.InvocationTargetException;
@@ -29,7 +29,7 @@ public class Model {
     /** Configuration settings for this model run */
     private final Config config;
 
-    private final Results results;
+    private final Results results = new Results();
 
     /**
      * Constructs a new model instance with the specified settings.
@@ -38,7 +38,6 @@ public class Model {
      */
     public Model(Config config) {
         this.config = config;
-        this.results = config.results();
     }
 
     /**
@@ -62,7 +61,7 @@ public class Model {
 
         // Instantiate results container
         results.setAgentNames(agentsForEachCore);
-        results.setAgentResults(new AgentLevelResults(new AgentSet()));
+        results.setAgentResults(new ResultsForAgents(new AgentSet()));
 
         // Set up multithreaded execution
         ExecutorService executorService = Executors.newFixedThreadPool(config.threadCount());
@@ -87,7 +86,7 @@ public class Model {
         environment.setContext(environmentContext);
 
         // Launch central coordinator if synchronisation is required
-        if (config.areProcessesSynced()) {
+        if (config.areThreadsSynced()) {
             coordinator = new CoordinatorThread(
                     String.valueOf(config.threadCount()),
                     config,
@@ -131,7 +130,7 @@ public class Model {
         try {
             for (Future<Results> future : futures) {
                 Results coreResult = future.get();
-                results.mergeWithBeforeAccumulation(coreResult);
+                results.mergeWith(coreResult);
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
@@ -140,7 +139,7 @@ public class Model {
         }
 
         // Gracefully stop the coordinator thread if it was used
-        if (config.areProcessesSynced()) {
+        if (config.areThreadsSynced()) {
             coordinator.shutdown();
             try {
                 coordinatorThread.join();
@@ -150,9 +149,7 @@ public class Model {
         }
 
         // Post-processing of results
-        results.setEnvironmentResults(new EnvironmentLevelResults(environment));
-        results.accumulateAgentAttributeData();
-        results.processEnvironmentAttributeData();
+        results.setEnvironmentResults(new ResultsForEnvironment(environment));
         results.seal(); // Finalise results
     }
 

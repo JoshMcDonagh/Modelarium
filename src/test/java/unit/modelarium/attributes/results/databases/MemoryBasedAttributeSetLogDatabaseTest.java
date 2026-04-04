@@ -1,6 +1,6 @@
 package unit.modelarium.attributes.results.databases;
 
-import modelarium.logging.databases.MemoryBasedAttributeSetLogDatabase;
+import modelarium.entities.logging.databases.MemoryBasedAttributeSetLogDatabase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,6 @@
 package unit.modelarium.attributes.results.databases;
 
-import modelarium.logging.databases.AttributeSetLogDatabase;
+import modelarium.entities.logging.databases.AttributeSetLogDatabase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

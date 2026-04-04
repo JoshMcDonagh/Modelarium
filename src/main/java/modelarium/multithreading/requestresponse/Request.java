@@ -1,6 +1,6 @@
 package modelarium.multithreading.requestresponse;
 
-import modelarium.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.AgentSet;
 
 /**
  * Represents a request sent from a worker thread to the coordinator thread

@@ -1,10 +1,10 @@
 package unit.modelarium.attributes.builtins.properties;
 
-import modelarium.attributes.builtins.properties.AddDoubleProperty;
-import modelarium.attributes.builtins.properties.ClampDoubleProperty;
-import modelarium.attributes.builtins.properties.ConstantDoubleProperty;
-import modelarium.attributes.builtins.properties.CopyDoubleProperty;
-import modelarium.attributes.builtins.refs.LiteralDoubleRef;
+import modelarium.entities.attributes.builtins.properties.AddDoubleProperty;
+import modelarium.entities.attributes.builtins.properties.ClampDoubleProperty;
+import modelarium.entities.attributes.builtins.properties.ConstantDoubleProperty;
+import modelarium.entities.attributes.builtins.properties.CopyDoubleProperty;
+import modelarium.entities.attributes.builtins.refs.LiteralDoubleRef;
 import org.junit.jupiter.api.Test;
 import unit.modelarium.attributes.builtins.BuiltinTestSupport;
 

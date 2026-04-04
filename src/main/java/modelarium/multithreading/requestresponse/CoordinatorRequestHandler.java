@@ -1,10 +1,10 @@
 package modelarium.multithreading.requestresponse;
 
 import modelarium.Config;
-import modelarium.agents.Agent;
-import modelarium.agents.sets.AgentSet;
-import modelarium.contexts.EnvironmentContext;
-import modelarium.environments.Environment;
+import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.contexts.EnvironmentContext;
+import modelarium.entities.environments.Environment;
 
 import java.util.*;
 import java.util.concurrent.BlockingQueue;

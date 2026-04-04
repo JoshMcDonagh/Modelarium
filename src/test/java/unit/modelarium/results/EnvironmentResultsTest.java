@@ -1,8 +1,8 @@
 package unit.modelarium.results;
 
-import modelarium.logging.AttributeSetLog;
-import modelarium.environments.Environment;
-import modelarium.results.EnvironmentLevelResults;
+import modelarium.entities.logging.AttributeSetLog;
+import modelarium.entities.environments.Environment;
+import modelarium.results.ResultsForEnvironment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for {@link EnvironmentLevelResults}.
+ * Unit tests for {@link ResultsForEnvironment}.
  */
 public class EnvironmentResultsTest {
 
@@ -43,7 +43,7 @@ public class EnvironmentResultsTest {
 
     @Test
     void testGetPropertyValuesReturnsExpectedValues() {
-        EnvironmentLevelResults results = new EnvironmentLevelResults(mockEnvironment);
+        ResultsForEnvironment results = new ResultsForEnvironment(mockEnvironment);
 
         List<Object> values = results.getPropertyValues("Weather", "temperature");
         assertEquals(List.of(23.5), values);
@@ -51,7 +51,7 @@ public class EnvironmentResultsTest {
 
     @Test
     void testGetPreEventValuesReturnsExpectedValues() {
-        EnvironmentLevelResults results = new EnvironmentLevelResults(mockEnvironment);
+        ResultsForEnvironment results = new ResultsForEnvironment(mockEnvironment);
 
         List<Boolean> values = results.getPreEventValues("Weather", "stormWarning");
         assertEquals(List.of(true), values);
@@ -59,7 +59,7 @@ public class EnvironmentResultsTest {
 
     @Test
     void testGetPostEventValuesReturnsExpectedValues() {
-        EnvironmentLevelResults results = new EnvironmentLevelResults(mockEnvironment);
+        ResultsForEnvironment results = new ResultsForEnvironment(mockEnvironment);
 
         List<Boolean> values = results.getPostEventValues("Weather", "rainEnd");
         assertEquals(List.of(false), values);
@@ -67,7 +67,7 @@ public class EnvironmentResultsTest {
 
     @Test
     void testGetAttributeSetCollectionResultsReturnsCorrectResults() {
-        EnvironmentLevelResults results = new EnvironmentLevelResults(mockEnvironment);
+        ResultsForEnvironment results = new ResultsForEnvironment(mockEnvironment);
 
         AttributeSetCollectionResults retrieved = results.getAttributeSetCollectionResults();
         assertEquals(mockCollectionResults, retrieved);

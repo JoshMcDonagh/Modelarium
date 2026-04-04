@@ -1,8 +1,8 @@
 package unit.modelarium;
 
 import modelarium.Config;
-import modelarium.agents.generators.AgentGenerator;
-import modelarium.environments.EnvironmentGenerator;
+import modelarium.entities.agents.generators.AgentGenerator;
+import modelarium.entities.environments.EnvironmentGenerator;
 import modelarium.results.Results;
 import modelarium.scheduler.Scheduler;
 import org.junit.jupiter.api.BeforeEach;
@@ -96,7 +96,7 @@ public class ConfigTest {
     public void testAgentGeneratorSetterAndGetter() {
         AgentGenerator mockGenerator = new AgentGenerator() {
             @Override
-            protected modelarium.agents.Agent generateAgent(Config settings) {
+            protected modelarium.entities.agents.Agent generateAgent(Config settings) {
                 return null;
             }
         };
@@ -108,7 +108,7 @@ public class ConfigTest {
     public void testEnvironmentGeneratorSetterAndGetter() {
         EnvironmentGenerator mockGenerator = new EnvironmentGenerator() {
             @Override
-            public modelarium.environments.Environment generateEnvironment(Config settings) {
+            public modelarium.entities.environments.Environment generateEnvironment(Config settings) {
                 return null;
             }
         };

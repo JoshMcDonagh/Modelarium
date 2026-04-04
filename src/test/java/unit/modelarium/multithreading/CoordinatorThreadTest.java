@@ -1,9 +1,9 @@
 package unit.modelarium.multithreading;
 
 import modelarium.Config;
-import modelarium.agents.Agent;
-import modelarium.agents.sets.AgentSet;
-import modelarium.environments.Environment;
+import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.environments.Environment;
 import modelarium.multithreading.CoordinatorThread;
 import modelarium.multithreading.requestresponse.*;
 import org.junit.jupiter.api.BeforeEach;

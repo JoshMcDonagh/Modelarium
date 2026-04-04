@@ -1,14 +1,14 @@
 package unit.modelarium.attributes.builtins.events;
 
-import modelarium.Entity;
-import modelarium.attributes.builtins.actions.AddDoubleAction;
-import modelarium.attributes.builtins.actions.SetBooleanAction;
-import modelarium.attributes.builtins.events.ThresholdCrossingEvent;
-import modelarium.attributes.builtins.events.ThresholdDirection;
-import modelarium.attributes.builtins.events.TimerEvent;
-import modelarium.attributes.builtins.refs.LiteralDoubleRef;
-import modelarium.attributes.builtins.refs.PropertyDoubleRef;
-import modelarium.attributes.AttributeSet;
+import modelarium.entities.Entity;
+import modelarium.entities.attributes.builtins.actions.AddDoubleAction;
+import modelarium.entities.attributes.builtins.actions.SetBooleanAction;
+import modelarium.entities.attributes.builtins.events.ThresholdCrossingEvent;
+import modelarium.entities.attributes.builtins.events.ThresholdDirection;
+import modelarium.entities.attributes.builtins.events.TimerEvent;
+import modelarium.entities.attributes.builtins.refs.LiteralDoubleRef;
+import modelarium.entities.attributes.builtins.refs.PropertyDoubleRef;
+import modelarium.entities.attributes.AttributeSet;
 import org.junit.jupiter.api.Test;
 import unit.modelarium.attributes.builtins.BuiltinTestSupport;
 
@@ -26,8 +26,8 @@ class BuiltinEventTest {
                 new AttributeSet(
                         "core",
                         events(seedEvent),
-                        new modelarium.attributes.Properties(),
-                        new modelarium.attributes.Events()
+                        new modelarium.entities.attributes.Properties(),
+                        new modelarium.entities.attributes.Events()
                 )
         );
         BuiltinTestSupport.attachClock(element, 3);
@@ -48,8 +48,8 @@ class BuiltinEventTest {
                 new AttributeSet(
                         "core",
                         events(seedEvent),
-                        new modelarium.attributes.Properties(),
-                        new modelarium.attributes.Events()
+                        new modelarium.entities.attributes.Properties(),
+                        new modelarium.entities.attributes.Events()
                 )
         );
         BuiltinTestSupport.attachClock(element, 13);
@@ -70,8 +70,8 @@ class BuiltinEventTest {
                 new AttributeSet(
                         "core",
                         events(seedEvent),
-                        new modelarium.attributes.Properties(),
-                        new modelarium.attributes.Events()
+                        new modelarium.entities.attributes.Properties(),
+                        new modelarium.entities.attributes.Events()
                 )
         );
         BuiltinTestSupport.attachClock(element, 2);
@@ -92,8 +92,8 @@ class BuiltinEventTest {
                 new AttributeSet(
                         "core",
                         events(seedEvent),
-                        new modelarium.attributes.Properties(),
-                        new modelarium.attributes.Events()
+                        new modelarium.entities.attributes.Properties(),
+                        new modelarium.entities.attributes.Events()
                 )
         );
         BuiltinTestSupport.attachClock(element, 4);
@@ -313,20 +313,20 @@ class BuiltinEventTest {
         assertEquals(true, flag.get());
     }
 
-    private static modelarium.attributes.Events events(modelarium.attributes.Event... events) {
-        modelarium.attributes.Events collection = new modelarium.attributes.Events();
-        for (modelarium.attributes.Event event : events)
+    private static modelarium.entities.attributes.Events events(modelarium.entities.attributes.Event... events) {
+        modelarium.entities.attributes.Events collection = new modelarium.entities.attributes.Events();
+        for (modelarium.entities.attributes.Event event : events)
             collection.add(event);
         return collection;
     }
 
     @SuppressWarnings("unchecked")
-    private static modelarium.attributes.Property<Double> getDoubleProperty(
+    private static modelarium.entities.attributes.Property<Double> getDoubleProperty(
             Entity element,
             String attributeSetName,
             String propertyName
     ) {
-        return (modelarium.attributes.Property<Double>) element.getAttributeSetCollection()
+        return (modelarium.entities.attributes.Property<Double>) element.getAttributeSetCollection()
                 .get(attributeSetName)
                 .getProperties()
                 .get(propertyName);

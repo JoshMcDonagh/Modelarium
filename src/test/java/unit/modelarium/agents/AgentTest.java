@@ -1,7 +1,7 @@
 package unit.modelarium.agents;
 
-import modelarium.Entity;
-import modelarium.agents.Agent;
+import modelarium.entities.Entity;
+import modelarium.entities.agents.Agent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

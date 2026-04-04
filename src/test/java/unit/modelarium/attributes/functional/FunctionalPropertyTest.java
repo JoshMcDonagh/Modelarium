@@ -1,9 +1,9 @@
 package unit.modelarium.attributes.functional;
 
-import modelarium.attributes.functional.properties.FunctionalProperty;
-import modelarium.attributes.functional.properties.PropertyGetterFunction;
-import modelarium.attributes.functional.properties.PropertyRunFunction;
-import modelarium.attributes.functional.properties.PropertySetterFunction;
+import modelarium.entities.attributes.functional.properties.FunctionalProperty;
+import modelarium.entities.attributes.functional.properties.PropertyGetterFunction;
+import modelarium.entities.attributes.functional.properties.PropertyRunFunction;
+import modelarium.entities.attributes.functional.properties.PropertySetterFunction;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

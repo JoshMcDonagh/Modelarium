@@ -1,7 +1,7 @@
 package unit.modelarium.scheduler;
 
-import modelarium.agents.Agent;
-import modelarium.agents.sets.AgentSet;
+import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.sets.AgentSet;
 import modelarium.scheduler.FunctionalScheduler;
 import org.junit.jupiter.api.Test;
 

@@ -1,13 +1,10 @@
 package modelarium.multithreading;
 
-import modelarium.Clock;
-import modelarium.contexts.Context;
 import modelarium.Config;
-import modelarium.agents.sets.AgentSet;
-import modelarium.contexts.EnvironmentContext;
-import modelarium.environments.Environment;
+import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.contexts.EnvironmentContext;
+import modelarium.entities.environments.Environment;
 import modelarium.multithreading.requestresponse.*;
-import modelarium.contexts.ContextCache;
 
 /**
  * Coordinator thread responsible for managing synchronised access to shared simulation state

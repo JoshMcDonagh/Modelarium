@@ -2,17 +2,16 @@ package modelarium.multithreading;
 
 import modelarium.Clock;
 import modelarium.Config;
-import modelarium.agents.Agent;
-import modelarium.agents.sets.AgentSet;
-import modelarium.contexts.AgentContext;
-import modelarium.environments.Environment;
+import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.contexts.AgentContext;
+import modelarium.entities.environments.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
-import modelarium.contexts.ContextCache;
-import modelarium.results.AgentLevelResults;
+import modelarium.entities.contexts.ContextCache;
+import modelarium.results.ResultsForAgents;
 import modelarium.results.Results;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
@@ -82,7 +81,7 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
         for (Agent agent : agentsInThread) {
             Environment localEnvironment = null;
 
-            if (config.areProcessesSynced())
+            if (config.areThreadsSynced())
                 localEnvironment = environment.clone();
 
             AgentContext agentContext = new AgentContext(
@@ -101,14 +100,14 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
         RequestResponseInterface requestResponseInterface = requestResponseController.getInterface(threadName);
 
         // Initial broadcast of agent state to coordinator
-        if (config.areProcessesSynced())
+        if (config.areThreadsSynced())
             requestResponseInterface.updateCoordinatorAgents(agentsInThread);
 
         // Simulation main loop
         while (!clock.isFinished()) {
             config.scheduler().runTick(agentsInThread);
 
-            if (config.areProcessesSynced()) {
+            if (config.areThreadsSynced()) {
                 requestResponseInterface.waitUntilAllWorkersFinishTick();
                 agentsInThread.add(updatedAgents); // Merge agent updates
                 requestResponseInterface.updateCoordinatorAgents(agentsInThread);
@@ -120,10 +119,10 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
         }
 
         // Final setup and result collection
-        AgentLevelResults agentResults = new AgentLevelResults(agentsInThread);
+        ResultsForAgents agentsResults = new ResultsForAgents(agentsInThread);
         Results results = config.results();
         results.setAgentNames(agentsInThread);
-        results.setAgentResults(agentResults);
+        results.setAgentResults(agentsResults);
 
         return results;
     }

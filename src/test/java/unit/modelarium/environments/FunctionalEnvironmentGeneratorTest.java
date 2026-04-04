@@ -1,8 +1,8 @@
 package unit.modelarium.environments;
 
 import modelarium.Config;
-import modelarium.environments.Environment;
-import modelarium.environments.FunctionalEnvironmentGenerator;
+import modelarium.entities.environments.Environment;
+import modelarium.entities.environments.FunctionalEnvironmentGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;

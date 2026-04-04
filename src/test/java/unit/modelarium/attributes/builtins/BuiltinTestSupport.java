@@ -1,9 +1,9 @@
 package unit.modelarium.attributes.builtins;
 
 import modelarium.Clock;
-import modelarium.Entity;
-import modelarium.contexts.Context;
-import modelarium.attributes.functional.properties.FunctionalProperty;
+import modelarium.entities.Entity;
+import modelarium.entities.contexts.Context;
+import modelarium.entities.attributes.functional.properties.FunctionalProperty;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -40,9 +40,9 @@ public final class BuiltinTestSupport {
             props.add(property);
         return new AttributeSet(
                 name,
-                new modelarium.attributes.Events(),
+                new modelarium.entities.attributes.Events(),
                 props,
-                new modelarium.attributes.Events()
+                new modelarium.entities.attributes.Events()
         );
     }
 
