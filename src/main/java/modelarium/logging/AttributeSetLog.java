@@ -4,7 +4,8 @@ import modelarium.attributes.Attribute;
 import modelarium.attributes.AttributeSet;
 import modelarium.attributes.Event;
 import modelarium.attributes.Property;
-import modelarium.logging.databases.AttributeSetRunLogDatabase;
+import modelarium.logging.databases.AttributeSetLogDatabase;
+import modelarium.logging.databases.factories.AttributeSetLogDatabaseFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class AttributeSetLog {
     private final String attributeSetName;
 
     /** The database instance used to store this attribute set’s results */
-    private final AttributeSetRunLogDatabase database;
+    private final AttributeSetLogDatabase database;
 
     /** Names of all logged attributes */
     private final List<String> attributeNamesList = new ArrayList<>();
@@ -38,9 +39,8 @@ public class AttributeSetLog {
     public AttributeSetLog(String ownerName, String attributeSetName, List<Attribute> attributeList) {
         this.ownerName = ownerName;
         this.attributeSetName = attributeSetName;
-        this.database = AttributeSetRunLogDatabaseFactory.createDatabase();
+        this.database = AttributeSetLogDatabaseFactory.get().create();
 
-        assert database != null;
         database.connect();
 
         // Register attributes marked for logging
@@ -78,6 +78,10 @@ public class AttributeSetLog {
      */
     public Class<?> getPropertyType(String propertyName) {
         return propertyTypesMap.get(propertyName);
+    }
+
+    public int attributeLogCount() {
+        return attributeNamesList.size();
     }
 
     public void record(Attribute attribute) {

@@ -3,6 +3,7 @@ package modelarium.results;
 import modelarium.environments.Environment;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * A concrete results container for the simulation environment.
@@ -25,45 +26,23 @@ public class EnvironmentLevelResults extends EntityLevelResults {
         this.environmentName = environment.name();
     }
 
-    /**
-     * Retrieves all recorded values of a given property from the specified attribute set.
-     *
-     * @param attributeSetName the name of the attribute set
-     * @param propertyName the name of the property
-     * @return a list of recorded property values
-     */
-    public List<Object> getPropertyValues(String attributeSetName, String propertyName) {
-        return getPropertyValues(environmentName, attributeSetName, propertyName);
+    public List<Object> getLogForEnvironmentAttribute(String attributeSetName, String attributeName) {
+        return getLogForEntityAttribute(this.environmentName, attributeSetName, attributeName);
     }
 
-    /**
-     * Retrieves all recorded trigger states of a pre-event from the specified attribute set.
-     *
-     * @param attributeSetName the name of the attribute set
-     * @param eventName the name of the event
-     * @return a list of booleans indicating whether the event was triggered
-     */
-    public List<Boolean> getPreEventValues(String attributeSetName, String eventName) {
-        return getPreEventValues(environmentName, attributeSetName, eventName);
+    public int EnvironmentAttributeSetLogCount() {
+        return entityAttributeSetLogCount(environmentName);
     }
 
-    /**
-     * Retrieves all recorded trigger states of a post-event from the specified attribute set.
-     *
-     * @param attributeSetName the name of the attribute set
-     * @param eventName the name of the event
-     * @return a list of booleans indicating whether the event was triggered
-     */
-    public List<Boolean> getPostEventValues(String attributeSetName, String eventName) {
-        return getPostEventValues(environmentName, attributeSetName, eventName);
+    public int EnvironmentAttributeSetAttributeLogCount(String attributeSetName) {
+        return entityAttributeSetAttributeLogCount(environmentName, attributeSetName);
     }
 
-    /**
-     * Returns the full results object for the environment's attribute sets.
-     *
-     * @return the environment's attribute set collection results
-     */
-    public AttributeSetCollectionResults getAttributeSetCollectionResults() {
-        return getAttributeSetCollectionResults(environmentName);
+    public Map<String, List<Object>> getLogsForEnvironmentAttributeSetAsMap(String attributeSetName) {
+        return getLogsForEntityAttributeSetAsMap(environmentName, attributeSetName);
+    }
+
+    public Map<String, Map<String, List<Object>>> getLogsForEnvironmentAsMap() {
+        return getLogsForEntityAsMap(environmentName);
     }
 }

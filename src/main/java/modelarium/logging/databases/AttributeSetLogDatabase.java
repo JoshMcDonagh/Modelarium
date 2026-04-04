@@ -12,18 +12,15 @@ import java.util.List;
  * <p>Concrete implementations may write to in-memory structures, files, or external systems.
  * This class supports both tick-by-tick updates and full-column writes.
  */
-public abstract class AttributeSetRunLogDatabase {
-    private static final Cloner cloner = new Cloner();
-
-    public static AttributeSetRunLogDatabase setupAndClone(AttributeSetRunLogDatabase database) {
-        database.setDatabasePath(RandomStringGenerator.generateUniqueRandomString(20) + ".db");
-        return cloner.deepClone(database);
-    }
-
+public abstract class AttributeSetLogDatabase {
     private String databasePath = null;
 
-    protected void setDatabasePath(String databasePath) {
+    public AttributeSetLogDatabase(String databasePath) {
         this.databasePath = databasePath;
+    }
+
+    public AttributeSetLogDatabase() {
+        this.databasePath = null;
     }
 
     public String getDatabasePath() {

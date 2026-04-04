@@ -1,7 +1,7 @@
 package unit.modelarium.attributes.results.databases;
 
-import modelarium.logging.databases.AttributeSetRunLogDatabase;
-import modelarium.logging.databases.DiskBasedAttributeSetRunLogDatabase;
+import modelarium.logging.databases.AttributeSetLogDatabase;
+import modelarium.logging.databases.DiskBasedAttributeSetLogDatabase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,20 +14,20 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for {@link DiskBasedAttributeSetRunLogDatabase}.
+ * Unit tests for {@link DiskBasedAttributeSetLogDatabase}.
  *
  * <p>Verifies that values written to properties and events can be retrieved correctly.
  * Uses a temporary database file that is deleted after each test.
  */
 public class DiskBasedAttributeSetLogDatabaseTest {
 
-    private DiskBasedAttributeSetRunLogDatabase database;
+    private DiskBasedAttributeSetLogDatabase database;
 
     @BeforeEach
     public void setUp() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        database = new DiskBasedAttributeSetRunLogDatabase();
+        database = new DiskBasedAttributeSetLogDatabase();
 
-        Method setDatabasePathMethod = AttributeSetRunLogDatabase.class
+        Method setDatabasePathMethod = AttributeSetLogDatabase.class
                 .getDeclaredMethod("setDatabasePath", String.class);
         setDatabasePathMethod.setAccessible(true);
         setDatabasePathMethod.invoke(database, "test_" + System.nanoTime() + ".db");

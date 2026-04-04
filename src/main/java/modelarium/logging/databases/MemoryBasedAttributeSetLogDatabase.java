@@ -6,15 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * An in-memory implementation of {@link AttributeSetRunLogDatabase}.
+ * An in-memory implementation of {@link AttributeSetLogDatabase}.
  *
  * <p>This class stores all simulation results directly in RAM, using Java collections.
  * It is useful for lightweight simulations, unit tests, or post-processing before output.
  *
- * <p>Unlike {@link DiskBasedAttributeSetRunLogDatabase}, this class does not persist results to disk.
+ * <p>Unlike {@link DiskBasedAttributeSetLogDatabase}, this class does not persist results to disk.
  */
-public class MemoryBasedAttributeSetRunLogDatabase extends AttributeSetRunLogDatabase {
-
+public class MemoryBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
     private final Map<String, List<Object>> attributesMap = new HashMap<>();
     private final Map<String, Class<?>> attributeClassesMap = new HashMap<>();
 
@@ -26,14 +25,8 @@ public class MemoryBasedAttributeSetRunLogDatabase extends AttributeSetRunLogDat
         return null;
     }
 
-    /**
-     * Overrides setDatabasePath but ignores the value, as memory-based storage does not require a file path.
-     *
-     * @param databasePath ignored
-     */
-    @Override
-    protected void setDatabasePath(String databasePath) {
-        // No-op for in-memory implementation
+    public MemoryBasedAttributeSetLogDatabase() {
+        super();
     }
 
     @Override

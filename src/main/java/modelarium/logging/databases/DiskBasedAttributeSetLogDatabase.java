@@ -2,6 +2,7 @@ package modelarium.logging.databases;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import utils.RandomStringGenerator;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,7 +17,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Concrete implementation of {@link AttributeSetRunLogDatabase} that stores results
+ * Concrete implementation of {@link AttributeSetLogDatabase} that stores results
  * in an SQLite database file.
  *
  * <p>This implementation uses a stable row-based schema internally instead of
@@ -27,10 +28,10 @@ import java.util.concurrent.ConcurrentHashMap;
  *     (series_name, position_index, value_json)
  * </pre>
  */
-public class DiskBasedAttributeSetRunLogDatabase extends AttributeSetRunLogDatabase {
+public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
 
     /** Thread-safe list of currently active databases to auto-disconnect on JVM shutdown. */
-    private static final List<DiskBasedAttributeSetRunLogDatabase> activeDatabases =
+    private static final List<DiskBasedAttributeSetLogDatabase> activeDatabases =
             Collections.synchronizedList(new ArrayList<>());
 
     private static volatile boolean shutdownHookRegistered = false;
@@ -67,18 +68,20 @@ public class DiskBasedAttributeSetRunLogDatabase extends AttributeSetRunLogDatab
     }
 
     /** Registers this instance for automatic disconnect on JVM shutdown. */
-    public DiskBasedAttributeSetRunLogDatabase() {
+    public DiskBasedAttributeSetLogDatabase() {
+        super(RandomStringGenerator.generateUniqueRandomString(20) + ".db");
+
         synchronized (activeDatabases) {
             activeDatabases.add(this);
 
             if (!shutdownHookRegistered) {
                 Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                    List<DiskBasedAttributeSetRunLogDatabase> snapshot;
+                    List<DiskBasedAttributeSetLogDatabase> snapshot;
                     synchronized (activeDatabases) {
                         snapshot = new ArrayList<>(activeDatabases);
                     }
 
-                    for (DiskBasedAttributeSetRunLogDatabase db : snapshot) {
+                    for (DiskBasedAttributeSetLogDatabase db : snapshot) {
                         try {
                             db.disconnect();
                         } catch (Exception e) {

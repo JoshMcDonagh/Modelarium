@@ -3,7 +3,7 @@ package modelarium.results;
 import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
 import modelarium.logging.AttributeSetLog;
-import modelarium.logging.databases.AttributeSetRunLogDatabase;
+import modelarium.logging.databases.AttributeSetLogDatabase;
 
 import java.util.*;
 
@@ -23,10 +23,10 @@ public abstract class Results implements DeepCopyable<Results> {
     private AgentLevelResults agentResults;
     private EnvironmentLevelResults environmentResults;
 
-    private final Map<String, AttributeSetRunLogDatabase> accumulatedAgentAttributeSetResultsDatabaseMap = new HashMap<>();
-    private final Map<String, AttributeSetRunLogDatabase> processedEnvironmentAttributeSetResultsDatabaseMap = new HashMap<>();
-    private final List<AttributeSetRunLogDatabase> accumulatedAgentAttributeSetRunLogDatabaseList = new ArrayList<>();
-    private final List<AttributeSetRunLogDatabase> processedEnvironmentAttributeSetRunLogDatabaseList = new ArrayList<>();
+    private final Map<String, AttributeSetLogDatabase> accumulatedAgentAttributeSetResultsDatabaseMap = new HashMap<>();
+    private final Map<String, AttributeSetLogDatabase> processedEnvironmentAttributeSetResultsDatabaseMap = new HashMap<>();
+    private final List<AttributeSetLogDatabase> accumulatedAgentAttributeSetLogDatabaseList = new ArrayList<>();
+    private final List<AttributeSetLogDatabase> processedEnvironmentAttributeSetLogDatabaseList = new ArrayList<>();
 
     private final List<String> agentNames = new ArrayList<>();
 
@@ -208,17 +208,17 @@ public abstract class Results implements DeepCopyable<Results> {
      */
     public void disconnectAccumulatedDatabases() {
         if (isAccumulatedAgentAttributeSetDataConnected) {
-            for (AttributeSetRunLogDatabase db : accumulatedAgentAttributeSetRunLogDatabaseList)
+            for (AttributeSetLogDatabase db : accumulatedAgentAttributeSetLogDatabaseList)
                 db.disconnect();
             accumulatedAgentAttributeSetResultsDatabaseMap.clear();
-            accumulatedAgentAttributeSetRunLogDatabaseList.clear();
+            accumulatedAgentAttributeSetLogDatabaseList.clear();
             isAccumulatedAgentAttributeSetDataConnected = false;
         }
         if (isProcessedEnvironmentAttributeSetDataConnected) {
-            for (AttributeSetRunLogDatabase db : processedEnvironmentAttributeSetRunLogDatabaseList)
+            for (AttributeSetLogDatabase db : processedEnvironmentAttributeSetLogDatabaseList)
                 db.disconnect();
             processedEnvironmentAttributeSetResultsDatabaseMap.clear();
-            processedEnvironmentAttributeSetRunLogDatabaseList.clear();
+            processedEnvironmentAttributeSetLogDatabaseList.clear();
             isProcessedEnvironmentAttributeSetDataConnected = false;
         }
     }
@@ -243,13 +243,13 @@ public abstract class Results implements DeepCopyable<Results> {
         for (int i = 0; i < agentResults.getAttributeSetCollectionSetCount(); i++) {
             AttributeSetCollectionResults agentAttributeSetCollectionResults = agentResults.getAttributeSetCollectionResults(i);
 
-            if (accumulatedAgentAttributeSetRunLogDatabaseList.isEmpty()) {
+            if (accumulatedAgentAttributeSetLogDatabaseList.isEmpty()) {
                 for (int j = 0; j < agentAttributeSetCollectionResults.getAttributeSetCount(); j++) {
                     String attributeName = agentAttributeSetCollectionResults.getAttributeSetResults(j).getAttributeSetName();
-                    AttributeSetRunLogDatabase newDatabase = Objects.requireNonNull(AttributeSetRunLogDatabaseFactory.createDatabase(), "AttributeSetResultsDatabaseFactory.createDatabase() returned null");
+                    AttributeSetLogDatabase newDatabase = Objects.requireNonNull(AttributeSetRunLogDatabaseFactory.createDatabase(), "AttributeSetResultsDatabaseFactory.createDatabase() returned null");
                     newDatabase.connect();
                     accumulatedAgentAttributeSetResultsDatabaseMap.put(attributeName, newDatabase);
-                    accumulatedAgentAttributeSetRunLogDatabaseList.add(newDatabase);
+                    accumulatedAgentAttributeSetLogDatabaseList.add(newDatabase);
                 }
                 isAccumulatedAgentAttributeSetDataConnected = true;
             }
@@ -294,13 +294,13 @@ public abstract class Results implements DeepCopyable<Results> {
 
         AttributeSetCollectionResults environmentAttributeSetCollectionResults = environmentResults.getAttributeSetCollectionResults();
 
-        if (processedEnvironmentAttributeSetRunLogDatabaseList.isEmpty()) {
+        if (processedEnvironmentAttributeSetLogDatabaseList.isEmpty()) {
             for (int i = 0; i < environmentAttributeSetCollectionResults.getAttributeSetCount(); i++) {
                 String attributeName = environmentAttributeSetCollectionResults.getAttributeSetResults(i).getAttributeSetName();
-                AttributeSetRunLogDatabase newDatabase = Objects.requireNonNull(AttributeSetRunLogDatabaseFactory.createDatabase(), "AttributeSetResultsDatabaseFactory.createDatabase() returned null");
+                AttributeSetLogDatabase newDatabase = Objects.requireNonNull(AttributeSetRunLogDatabaseFactory.createDatabase(), "AttributeSetResultsDatabaseFactory.createDatabase() returned null");
                 newDatabase.connect();
                 processedEnvironmentAttributeSetResultsDatabaseMap.put(attributeName, newDatabase);
-                processedEnvironmentAttributeSetRunLogDatabaseList.add(newDatabase);
+                processedEnvironmentAttributeSetLogDatabaseList.add(newDatabase);
             }
             isProcessedEnvironmentAttributeSetDataConnected = true;
         }

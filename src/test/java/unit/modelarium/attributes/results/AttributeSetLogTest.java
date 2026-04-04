@@ -3,7 +3,7 @@ package unit.modelarium.attributes.results;
 import modelarium.attributes.*;
 import modelarium.attributes.AttributeSet;
 import modelarium.logging.AttributeSetLog;
-import modelarium.logging.databases.AttributeSetRunLogDatabase;
+import modelarium.logging.databases.AttributeSetLogDatabase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,12 +21,12 @@ import static org.mockito.Mockito.*;
 public class AttributeSetLogTest {
 
     private AttributeSetLog results;
-    private AttributeSetRunLogDatabase mockDatabase;
+    private AttributeSetLogDatabase mockDatabase;
 
     @BeforeEach
     public void setup() {
         // Override the factory to return a mocked database
-        mockDatabase = mock(AttributeSetRunLogDatabase.class);
+        mockDatabase = mock(AttributeSetLogDatabase.class);
         AttributeSetRunLogDatabaseFactory.setCustomFactory(() -> mockDatabase);
 
         // Build a simple attribute set with recordable items

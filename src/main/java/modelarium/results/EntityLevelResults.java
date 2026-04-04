@@ -1,6 +1,7 @@
 package modelarium.results;
 
 import modelarium.Entity;
+import modelarium.logging.AttributeSetLog;
 import modelarium.logging.EntityLog;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EntityLevelResults {
+public abstract class EntityLevelResults {
 
     private final List<EntityLog> entityLogList = new ArrayList<>();
     private final Map<String, Integer> entityLogIndexMap = new HashMap<>();
@@ -37,12 +38,57 @@ public class EntityLevelResults {
         }
     }
 
-    public List<Object> getAttributeLogForEntity(String entityName, String attributeSetName, String attributeName) {
-        return entityLogList.get(entityLogIndexMap.get(entityName)).get(attributeSetName).getValues(attributeName);
+    private EntityLog getEntityLog(String entityName) {
+        return entityLogList.get(entityLogIndexMap.get(entityName));
     }
 
-    public int size() {
+    protected List<Object> getLogForEntityAttribute(String entityName, String attributeSetName, String attributeName) {
+        return getEntityLog(entityName).get(attributeSetName).getValues(attributeName);
+    }
+
+    protected int entityLogCount() {
         return entityLogList.size();
+    }
+
+    protected int entityAttributeSetLogCount(String entityName) {
+        return getEntityLog(entityName).attributeSetLogCount();
+    }
+
+    protected int entityAttributeSetAttributeLogCount(String entityName, String attributeSetName) {
+        return getEntityLog(entityName).get(attributeSetName).attributeLogCount();
+    }
+
+    protected Map<String, List<Object>> getLogsForEntityAttributeSetAsMap(String entityName, String attributeSetName) {
+        AttributeSetLog attributeSetLog = getEntityLog(entityName).get(attributeSetName);
+        List<String> attributeNamesList = attributeSetLog.getAttributeNamesList();
+        Map<String, List<Object>> logsForEntityAttributeSet = new HashMap<>();
+
+        for (String attributeName : attributeNamesList)
+            logsForEntityAttributeSet.put(attributeName, attributeSetLog.getValues(attributeName));
+
+        return logsForEntityAttributeSet;
+    }
+
+    protected Map<String, Map<String, List<Object>>> getLogsForEntityAsMap(String entityName) {
+        EntityLog entityLog = getEntityLog(entityName);
+        Map<String, Map<String, List<Object>>> logsForEntity = new HashMap<>();
+
+        for (int i = 0; i < entityLog.attributeSetLogCount(); i++) {
+            AttributeSetLog attributeSetLog = entityLog.get(i);
+            String attributeSetName = attributeSetLog.getAttributeSetName();
+            logsForEntity.put(attributeSetName, getLogsForEntityAttributeSetAsMap(entityName, attributeSetName));
+        }
+
+        return logsForEntity;
+    }
+
+    protected Map<String, Map<String, Map<String, List<Object>>>> getAllLogsAsMap() {
+        Map<String, Map<String, Map<String, List<Object>>>> allLogs = new HashMap<>();
+        for (EntityLog entityLog : entityLogList) {
+            String entityName = entityLog.getEntityName();
+            allLogs.put(entityName, getLogsForEntityAsMap(entityName));
+        }
+        return allLogs;
     }
 
     public void disconnectDatabases() {

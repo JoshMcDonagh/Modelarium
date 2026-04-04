@@ -1,6 +1,6 @@
 package unit.modelarium.attributes.results.databases;
 
-import modelarium.logging.databases.AttributeSetRunLogDatabase;
+import modelarium.logging.databases.AttributeSetLogDatabase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,11 +10,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AttributeSetLogDatabaseTest {
 
-    private TestAttributeSetRunLogDatabase database;
+    private TestAttributeSetLogDatabase database;
 
     @BeforeEach
     void setUp() {
-        database = new TestAttributeSetRunLogDatabase();
+        database = new TestAttributeSetLogDatabase();
     }
 
     @Test
@@ -57,7 +57,7 @@ class AttributeSetLogDatabaseTest {
     }
 
     // A minimal concrete implementation for testing purposes
-    static class TestAttributeSetRunLogDatabase extends AttributeSetRunLogDatabase {
+    static class TestAttributeSetLogDatabase extends AttributeSetLogDatabase {
         private final Map<String, List<Object>> properties = new HashMap<>();
         private final Map<String, List<Object>> preEvents = new HashMap<>();
         private final Map<String, List<Object>> postEvents = new HashMap<>();

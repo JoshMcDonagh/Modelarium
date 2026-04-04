@@ -1,11 +1,9 @@
 package modelarium;
 
-import modelarium.agents.Agent;
 import modelarium.agents.sets.AgentSet;
-import modelarium.contexts.AgentContext;
-import modelarium.contexts.Context;
 import modelarium.contexts.EnvironmentContext;
 import modelarium.environments.Environment;
+import modelarium.logging.databases.factories.AttributeSetLogDatabaseFactory;
 import modelarium.multithreading.CoordinatorThread;
 import modelarium.multithreading.WorkerThread;
 import modelarium.multithreading.requestresponse.RequestResponseController;
@@ -53,6 +51,8 @@ public class Model {
      */
     public void run() throws NoSuchMethodException, InvocationTargetException,
             InstantiationException, IllegalAccessException {
+
+        AttributeSetLogDatabaseFactory.set(config.runLogDatabaseFactory());
 
         // Distribute agents among cores
         List<AgentSet> agentsForEachCore = config.agentGenerator().getAgentsForEachCore(config);

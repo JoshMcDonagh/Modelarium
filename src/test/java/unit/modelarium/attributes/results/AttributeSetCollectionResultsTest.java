@@ -1,7 +1,7 @@
 package unit.modelarium.attributes.results;
 
 import modelarium.logging.AttributeSetLog;
-import modelarium.logging.databases.AttributeSetRunLogDatabase;
+import modelarium.logging.databases.AttributeSetLogDatabase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ class AttributeSetCollectionResultsTest {
         collectionResults = new AttributeSetCollectionResults();
 
         // Use a mock database implementation to avoid real disk I/O
-        AttributeSetRunLogDatabaseFactory.setCustomFactory(() -> mock(AttributeSetRunLogDatabase.class));
+        AttributeSetRunLogDatabaseFactory.setCustomFactory(() -> mock(AttributeSetLogDatabase.class));
     }
 
     @AfterEach
@@ -55,7 +55,7 @@ class AttributeSetCollectionResultsTest {
         AttributeSet attributeSet = new AttributeSet("ToDisconnect");
 
         // Set up a mock factory to return a mocked database
-        AttributeSetRunLogDatabase mockDatabase = mock(AttributeSetRunLogDatabase.class);
+        AttributeSetLogDatabase mockDatabase = mock(AttributeSetLogDatabase.class);
         AttributeSetRunLogDatabaseFactory.setCustomFactory(() -> mockDatabase);
 
         collectionResults.setup("MockElement", Collections.singletonList(attributeSet));

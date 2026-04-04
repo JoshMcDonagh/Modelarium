@@ -79,7 +79,7 @@ public abstract class Entity {
     }
 
     public EntityLog getLog() {
-        return new EntityLog(attributeSetList);
+        return new EntityLog(name, attributeSetList);
     }
 
     public void run() {

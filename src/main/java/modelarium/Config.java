@@ -1,8 +1,8 @@
 package modelarium;
 
 import modelarium.agents.generators.AgentGenerator;
-import modelarium.logging.databases.AttributeSetRunLogDatabase;
 import modelarium.environments.EnvironmentGenerator;
+import modelarium.logging.databases.factories.AttributeSetLogDatabaseFactory;
 import modelarium.results.Results;
 import modelarium.scheduler.Scheduler;
 
@@ -13,7 +13,7 @@ public record Config(
         AgentGenerator agentGenerator,
         EnvironmentGenerator environmentGenerator,
         Scheduler scheduler,
-        AttributeSetRunLogDatabase runLogDatabase,
+        AttributeSetLogDatabaseFactory runLogDatabaseFactory,
         boolean areProcessesSynced,
         Class<? extends Results> resultsClass,
         Results results

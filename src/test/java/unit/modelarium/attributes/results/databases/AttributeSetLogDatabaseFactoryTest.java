@@ -1,8 +1,8 @@
 package unit.modelarium.attributes.results.databases;
 
-import modelarium.logging.databases.AttributeSetRunLogDatabase;
-import modelarium.logging.databases.DiskBasedAttributeSetRunLogDatabase;
-import modelarium.logging.databases.MemoryBasedAttributeSetRunLogDatabase;
+import modelarium.logging.databases.AttributeSetLogDatabase;
+import modelarium.logging.databases.DiskBasedAttributeSetLogDatabase;
+import modelarium.logging.databases.MemoryBasedAttributeSetLogDatabase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,10 +37,10 @@ public class AttributeSetLogDatabaseFactoryTest {
         // Clear any existing configuration
         AttributeSetRunLogDatabaseFactory.setDatabaseClass(null);
 
-        AttributeSetRunLogDatabase db = AttributeSetRunLogDatabaseFactory.createDatabase();
+        AttributeSetLogDatabase db = AttributeSetRunLogDatabaseFactory.createDatabase();
 
         assertNotNull(db);
-        assertTrue(db instanceof DiskBasedAttributeSetRunLogDatabase);
+        assertTrue(db instanceof DiskBasedAttributeSetLogDatabase);
         assertNotNull(db.getDatabasePath());
         assertTrue(db.getDatabasePath().endsWith(".db"));
     }
@@ -48,35 +48,35 @@ public class AttributeSetLogDatabaseFactoryTest {
     @Test
     public void testCreateMemoryBasedDatabase() {
         AttributeSetRunLogDatabaseFactory.setDatabaseToMemoryBased();
-        AttributeSetRunLogDatabase db = AttributeSetRunLogDatabaseFactory.createDatabase();
+        AttributeSetLogDatabase db = AttributeSetRunLogDatabaseFactory.createDatabase();
 
         assertNotNull(db);
-        assertTrue(db instanceof MemoryBasedAttributeSetRunLogDatabase);
+        assertTrue(db instanceof MemoryBasedAttributeSetLogDatabase);
     }
 
     @Test
     public void testCustomFactoryIsUsed() {
-        AttributeSetRunLogDatabase mockDb = new MemoryBasedAttributeSetRunLogDatabase();
+        AttributeSetLogDatabase mockDb = new MemoryBasedAttributeSetLogDatabase();
         AttributeSetRunLogDatabaseFactory.setCustomFactory(() -> mockDb);
 
-        AttributeSetRunLogDatabase result = AttributeSetRunLogDatabaseFactory.createDatabase();
+        AttributeSetLogDatabase result = AttributeSetRunLogDatabaseFactory.createDatabase();
 
         assertSame(mockDb, result, "Custom factory result should be returned");
     }
 
     @Test
     public void testCustomFactoryClearsCorrectly() {
-        AttributeSetRunLogDatabase mockDb = new MemoryBasedAttributeSetRunLogDatabase();
+        AttributeSetLogDatabase mockDb = new MemoryBasedAttributeSetLogDatabase();
         AttributeSetRunLogDatabaseFactory.setCustomFactory(() -> mockDb);
 
         // Create once with custom factory
-        AttributeSetRunLogDatabase db1 = AttributeSetRunLogDatabaseFactory.createDatabase();
+        AttributeSetLogDatabase db1 = AttributeSetRunLogDatabaseFactory.createDatabase();
         assertSame(mockDb, db1);
 
         // Clear and ensure it no longer returns the mock
         AttributeSetRunLogDatabaseFactory.clearCustomFactory();
         AttributeSetRunLogDatabaseFactory.setDatabaseToMemoryBased();
-        AttributeSetRunLogDatabase db2 = AttributeSetRunLogDatabaseFactory.createDatabase();
+        AttributeSetLogDatabase db2 = AttributeSetRunLogDatabaseFactory.createDatabase();
         assertNotSame(mockDb, db2);
     }
 
@@ -84,7 +84,7 @@ public class AttributeSetLogDatabaseFactoryTest {
     public void testCreateReturnsNullOnInvalidClass() {
         AttributeSetRunLogDatabaseFactory.setDatabaseClass(InvalidDatabase.class);
 
-        AttributeSetRunLogDatabase db = AttributeSetRunLogDatabaseFactory.createDatabase();
+        AttributeSetLogDatabase db = AttributeSetRunLogDatabaseFactory.createDatabase();
 
         assertNull(db, "Should return null if instantiation fails");
     }
@@ -92,7 +92,7 @@ public class AttributeSetLogDatabaseFactoryTest {
     /**
      * Dummy class without no-arg constructor, used to trigger instantiation error.
      */
-    private static class InvalidDatabase extends AttributeSetRunLogDatabase {
+    private static class InvalidDatabase extends AttributeSetLogDatabase {
         public InvalidDatabase(String fail) {
         }
 
