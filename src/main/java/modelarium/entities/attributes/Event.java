@@ -1,10 +1,12 @@
 package modelarium.entities.attributes;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public abstract class Event extends Attribute {
-    private static int eventCount = 0;
+    private static final AtomicInteger eventCount = new AtomicInteger(0);
 
     private static String defaultName() {
-        return "event_" + eventCount;
+        return "event_" + eventCount.intValue();
     }
 
     private static boolean defaultIsLogged() {
@@ -17,7 +19,7 @@ public abstract class Event extends Attribute {
 
     public Event(String name, boolean isLogged, AttributeAccessLevel accessLevel) {
         super(name, isLogged, accessLevel);
-        eventCount++;
+        eventCount.incrementAndGet();
     }
 
     public Event(String name, boolean isLogged) {

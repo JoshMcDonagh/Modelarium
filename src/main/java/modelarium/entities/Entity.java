@@ -59,19 +59,19 @@ public abstract class Entity {
         return getAttributeSet(attributeSetIndexMap.get(attributeSetName));
     }
 
-    public Attribute getAttribute(String attributeSetName, String attributeName) {
+    public Attribute getAttribute(String attributeSetName, String attributeName) throws IllegalAccessException {
         return getAttributeSet(attributeSetName).get(attributeName);
     }
 
-    public Event getEvent(String attributeSetName, String eventName) {
+    public Event getEvent(String attributeSetName, String eventName) throws IllegalAccessException {
         return getAttributeSet(attributeSetName).getEvent(eventName);
     }
 
-    public Routine getRoutine(String attributeSetName, String routineName) {
+    public Routine getRoutine(String attributeSetName, String routineName) throws IllegalAccessException {
         return getAttributeSet(attributeSetName).getRoutine(routineName);
     }
 
-    public Property<?> getProperty(String attributeSetName, String propertyName) {
+    public Property<?> getProperty(String attributeSetName, String propertyName) throws IllegalAccessException {
         return getAttributeSet(attributeSetName).getProperty(propertyName);
     }
 

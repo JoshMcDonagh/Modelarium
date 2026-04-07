@@ -43,21 +43,21 @@ public class AttributeSet {
             attribute.setContext(context);
     }
 
-    public Attribute get(int attributeIndex) {
+    public Attribute get(int attributeIndex) throws IllegalAccessException {
         Attribute attribute = attributeList.get(attributeIndex);
         if (attribute.accessLevel() == AttributeAccessLevel.PUBLIC)
             return attribute;
-        return null;
+        throw new IllegalAccessException(attribute.name() + " is a PRIVATE attribute and cannot be returned.");
     }
 
-    public Attribute get(String attributeName) {
+    public Attribute get(String attributeName) throws IllegalAccessException {
         Attribute attribute = attributeList.get(attributeIndexMap.get(attributeName));
         if (attribute.accessLevel() == AttributeAccessLevel.PUBLIC)
             return attribute;
-        return null;
+        throw new IllegalAccessException(attribute.name() + " is a PRIVATE attribute and cannot be returned.");
     }
 
-    public Event getEvent(int eventIndex) {
+    public Event getEvent(int eventIndex) throws IllegalAccessException {
         Attribute attribute = get(eventIndex);
 
         if (attribute instanceof Event event)
@@ -69,11 +69,11 @@ public class AttributeSet {
         throw new IllegalArgumentException("Expected an Event, but got: " + attribute.getClass().getName());
     }
 
-    public Event getEvent(String eventName) {
+    public Event getEvent(String eventName) throws IllegalAccessException {
         return getEvent(attributeIndexMap.get(eventName));
     }
 
-    public Routine getRoutine(int processIndex) {
+    public Routine getRoutine(int processIndex) throws IllegalAccessException {
         Attribute attribute = get(processIndex);
 
         if (attribute instanceof Routine routine)
@@ -85,11 +85,11 @@ public class AttributeSet {
         throw new IllegalArgumentException("Expected a Routine, but got: " + attribute.getClass().getName());
     }
 
-    public Routine getRoutine(String processName) {
+    public Routine getRoutine(String processName) throws IllegalAccessException {
         return getRoutine(attributeIndexMap.get(processName));
     }
 
-    public Property<?> getProperty(int propertyIndex) {
+    public Property<?> getProperty(int propertyIndex) throws IllegalAccessException {
         Attribute attribute = get(propertyIndex);
 
         if (attribute instanceof Property<?> property)
@@ -101,7 +101,7 @@ public class AttributeSet {
         throw new IllegalArgumentException("Expected a Property, but got: " + attribute.getClass().getName());
     }
 
-    public Property<?> getProperty(String propertyName) {
+    public Property<?> getProperty(String propertyName) throws IllegalAccessException {
         return getProperty(attributeIndexMap.get(propertyName));
     }
 
