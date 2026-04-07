@@ -41,7 +41,7 @@ public class RequestResponseInterface {
         this.name = name;
         this.areProcessesSynced = config.areThreadsSynced();
         this.requestQueue = requestResponseController.getRequestQueue();
-        this.responseQueue = requestResponseController.getResponseQueue();
+        this.responseQueue = requestResponseController.getResponseQueue(name);
     }
 
     /**
@@ -84,7 +84,6 @@ public class RequestResponseInterface {
      */
     public Agent getAgentFromCoordinator(String requesterAgentName, String targetAgentName) throws InterruptedException {
         requestQueue.put(new Request(requesterAgentName, targetAgentName, RequestType.AGENT_ACCESS, null));
-
         while (true) {
             Response response = responseQueue.take();
             if (Objects.equals(response.getResponseType(), ResponseType.AGENT_ACCESS) && Objects.equals(response.getDestination(), requesterAgentName))

@@ -3,6 +3,8 @@ package modelarium.multithreading.requestresponse;
 import modelarium.Config;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -17,22 +19,17 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class RequestResponseController {
 
-    /** Simulation settings, accessible to interfaces and handlers */
-    private final Config settings;
-
-    /** Queue for incoming requests from worker threads */
+    private final Config config;
     private final BlockingQueue<Request> requestQueue = new LinkedBlockingQueue<>();
-
-    /** Queue for outgoing responses from the coordinator to workers */
-    private final BlockingQueue<Response> responseQueue = new LinkedBlockingQueue<>();
+    private final ConcurrentMap<String, BlockingQueue<Response>> responseQueues = new ConcurrentHashMap<>();
 
     /**
      * Constructs a new request-response controller for coordinating simulation threads.
      *
-     * @param settings the shared model settings used across threads
+     * @param config the shared model settings used across threads
      */
-    public RequestResponseController(Config settings) {
-        this.settings = settings;
+    public RequestResponseController(Config config) {
+        this.config = config;
     }
 
     /**
@@ -49,8 +46,8 @@ public class RequestResponseController {
      *
      * @return the response queue
      */
-    public BlockingQueue<Response> getResponseQueue() {
-        return responseQueue;
+    public BlockingQueue<Response> getResponseQueue(String threadName) {
+        return responseQueues.computeIfAbsent(threadName, k -> new LinkedBlockingQueue<>());
     }
 
     /**
@@ -61,6 +58,6 @@ public class RequestResponseController {
      * @return a new {@link RequestResponseInterface} instance for the caller
      */
     public RequestResponseInterface getInterface(String name) {
-        return new RequestResponseInterface(name, settings, this);
+        return new RequestResponseInterface(name, config, this);
     }
 }
