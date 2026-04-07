@@ -31,30 +31,30 @@ public abstract class CoordinatorRequestHandler {
      * request type's handler.
      *
      * @param threadName the coordinator thread's name
-     * @param settings the global model settings
+     * @param config the global model config
      * @param responseQueue the shared response queue
      * @param globalAgentSet the global agent set known to the coordinator
-     * @param environment the shared environment
+     * @param environment the shared environment-
      */
     public static void initialise(String threadName,
-                                  Config settings,
+                                  Config config,
                                   BlockingQueue<Response> responseQueue,
                                   AgentSet globalAgentSet,
                                   Environment environment,
                                   EnvironmentContext environmentContext) {
         requestHandlerMap = new HashMap<>();
         requestHandlerMap.put(RequestType.ALL_WORKERS_FINISH_TICK,
-                new AllWorkersFinishTick(threadName, settings, responseQueue, globalAgentSet, environment, environmentContext));
+                new AllWorkersFinishTick(threadName, config, responseQueue, globalAgentSet, environment, environmentContext));
         requestHandlerMap.put(RequestType.ALL_WORKERS_UPDATE_COORDINATOR,
-                new AllWorkersUpdateCoordinator(threadName, settings, responseQueue, globalAgentSet, environment, environmentContext));
+                new AllWorkersUpdateCoordinator(threadName, config, responseQueue, globalAgentSet, environment, environmentContext));
         requestHandlerMap.put(RequestType.AGENT_ACCESS,
-                new AgentAccess(threadName, settings, responseQueue, globalAgentSet, environment, environmentContext));
+                new AgentAccess(threadName, config, responseQueue, globalAgentSet, environment, environmentContext));
         requestHandlerMap.put(RequestType.UPDATE_COORDINATOR_AGENTS,
-                new UpdateCoordinatorAgents(threadName, settings, responseQueue, globalAgentSet, environment, environmentContext));
+                new UpdateCoordinatorAgents(threadName, config, responseQueue, globalAgentSet, environment, environmentContext));
         requestHandlerMap.put(RequestType.FILTERED_AGENTS_ACCESS,
-                new FilteredAgentsAccess(threadName, settings, responseQueue, globalAgentSet, environment, environmentContext));
+                new FilteredAgentsAccess(threadName, config, responseQueue, globalAgentSet, environment, environmentContext));
         requestHandlerMap.put(RequestType.ENVIRONMENT_ATTRIBUTES_ACCESS,
-                new EnvironmentAttributesAccess(threadName, settings, responseQueue, globalAgentSet, environment, environmentContext));
+                new EnvironmentAttributesAccess(threadName, config, responseQueue, globalAgentSet, environment, environmentContext));
     }
 
     /**

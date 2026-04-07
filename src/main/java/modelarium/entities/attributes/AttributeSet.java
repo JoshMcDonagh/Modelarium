@@ -2,6 +2,7 @@ package modelarium.entities.attributes;
 
 import modelarium.entities.contexts.Context;
 import modelarium.entities.logging.AttributeSetLog;
+import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,24 +11,33 @@ import java.util.Map;
 public class AttributeSet {
     private static int attributeSetCount = 0;
 
+    private final String ownerName;
     private final String name;
     private final List<Attribute> attributeList;
     private final Map<String, Integer> attributeIndexMap = new HashMap<String, Integer>();
-    private final AttributeSetLog log;
+
+    private AttributeSetLog log = null;
 
     public AttributeSet(String ownerName, String attributeSetName, List<Attribute> attributeList) {
+        this.ownerName = ownerName;
         this.name = attributeSetName;
         this.attributeList = attributeList;
         for (int i = 0; i < this.attributeList.size(); i++) {
             Attribute attribute = this.attributeList.get(i);
             this.attributeIndexMap.put(attribute.name(), i);
         }
-        this.log = new AttributeSetLog(ownerName, this.name, this.attributeList);
         attributeSetCount++;
     }
 
     public AttributeSet(String ownerName, List<Attribute> attributeList) {
         this(ownerName, "attribute_set_" + attributeSetCount, attributeList);
+    }
+
+    public void setLogDatabase(AttributeSetLogDatabaseFactory database) {
+        if (log != null)
+            return;
+
+        log = new AttributeSetLog(ownerName, name, database, attributeList);
     }
 
     public String name() {

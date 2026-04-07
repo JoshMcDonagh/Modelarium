@@ -1,9 +1,13 @@
 package modelarium;
 
+import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeSet;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
+import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 import modelarium.multithreading.CoordinatorThread;
 import modelarium.multithreading.WorkerThread;
@@ -50,14 +54,23 @@ public class Model {
      */
     public void run() throws NoSuchMethodException, InvocationTargetException,
             InstantiationException, IllegalAccessException {
-
-        AttributeSetLogDatabaseFactory.set(config.runLogDatabaseFactory());
-
         // Distribute agents among cores
         List<AgentSet> agentsForEachCore = config.agentGenerator().getAgentsForEachCore(config);
 
+        for (AgentSet agentSet : agentsForEachCore) {
+            for (Agent agent : agentSet) {
+                int attributeSetCount = agent.attributeSetCount();
+                for (int i = 0; i < attributeSetCount; i++)
+                    agent.getAttributeSet(i).setLogDatabase(config.runLogDatabaseFactory());
+            }
+        }
+
         // Generate the simulation environment
         Environment environment = config.environmentGenerator().generateEnvironment(config);
+
+        int attributeSetCount = environment.attributeSetCount();
+        for (int i = 0; i < attributeSetCount; i++)
+            environment.getAttributeSet(i).setLogDatabase(config.runLogDatabaseFactory());
 
         // Instantiate results container
         results.setAgentNames(agentsForEachCore);

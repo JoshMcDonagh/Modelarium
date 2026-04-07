@@ -3,7 +3,6 @@ package modelarium.entities.logging;
 import com.rits.cloning.Cloner;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeSet;
-import modelarium.entities.attributes.Event;
 import modelarium.entities.attributes.Property;
 import modelarium.entities.logging.databases.AttributeSetLogDatabase;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
@@ -38,10 +37,15 @@ public class AttributeSetLog {
     /** Maps property names to their runtime class types */
     private final Map<String, Class<?>> propertyTypesMap = new HashMap<>();
 
-    public AttributeSetLog(String ownerName, String attributeSetName, List<Attribute> attributeList) {
+    public AttributeSetLog(
+            String ownerName,
+            String attributeSetName,
+            AttributeSetLogDatabaseFactory databaseFactory,
+            List<Attribute> attributeList
+    ) {
         this.ownerName = ownerName;
         this.attributeSetName = attributeSetName;
-        this.database = AttributeSetLogDatabaseFactory.get().create();
+        this.database = databaseFactory.create();
 
         database.connect();
 

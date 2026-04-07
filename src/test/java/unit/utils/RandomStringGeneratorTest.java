@@ -1,7 +1,7 @@
 package unit.utils;
 
 import org.junit.jupiter.api.Test;
-import utils.RandomStringGenerator;
+import modelarium.utils.RandomStringGenerator;
 
 import java.util.HashSet;
 import java.util.Set;

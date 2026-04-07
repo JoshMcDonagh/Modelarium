@@ -1,4 +1,4 @@
-package utils;
+package modelarium.utils;
 
 import java.security.SecureRandom;
 import java.util.Set;

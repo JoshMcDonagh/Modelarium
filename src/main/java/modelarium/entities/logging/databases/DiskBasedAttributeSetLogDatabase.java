@@ -2,7 +2,7 @@ package modelarium.entities.logging.databases;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import utils.RandomStringGenerator;
+import modelarium.utils.RandomStringGenerator;
 
 import java.io.IOException;
 import java.nio.file.Files;

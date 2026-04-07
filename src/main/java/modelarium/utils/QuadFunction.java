@@ -1,4 +1,4 @@
-package utils;
+package modelarium.utils;
 
 @FunctionalInterface
 public interface QuadFunction<A, B, C, D, R> {
