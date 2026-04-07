@@ -7,7 +7,7 @@ import modelarium.scheduler.Scheduler;
 
 public record Config(
         int populationSize,
-        int epochs,
+        int tickCount,
         int threadCount,
         boolean areThreadsSynced,
         AgentGenerator agentGenerator,

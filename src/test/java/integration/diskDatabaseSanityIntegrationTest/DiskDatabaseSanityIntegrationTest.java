@@ -1,11 +1,11 @@
 package integration.diskDatabaseSanityIntegrationTest;
 
-import modelarium.Model;
-import modelarium.Config;
-import modelarium.results.Results;
-import modelarium.scheduler.InOrderScheduler;
 import integration.agentEnvironmentSyncIntegrationTest.attributes.ModelAttributes;
 import integration.agentEnvironmentSyncIntegrationTest.results.ModelResults;
+import modelarium.Config;
+import modelarium.Model;
+import modelarium.results.Results;
+import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;

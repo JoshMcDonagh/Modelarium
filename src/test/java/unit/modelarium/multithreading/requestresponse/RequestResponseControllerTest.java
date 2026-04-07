@@ -11,8 +11,10 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Field;
 import java.util.concurrent.BlockingQueue;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class RequestResponseControllerTest {
 

@@ -2,9 +2,10 @@ package unit.modelarium.attributes;
 
 import modelarium.Clock;
 import modelarium.entities.Entity;
-import modelarium.entities.contexts.Context;
-import modelarium.entities.attributes.*;
 import modelarium.entities.attributes.AttributeSet;
+import modelarium.entities.attributes.Event;
+import modelarium.entities.attributes.Property;
+import modelarium.entities.contexts.Context;
 import modelarium.entities.logging.AttributeSetLog;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

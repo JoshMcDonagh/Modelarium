@@ -8,8 +8,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 class AttributeSetCollectionResultsTest {
 

@@ -1,8 +1,8 @@
 package modelarium.entities.attributes.functional.properties;
 
-import modelarium.entities.Entity;
+import modelarium.entities.contexts.Context;
 
 @FunctionalInterface
 public interface PropertyRunFunction<T> {
-    T run(Entity owner, T propertyValue);
+    T run(Context context, T propertyValue);
 }

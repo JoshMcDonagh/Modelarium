@@ -9,7 +9,8 @@ import modelarium.entities.attributes.builtins.refs.PropertyDoubleRef;
 import org.junit.jupiter.api.Test;
 import unit.modelarium.attributes.builtins.BuiltinTestSupport;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BuiltinActionTest {
 

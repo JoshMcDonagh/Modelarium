@@ -4,7 +4,8 @@ import modelarium.Config;
 import modelarium.entities.environments.Environment;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Unit tests for the {@link DefaultEnvironmentGenerator} class.

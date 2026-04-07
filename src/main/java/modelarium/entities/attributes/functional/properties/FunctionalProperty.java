@@ -203,12 +203,12 @@ public class FunctionalProperty<T> extends Property<T> {
 
     @Override
     public T get() {
-        return getter.get(owner(), propertyValue);
+        return getter.get(context(), propertyValue);
     }
 
     @Override
     public void set(T value) {
-        propertyValue = setter.set(owner(), propertyValue, value);
+        propertyValue = setter.set(context(), propertyValue, value);
     }
 
     @Override
@@ -216,6 +216,6 @@ public class FunctionalProperty<T> extends Property<T> {
         if (runLogic == null)
             return; // Default run method is no-op for properties
 
-        propertyValue = runLogic.run(owner(), propertyValue);
+        propertyValue = runLogic.run(context(), propertyValue);
     }
 }

@@ -1,9 +1,9 @@
 package unit.modelarium;
 
 import modelarium.entities.Entity;
-import modelarium.entities.contexts.Context;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.contexts.Context;
 import modelarium.entities.environments.Environment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

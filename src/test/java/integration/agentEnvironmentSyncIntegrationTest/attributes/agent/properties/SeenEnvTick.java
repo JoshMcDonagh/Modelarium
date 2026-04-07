@@ -1,7 +1,7 @@
 package integration.agentEnvironmentSyncIntegrationTest.attributes.agent.properties;
 
-import modelarium.entities.contexts.Context;
 import modelarium.entities.attributes.Property;
+import modelarium.entities.contexts.Context;
 import modelarium.entities.environments.Environment;
 
 public class SeenEnvTick extends Property<Integer> {

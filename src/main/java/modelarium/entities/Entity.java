@@ -2,8 +2,6 @@ package modelarium.entities;
 
 import com.rits.cloning.Cloner;
 import modelarium.entities.attributes.*;
-import modelarium.entities.attributes.Routine;
-import modelarium.entities.attributes.AttributeSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.logging.EntityLog;
 

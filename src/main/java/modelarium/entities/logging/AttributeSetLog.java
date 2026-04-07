@@ -86,19 +86,7 @@ public class AttributeSetLog {
         return attributeNamesList.size();
     }
 
-    public void record(Attribute attribute) {
-        if (!attribute.isLogged())
-            return;
-
-        String attributeName = attribute.name();
-        Object value = null;
-
-        if (attribute instanceof Event)
-            value = ((Event)attribute).isTriggered();
-
-        else if (attribute instanceof Property)
-            value = ((Property<?>)attribute).get();
-
+    public void record(String attributeName, Object value) {
         database.addAttributeValue(attributeName, value);
     }
 

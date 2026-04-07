@@ -1,9 +1,9 @@
 package unit.modelarium.multithreading;
 
-import modelarium.entities.contexts.Context;
 import modelarium.Config;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.contexts.Context;
 import modelarium.multithreading.WorkerThread;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
@@ -13,7 +13,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**

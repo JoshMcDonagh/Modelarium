@@ -1,12 +1,13 @@
 package unit.modelarium.attributes.builtins.refs;
 
-import modelarium.entities.attributes.functional.properties.FunctionalProperty;
 import modelarium.entities.attributes.builtins.refs.LiteralDoubleRef;
 import modelarium.entities.attributes.builtins.refs.PropertyDoubleRef;
+import modelarium.entities.attributes.functional.properties.FunctionalProperty;
 import org.junit.jupiter.api.Test;
 import unit.modelarium.attributes.builtins.BuiltinTestSupport;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BuiltinRefTest {
 

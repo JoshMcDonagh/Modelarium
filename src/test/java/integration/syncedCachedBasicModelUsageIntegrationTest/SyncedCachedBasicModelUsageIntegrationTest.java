@@ -1,11 +1,11 @@
 package integration.syncedCachedBasicModelUsageIntegrationTest;
 
-import modelarium.Model;
-import modelarium.Config;
-import modelarium.results.Results;
-import modelarium.scheduler.RandomOrderScheduler;
 import integration.syncedCachedBasicModelUsageIntegrationTest.attributes.ModelAttributes;
 import integration.syncedCachedBasicModelUsageIntegrationTest.results.ModelResults;
+import modelarium.Config;
+import modelarium.Model;
+import modelarium.results.Results;
+import modelarium.scheduler.RandomOrderScheduler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,7 @@
 package unit.modelarium.attributes.builtins.events;
 
 import modelarium.entities.Entity;
+import modelarium.entities.attributes.AttributeSet;
 import modelarium.entities.attributes.builtins.actions.AddDoubleAction;
 import modelarium.entities.attributes.builtins.actions.SetBooleanAction;
 import modelarium.entities.attributes.builtins.events.ThresholdCrossingEvent;
@@ -8,13 +9,13 @@ import modelarium.entities.attributes.builtins.events.ThresholdDirection;
 import modelarium.entities.attributes.builtins.events.TimerEvent;
 import modelarium.entities.attributes.builtins.refs.LiteralDoubleRef;
 import modelarium.entities.attributes.builtins.refs.PropertyDoubleRef;
-import modelarium.entities.attributes.AttributeSet;
 import org.junit.jupiter.api.Test;
 import unit.modelarium.attributes.builtins.BuiltinTestSupport;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BuiltinEventTest {
 

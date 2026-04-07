@@ -1,7 +1,7 @@
 package unit.modelarium;
 
-import modelarium.Model;
 import modelarium.Config;
+import modelarium.Model;
 import modelarium.results.Results;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.Test;

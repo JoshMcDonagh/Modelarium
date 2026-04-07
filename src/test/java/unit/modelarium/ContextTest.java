@@ -1,20 +1,21 @@
 package unit.modelarium;
 
-import modelarium.entities.Entity;
-import modelarium.entities.contexts.Context;
 import modelarium.Config;
+import modelarium.entities.Entity;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.contexts.Context;
+import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
-import modelarium.entities.contexts.ContextCache;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link Context}.

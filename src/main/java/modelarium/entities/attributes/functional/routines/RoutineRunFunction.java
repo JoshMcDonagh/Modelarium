@@ -1,8 +1,8 @@
 package modelarium.entities.attributes.functional.routines;
 
-import modelarium.entities.Entity;
+import modelarium.entities.contexts.Context;
 
 @FunctionalInterface
 public interface RoutineRunFunction {
-    void run(Entity owner);
+    void run(Context context);
 }

@@ -28,6 +28,6 @@ public class FunctionalRoutine extends Routine {
 
     @Override
     public void run() {
-        runLogic.run(owner());
+        runLogic.run(context());
     }
 }

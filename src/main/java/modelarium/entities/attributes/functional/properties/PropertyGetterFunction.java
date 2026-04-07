@@ -1,8 +1,8 @@
 package modelarium.entities.attributes.functional.properties;
 
-import modelarium.entities.Entity;
+import modelarium.entities.contexts.Context;
 
 @FunctionalInterface
 public interface PropertyGetterFunction<T> {
-    T get(Entity owner, T propertyValue);
+    T get(Context context, T propertyValue);
 }

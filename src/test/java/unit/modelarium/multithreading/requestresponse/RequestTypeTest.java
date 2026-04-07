@@ -3,7 +3,8 @@ package unit.modelarium.multithreading.requestresponse;
 import modelarium.multithreading.requestresponse.RequestType;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Unit tests for the {@link RequestType} enum.

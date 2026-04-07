@@ -2,8 +2,8 @@ package unit.modelarium.multithreading.utils;
 
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.AgentSet;
-import modelarium.entities.environments.Environment;
 import modelarium.entities.contexts.ContextCache;
+import modelarium.entities.environments.Environment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

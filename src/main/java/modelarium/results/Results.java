@@ -3,7 +3,8 @@ package modelarium.results;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.AgentSet;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Results {
     private ResultsForAgents agentsResults;

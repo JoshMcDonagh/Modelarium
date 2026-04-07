@@ -111,22 +111,26 @@ public class AttributeSet {
 
     public void run() {
         for (Attribute attribute : attributeList) {
+            Object valueToLog = null;
 
             if (attribute instanceof Event) {
                 Event event = (Event) attribute;
                 boolean isTriggered = event.isTriggered();
                 if (isTriggered)
                     event.run();
+                valueToLog = isTriggered;
 
             } else if (attribute instanceof Property) {
                 Property<?> property = (Property<?>) attribute;
                 property.run();
+                valueToLog = property.get();
 
             } else {
                 attribute.run();
             }
 
-            log.record(attribute);
+            if (attribute.isLogged())
+                log.record(attribute.name(), valueToLog);
         }
     }
 }

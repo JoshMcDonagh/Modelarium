@@ -1,7 +1,7 @@
 package integration.agentEnvironmentSyncIntegrationTest.attributes;
 
-import integration.agentEnvironmentSyncIntegrationTest.attributes.environment.properties.EnvTick;
 import integration.agentEnvironmentSyncIntegrationTest.attributes.agent.properties.SeenEnvTick;
+import integration.agentEnvironmentSyncIntegrationTest.attributes.environment.properties.EnvTick;
 
 public class ModelAttributes {
 

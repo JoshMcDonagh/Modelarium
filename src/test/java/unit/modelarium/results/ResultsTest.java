@@ -3,9 +3,9 @@ package unit.modelarium.results;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.AgentSet;
 import modelarium.entities.logging.databases.AttributeSetLogDatabase;
+import modelarium.results.Results;
 import modelarium.results.ResultsForAgents;
 import modelarium.results.ResultsForEnvironment;
-import modelarium.results.Results;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 /**

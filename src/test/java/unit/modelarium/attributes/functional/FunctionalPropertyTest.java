@@ -6,7 +6,7 @@ import modelarium.entities.attributes.functional.properties.PropertyRunFunction;
 import modelarium.entities.attributes.functional.properties.PropertySetterFunction;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**

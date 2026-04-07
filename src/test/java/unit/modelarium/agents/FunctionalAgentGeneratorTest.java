@@ -2,16 +2,18 @@ package unit.modelarium.agents;
 
 import modelarium.Config;
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
 import modelarium.entities.agents.generators.FunctionalAgentGenerator;
+import modelarium.entities.agents.sets.AgentSet;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit test for {@link FunctionalAgentGenerator}.

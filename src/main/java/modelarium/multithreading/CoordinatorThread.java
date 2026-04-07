@@ -4,7 +4,10 @@ import modelarium.Config;
 import modelarium.entities.agents.sets.AgentSet;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
-import modelarium.multithreading.requestresponse.*;
+import modelarium.multithreading.requestresponse.CoordinatorRequestHandler;
+import modelarium.multithreading.requestresponse.Request;
+import modelarium.multithreading.requestresponse.RequestResponseController;
+import modelarium.multithreading.requestresponse.RequestType;
 
 /**
  * Coordinator thread responsible for managing synchronised access to shared simulation state

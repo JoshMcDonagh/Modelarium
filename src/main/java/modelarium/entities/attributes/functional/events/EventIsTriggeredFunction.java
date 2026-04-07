@@ -1,8 +1,8 @@
 package modelarium.entities.attributes.functional.events;
 
-import modelarium.entities.Entity;
+import modelarium.entities.contexts.Context;
 
 @FunctionalInterface
 public interface EventIsTriggeredFunction {
-    boolean isTriggered(Entity owner);
+    boolean isTriggered(Context context);
 }

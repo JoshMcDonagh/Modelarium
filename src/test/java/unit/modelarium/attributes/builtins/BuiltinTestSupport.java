@@ -2,8 +2,8 @@ package unit.modelarium.attributes.builtins;
 
 import modelarium.Clock;
 import modelarium.entities.Entity;
-import modelarium.entities.contexts.Context;
 import modelarium.entities.attributes.functional.properties.FunctionalProperty;
+import modelarium.entities.contexts.Context;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

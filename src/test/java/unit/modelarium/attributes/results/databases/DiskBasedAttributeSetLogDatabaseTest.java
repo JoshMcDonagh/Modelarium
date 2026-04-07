@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Unit tests for {@link DiskBasedAttributeSetLogDatabase}.

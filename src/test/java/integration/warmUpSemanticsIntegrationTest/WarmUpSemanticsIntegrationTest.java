@@ -1,16 +1,16 @@
 package integration.warmUpSemanticsIntegrationTest;
 
-import modelarium.Model;
-import modelarium.Config;
-import modelarium.results.Results;
-import modelarium.scheduler.InOrderScheduler;
 import integration.agentEnvironmentSyncIntegrationTest.attributes.ModelAttributes;
 import integration.agentEnvironmentSyncIntegrationTest.results.ModelResults;
+import modelarium.Config;
+import modelarium.Model;
+import modelarium.results.Results;
+import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class WarmUpSemanticsIntegrationTest {
 

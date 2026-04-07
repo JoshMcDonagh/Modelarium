@@ -1,18 +1,19 @@
 package integration.unsyncedNoCacheBasicModelUsageIntegrationTest;
 
-import modelarium.Model;
-import modelarium.Config;
-import modelarium.results.Results;
-import modelarium.scheduler.InOrderScheduler;
 import integration.unsyncedNoCacheBasicModelUsageIntegrationTest.attributes.ModelAttributes;
 import integration.unsyncedNoCacheBasicModelUsageIntegrationTest.results.ModelResults;
+import modelarium.Config;
+import modelarium.Model;
+import modelarium.results.Results;
+import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UnsyncedNoCacheBasicModelUsageIntegrationTest {
 

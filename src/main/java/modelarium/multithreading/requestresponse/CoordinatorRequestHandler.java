@@ -6,7 +6,10 @@ import modelarium.entities.agents.sets.AgentSet;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.function.Predicate;
 

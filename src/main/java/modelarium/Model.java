@@ -1,6 +1,7 @@
 package modelarium;
 
 import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
@@ -8,10 +9,9 @@ import modelarium.multithreading.CoordinatorThread;
 import modelarium.multithreading.WorkerThread;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
-import modelarium.entities.contexts.ContextCache;
+import modelarium.results.Results;
 import modelarium.results.ResultsForAgents;
 import modelarium.results.ResultsForEnvironment;
-import modelarium.results.Results;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public class Model {
                 new AgentSet(),
                 config,
                 new ContextCache(),
-                new Clock(config.epochs()),
+                new Clock(config.tickCount()),
                 new RequestResponseInterface(environment.name(), config, requestResponseController)
         );
 
@@ -101,7 +101,7 @@ public class Model {
         // Launch worker threads
         for (int threadIndex = 0; threadIndex < config.threadCount(); threadIndex++) {
             ContextCache cache = new ContextCache();
-            Clock clock = new Clock(config.epochs());
+            Clock clock = new Clock(config.tickCount());
 
             // Create an agent set for the current core
             AgentSet threadAgentSet = new AgentSet(true);

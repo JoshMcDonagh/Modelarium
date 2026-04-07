@@ -1,8 +1,8 @@
 package modelarium.entities.attributes.functional.properties;
 
-import modelarium.entities.Entity;
+import modelarium.entities.contexts.Context;
 
 @FunctionalInterface
 public interface PropertySetterFunction<T> {
-    T set(Entity owner, T currentPropertyValue, T newValue);
+    T set(Context context, T currentPropertyValue, T newValue);
 }

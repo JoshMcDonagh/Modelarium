@@ -1,6 +1,5 @@
 package unit.modelarium.results;
 
-import modelarium.results.FunctionalResults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.QuadFunction;
@@ -9,7 +8,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * Unit tests for {@link FunctionalResults}.

@@ -58,11 +58,11 @@ public class FunctionalEvent extends Event {
 
     @Override
     public boolean isTriggered() {
-        return triggerLogic.isTriggered(owner());
+        return triggerLogic.isTriggered(context());
     }
 
     @Override
     public void run() {
-        runLogic.run(owner());
+        runLogic.run(context());
     }
 }

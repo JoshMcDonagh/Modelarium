@@ -3,10 +3,10 @@ package unit.utils;
 import org.junit.jupiter.api.Test;
 import utils.RandomStringGenerator;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the {@link RandomStringGenerator} utility class.

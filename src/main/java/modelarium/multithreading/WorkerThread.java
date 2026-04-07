@@ -5,12 +5,12 @@ import modelarium.Config;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.AgentSet;
 import modelarium.entities.contexts.AgentContext;
+import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
-import modelarium.entities.contexts.ContextCache;
-import modelarium.results.ResultsForAgents;
 import modelarium.results.Results;
+import modelarium.results.ResultsForAgents;
 
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -75,7 +75,7 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
      */
     @Override
     public Results call() throws InterruptedException {
-        Clock clock = new Clock(config.epochs());
+        Clock clock = new Clock(config.tickCount());
         ContextCache cache = new ContextCache();
 
         for (Agent agent : agentsInThread) {
@@ -120,7 +120,7 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
 
         // Final setup and result collection
         ResultsForAgents agentsResults = new ResultsForAgents(agentsInThread);
-        Results results = config.results();
+        Results results = new Results();
         results.setAgentNames(agentsInThread);
         results.setAgentResults(agentsResults);
 

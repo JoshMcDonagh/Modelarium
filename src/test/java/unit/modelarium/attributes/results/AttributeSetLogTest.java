@@ -1,7 +1,8 @@
 package unit.modelarium.attributes.results;
 
-import modelarium.entities.attributes.*;
 import modelarium.entities.attributes.AttributeSet;
+import modelarium.entities.attributes.Event;
+import modelarium.entities.attributes.Property;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.databases.AttributeSetLogDatabase;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,8 +10,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * Tests for the {@link AttributeSetLog} class.

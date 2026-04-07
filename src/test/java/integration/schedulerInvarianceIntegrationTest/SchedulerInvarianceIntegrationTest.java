@@ -1,18 +1,19 @@
 package integration.schedulerInvarianceIntegrationTest;
 
-import modelarium.Model;
+import integration.syncedCachedBasicModelUsageIntegrationTest.attributes.ModelAttributes;
+import integration.syncedCachedBasicModelUsageIntegrationTest.results.ModelResults;
 import modelarium.Config;
+import modelarium.Model;
 import modelarium.results.Results;
 import modelarium.scheduler.InOrderScheduler;
 import modelarium.scheduler.RandomOrderScheduler;
-import integration.syncedCachedBasicModelUsageIntegrationTest.attributes.ModelAttributes;
-import integration.syncedCachedBasicModelUsageIntegrationTest.results.ModelResults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SchedulerInvarianceIntegrationTest {
 
