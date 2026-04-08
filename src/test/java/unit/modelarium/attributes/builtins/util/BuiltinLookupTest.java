@@ -1,7 +1,7 @@
 package unit.modelarium.attributes.builtins.util;
 
 import modelarium.entities.attributes.builtins.util.BuiltinLookup;
-import modelarium.entities.attributes.functional.properties.FunctionalProperty;
+import modelarium.entities.attributes.properties.functional.FunctionalAgentProperty;
 import org.junit.jupiter.api.Test;
 import unit.modelarium.attributes.builtins.BuiltinTestSupport;
 
@@ -95,7 +95,7 @@ class BuiltinLookupTest {
 
     @Test
     void getRequiredDoublePropertyValueThrowsWhenValueIsNull() {
-        FunctionalProperty<Double> value = new FunctionalProperty<>(
+        FunctionalAgentProperty<Double> value = new FunctionalAgentProperty<>(
                 "value",
                 true,
                 Double.class,

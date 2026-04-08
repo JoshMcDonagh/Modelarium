@@ -2,7 +2,7 @@ package unit.modelarium.attributes.builtins;
 
 import modelarium.Clock;
 import modelarium.entities.Entity;
-import modelarium.entities.attributes.functional.properties.FunctionalProperty;
+import modelarium.entities.attributes.properties.functional.FunctionalAgentProperty;
 import modelarium.entities.contexts.Context;
 
 import static org.mockito.Mockito.mock;
@@ -46,8 +46,8 @@ public final class BuiltinTestSupport {
         );
     }
 
-    public static FunctionalProperty<Double> mutableDoubleProperty(String name, double initialValue) {
-        FunctionalProperty<Double> property = new FunctionalProperty<>(
+    public static FunctionalAgentProperty<Double> mutableDoubleProperty(String name, double initialValue) {
+        FunctionalAgentProperty<Double> property = new FunctionalAgentProperty<>(
                 name,
                 true,
                 Double.class,
@@ -59,8 +59,8 @@ public final class BuiltinTestSupport {
         return property;
     }
 
-    public static FunctionalProperty<Boolean> mutableBooleanProperty(String name, boolean initialValue) {
-        FunctionalProperty<Boolean> property = new FunctionalProperty<>(
+    public static FunctionalAgentProperty<Boolean> mutableBooleanProperty(String name, boolean initialValue) {
+        FunctionalAgentProperty<Boolean> property = new FunctionalAgentProperty<>(
                 name,
                 true,
                 Boolean.class,

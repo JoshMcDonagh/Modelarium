@@ -3,7 +3,7 @@ package modelarium.entities.logging;
 import com.rits.cloning.Cloner;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeSet;
-import modelarium.entities.attributes.Property;
+import modelarium.entities.attributes.properties.Property;
 import modelarium.entities.logging.databases.AttributeSetLogDatabase;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 

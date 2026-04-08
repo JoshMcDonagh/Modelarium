@@ -2,12 +2,12 @@ package modelarium.entities.attributes;
 
 import modelarium.entities.contexts.Context;
 
-public abstract class Attribute {
+public abstract class Attribute<C extends Context> {
     private final String name;
     private final boolean isLogged;
     private final AttributeAccessLevel accessLevel;
 
-    private Context context = null;
+    private C context = null;
 
     public Attribute(String name, boolean isLogged, AttributeAccessLevel accessLevel) {
         this.name = name;
@@ -23,11 +23,11 @@ public abstract class Attribute {
         return isLogged;
     }
 
-    protected Context context() {
+    protected C context() {
         return context;
     }
 
-    public void setContext(Context context) {
+    public void setContext(C context) {
         if (this.context != null)
             return;
 

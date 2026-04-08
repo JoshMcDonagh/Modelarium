@@ -2,7 +2,7 @@ package unit.modelarium.attributes.builtins.refs;
 
 import modelarium.entities.attributes.builtins.refs.LiteralDoubleRef;
 import modelarium.entities.attributes.builtins.refs.PropertyDoubleRef;
-import modelarium.entities.attributes.functional.properties.FunctionalProperty;
+import modelarium.entities.attributes.properties.functional.FunctionalAgentProperty;
 import org.junit.jupiter.api.Test;
 import unit.modelarium.attributes.builtins.BuiltinTestSupport;
 
@@ -81,7 +81,7 @@ class BuiltinRefTest {
 
     @Test
     void propertyDoubleRefThrowsWhenPropertyValueIsNull() {
-        FunctionalProperty<Double> value = new FunctionalProperty<>(
+        FunctionalAgentProperty<Double> value = new FunctionalAgentProperty<>(
                 "value",
                 true,
                 Double.class,

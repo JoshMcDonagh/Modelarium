@@ -1,8 +1,8 @@
 package unit.modelarium.attributes.results;
 
 import modelarium.entities.attributes.AttributeSet;
-import modelarium.entities.attributes.Event;
-import modelarium.entities.attributes.Property;
+import modelarium.entities.attributes.events.Event;
+import modelarium.entities.attributes.properties.Property;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.databases.AttributeSetLogDatabase;
 import org.junit.jupiter.api.BeforeEach;

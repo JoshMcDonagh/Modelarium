@@ -9,6 +9,8 @@ import modelarium.entities.attributes.builtins.events.ThresholdDirection;
 import modelarium.entities.attributes.builtins.events.TimerEvent;
 import modelarium.entities.attributes.builtins.refs.LiteralDoubleRef;
 import modelarium.entities.attributes.builtins.refs.PropertyDoubleRef;
+import modelarium.entities.attributes.events.Event;
+import modelarium.entities.attributes.properties.Property;
 import org.junit.jupiter.api.Test;
 import unit.modelarium.attributes.builtins.BuiltinTestSupport;
 
@@ -314,20 +316,20 @@ class BuiltinEventTest {
         assertEquals(true, flag.get());
     }
 
-    private static modelarium.entities.attributes.Events events(modelarium.entities.attributes.Event... events) {
+    private static modelarium.entities.attributes.Events events(Event... events) {
         modelarium.entities.attributes.Events collection = new modelarium.entities.attributes.Events();
-        for (modelarium.entities.attributes.Event event : events)
+        for (Event event : events)
             collection.add(event);
         return collection;
     }
 
     @SuppressWarnings("unchecked")
-    private static modelarium.entities.attributes.Property<Double> getDoubleProperty(
+    private static Property<Double> getDoubleProperty(
             Entity element,
             String attributeSetName,
             String propertyName
     ) {
-        return (modelarium.entities.attributes.Property<Double>) element.getAttributeSetCollection()
+        return (Property<Double>) element.getAttributeSetCollection()
                 .get(attributeSetName)
                 .getProperties()
                 .get(propertyName);

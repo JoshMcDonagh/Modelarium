@@ -149,16 +149,7 @@ public class Model {
         }
     }
 
-    /**
-     * Runs the agent-based model according to the configured settings.
-     *
-     * @throws NoSuchMethodException if the results class has no default constructor
-     * @throws InvocationTargetException if constructor invocation fails
-     * @throws InstantiationException if instantiating the results class fails
-     * @throws IllegalAccessException if the constructor is not accessible
-     */
-    public void run() throws NoSuchMethodException, InvocationTargetException,
-            InstantiationException, IllegalAccessException {
+    public void run() {
         List<AgentSet> agentsForEachCore = generateAgentsForEachCoreAsList();
         Environment environment = generateEnvironment();
 
