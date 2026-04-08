@@ -1,12 +1,14 @@
 package modelarium.entities.attributes;
 
+import modelarium.entities.contexts.Context;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class Event extends Attribute {
     private static final AtomicInteger eventCount = new AtomicInteger(0);
 
     private static String defaultName() {
-        return "event_" + eventCount.intValue();
+        return "event_" + eventCount.getAndIncrement();
     }
 
     private static boolean defaultIsLogged() {
@@ -19,7 +21,6 @@ public abstract class Event extends Attribute {
 
     public Event(String name, boolean isLogged, AttributeAccessLevel accessLevel) {
         super(name, isLogged, accessLevel);
-        eventCount.incrementAndGet();
     }
 
     public Event(String name, boolean isLogged) {
@@ -50,8 +51,16 @@ public abstract class Event extends Attribute {
         this(defaultName(), defaultIsLogged(), accessLevel);
     }
 
-    public abstract boolean isTriggered();
+    public boolean isTriggered() {
+        return isTriggered(context());
+    }
 
     @Override
-    public abstract void run();
+    public void run() {
+        run(context());
+    }
+
+    protected abstract boolean isTriggered(Context context);
+
+    protected abstract void run(Context context);
 }

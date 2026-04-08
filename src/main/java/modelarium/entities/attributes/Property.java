@@ -1,12 +1,14 @@
 package modelarium.entities.attributes;
 
+import modelarium.entities.contexts.Context;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class Property<T> extends Attribute {
     private static final AtomicInteger propertyCount = new AtomicInteger(0);
 
     private static String defaultName() {
-        return "property_" + propertyCount.intValue();
+        return "property_" + propertyCount.getAndIncrement();
     }
 
     private static boolean defaultIsLogged() {
@@ -22,7 +24,6 @@ public abstract class Property<T> extends Attribute {
     public Property(String name, boolean isLogged, AttributeAccessLevel accessLevel, Class<T> type) {
         super(name, isLogged, accessLevel);
         this.type = type;
-        propertyCount.incrementAndGet();
     }
 
     public Property(String name, boolean isLogged, Class<T> type) {
@@ -57,13 +58,22 @@ public abstract class Property<T> extends Attribute {
         return type;
     }
 
-    public abstract void set(T value);
+    public void set(T value) {
+        set(context(), value);
+    }
 
-    public abstract T get();
+    public T get() {
+        return get(context());
+    }
 
     @Override
     public void run() {
-        // Default implementation: No operation
-        return;
+        run(context());
     }
+
+    protected abstract void run(Context context);
+
+    protected abstract void set(Context context, T value);
+
+    protected abstract T get(Context context);
 }

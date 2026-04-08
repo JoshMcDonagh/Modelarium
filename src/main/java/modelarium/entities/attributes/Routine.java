@@ -1,12 +1,14 @@
 package modelarium.entities.attributes;
 
+import modelarium.entities.contexts.Context;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class Routine extends Attribute {
-    private static final AtomicInteger processCount = new AtomicInteger(0);
+    private static final AtomicInteger routineCount = new AtomicInteger(0);
 
     private static String defaultName() {
-        return "process_" + processCount.intValue();
+        return "routine_" + routineCount.getAndIncrement();
     }
 
     public static AttributeAccessLevel defaultAccessLevel() {
@@ -15,7 +17,6 @@ public abstract class Routine extends Attribute {
 
     public Routine(String name, AttributeAccessLevel accessLevel) {
         super(name, false, accessLevel);
-        processCount.incrementAndGet();
     }
 
     public Routine(String name) {
@@ -31,5 +32,9 @@ public abstract class Routine extends Attribute {
     }
 
     @Override
-    public abstract void run();
+    public void run() {
+        run(context());
+    }
+
+    protected abstract void run(Context context);
 }

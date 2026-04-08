@@ -2,6 +2,7 @@ package modelarium.entities.attributes.functional.properties;
 
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.Property;
+import modelarium.entities.contexts.Context;
 
 /**
  * A property whose behaviour is defined using functional interfaces.
@@ -202,20 +203,20 @@ public class FunctionalProperty<T> extends Property<T> {
     }
 
     @Override
-    public T get() {
-        return getter.get(context(), propertyValue);
-    }
-
-    @Override
-    public void set(T value) {
-        propertyValue = setter.set(context(), propertyValue, value);
-    }
-
-    @Override
-    public void run() {
+    protected void run(Context context) {
         if (runLogic == null)
             return; // Default run method is no-op for properties
 
-        propertyValue = runLogic.run(context(), propertyValue);
+        propertyValue = runLogic.run(context, propertyValue);
+    }
+
+    @Override
+    protected void set(Context context, T value) {
+        propertyValue = setter.set(context, propertyValue, value);
+    }
+
+    @Override
+    protected T get(Context context) {
+        return getter.get(context, propertyValue);
     }
 }

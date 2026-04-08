@@ -38,5 +38,5 @@ public abstract class Attribute {
         return accessLevel;
     }
 
-    public abstract void run();
+    protected abstract void run();
 }

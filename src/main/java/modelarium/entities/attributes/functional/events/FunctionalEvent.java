@@ -2,6 +2,7 @@ package modelarium.entities.attributes.functional.events;
 
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.Event;
+import modelarium.entities.contexts.Context;
 
 /**
  * An event whose logic is defined via functional interfaces.
@@ -57,12 +58,12 @@ public class FunctionalEvent extends Event {
     }
 
     @Override
-    public boolean isTriggered() {
-        return triggerLogic.isTriggered(context());
+    protected boolean isTriggered(Context context) {
+        return triggerLogic.isTriggered(context);
     }
 
     @Override
-    public void run() {
-        runLogic.run(context());
+    protected void run(Context context) {
+        runLogic.run(context);
     }
 }

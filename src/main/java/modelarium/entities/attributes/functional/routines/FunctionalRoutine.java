@@ -2,6 +2,7 @@ package modelarium.entities.attributes.functional.routines;
 
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.Routine;
+import modelarium.entities.contexts.Context;
 
 public class FunctionalRoutine extends Routine {
     private final RoutineRunFunction runLogic;
@@ -27,7 +28,7 @@ public class FunctionalRoutine extends Routine {
     }
 
     @Override
-    public void run() {
-        runLogic.run(context());
+    protected void run(Context context) {
+        runLogic.run(context);
     }
 }
