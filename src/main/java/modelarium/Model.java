@@ -177,7 +177,7 @@ public class Model {
             stopCoordinator(coordinatorHandle);
 
         results.setEnvironmentResults(new ResultsForEnvironment(environment));
-        results.seal(); // Finalise results
+        results.seal();
     }
 
     public Results getResults() {
