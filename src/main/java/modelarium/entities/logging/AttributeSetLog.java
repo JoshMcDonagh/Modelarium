@@ -83,7 +83,7 @@ public class AttributeSetLog {
      * @return the class type of the property's values
      */
     public Class<?> getPropertyType(String propertyName) {
-        return cloner.deepClone(propertyTypesMap.get(propertyName));
+        return propertyTypesMap.get(propertyName);
     }
 
     public int attributeLogCount() {
