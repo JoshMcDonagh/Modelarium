@@ -98,17 +98,17 @@ public class CoordinatorThread implements Runnable {
         globalAgentSet = Objects.requireNonNullElseGet(predefinedGlobalAgentSet, AgentSet::new);
 
         requestHandlerMap.put(RequestType.ALL_WORKERS_FINISH_TICK,
-                new CoordinatorRequestHandler.AllWorkersFinishTick(threadName, config, requestResponseController.getResponseQueue(threadName), globalAgentSet, environment, environmentContext));
+                new CoordinatorRequestHandler.AllWorkersFinishTick(threadName, config, requestResponseController, globalAgentSet, environment, environmentContext));
         requestHandlerMap.put(RequestType.ALL_WORKERS_UPDATE_COORDINATOR,
-                new CoordinatorRequestHandler.AllWorkersUpdateCoordinator(threadName, config, requestResponseController.getResponseQueue(threadName), globalAgentSet, environment, environmentContext));
+                new CoordinatorRequestHandler.AllWorkersUpdateCoordinator(threadName, config, requestResponseController, globalAgentSet, environment, environmentContext));
         requestHandlerMap.put(RequestType.AGENT_ACCESS,
-                new CoordinatorRequestHandler.AgentAccess(threadName, config, requestResponseController.getResponseQueue(threadName), globalAgentSet, environment, environmentContext));
+                new CoordinatorRequestHandler.AgentAccess(threadName, config, requestResponseController, globalAgentSet, environment, environmentContext));
         requestHandlerMap.put(RequestType.UPDATE_COORDINATOR_AGENTS,
-                new CoordinatorRequestHandler.UpdateCoordinatorAgents(threadName, config, requestResponseController.getResponseQueue(threadName), globalAgentSet, environment, environmentContext));
+                new CoordinatorRequestHandler.UpdateCoordinatorAgents(threadName, config, requestResponseController, globalAgentSet, environment, environmentContext));
         requestHandlerMap.put(RequestType.FILTERED_AGENTS_ACCESS,
-                new CoordinatorRequestHandler.FilteredAgentsAccess(threadName, config, requestResponseController.getResponseQueue(threadName), globalAgentSet, environment, environmentContext));
+                new CoordinatorRequestHandler.FilteredAgentsAccess(threadName, config, requestResponseController, globalAgentSet, environment, environmentContext));
         requestHandlerMap.put(RequestType.ENVIRONMENT_ATTRIBUTES_ACCESS,
-                new CoordinatorRequestHandler.EnvironmentAttributesAccess(threadName, config, requestResponseController.getResponseQueue(threadName), globalAgentSet, environment, environmentContext));
+                new CoordinatorRequestHandler.EnvironmentAttributesAccess(threadName, config, requestResponseController, globalAgentSet, environment, environmentContext));
     }
 
     /**
