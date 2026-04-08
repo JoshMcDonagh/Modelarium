@@ -4,6 +4,7 @@ import com.rits.cloning.Cloner;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeSet;
 import modelarium.entities.attributes.properties.Property;
+import modelarium.entities.contexts.Context;
 import modelarium.entities.logging.databases.AttributeSetLogDatabase;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 
@@ -19,7 +20,7 @@ import java.util.Map;
  * <p>This class is responsible for writing tick-level data to the backing database,
  * and for providing access to stored values after simulation.
  */
-public class AttributeSetLog {
+public class AttributeSetLog<C extends Context> {
     private static final Cloner cloner = new Cloner();
 
     /** Name of the agent or environment this result set belongs to */
@@ -41,7 +42,7 @@ public class AttributeSetLog {
             String ownerName,
             String attributeSetName,
             AttributeSetLogDatabaseFactory databaseFactory,
-            List<Attribute> attributeList
+            List<Attribute<C>> attributeList
     ) {
         this.ownerName = ownerName;
         this.attributeSetName = attributeSetName;
@@ -50,14 +51,14 @@ public class AttributeSetLog {
         database.connect();
 
         // Register attributes marked for logging
-        for (Attribute attribute : attributeList) {
+        for (Attribute<C> attribute : attributeList) {
             if (!attribute.isLogged())
                 continue;
 
             attributeNamesList.add(attribute.name());
 
-            if (attribute instanceof Property<?>)
-                propertyTypesMap.put(attribute.name(), ((Property<?>) attribute).type());
+            if (attribute instanceof Property<?,C>)
+                propertyTypesMap.put(attribute.name(), ((Property<?,C>) attribute).type());
         }
     }
 

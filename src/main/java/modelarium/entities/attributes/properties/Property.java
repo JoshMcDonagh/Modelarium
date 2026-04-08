@@ -4,10 +4,10 @@ import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.contexts.Context;
 
-abstract class Property<T,C extends Context> extends Attribute<C> {
+public abstract class Property<T,C extends Context> extends Attribute<C> {
     private final Class<T> type;
 
-    public Property(String name, boolean isLogged, AttributeAccessLevel accessLevel, Class<T> type) {
+    Property(String name, boolean isLogged, AttributeAccessLevel accessLevel, Class<T> type) {
         super(name, isLogged, accessLevel);
         this.type = type;
     }

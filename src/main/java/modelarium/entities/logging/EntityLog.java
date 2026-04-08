@@ -1,22 +1,23 @@
 package modelarium.entities.logging;
 
 import modelarium.entities.attributes.AttributeSet;
+import modelarium.entities.contexts.Context;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EntityLog {
+public class EntityLog<C extends Context, A extends AttributeSet<C>, L extends AttributeSetLog<C>> {
     private final String entityName;
-    private final List<AttributeSetLog> attributeSetLogList = new ArrayList<>();
+    private final List<L> attributeSetLogList = new ArrayList<>();
     private final Map<String, Integer> attributeSetLogIndexList = new HashMap<>();
 
-    public EntityLog(String entityName, List<AttributeSet> attributeSets) {
+    public EntityLog(String entityName, List<A> attributeSets) {
         this.entityName = entityName;
         for (int i = 0; i < attributeSets.size(); i++) {
-            AttributeSet attributeSet = attributeSets.get(i);
-            attributeSetLogList.add(attributeSet.getLog());
+            A attributeSet = attributeSets.get(i);
+            attributeSetLogList.add((L) attributeSet.getLog());
             attributeSetLogIndexList.put(attributeSet.name(), i);
         }
     }
@@ -25,11 +26,11 @@ public class EntityLog {
         return entityName;
     }
 
-    public AttributeSetLog get(int attributeSetIndex) {
+    public L get(int attributeSetIndex) {
         return attributeSetLogList.get(attributeSetIndex);
     }
 
-    public AttributeSetLog get(String attributeSetName) {
+    public L get(String attributeSetName) {
         return get(attributeSetLogIndexList.get(attributeSetName));
     }
 
@@ -38,7 +39,7 @@ public class EntityLog {
     }
 
     public void disconnectDatabases() {
-        for (AttributeSetLog attributeSetLog : attributeSetLogList)
+        for (L attributeSetLog : attributeSetLogList)
             attributeSetLog.disconnectDatabase();
 
         attributeSetLogList.clear();

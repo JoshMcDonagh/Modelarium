@@ -1,6 +1,9 @@
 package modelarium.results;
 
 import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.attributes.AgentAttributeSet;
+import modelarium.entities.contexts.AgentContext;
+import modelarium.entities.logging.AttributeSetLog;
 
 import java.util.List;
 import java.util.Map;
@@ -11,7 +14,7 @@ import java.util.Map;
  * <p>Wraps an {@link AgentSet} into a {@link ResultsForEntities} structure,
  * enabling easy access to recorded properties and events for all agents over time.
  */
-public class ResultsForAgents extends ResultsForEntities {
+public class ResultsForAgents extends ResultsForEntities<AgentContext, AgentAttributeSet, AttributeSetLog<AgentContext>> {
     /**
      * Constructs agent results from a given agent set.
      *

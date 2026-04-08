@@ -2,10 +2,8 @@ package modelarium.entities;
 
 import com.rits.cloning.Cloner;
 import modelarium.entities.attributes.*;
-import modelarium.entities.attributes.events.Event;
-import modelarium.entities.attributes.properties.Property;
-import modelarium.entities.attributes.routines.Routine;
 import modelarium.entities.contexts.Context;
+import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 
@@ -13,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class Entity {
+public abstract class Entity<C extends Context, A extends AttributeSet<C>, L extends AttributeSetLog<C>> {
     private static final Cloner cloner = new Cloner();
 
     protected static Cloner getCloner() {
@@ -21,32 +19,32 @@ public abstract class Entity {
     }
 
     private final String name;
-    private final List<AttributeSet> attributeSetList;
+    private final List<A> attributeSetList;
     private final Map<String, Integer> attributeSetIndexMap = new HashMap<>();
 
-    private Context context;
+    private C context;
 
-    public Entity(String name, List<AttributeSet> attributeSetList) {
+    protected Entity(String name, List<A> attributeSetList) {
         this.name = name;
         this.attributeSetList = attributeSetList;
         for (int i = 0; i < this.attributeSetList.size(); i++) {
-            AttributeSet attributeSet = this.attributeSetList.get(i);
+            A attributeSet = this.attributeSetList.get(i);
             this.attributeSetIndexMap.put(attributeSet.name(), i);
         }
     }
 
     public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory databaseFactory) {
-        for (AttributeSet attributeSet : attributeSetList)
+        for (A attributeSet : attributeSetList)
             attributeSet.setLogDatabaseFactory(databaseFactory);
     }
 
-    public void setContext(Context context) {
+    public void setContext(C context) {
         this.context = context;
-        for (AttributeSet attributeSet : attributeSetList)
+        for (A attributeSet : attributeSetList)
             attributeSet.setContext(context);
     }
 
-    public Context context() {
+    public C context() {
         return context;
     }
 
@@ -61,44 +59,28 @@ public abstract class Entity {
     public int attributeCount() {
         int count = 0;
 
-        for (AttributeSet attributeSet : attributeSetList)
+        for (A attributeSet : attributeSetList)
             count += attributeSet.size();
 
         return count;
     }
 
-    public AttributeSet getAttributeSet(int attributeSetIndex) {
+    public A getAttributeSet(int attributeSetIndex) {
         return attributeSetList.get(attributeSetIndex);
     }
 
-    public AttributeSet getAttributeSet(String attributeSetName) {
+    public A getAttributeSet(String attributeSetName) {
         return getAttributeSet(attributeSetIndexMap.get(attributeSetName));
     }
 
-    public Attribute getAttribute(String attributeSetName, String attributeName) throws IllegalAccessException {
-        return getAttributeSet(attributeSetName).get(attributeName);
-    }
-
-    public Event getEvent(String attributeSetName, String eventName) throws IllegalAccessException {
-        return getAttributeSet(attributeSetName).getEvent(eventName);
-    }
-
-    public Routine getRoutine(String attributeSetName, String routineName) throws IllegalAccessException {
-        return getAttributeSet(attributeSetName).getRoutine(routineName);
-    }
-
-    public Property<?> getProperty(String attributeSetName, String propertyName) throws IllegalAccessException {
-        return getAttributeSet(attributeSetName).getProperty(propertyName);
-    }
-
-    public EntityLog getLog() {
-        return new EntityLog(name, attributeSetList);
+    public EntityLog<C,A,L> getLog() {
+        return new EntityLog<C,A,L>(name, (List<A>) attributeSetList);
     }
 
     public void run() {
-        for (AttributeSet attributeSet : attributeSetList)
+        for (A attributeSet : attributeSetList)
             attributeSet.run();
     }
 
-    public abstract Entity clone();
+    public abstract Entity<C,A,L> clone();
 }

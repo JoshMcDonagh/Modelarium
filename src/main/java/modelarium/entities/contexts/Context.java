@@ -26,7 +26,7 @@ import java.util.function.Predicate;
  */
 public abstract class Context {
 
-    private final Entity entity;
+    private final Entity<?,?,?> entity;
     private final AgentSet localAgentSet;
     private final Config config;
     private final ContextCache cache;
@@ -35,7 +35,7 @@ public abstract class Context {
     private Clock clock = null;
 
     public Context(
-            Entity entity,
+            Entity<?,?,?> entity,
             AgentSet localAgentSet,
             Config config,
             ContextCache cache,
@@ -58,7 +58,7 @@ public abstract class Context {
         return localAgentSet.doesAgentExist(agentName);
     }
 
-    protected Entity entity() {
+    protected Entity<?,?,?> entity() {
         return entity;
     }
 
@@ -74,7 +74,7 @@ public abstract class Context {
         return requestResponseInterface;
     }
 
-    public abstract Entity getThisEntity();
+    public abstract Entity<?,?,?> getThisEntity();
 
     public abstract Environment getEnvironment();
 

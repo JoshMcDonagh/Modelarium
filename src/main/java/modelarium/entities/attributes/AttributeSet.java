@@ -10,41 +10,30 @@ import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFa
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class AttributeSet {
-    private static final AtomicInteger attributeSetCount = new AtomicInteger(0);
-
-    private static String defaultName() {
-        return "attribute_set_" + attributeSetCount.getAndIncrement();
-    }
-
+public class AttributeSet<C extends Context> {
     private final String ownerName;
     private final String name;
-    private final List<Attribute> attributeList;
+    private final List<Attribute<C>> attributeList;
     private final Map<String, Integer> attributeIndexMap = new HashMap<String, Integer>();
 
-    private AttributeSetLog log = null;
+    private AttributeSetLog<C> log = null;
 
-    public AttributeSet(String ownerName, String attributeSetName, List<Attribute> attributeList) {
+    AttributeSet(String ownerName, String attributeSetName, List<Attribute<C>> attributeList) {
         this.ownerName = ownerName;
         this.name = attributeSetName;
         this.attributeList = attributeList;
         for (int i = 0; i < this.attributeList.size(); i++) {
-            Attribute attribute = this.attributeList.get(i);
+            Attribute<?> attribute = this.attributeList.get(i);
             this.attributeIndexMap.put(attribute.name(), i);
         }
-    }
-
-    public AttributeSet(String ownerName, List<Attribute> attributeList) {
-        this(ownerName, defaultName(), attributeList);
     }
 
     public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory database) {
         if (log != null)
             return;
 
-        log = new AttributeSetLog(ownerName, name, database, attributeList);
+        log = new AttributeSetLog<>(ownerName, name, database, attributeList);
     }
 
     public String name() {
@@ -55,45 +44,45 @@ public class AttributeSet {
         return attributeList.size();
     }
 
-    public void setContext(Context context) {
-        for (Attribute attribute : attributeList)
+    public void setContext(C context) {
+        for (Attribute<C> attribute : attributeList)
             attribute.setContext(context);
     }
 
-    public Attribute get(int attributeIndex) throws IllegalAccessException {
-        Attribute attribute = attributeList.get(attributeIndex);
+    private Attribute<C> get(int attributeIndex) {
+        Attribute<C> attribute = attributeList.get(attributeIndex);
         if (attribute.accessLevel() == AttributeAccessLevel.PUBLIC)
             return attribute;
-        throw new IllegalAccessException(attribute.name() + " is a PRIVATE attribute and cannot be returned.");
+        throw new AttributeAccessException(attribute.name() + " is a PRIVATE attribute and cannot be returned.");
     }
 
-    public Attribute get(String attributeName) throws IllegalAccessException {
-        Attribute attribute = attributeList.get(attributeIndexMap.get(attributeName));
+    private Attribute<C> get(String attributeName) {
+        Attribute<C> attribute = attributeList.get(attributeIndexMap.get(attributeName));
         if (attribute.accessLevel() == AttributeAccessLevel.PUBLIC)
             return attribute;
-        throw new IllegalAccessException(attribute.name() + " is a PRIVATE attribute and cannot be returned.");
+        throw new AttributeAccessException(attribute.name() + " is a PRIVATE attribute and cannot be returned.");
     }
 
-    public Event getEvent(int eventIndex) throws IllegalAccessException {
-        Attribute attribute = get(eventIndex);
+    Event<C> getEvent(int eventIndex) {
+        Attribute<C> attribute = get(eventIndex);
 
-        if (attribute instanceof Event event)
+        if (attribute instanceof Event<C> event)
             return event;
 
         if (attribute == null)
             return null;
 
-        throw new IllegalArgumentException("Expected an Event, but got: " + attribute.getClass().getName());
+        throw new AttributeAccessException("Expected an Event, but got: " + attribute.getClass().getName());
     }
 
-    public Event getEvent(String eventName) throws IllegalAccessException {
+    Event<C> getEvent(String eventName) {
         return getEvent(attributeIndexMap.get(eventName));
     }
 
-    public Routine getRoutine(int processIndex) throws IllegalAccessException {
-        Attribute attribute = get(processIndex);
+    Routine<C> getRoutine(int processIndex) {
+        Attribute<C> attribute = get(processIndex);
 
-        if (attribute instanceof Routine routine)
+        if (attribute instanceof Routine<C> routine)
             return routine;
 
         if (attribute == null)
@@ -102,14 +91,14 @@ public class AttributeSet {
         throw new IllegalArgumentException("Expected a Routine, but got: " + attribute.getClass().getName());
     }
 
-    public Routine getRoutine(String processName) throws IllegalAccessException {
+    Routine<C> getRoutine(String processName) {
         return getRoutine(attributeIndexMap.get(processName));
     }
 
-    public Property<?> getProperty(int propertyIndex) throws IllegalAccessException {
-        Attribute attribute = get(propertyIndex);
+    Property<?,C> getProperty(int propertyIndex) {
+        Attribute<C> attribute = get(propertyIndex);
 
-        if (attribute instanceof Property<?> property)
+        if (attribute instanceof Property<?,C> property)
             return property;
 
         if (attribute == null)
@@ -118,27 +107,25 @@ public class AttributeSet {
         throw new IllegalArgumentException("Expected a Property, but got: " + attribute.getClass().getName());
     }
 
-    public Property<?> getProperty(String propertyName) throws IllegalAccessException {
+    Property<?,C> getProperty(String propertyName) {
         return getProperty(attributeIndexMap.get(propertyName));
     }
 
-    public AttributeSetLog getLog() {
+    public AttributeSetLog<C> getLog() {
         return log;
     }
 
     public void run() {
-        for (Attribute attribute : attributeList) {
+        for (Attribute<C> attribute : attributeList) {
             Object valueToLog = null;
 
-            if (attribute instanceof Event) {
-                Event event = (Event) attribute;
+            if (attribute instanceof Event<C> event) {
                 boolean isTriggered = event.isTriggered();
                 if (isTriggered)
                     event.run();
                 valueToLog = isTriggered;
 
-            } else if (attribute instanceof Property) {
-                Property<?> property = (Property<?>) attribute;
+            } else if (attribute instanceof Property<?, C> property) {
                 property.run();
                 valueToLog = property.get();
 

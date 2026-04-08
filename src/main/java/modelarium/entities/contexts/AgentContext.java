@@ -2,7 +2,6 @@ package modelarium.entities.contexts;
 
 import modelarium.Clock;
 import modelarium.Config;
-import modelarium.entities.Entity;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.AgentSet;
 import modelarium.entities.environments.Environment;
@@ -12,7 +11,7 @@ public class AgentContext extends Context {
     private final Environment localEnvironment;
 
     public AgentContext(
-            Entity entity,
+            Agent entity,
             AgentSet localAgentSet,
             Config config,
             ContextCache cache,

@@ -1,6 +1,8 @@
 package modelarium.results;
 
 import modelarium.entities.Entity;
+import modelarium.entities.attributes.AttributeSet;
+import modelarium.entities.contexts.Context;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
 
@@ -9,25 +11,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class ResultsForEntities {
+abstract class ResultsForEntities<C extends Context, A extends AttributeSet<C>, L extends AttributeSetLog<C>> {
 
-    private final List<EntityLog> entityLogList = new ArrayList<>();
+    private final List<EntityLog<C,A,L>> entityLogList = new ArrayList<>();
     private final Map<String, Integer> entityLogIndexMap = new HashMap<>();
 
-    public ResultsForEntities(List<? extends Entity> entities) {
+    ResultsForEntities(List<? extends Entity<C,A,L>> entities) {
         for (int i = 0; i < entities.size(); i++) {
-            Entity entity = entities.get(i);
+            Entity<C,A,L> entity = entities.get(i);
             entityLogList.add(entity.getLog());
             entityLogIndexMap.put(entity.name(), i);
         }
     }
 
-    ResultsForEntities(Entity entity) {
+    ResultsForEntities(Entity<C,A,L> entity) {
         entityLogList.add(entity.getLog());
         entityLogIndexMap.put(entity.name(), 0);
     }
 
-    public void mergeWith(ResultsForEntities other) {
+    public void mergeWith(ResultsForEntities<C,A,L> other) {
         int originalLogListSize = entityLogList.size();
         entityLogList.addAll(other.entityLogList);
         for (Map.Entry<String, Integer> otherIndexMapEntry : other.entityLogIndexMap.entrySet()) {
@@ -38,7 +40,7 @@ public abstract class ResultsForEntities {
         }
     }
 
-    private EntityLog getEntityLog(String entityName) {
+    private EntityLog<C,A,L> getEntityLog(String entityName) {
         return entityLogList.get(entityLogIndexMap.get(entityName));
     }
 
@@ -59,7 +61,7 @@ public abstract class ResultsForEntities {
     }
 
     protected Map<String, List<Object>> getLogsForEntityAttributeSetAsMap(String entityName, String attributeSetName) {
-        AttributeSetLog attributeSetLog = getEntityLog(entityName).get(attributeSetName);
+        L attributeSetLog = getEntityLog(entityName).get(attributeSetName);
         List<String> attributeNamesList = attributeSetLog.getAttributeNamesList();
         Map<String, List<Object>> logsForEntityAttributeSet = new HashMap<>();
 
@@ -70,11 +72,11 @@ public abstract class ResultsForEntities {
     }
 
     protected Map<String, Map<String, List<Object>>> getLogsForEntityAsMap(String entityName) {
-        EntityLog entityLog = getEntityLog(entityName);
+        EntityLog<C,A,L> entityLog = getEntityLog(entityName);
         Map<String, Map<String, List<Object>>> logsForEntity = new HashMap<>();
 
         for (int i = 0; i < entityLog.attributeSetLogCount(); i++) {
-            AttributeSetLog attributeSetLog = entityLog.get(i);
+            L attributeSetLog = entityLog.get(i);
             String attributeSetName = attributeSetLog.getAttributeSetName();
             logsForEntity.put(attributeSetName, getLogsForEntityAttributeSetAsMap(entityName, attributeSetName));
         }
@@ -84,7 +86,7 @@ public abstract class ResultsForEntities {
 
     protected Map<String, Map<String, Map<String, List<Object>>>> allLogs() {
         Map<String, Map<String, Map<String, List<Object>>>> allLogs = new HashMap<>();
-        for (EntityLog entityLog : entityLogList) {
+        for (EntityLog<C,A,L> entityLog : entityLogList) {
             String entityName = entityLog.getEntityName();
             allLogs.put(entityName, getLogsForEntityAsMap(entityName));
         }
@@ -92,7 +94,7 @@ public abstract class ResultsForEntities {
     }
 
     public void disconnectDatabases() {
-        for (EntityLog entityLog : entityLogList)
+        for (EntityLog<C,A,L> entityLog : entityLogList)
             entityLog.disconnectDatabases();
 
         entityLogList.clear();
