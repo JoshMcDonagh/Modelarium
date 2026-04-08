@@ -7,9 +7,14 @@ import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFa
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AttributeSet {
-    private static int attributeSetCount = 0;
+    private static final AtomicInteger attributeSetCount = new AtomicInteger(0);
+
+    private static String defaultName() {
+        return "attribute_set_" + attributeSetCount.getAndIncrement();
+    }
 
     private final String ownerName;
     private final String name;
@@ -26,11 +31,10 @@ public class AttributeSet {
             Attribute attribute = this.attributeList.get(i);
             this.attributeIndexMap.put(attribute.name(), i);
         }
-        attributeSetCount++;
     }
 
     public AttributeSet(String ownerName, List<Attribute> attributeList) {
-        this(ownerName, "attribute_set_" + attributeSetCount, attributeList);
+        this(ownerName, defaultName(), attributeList);
     }
 
     public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory database) {
