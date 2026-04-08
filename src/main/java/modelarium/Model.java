@@ -1,14 +1,10 @@
 package modelarium;
 
-import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.AgentSet;
-import modelarium.entities.attributes.Attribute;
-import modelarium.entities.attributes.AttributeSet;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
-import modelarium.entities.logging.AttributeSetLog;
-import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
+import modelarium.multithreading.CoordinatorHandle;
 import modelarium.multithreading.CoordinatorThread;
 import modelarium.multithreading.WorkerThread;
 import modelarium.multithreading.requestresponse.RequestResponseController;
@@ -44,49 +40,30 @@ public class Model {
         this.config = config;
     }
 
-    /**
-     * Runs the agent-based model according to the configured settings.
-     *
-     * @throws NoSuchMethodException if the results class has no default constructor
-     * @throws InvocationTargetException if constructor invocation fails
-     * @throws InstantiationException if instantiating the results class fails
-     * @throws IllegalAccessException if the constructor is not accessible
-     */
-    public void run() throws NoSuchMethodException, InvocationTargetException,
-            InstantiationException, IllegalAccessException {
-        // Distribute agents among cores
+    private List<AgentSet> generateAgentsForEachCoreAsList() {
         List<AgentSet> agentsForEachCore = config.agentGenerator().getAgentsForEachCore(config);
 
-        for (AgentSet agentSet : agentsForEachCore) {
-            for (Agent agent : agentSet) {
-                int attributeSetCount = agent.attributeSetCount();
-                for (int i = 0; i < attributeSetCount; i++)
-                    agent.getAttributeSet(i).setLogDatabase(config.runLogDatabaseFactory());
-            }
-        }
+        for (AgentSet agentSet : agentsForEachCore)
+            agentSet.setLogDatabaseFactory(config.runLogDatabaseFactory());
 
-        // Generate the simulation environment
+        return agentsForEachCore;
+    }
+
+    private Environment generateEnvironment() {
         Environment environment = config.environmentGenerator().generateEnvironment(config);
+        environment.setLogDatabaseFactory(config.runLogDatabaseFactory());
+        return environment;
+    }
 
-        int attributeSetCount = environment.attributeSetCount();
-        for (int i = 0; i < attributeSetCount; i++)
-            environment.getAttributeSet(i).setLogDatabase(config.runLogDatabaseFactory());
-
-        // Instantiate results container
+    private void setupResultsContainer(List<AgentSet> agentsForEachCore) {
         results.setAgentNames(agentsForEachCore);
         results.setAgentResults(new ResultsForAgents(new AgentSet()));
+    }
 
-        // Set up multithreaded execution
-        ExecutorService executorService = Executors.newFixedThreadPool(config.threadCount());
-        List<Future<Results>> futures = new ArrayList<>();
-
-        // Shared controller for inter-thread communication
-        RequestResponseController requestResponseController = new RequestResponseController(config);
-
-        Thread coordinatorThread = null;
-        CoordinatorThread coordinator = null;
-
-        // Set up accessor for the environment model element
+    private void createAndSetEnvironmentContext(
+            Environment environment,
+            RequestResponseController requestResponseController
+    ) {
         EnvironmentContext environmentContext = new EnvironmentContext(
                 environment,
                 new AgentSet(),
@@ -97,25 +74,36 @@ public class Model {
         );
 
         environment.setContext(environmentContext);
+    }
 
-        // Launch central coordinator if synchronisation is required
-        if (config.areThreadsSynced()) {
-            coordinator = new CoordinatorThread(
-                    String.valueOf(config.threadCount()),
-                    config,
-                    environment,
-                    environmentContext,
-                    requestResponseController
-            );
-            coordinatorThread = new Thread(coordinator);
-            coordinatorThread.start();
-        }
+    private CoordinatorHandle launchCoordinator(
+            Environment environment,
+            RequestResponseController requestResponseController
+    ) {
+        CoordinatorThread coordinator = new CoordinatorThread(
+                String.valueOf(config.threadCount()),
+                config,
+                environment,
+                (EnvironmentContext) environment.context(),
+                requestResponseController
+        );
+
+        Thread coordinatorThread = new Thread(coordinator);
+        coordinatorThread.start();
+
+        return new CoordinatorHandle(coordinatorThread, coordinator);
+    }
+
+    private void launchWorkers(
+            List<AgentSet> agentsForEachCore,
+            Environment environment,
+            RequestResponseController requestResponseController
+    ) {
+        ExecutorService executorService = Executors.newFixedThreadPool(config.threadCount());
+        List<Future<Results>> futures = new ArrayList<>();
 
         // Launch worker threads
         for (int threadIndex = 0; threadIndex < config.threadCount(); threadIndex++) {
-            ContextCache cache = new ContextCache();
-            Clock clock = new Clock(config.tickCount());
-
             // Create an agent set for the current core
             AgentSet threadAgentSet = new AgentSet(true);
             AgentSet perThreadAgentSet = agentsForEachCore.get(threadIndex);
@@ -150,18 +138,44 @@ public class Model {
         } finally {
             executorService.shutdown();
         }
+    }
 
-        // Gracefully stop the coordinator thread if it was used
-        if (config.areThreadsSynced()) {
-            coordinator.shutdown();
-            try {
-                coordinatorThread.join();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
+    private void stopCoordinator(CoordinatorHandle coordinatorHandle) {
+        coordinatorHandle.coordinator().shutdown();
+        try {
+            coordinatorHandle.coordinatorThread().join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
+    }
 
-        // Post-processing of results
+    /**
+     * Runs the agent-based model according to the configured settings.
+     *
+     * @throws NoSuchMethodException if the results class has no default constructor
+     * @throws InvocationTargetException if constructor invocation fails
+     * @throws InstantiationException if instantiating the results class fails
+     * @throws IllegalAccessException if the constructor is not accessible
+     */
+    public void run() throws NoSuchMethodException, InvocationTargetException,
+            InstantiationException, IllegalAccessException {
+        List<AgentSet> agentsForEachCore = generateAgentsForEachCoreAsList();
+        Environment environment = generateEnvironment();
+
+        setupResultsContainer(agentsForEachCore);
+
+        RequestResponseController requestResponseController = new RequestResponseController(config);
+        createAndSetEnvironmentContext(environment, requestResponseController);
+
+        CoordinatorHandle coordinatorHandle = null;
+        if (config.areThreadsSynced())
+            coordinatorHandle = launchCoordinator(environment, requestResponseController);
+
+        launchWorkers(agentsForEachCore, environment, requestResponseController);
+
+        if (config.areThreadsSynced())
+            stopCoordinator(coordinatorHandle);
+
         results.setEnvironmentResults(new ResultsForEnvironment(environment));
         results.seal(); // Finalise results
     }

@@ -33,7 +33,7 @@ public class AttributeSet {
         this(ownerName, "attribute_set_" + attributeSetCount, attributeList);
     }
 
-    public void setLogDatabase(AttributeSetLogDatabaseFactory database) {
+    public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory database) {
         if (log != null)
             return;
 

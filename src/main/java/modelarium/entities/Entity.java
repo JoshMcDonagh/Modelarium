@@ -4,6 +4,7 @@ import com.rits.cloning.Cloner;
 import modelarium.entities.attributes.*;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.logging.EntityLog;
+import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,8 @@ public abstract class Entity {
     private final List<AttributeSet> attributeSetList;
     private final Map<String, Integer> attributeSetIndexMap = new HashMap<>();
 
+    private Context context;
+
     public Entity(String name, List<AttributeSet> attributeSetList) {
         this.name = name;
         this.attributeSetList = attributeSetList;
@@ -29,9 +32,19 @@ public abstract class Entity {
         }
     }
 
+    public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory databaseFactory) {
+        for (AttributeSet attributeSet : attributeSetList)
+            attributeSet.setLogDatabaseFactory(databaseFactory);
+    }
+
     public void setContext(Context context) {
+        this.context = context;
         for (AttributeSet attributeSet : attributeSetList)
             attributeSet.setContext(context);
+    }
+
+    public Context context() {
+        return context;
     }
 
     public String name() {

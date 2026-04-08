@@ -1,6 +1,7 @@
 package modelarium.entities.agents.sets;
 
 import modelarium.entities.agents.Agent;
+import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -19,13 +20,13 @@ import java.util.function.Predicate;
 public class AgentSet implements Iterable<Agent> {
 
     /** Whether to store deep copies of added agents rather than references */
-    private boolean isStoringAgentCopies;
-
-    /** Map from agent names to their index in the list */
-    private Map<String, Integer> agentIndexes;
+    private final boolean isStoringAgentCopies;
 
     /** Ordered list of agents in the set */
-    private List<Agent> agents;
+    private List<Agent> agentList = new ArrayList<>();
+
+    /** Map from agent names to their index in the list */
+    private Map<String, Integer> agentIndexMap = new HashMap<>();
 
     /**
      * Constructs an empty agent set with optional deep copy behaviour.
@@ -34,8 +35,6 @@ public class AgentSet implements Iterable<Agent> {
      */
     public AgentSet(boolean isStoringAgentCopies) {
         this.isStoringAgentCopies = isStoringAgentCopies;
-        agentIndexes = new HashMap<>();
-        agents = new ArrayList<>();
     }
 
     /**
@@ -64,6 +63,11 @@ public class AgentSet implements Iterable<Agent> {
         this(false);
     }
 
+    public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory databaseFactory) {
+        for (Agent agent : agentList)
+            agent.setLogDatabaseFactory(databaseFactory);
+    }
+
     /**
      * Adds an agent to the set. If the agent already exists, it will be replaced.
      *
@@ -73,17 +77,17 @@ public class AgentSet implements Iterable<Agent> {
         int index;
 
         if (doesAgentExist(agent.name())) {
-            index = agentIndexes.get(agent.name());
+            index = agentIndexMap.get(agent.name());
         } else {
-            index = agents.size();
-            agentIndexes.put(agent.name(), index);
-            agents.add(agent); // Ensure list is long enough before setting
+            index = agentList.size();
+            agentIndexMap.put(agent.name(), index);
+            agentList.add(agent); // Ensure list is long enough before setting
         }
 
         if (isStoringAgentCopies)
-            agents.set(index, agent.clone());
+            agentList.set(index, agent.clone());
         else
-            agents.set(index, agent);
+            agentList.set(index, agent);
     }
 
     /**
@@ -119,8 +123,8 @@ public class AgentSet implements Iterable<Agent> {
      * @return the agent instance
      */
     public Agent get(String agentName) {
-        int index = agentIndexes.get(agentName);
-        return agents.get(index);
+        int index = agentIndexMap.get(agentName);
+        return agentList.get(index);
     }
 
     /**
@@ -130,7 +134,7 @@ public class AgentSet implements Iterable<Agent> {
      * @return the agent at the given position
      */
     public Agent get(int index) {
-        return agents.get(index);
+        return agentList.get(index);
     }
 
     /**
@@ -139,7 +143,7 @@ public class AgentSet implements Iterable<Agent> {
      * @return a list of agent instances
      */
     public List<Agent> getAsList() {
-        return new ArrayList<>(agents);
+        return new ArrayList<>(agentList);
     }
 
     /**
@@ -148,15 +152,15 @@ public class AgentSet implements Iterable<Agent> {
      * @return the size of the agent set
      */
     public int size() {
-        return agents.size();
+        return agentList.size();
     }
 
     /**
      * Clears the agent set entirely.
      */
     public void clear() {
-        agentIndexes = new HashMap<>();
-        agents = new ArrayList<>();
+        agentIndexMap = new HashMap<>();
+        agentList = new ArrayList<>();
     }
 
     /**
@@ -166,7 +170,7 @@ public class AgentSet implements Iterable<Agent> {
      * @return true if the agent exists
      */
     public boolean doesAgentExist(String agentName) {
-        return agentIndexes.containsKey(agentName);
+        return agentIndexMap.containsKey(agentName);
     }
 
     /**
@@ -194,7 +198,7 @@ public class AgentSet implements Iterable<Agent> {
     public AgentSet getFilteredAgents(Predicate<Agent> agentFilter) {
         List<Agent> filteredAgents = new ArrayList<>();
 
-        for (Agent agent : agents) {
+        for (Agent agent : agentList) {
             if (agentFilter.test(agent))
                 filteredAgents.add(agent);
         }
@@ -208,7 +212,7 @@ public class AgentSet implements Iterable<Agent> {
      * @return an iterator that yields agents in random order
      */
     public Iterator<Agent> getRandomIterator() {
-        List<Agent> shuffledAgents = new ArrayList<>(agents);
+        List<Agent> shuffledAgents = new ArrayList<>(agentList);
         Collections.shuffle(shuffledAgents);
         return shuffledAgents.iterator();
     }
@@ -224,7 +228,7 @@ public class AgentSet implements Iterable<Agent> {
      * @return a new {@code AgentSet} with the same agents
      */
     public AgentSet duplicate() {
-        return new AgentSet(agents, isStoringAgentCopies);
+        return new AgentSet(agentList, isStoringAgentCopies);
     }
 
     /**
@@ -234,6 +238,6 @@ public class AgentSet implements Iterable<Agent> {
      */
     @Override
     public Iterator<Agent> iterator() {
-        return agents.iterator();
+        return agentList.iterator();
     }
 }
