@@ -1,11 +1,17 @@
 package modelarium.entities;
 
 import com.rits.cloning.Cloner;
+import modelarium.Clock;
+import modelarium.Config;
+import modelarium.entities.agents.sets.AgentSet;
 import modelarium.entities.attributes.*;
 import modelarium.entities.contexts.Context;
+import modelarium.entities.contexts.ContextCache;
+import modelarium.entities.environments.Environment;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
+import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,8 +28,6 @@ public abstract class Entity<C extends Context, A extends AttributeSet<C>, L ext
     private final List<A> attributeSetList;
     private final Map<String, Integer> attributeSetIndexMap = new HashMap<>();
 
-    private C context;
-
     protected Entity(String name, List<A> attributeSetList) {
         this.name = name;
         this.attributeSetList = attributeSetList;
@@ -38,14 +42,25 @@ public abstract class Entity<C extends Context, A extends AttributeSet<C>, L ext
             attributeSet.setLogDatabaseFactory(databaseFactory);
     }
 
-    public void setContext(C context) {
-        this.context = context;
-        for (A attributeSet : attributeSetList)
-            attributeSet.setContext(context);
-    }
-
-    public C context() {
-        return context;
+    public void createContext(
+            AgentSet agentSet,
+            Config config,
+            ContextCache contextCache,
+            Clock clock,
+            RequestResponseInterface requestResponseInterface,
+            Environment localEnvironment
+    ) {
+        for (A attributeSet : attributeSetList) {
+            attributeSet.createContext(
+                    this,
+                    agentSet,
+                    config,
+                    contextCache,
+                    clock,
+                    requestResponseInterface,
+                    localEnvironment
+            );
+        }
     }
 
     public String name() {
@@ -74,7 +89,7 @@ public abstract class Entity<C extends Context, A extends AttributeSet<C>, L ext
     }
 
     public EntityLog<C,A,L> getLog() {
-        return new EntityLog<C,A,L>(name, (List<A>) attributeSetList);
+        return new EntityLog<>(name, attributeSetList);
     }
 
     public void run() {

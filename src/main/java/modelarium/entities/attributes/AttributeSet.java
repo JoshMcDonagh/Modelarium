@@ -1,11 +1,18 @@
 package modelarium.entities.attributes;
 
+import modelarium.Clock;
+import modelarium.Config;
+import modelarium.entities.Entity;
+import modelarium.entities.agents.sets.AgentSet;
 import modelarium.entities.attributes.events.Event;
 import modelarium.entities.attributes.properties.Property;
 import modelarium.entities.attributes.routines.Routine;
 import modelarium.entities.contexts.Context;
+import modelarium.entities.contexts.ContextCache;
+import modelarium.entities.environments.Environment;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
+import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,9 +51,27 @@ public class AttributeSet<C extends Context> {
         return attributeList.size();
     }
 
-    public void setContext(C context) {
-        for (Attribute<C> attribute : attributeList)
-            attribute.setContext(context);
+    public void createContext(
+            Entity<?,?,?> entity,
+            AgentSet agentSet,
+            Config config,
+            ContextCache contextCache,
+            Clock clock,
+            RequestResponseInterface requestResponseInterface,
+            Environment localEnvironment
+    ) {
+        for (Attribute<C> attribute : attributeList) {
+            attribute.createContext(
+                    entity,
+                    this,
+                    agentSet,
+                    config,
+                    contextCache,
+                    clock,
+                    requestResponseInterface,
+                    localEnvironment
+            );
+        }
     }
 
     private Attribute<C> get(int attributeIndex) {

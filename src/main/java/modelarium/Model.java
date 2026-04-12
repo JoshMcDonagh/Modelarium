@@ -63,16 +63,14 @@ public class Model {
             Environment environment,
             RequestResponseController requestResponseController
     ) {
-        EnvironmentContext environmentContext = new EnvironmentContext(
-                environment,
+        environment.createContext(
                 new AgentSet(),
                 config,
                 new ContextCache(),
                 new Clock(config.tickCount()),
-                new RequestResponseInterface(environment.name(), config, requestResponseController)
+                new RequestResponseInterface(environment.name(), config, requestResponseController),
+                null
         );
-
-        environment.setContext(environmentContext);
     }
 
     private CoordinatorHandle launchCoordinator(
@@ -83,7 +81,6 @@ public class Model {
                 String.valueOf(config.threadCount()),
                 config,
                 environment,
-                (EnvironmentContext) environment.context(),
                 requestResponseController
         );
 

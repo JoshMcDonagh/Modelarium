@@ -2,7 +2,6 @@ package modelarium.multithreading;
 
 import modelarium.Config;
 import modelarium.entities.agents.sets.AgentSet;
-import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
 import modelarium.multithreading.requestresponse.CoordinatorRequestHandler;
 import modelarium.multithreading.requestresponse.Request;
@@ -31,8 +30,6 @@ public class CoordinatorThread implements Runnable {
     /** The environment shared across all workers */
     private final Environment environment;
 
-    private final EnvironmentContext environmentContext;
-
     /** Controller that manages the request and response queues for inter-thread communication */
     private final RequestResponseController requestResponseController;
 
@@ -56,9 +53,8 @@ public class CoordinatorThread implements Runnable {
     public CoordinatorThread(String name,
                              Config config,
                              Environment environment,
-                             EnvironmentContext environmentContext,
                              RequestResponseController requestResponseController) {
-        this(name, config, environment, environmentContext, requestResponseController, null);
+        this(name, config, environment, requestResponseController, null);
     }
 
     /**
@@ -73,13 +69,11 @@ public class CoordinatorThread implements Runnable {
     public CoordinatorThread(String name,
                              Config config,
                              Environment environment,
-                             EnvironmentContext environmentContext,
                              RequestResponseController requestResponseController,
                              AgentSet globalAgentSet) {
         this.threadName = name;
         this.config = config;
         this.environment = environment;
-        this.environmentContext = environmentContext;
         this.requestResponseController = requestResponseController;
         this.predefinedGlobalAgentSet = globalAgentSet;
     }
@@ -98,17 +92,17 @@ public class CoordinatorThread implements Runnable {
         globalAgentSet = Objects.requireNonNullElseGet(predefinedGlobalAgentSet, AgentSet::new);
 
         requestHandlerMap.put(RequestType.ALL_WORKERS_FINISH_TICK,
-                new CoordinatorRequestHandler.AllWorkersFinishTick(threadName, config, requestResponseController, globalAgentSet, environment, environmentContext));
+                new CoordinatorRequestHandler.AllWorkersFinishTick(threadName, config, requestResponseController, globalAgentSet, environment));
         requestHandlerMap.put(RequestType.ALL_WORKERS_UPDATE_COORDINATOR,
-                new CoordinatorRequestHandler.AllWorkersUpdateCoordinator(threadName, config, requestResponseController, globalAgentSet, environment, environmentContext));
+                new CoordinatorRequestHandler.AllWorkersUpdateCoordinator(threadName, config, requestResponseController, globalAgentSet, environment));
         requestHandlerMap.put(RequestType.AGENT_ACCESS,
-                new CoordinatorRequestHandler.AgentAccess(threadName, config, requestResponseController, globalAgentSet, environment, environmentContext));
+                new CoordinatorRequestHandler.AgentAccess(threadName, config, requestResponseController, globalAgentSet, environment));
         requestHandlerMap.put(RequestType.UPDATE_COORDINATOR_AGENTS,
-                new CoordinatorRequestHandler.UpdateCoordinatorAgents(threadName, config, requestResponseController, globalAgentSet, environment, environmentContext));
+                new CoordinatorRequestHandler.UpdateCoordinatorAgents(threadName, config, requestResponseController, globalAgentSet, environment));
         requestHandlerMap.put(RequestType.FILTERED_AGENTS_ACCESS,
-                new CoordinatorRequestHandler.FilteredAgentsAccess(threadName, config, requestResponseController, globalAgentSet, environment, environmentContext));
+                new CoordinatorRequestHandler.FilteredAgentsAccess(threadName, config, requestResponseController, globalAgentSet, environment));
         requestHandlerMap.put(RequestType.ENVIRONMENT_ATTRIBUTES_ACCESS,
-                new CoordinatorRequestHandler.EnvironmentAttributesAccess(threadName, config, requestResponseController, globalAgentSet, environment, environmentContext));
+                new CoordinatorRequestHandler.EnvironmentAttributesAccess(threadName, config, requestResponseController, globalAgentSet, environment));
     }
 
     /**

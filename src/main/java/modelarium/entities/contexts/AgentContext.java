@@ -4,6 +4,8 @@ import modelarium.Clock;
 import modelarium.Config;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.attributes.AgentAttributeSet;
+import modelarium.entities.attributes.Attribute;
 import modelarium.entities.environments.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
@@ -12,6 +14,8 @@ public class AgentContext extends Context {
 
     public AgentContext(
             Agent entity,
+            AgentAttributeSet attributeSet,
+            Attribute<AgentContext>  attribute,
             AgentSet localAgentSet,
             Config config,
             ContextCache cache,
@@ -19,13 +23,23 @@ public class AgentContext extends Context {
             RequestResponseInterface requestResponseInterface,
             Environment localEnvironment
     ) {
-        super(entity, localAgentSet, config, cache, clock, requestResponseInterface);
+        super(entity, attributeSet, attribute, localAgentSet, config, cache, clock, requestResponseInterface);
         this.localEnvironment = localEnvironment;
     }
 
     @Override
     public Agent getThisEntity() {
         return (Agent) entity();
+    }
+
+    @Override
+    public AgentAttributeSet getThisAttributeSet() {
+        return (AgentAttributeSet) attributeSet();
+    }
+
+    @Override
+    public Attribute<AgentContext> getThisAttribute() {
+        return (Attribute<AgentContext>) attribute();
     }
 
     @Override

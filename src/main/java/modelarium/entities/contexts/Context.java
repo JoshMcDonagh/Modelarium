@@ -6,6 +6,8 @@ import modelarium.entities.Entity;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.AgentSet;
 import modelarium.entities.agents.sets.ImmutableAgentSet;
+import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeSet;
 import modelarium.entities.environments.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
@@ -27,15 +29,18 @@ import java.util.function.Predicate;
 public abstract class Context {
 
     private final Entity<?,?,?> entity;
+    private final AttributeSet<?> attributeSet;
+    private final Attribute<?> attribute;
     private final AgentSet localAgentSet;
     private final Config config;
     private final ContextCache cache;
+    private final Clock clock;
     private final RequestResponseInterface requestResponseInterface;
-
-    private Clock clock = null;
 
     public Context(
             Entity<?,?,?> entity,
+            AttributeSet<?> attributeSet,
+            Attribute<?> attribute,
             AgentSet localAgentSet,
             Config config,
             ContextCache cache,
@@ -43,6 +48,8 @@ public abstract class Context {
             RequestResponseInterface requestResponseInterface
     ) {
         this.entity = entity;
+        this.attributeSet = attributeSet;
+        this.attribute = attribute;
         this.localAgentSet = localAgentSet;
         this.config = config;
         this.cache = cache;
@@ -62,6 +69,14 @@ public abstract class Context {
         return entity;
     }
 
+    protected AttributeSet<?> attributeSet() {
+        return attributeSet;
+    }
+
+    protected Attribute<?> attribute() {
+        return attribute;
+    }
+
     protected Config config() {
         return config;
     }
@@ -75,6 +90,10 @@ public abstract class Context {
     }
 
     public abstract Entity<?,?,?> getThisEntity();
+
+    public abstract AttributeSet<?> getThisAttributeSet();
+
+    public abstract Attribute<?> getThisAttribute();
 
     public abstract Environment getEnvironment();
 

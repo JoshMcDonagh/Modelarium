@@ -84,8 +84,7 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
             if (config.areThreadsSynced())
                 localEnvironment = environment.clone();
 
-            AgentContext agentContext = new AgentContext(
-                    agent,
+            agent.createContext(
                     agentsInThread,
                     config,
                     cache,
@@ -93,8 +92,6 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
                     new RequestResponseInterface(agent.name(), config, requestResponseController),
                     localEnvironment
             );
-
-            agent.setContext(agentContext);
         }
 
         RequestResponseInterface requestResponseInterface = requestResponseController.getInterface(threadName);

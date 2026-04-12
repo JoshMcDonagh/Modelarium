@@ -1,6 +1,7 @@
 package modelarium.entities.agents.sets;
 
 import modelarium.entities.agents.Agent;
+import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 
 import java.util.List;
 
@@ -12,6 +13,11 @@ public class ImmutableAgentSet extends AgentSet {
 
     private void throwUnsupportedOperationException() {
         throw new UnsupportedOperationException("ImmutableAgentSet cannot be modified");
+    }
+
+    @Override
+    public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory databaseFactory) {
+        throwUnsupportedOperationException();
     }
 
     @Override
