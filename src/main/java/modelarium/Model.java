@@ -63,11 +63,15 @@ public class Model {
             Environment environment,
             RequestResponseController requestResponseController
     ) {
+        Clock clock = new Clock(config.tickCount());
+
+        environment.setClock(clock);
+
         environment.createContext(
                 new AgentSet(),
                 config,
                 new ContextCache(),
-                new Clock(config.tickCount()),
+                clock,
                 new RequestResponseInterface(environment.name(), config, requestResponseController),
                 null
         );

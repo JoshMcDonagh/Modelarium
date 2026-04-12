@@ -28,6 +28,8 @@ public abstract class Entity<C extends Context, A extends AttributeSet<C>, L ext
     private final List<A> attributeSetList;
     private final Map<String, Integer> attributeSetIndexMap = new HashMap<>();
 
+    private C context = null;
+
     protected Entity(String name, List<A> attributeSetList) {
         this.name = name;
         this.attributeSetList = attributeSetList;
@@ -89,7 +91,7 @@ public abstract class Entity<C extends Context, A extends AttributeSet<C>, L ext
     }
 
     public EntityLog<C,A,L> getLog() {
-        return new EntityLog<>(name, attributeSetList);
+        return new EntityLog<C,A,L>(name, (List<A>) attributeSetList);
     }
 
     public void run() {

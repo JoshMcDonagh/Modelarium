@@ -1,5 +1,6 @@
 package modelarium.entities.environments;
 
+import modelarium.Clock;
 import modelarium.entities.Entity;
 import modelarium.entities.attributes.EnvironmentAttributeSet;
 import modelarium.entities.attributes.events.EnvironmentEvent;
@@ -11,8 +12,21 @@ import modelarium.entities.logging.AttributeSetLog;
 import java.util.List;
 
 public class Environment extends Entity<EnvironmentContext, EnvironmentAttributeSet, AttributeSetLog<EnvironmentContext>> {
+    private Clock clock = null;
+
     public Environment(String name, List<EnvironmentAttributeSet> attributeSets) {
         super(name, attributeSets);
+    }
+
+    public void setClock(Clock clock) {
+        if (this.clock != null)
+            return;
+
+        this.clock = clock;
+    }
+
+    public Clock clock() {
+        return clock;
     }
 
     @Override
