@@ -1,18 +1,11 @@
 package modelarium.entities.attributes;
 
-import modelarium.Clock;
-import modelarium.Config;
-import modelarium.entities.Entity;
-import modelarium.entities.agents.sets.AgentSet;
 import modelarium.entities.attributes.events.Event;
 import modelarium.entities.attributes.properties.Property;
 import modelarium.entities.attributes.routines.Routine;
 import modelarium.entities.contexts.Context;
-import modelarium.entities.contexts.ContextCache;
-import modelarium.entities.environments.Environment;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
-import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +18,8 @@ public class AttributeSet<C extends Context> {
     private final Map<String, Integer> attributeIndexMap = new HashMap<String, Integer>();
 
     private AttributeSetLog<C> log = null;
+
+    private C context = null;
 
     AttributeSet(String ownerName, String attributeSetName, List<Attribute<C>> attributeList) {
         this.ownerName = ownerName;
@@ -51,27 +46,18 @@ public class AttributeSet<C extends Context> {
         return attributeList.size();
     }
 
-    public void createContext(
-            Entity<?,?,?> entity,
-            AgentSet agentSet,
-            Config config,
-            ContextCache contextCache,
-            Clock clock,
-            RequestResponseInterface requestResponseInterface,
-            Environment localEnvironment
-    ) {
-        for (Attribute<C> attribute : attributeList) {
-            attribute.createContext(
-                    entity,
-                    this,
-                    agentSet,
-                    config,
-                    contextCache,
-                    clock,
-                    requestResponseInterface,
-                    localEnvironment
-            );
-        }
+    public void setContext(C context) {
+        if (this.context != null)
+            return;
+
+        for (Attribute<C> attribute : attributeList)
+            attribute.setContext(context);
+
+        this.context = context;
+    }
+
+    public C context() {
+        return context;
     }
 
     private Attribute<C> get(int attributeIndex) {
@@ -141,7 +127,9 @@ public class AttributeSet<C extends Context> {
     }
 
     public void run() {
+        context.setCurrentAttributeSet(this);
         for (Attribute<C> attribute : attributeList) {
+            context.setCurrentAttribute(attribute);
             Object valueToLog = null;
 
             if (attribute instanceof Event<C> event) {

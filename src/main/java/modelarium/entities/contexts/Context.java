@@ -29,18 +29,17 @@ import java.util.function.Predicate;
 public abstract class Context {
 
     private final Entity<?,?,?> entity;
-    private final AttributeSet<?> attributeSet;
-    private final Attribute<?> attribute;
     private final AgentSet localAgentSet;
     private final Config config;
     private final ContextCache cache;
     private final Clock clock;
     private final RequestResponseInterface requestResponseInterface;
 
+    private AttributeSet<?> attributeSet = null;
+    private Attribute<?> attribute = null;
+
     public Context(
             Entity<?,?,?> entity,
-            AttributeSet<?> attributeSet,
-            Attribute<?> attribute,
             AgentSet localAgentSet,
             Config config,
             ContextCache cache,
@@ -48,8 +47,6 @@ public abstract class Context {
             RequestResponseInterface requestResponseInterface
     ) {
         this.entity = entity;
-        this.attributeSet = attributeSet;
-        this.attribute = attribute;
         this.localAgentSet = localAgentSet;
         this.config = config;
         this.cache = cache;
@@ -63,6 +60,14 @@ public abstract class Context {
 
     public boolean doesAgentExistInThisCore(String agentName) {
         return localAgentSet.doesAgentExist(agentName);
+    }
+
+    public void setCurrentAttributeSet(AttributeSet<?> attributeSet) {
+        this.attributeSet = attributeSet;
+    }
+
+    public void setCurrentAttribute(Attribute<?> attribute) {
+        this.attribute = attribute;
     }
 
     protected Entity<?,?,?> entity() {

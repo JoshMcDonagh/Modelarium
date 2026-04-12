@@ -1,10 +1,8 @@
 package modelarium.multithreading.requestresponse;
 
-import modelarium.Clock;
 import modelarium.Config;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.AgentSet;
-import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
 
 import java.util.ArrayList;
@@ -110,7 +108,7 @@ public abstract class CoordinatorRequestHandler {
             if (getWorkersWaiting().size() == getConfig().threadCount()) {
                 getEnvironment().run();
 
-                getEnvironment().clock().triggerTick();
+                getEnvironment().context().getClock().triggerTick();
 
                 for (String worker : getWorkersWaiting())
                     getResponseQueue(worker).put(new Response(getThreadName(), worker, ResponseType.ALL_WORKERS_UPDATE_COORDINATOR, null));

@@ -1,13 +1,6 @@
 package modelarium.entities.attributes;
 
-import modelarium.Clock;
-import modelarium.Config;
-import modelarium.entities.Entity;
-import modelarium.entities.agents.sets.AgentSet;
 import modelarium.entities.contexts.Context;
-import modelarium.entities.contexts.ContextCache;
-import modelarium.entities.environments.Environment;
-import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
 public abstract class Attribute<C extends Context> {
     private final String name;
@@ -34,18 +27,10 @@ public abstract class Attribute<C extends Context> {
         return context;
     }
 
-    public abstract void createContext(
-            Entity<?,?,?> entity,
-            AttributeSet<?> attributeSet,
-            AgentSet agentSet,
-            Config config,
-            ContextCache contextCache,
-            Clock clock,
-            RequestResponseInterface requestResponseInterface,
-            Environment localEnvironment
-    );
+    void setContext(C context) {
+        if (this.context != null)
+            return;
 
-    protected void setContext(C context) {
         this.context = context;
     }
 

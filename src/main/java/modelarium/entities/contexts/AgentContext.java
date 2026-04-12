@@ -14,8 +14,6 @@ public class AgentContext extends Context {
 
     public AgentContext(
             Agent entity,
-            AgentAttributeSet attributeSet,
-            Attribute<AgentContext>  attribute,
             AgentSet localAgentSet,
             Config config,
             ContextCache cache,
@@ -23,7 +21,7 @@ public class AgentContext extends Context {
             RequestResponseInterface requestResponseInterface,
             Environment localEnvironment
     ) {
-        super(entity, attributeSet, attribute, localAgentSet, config, cache, clock, requestResponseInterface);
+        super(entity, localAgentSet, config, cache, clock, requestResponseInterface);
         this.localEnvironment = localEnvironment;
     }
 

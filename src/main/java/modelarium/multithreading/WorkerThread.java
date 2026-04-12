@@ -4,7 +4,6 @@ import modelarium.Clock;
 import modelarium.Config;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.AgentSet;
-import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseController;

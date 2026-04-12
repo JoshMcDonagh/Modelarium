@@ -2,7 +2,6 @@ package modelarium;
 
 import modelarium.entities.agents.sets.AgentSet;
 import modelarium.entities.contexts.ContextCache;
-import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
 import modelarium.multithreading.CoordinatorHandle;
 import modelarium.multithreading.CoordinatorThread;
@@ -63,15 +62,11 @@ public class Model {
             Environment environment,
             RequestResponseController requestResponseController
     ) {
-        Clock clock = new Clock(config.tickCount());
-
-        environment.setClock(clock);
-
         environment.createContext(
                 new AgentSet(),
                 config,
                 new ContextCache(),
-                clock,
+                new Clock(config.tickCount()),
                 new RequestResponseInterface(environment.name(), config, requestResponseController),
                 null
         );

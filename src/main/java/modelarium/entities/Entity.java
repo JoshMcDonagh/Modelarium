@@ -44,6 +44,15 @@ public abstract class Entity<C extends Context, A extends AttributeSet<C>, L ext
             attributeSet.setLogDatabaseFactory(databaseFactory);
     }
 
+    protected abstract C makeContextInstance(
+            AgentSet agentSet,
+            Config config,
+            ContextCache contextCache,
+            Clock clock,
+            RequestResponseInterface requestResponseInterface,
+            Environment localEnvironment
+    );
+
     public void createContext(
             AgentSet agentSet,
             Config config,
@@ -52,17 +61,21 @@ public abstract class Entity<C extends Context, A extends AttributeSet<C>, L ext
             RequestResponseInterface requestResponseInterface,
             Environment localEnvironment
     ) {
-        for (A attributeSet : attributeSetList) {
-            attributeSet.createContext(
-                    this,
-                    agentSet,
-                    config,
-                    contextCache,
-                    clock,
-                    requestResponseInterface,
-                    localEnvironment
-            );
-        }
+        if (context != null)
+            return;
+
+        context = makeContextInstance(
+                agentSet,
+                config,
+                contextCache,
+                clock,
+                requestResponseInterface,
+                localEnvironment
+        );
+    }
+
+    public C context() {
+        return context;
     }
 
     public String name() {
