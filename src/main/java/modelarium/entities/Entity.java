@@ -72,6 +72,9 @@ public abstract class Entity<C extends Context, A extends AttributeSet<C>, L ext
                 requestResponseInterface,
                 localEnvironment
         );
+
+        for (A attributeSet : attributeSetList)
+            attributeSet.setContext(context);
     }
 
     public C context() {
