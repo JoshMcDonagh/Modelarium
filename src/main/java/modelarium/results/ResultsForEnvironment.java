@@ -4,6 +4,8 @@ import modelarium.entities.attributes.EnvironmentAttributeSet;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.logging.AttributeSetLog;
+import modelarium.results.immutable.ImmutableResultsForAgents;
+import modelarium.results.immutable.ImmutableResultsForEnvironment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,11 @@ public class ResultsForEnvironment extends ResultsForEntities<EnvironmentContext
     public ResultsForEnvironment(Environment environment) {
         super(environment);
         this.environmentName = environment.name();
+    }
+
+    protected ResultsForEnvironment(ResultsForEnvironment other) {
+        super(other);
+        this.environmentName = other.environmentName;
     }
 
     public int attributeSetLogCount() {
@@ -56,5 +63,9 @@ public class ResultsForEnvironment extends ResultsForEntities<EnvironmentContext
 
     public Map<String, Map<String, List<Object>>> environmentLogs() {
         return getLogsForEntityAsMap(environmentName);
+    }
+
+    public ImmutableResultsForEnvironment getAsImmutable() {
+        return new ImmutableResultsForEnvironment(this);
     }
 }

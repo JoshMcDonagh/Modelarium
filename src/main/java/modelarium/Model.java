@@ -11,6 +11,7 @@ import modelarium.multithreading.requestresponse.RequestResponseInterface;
 import modelarium.results.Results;
 import modelarium.results.ResultsForAgents;
 import modelarium.results.ResultsForEnvironment;
+import modelarium.results.immutable.ImmutableResults;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,10 +164,9 @@ public class Model {
             stopCoordinator(coordinatorHandle);
 
         results.setEnvironmentResults(new ResultsForEnvironment(environment));
-        results.seal();
     }
 
-    public Results getResults() {
-        return results;
+    public ImmutableResults getResults() {
+        return results.getAsImmutable();
     }
 }

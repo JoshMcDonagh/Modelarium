@@ -4,6 +4,7 @@ import modelarium.entities.agents.sets.AgentSet;
 import modelarium.entities.attributes.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.logging.AttributeSetLog;
+import modelarium.results.immutable.ImmutableResultsForAgents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,10 @@ public class ResultsForAgents extends ResultsForEntities<AgentContext, AgentAttr
      */
     public ResultsForAgents(AgentSet agentSet) {
         super(agentSet.getAsList());
+    }
+
+    protected ResultsForAgents(ResultsForAgents other) {
+        super(other);
     }
 
     public int agentLogCount() {
@@ -60,5 +65,9 @@ public class ResultsForAgents extends ResultsForEntities<AgentContext, AgentAttr
     @Override
     public Map<String, Map<String, Map<String, List<Object>>>> allLogs() {
         return super.allLogs();
+    }
+
+    public ImmutableResultsForAgents getAsImmutable() {
+        return new ImmutableResultsForAgents(this);
     }
 }

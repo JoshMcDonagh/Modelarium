@@ -2,6 +2,7 @@ package modelarium.results;
 
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.AgentSet;
+import modelarium.results.immutable.ImmutableResults;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +16,14 @@ public class Results {
     private boolean isAgentAttributeSetDataConnected = false;
     private boolean isEnvironmentAttributeSetDataConnected = false;
 
-    private boolean isImmutable = false;
+    public Results() {}
 
-    /**
-     * Makes this Results instance immutable, preventing further modification.
-     */
-    public void seal() {
-        isImmutable = true;
+    protected Results(Results other) {
+        this.agentsResults = other.agentsResults;
+        this.environmentResults = other.environmentResults;
+        this.agentNames.addAll(other.agentNames);
+        this.isAgentAttributeSetDataConnected = other.isAgentAttributeSetDataConnected;
+        this.isEnvironmentAttributeSetDataConnected = other.isEnvironmentAttributeSetDataConnected;
     }
 
     /**
@@ -30,9 +32,6 @@ public class Results {
      * @param agents the set of agents
      */
     public void setAgentNames(AgentSet agents) {
-        if (isImmutable)
-            throw new IllegalStateException("Cannot modify Results: object is immutable.");
-
         for (Agent agent : agents)
             agentNames.add(agent.name());
     }
@@ -62,9 +61,6 @@ public class Results {
      * @param agentsResults the raw agent results
      */
     public void setAgentResults(ResultsForAgents agentsResults) {
-        if (isImmutable)
-            throw new IllegalStateException("Cannot modify Results: object is immutable.");
-
         this.agentsResults = agentsResults;
         if (agentsResults != null)
             isAgentAttributeSetDataConnected = true;
@@ -76,9 +72,6 @@ public class Results {
      * @param environmentResults the raw environment results
      */
     public void setEnvironmentResults(ResultsForEnvironment environmentResults) {
-        if (isImmutable)
-            throw new IllegalStateException("Cannot modify Results: object is immutable.");
-
         this.environmentResults = environmentResults;
         if (environmentResults != null)
             isEnvironmentAttributeSetDataConnected = true;
@@ -112,8 +105,10 @@ public class Results {
      * @param other the results to merge into this one
      */
     public void mergeWith(Results other) {
-        if (isImmutable)
-            throw new IllegalStateException("Cannot modify Results: object is immutable.");
         agentsResults.mergeWith(other.agentsResults);
+    }
+
+    public ImmutableResults getAsImmutable() {
+        return new ImmutableResults(this);
     }
 }

@@ -5,13 +5,14 @@ import modelarium.entities.attributes.AttributeSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
+import modelarium.results.immutable.ImmutableResultsForAgents;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-abstract class ResultsForEntities<C extends Context, A extends AttributeSet<C>, L extends AttributeSetLog<C>> {
+public abstract class ResultsForEntities<C extends Context, A extends AttributeSet<C>, L extends AttributeSetLog<C>> {
 
     private final List<EntityLog<C,A,L>> entityLogList = new ArrayList<>();
     private final Map<String, Integer> entityLogIndexMap = new HashMap<>();
@@ -27,6 +28,11 @@ abstract class ResultsForEntities<C extends Context, A extends AttributeSet<C>, 
     ResultsForEntities(Entity<C,A,L> entity) {
         entityLogList.add(entity.getLog());
         entityLogIndexMap.put(entity.name(), 0);
+    }
+
+    ResultsForEntities(ResultsForEntities<C,A,L> other) {
+        this.entityLogList.addAll(other.entityLogList);
+        this.entityLogIndexMap.putAll(other.entityLogIndexMap);
     }
 
     public void mergeWith(ResultsForEntities<C,A,L> other) {
