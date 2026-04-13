@@ -5,6 +5,7 @@ import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.logging.AttributeSetLog;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +39,15 @@ public class ResultsForEnvironment extends ResultsForEntities<EnvironmentContext
     }
 
     public List<Object> attributeLogs(String attributeSetName, String attributeName) {
-        return getLogsForEntityAttribute(this.environmentName, attributeSetName, attributeName);
+        return getLogsForEntityAttribute(environmentName, attributeSetName, attributeName);
+    }
+
+    public <T> List<T> attributeLogs(String attributeSetName, String attributeName, Class<T> type) {
+        List<Object> raw = getLogsForEntityAttribute(environmentName, attributeSetName, attributeName);
+        List<T> typed = new ArrayList<>(raw.size());
+        for (Object value : raw)
+            typed.add(type.cast(value));
+        return typed;
     }
 
     public Map<String, List<Object>> attributeSetLogs(String attributeSetName) {

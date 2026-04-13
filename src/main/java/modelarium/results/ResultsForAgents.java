@@ -5,6 +5,7 @@ import modelarium.entities.attributes.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.logging.AttributeSetLog;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +39,14 @@ public class ResultsForAgents extends ResultsForEntities<AgentContext, AgentAttr
 
     public List<Object> attributeLogs(String agentName, String attributeSetName, String attributeName) {
         return getLogsForEntityAttribute(agentName, attributeSetName, attributeName);
+    }
+
+    public <T> List<T> attributeLogs(String agentName, String attributeSetName, String attributeName, Class<T> type) {
+        List<Object> raw = getLogsForEntityAttribute(agentName, attributeSetName, attributeName);
+        List<T> typed = new ArrayList<>(raw.size());
+        for (Object value : raw)
+            typed.add(type.cast(value));
+        return typed;
     }
 
     public Map<String, List<Object>> attributeSetLogs(String agentName, String attributeSetName) {
