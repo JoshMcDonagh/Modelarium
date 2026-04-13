@@ -113,7 +113,7 @@ public abstract class Context {
 
         // If not synchronised, cannot retrieve further
         if (!config.areThreadsSynced())
-            return null;
+            throw new AgentNotFoundException("Agent '" + targetAgentName + "' requested by '" + entity.name() + "' not found in this thread (threads are not synced)");
 
         // Request from coordinator
         try {
@@ -121,7 +121,7 @@ public abstract class Context {
             cache.addAgent(requestedAgent);
             return requestedAgent;
         } catch (Exception e) {
-            return null;
+            throw new AgentNotFoundException("Agent '" + targetAgentName + "' requested by '" + entity.name() + "' not found");
         }
     }
 
@@ -137,7 +137,7 @@ public abstract class Context {
             try {
                 filteredAgentSet = requestResponseInterface.getFilteredAgentsFromCoordinator(entity.name(), filter);
             } catch (Exception e) {
-                return null;
+                throw new  AgentNotFoundException("Failed to retrieve filtered agents requested by '" + entity.name() + "' from this thread (threads are not synced)");
             }
         } else {
             // Use only local agent set
