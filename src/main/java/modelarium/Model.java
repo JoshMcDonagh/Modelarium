@@ -16,6 +16,7 @@ import modelarium.results.immutable.ImmutableResults;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.*;
 
 /**
@@ -60,15 +61,27 @@ public class Model {
         results.setAgentResults(new ResultsForAgents(new AgentSet()));
     }
 
+    private Clock makeClockIfSynced() {
+        if (config.areThreadsSynced())
+            return new Clock(config.tickCount());
+
+        return null;
+    }
+
     private void createAndSetEnvironmentContext(
             Environment environment,
-            RequestResponseController requestResponseController
+            RequestResponseController requestResponseController,
+            Clock sharedClock
     ) {
+        Clock clock;
+
+        clock = Objects.requireNonNullElseGet(sharedClock, () -> new Clock(config.tickCount()));
+
         environment.createContext(
                 new AgentSet(),
                 config,
                 new ContextCache(),
-                new Clock(config.tickCount()),
+                clock,
                 new RequestResponseInterface(environment.name(), config, requestResponseController),
                 null
         );
@@ -94,7 +107,8 @@ public class Model {
     private void launchWorkers(
             List<AgentSet> agentsForEachCore,
             Environment environment,
-            RequestResponseController requestResponseController
+            RequestResponseController requestResponseController,
+            Clock sharedClock
     ) {
         ExecutorService executorService = Executors.newFixedThreadPool(config.threadCount());
         List<Future<Results>> futures = new ArrayList<>();
@@ -118,7 +132,8 @@ public class Model {
                     config,
                     requestResponseController,
                     environment,
-                    threadAgentSet
+                    threadAgentSet,
+                    sharedClock
             );
 
             futures.add(executorService.submit(worker));
@@ -162,15 +177,17 @@ public class Model {
 
         setupResultsContainer(agentsForEachCore);
 
+        Clock sharedClock = makeClockIfSynced();
+
         RequestResponseController requestResponseController = new RequestResponseController(config);
-        createAndSetEnvironmentContext(environment, requestResponseController);
+        createAndSetEnvironmentContext(environment, requestResponseController, sharedClock);
 
         CoordinatorHandle coordinatorHandle = null;
         if (config.areThreadsSynced())
             coordinatorHandle = launchCoordinator(environment, requestResponseController);
 
         try {
-            launchWorkers(agentsForEachCore, environment, requestResponseController);
+            launchWorkers(agentsForEachCore, environment, requestResponseController, sharedClock);
         } finally {
             if (coordinatorHandle != null)
                 stopCoordinator(coordinatorHandle);

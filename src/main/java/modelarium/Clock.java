@@ -1,23 +1,29 @@
 package modelarium;
 
-public class Clock {
+import java.util.concurrent.atomic.AtomicInteger;
+
+public final class Clock {
     private final int totalTickCount;
 
-    private int tick = 0;
+    private final AtomicInteger tick = new AtomicInteger(0);
 
     public Clock(int totalTickCount) {
         this.totalTickCount = totalTickCount;
     }
 
     public boolean isFinished() {
-        return tick >= totalTickCount;
+        return tick.get() >= totalTickCount;
     }
 
     /**
      * @return the current tick integer
      */
     public int currentTick() {
-        return tick;
+        return tick.get();
+    }
+
+    public int totalTickCount() {
+        return totalTickCount;
     }
 
     /**
@@ -26,6 +32,6 @@ public class Clock {
     public void triggerTick() {
         if (isFinished())
             return;
-        tick++;
+        tick.incrementAndGet();
     }
 }

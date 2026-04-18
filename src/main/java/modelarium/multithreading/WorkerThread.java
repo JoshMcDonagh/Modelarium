@@ -40,6 +40,8 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
     /** The original set of agents this worker is responsible for simulating */
     private final AgentSet agentsInThread;
 
+    private final Clock sharedClock;
+
     /** A duplicate of the agent set to allow for safe merging during synchronisation */
     private final AgentSet updatedAgents;
 
@@ -55,12 +57,15 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
                         Config config,
                         RequestResponseController requestResponseController,
                         Environment environment,
-                        AgentSet agentsInThread) {
+                        AgentSet agentsInThread,
+                        Clock sharedClock
+    ) {
         this.threadName = Objects.requireNonNull(threadName, "threadName");
         this.config = Objects.requireNonNull(config, "settings");
         this.requestResponseController = Objects.requireNonNull(requestResponseController, "requestResponseController");
         this.environment = environment;
         this.agentsInThread = Objects.requireNonNull(agentsInThread, "agents");
+        this.sharedClock = sharedClock;
         this.updatedAgents = this.agentsInThread.duplicate();
     }
 
@@ -74,7 +79,7 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
      */
     @Override
     public Results call() throws InterruptedException {
-        Clock clock = new Clock(config.tickCount());
+        Clock clock = Objects.requireNonNullElseGet(sharedClock, () -> new Clock(config.tickCount()));
         ContextCache cache = new ContextCache();
 
         for (Agent agent : agentsInThread) {
@@ -108,10 +113,11 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
                 agentsInThread.add(updatedAgents); // Merge agent updates
                 requestResponseInterface.updateCoordinatorAgents(agentsInThread);
                 requestResponseInterface.waitUntilAllWorkersUpdateCoordinator();
+            } else {
+                clock.triggerTick();
             }
 
             cache.clear();
-            clock.triggerTick();
         }
 
         // Final setup and result collection

@@ -1,5 +1,6 @@
 package modelarium.multithreading;
 
+import modelarium.Clock;
 import modelarium.Config;
 import modelarium.entities.agents.sets.AgentSet;
 import modelarium.entities.environments.Environment;
@@ -30,6 +31,8 @@ public class CoordinatorThread implements Runnable {
     /** Controller that manages the request and response queues for inter-thread communication */
     private final RequestResponseController requestResponseController;
 
+    private final Clock sharedClock;
+
     /** Global agent set of the model */
     private final AgentSet predefinedGlobalAgentSet;
 
@@ -50,8 +53,10 @@ public class CoordinatorThread implements Runnable {
     public CoordinatorThread(String name,
                              Config config,
                              Environment environment,
-                             RequestResponseController requestResponseController) {
-        this(name, config, environment, requestResponseController, null);
+                             RequestResponseController requestResponseController,
+                             Clock sharedClock
+    ) {
+        this(name, config, environment, requestResponseController, sharedClock, null);
     }
 
     /**
@@ -67,11 +72,14 @@ public class CoordinatorThread implements Runnable {
                              Config config,
                              Environment environment,
                              RequestResponseController requestResponseController,
-                             AgentSet globalAgentSet) {
+                             Clock sharedClock,
+                             AgentSet globalAgentSet
+    ) {
         this.threadName = name;
         this.config = config;
         this.environment = environment;
         this.requestResponseController = requestResponseController;
+        this.sharedClock = sharedClock;
         this.predefinedGlobalAgentSet = globalAgentSet;
     }
 
@@ -89,17 +97,17 @@ public class CoordinatorThread implements Runnable {
         globalAgentSet = Objects.requireNonNullElseGet(predefinedGlobalAgentSet, AgentSet::new);
 
         requestHandlerMap.put(RequestType.ALL_WORKERS_FINISH_TICK,
-                new CoordinatorRequestHandler.AllWorkersFinishTick(threadName, config, requestResponseController, globalAgentSet, environment));
+                new CoordinatorRequestHandler.AllWorkersFinishTick(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
         requestHandlerMap.put(RequestType.ALL_WORKERS_UPDATE_COORDINATOR,
-                new CoordinatorRequestHandler.AllWorkersUpdateCoordinator(threadName, config, requestResponseController, globalAgentSet, environment));
+                new CoordinatorRequestHandler.AllWorkersUpdateCoordinator(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
         requestHandlerMap.put(RequestType.AGENT_ACCESS,
-                new CoordinatorRequestHandler.AgentAccess(threadName, config, requestResponseController, globalAgentSet, environment));
+                new CoordinatorRequestHandler.AgentAccess(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
         requestHandlerMap.put(RequestType.UPDATE_COORDINATOR_AGENTS,
-                new CoordinatorRequestHandler.UpdateCoordinatorAgents(threadName, config, requestResponseController, globalAgentSet, environment));
+                new CoordinatorRequestHandler.UpdateCoordinatorAgents(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
         requestHandlerMap.put(RequestType.FILTERED_AGENTS_ACCESS,
-                new CoordinatorRequestHandler.FilteredAgentsAccess(threadName, config, requestResponseController, globalAgentSet, environment));
+                new CoordinatorRequestHandler.FilteredAgentsAccess(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
         requestHandlerMap.put(RequestType.ENVIRONMENT_ATTRIBUTES_ACCESS,
-                new CoordinatorRequestHandler.EnvironmentAttributesAccess(threadName, config, requestResponseController, globalAgentSet, environment));
+                new CoordinatorRequestHandler.EnvironmentAttributesAccess(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
     }
 
     private void notifyRequesterOfError(Request request, Throwable cause) {
