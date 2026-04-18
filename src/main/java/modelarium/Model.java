@@ -169,7 +169,12 @@ public class Model {
         if (config.areThreadsSynced())
             coordinatorHandle = launchCoordinator(environment, requestResponseController);
 
-        launchWorkers(agentsForEachCore, environment, requestResponseController);
+        try {
+            launchWorkers(agentsForEachCore, environment, requestResponseController);
+        } finally {
+            if (coordinatorHandle != null)
+                stopCoordinator(coordinatorHandle);
+        }
 
         if (config.areThreadsSynced())
             stopCoordinator(coordinatorHandle);
