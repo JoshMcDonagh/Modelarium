@@ -8,7 +8,7 @@ import modelarium.entities.contexts.EnvironmentContext;
 import java.util.List;
 
 public class EnvironmentAttributeSet extends AttributeSet<EnvironmentContext> {
-    EnvironmentAttributeSet(String ownerName, String attributeSetName, List<Attribute<EnvironmentContext>> attributes) {
+    public EnvironmentAttributeSet(String ownerName, String attributeSetName, List<Attribute<EnvironmentContext>> attributes) {
         super(ownerName, attributeSetName, attributes);
     }
 

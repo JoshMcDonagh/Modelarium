@@ -8,7 +8,7 @@ import modelarium.entities.contexts.AgentContext;
 import java.util.List;
 
 public class AgentAttributeSet extends AttributeSet<AgentContext> {
-    AgentAttributeSet(String ownerName, String attributeSetName, List<Attribute<AgentContext>> attributes) {
+    public AgentAttributeSet(String ownerName, String attributeSetName, List<Attribute<AgentContext>> attributes) {
         super(ownerName, attributeSetName, attributes);
     }
 
