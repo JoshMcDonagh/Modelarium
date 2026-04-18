@@ -3,6 +3,7 @@ package modelarium;
 import modelarium.entities.agents.sets.AgentSet;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
+import modelarium.exceptions.ModelRunException;
 import modelarium.multithreading.CoordinatorHandle;
 import modelarium.multithreading.CoordinatorThread;
 import modelarium.multithreading.WorkerThread;
@@ -126,11 +127,19 @@ public class Model {
         // Collect results from each worker thread
         try {
             for (Future<Results> future : futures) {
-                Results resultsForThread = future.get();
-                results.mergeWith(resultsForThread);
+                try {
+                    Results resultsForThread = future.get();
+                    results.mergeWith(resultsForThread);
+                } catch (ExecutionException e) {
+                    // A worker threw. Cancel the rest and propagate.
+                    futures.forEach(f -> f.cancel(true));
+                    throw new ModelRunException("Worker thread failed during simulation", e.getCause());
+                } catch (InterruptedException e) {
+                    futures.forEach(f -> f.cancel(true));
+                    Thread.currentThread().interrupt();
+                    throw new ModelRunException("Interrupted while waiting for worker results", e);
+                }
             }
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
         } finally {
             executorService.shutdown();
         }
