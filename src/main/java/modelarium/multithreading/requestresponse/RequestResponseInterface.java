@@ -4,9 +4,13 @@ import modelarium.Config;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.AgentSet;
 import modelarium.entities.environments.Environment;
+import modelarium.exceptions.CoordinatorErrorException;
+import modelarium.exceptions.CoordinatorTimeoutException;
 
+import java.time.Duration;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
 /**
@@ -24,6 +28,8 @@ public class RequestResponseInterface {
     /** Whether the simulation is running in synchronised (coordinated) mode */
     private final boolean areProcessesSynced;
 
+    private final Duration coordinatorTimeout;
+
     /** Shared queue for outgoing requests */
     private final BlockingQueue<Request> requestQueue;
 
@@ -40,39 +46,74 @@ public class RequestResponseInterface {
     public RequestResponseInterface(String name, Config config, RequestResponseController requestResponseController) {
         this.name = name;
         this.areProcessesSynced = config.areThreadsSynced();
+        this.coordinatorTimeout = Duration.ofSeconds(config.threadTimeoutSeconds());
         this.requestQueue = requestResponseController.getRequestQueue();
         this.responseQueue = requestResponseController.getResponseQueue(name);
     }
 
-    /**
-     * Waits for a specific response type after placing a corresponding request.
-     * Used for synchronisation barriers between threads.
-     */
-    private void wait(RequestType requestType, ResponseType responseType) throws InterruptedException {
-        if (!areProcessesSynced) return;
+    private static CoordinatorTimeoutException makeCoordinatorTimeoutException(
+            RequestType requestType,
+            ResponseType expectedType,
+            String requester
+    ) {
+        return new CoordinatorTimeoutException("Timed out waiting for " + expectedType + " response to " + requestType
+                + " request from '" + requester + "'");
+    }
 
-        requestQueue.put(new Request(name, null, requestType, null));
+    private Object sendAndAwait(Request request, ResponseType expectedType) throws InterruptedException {
+        requestQueue.put(request);
+
+        String expectedDestination = request.getRequester();
+        RequestType originalType = request.getRequestType();
+        long deadlineNanos = System.nanoTime() + coordinatorTimeout.toNanos();
 
         while (true) {
-            Response response = responseQueue.take();
-            if (Objects.equals(response.getResponseType(), responseType) && Objects.equals(response.getDestination(), name))
-                return;
+            long remainingNanos = deadlineNanos - System.nanoTime();
+            if (remainingNanos <= 0)
+                throw makeCoordinatorTimeoutException(originalType, expectedType, expectedDestination);
+
+            Response response = responseQueue.poll(remainingNanos, TimeUnit.NANOSECONDS);
+            if (response == null)
+                throw makeCoordinatorTimeoutException(originalType, expectedType, expectedDestination);
+
+            if (!Objects.equals(response.getDestination(), expectedDestination)) {
+                responseQueue.put(response);
+                continue;
+            }
+
+            if (response.getResponseType() == ResponseType.ERROR) {
+                Throwable cause = response.getPayload() instanceof Throwable t ? t : null;
+                throw new CoordinatorErrorException("Coordinator reported an error while handling " + originalType
+                        + " request from '" + expectedDestination + "'", cause);
+            }
+
+            if (response.getResponseType() == expectedType)
+                return response.getPayload();
+
+            // An unrelated response type for this destination - requeue defensively
             responseQueue.put(response);
         }
+    }
+
+    private void awaitBarrier(RequestType requestType, ResponseType responseType) throws InterruptedException {
+        if (!areProcessesSynced)
+            return;
+
+        sendAndAwait(new Request(name, null, requestType, null), responseType);
     }
 
     /**
      * Waits until all workers have completed their current simulation tick.
      */
     public void waitUntilAllWorkersFinishTick() throws InterruptedException {
-        wait(RequestType.ALL_WORKERS_FINISH_TICK, ResponseType.ALL_WORKERS_FINISH_TICK);
+        awaitBarrier(RequestType.ALL_WORKERS_FINISH_TICK, ResponseType.ALL_WORKERS_FINISH_TICK);
     }
 
     /**
      * Waits until all workers have updated the coordinator with their agent data.
      */
     public void waitUntilAllWorkersUpdateCoordinator() throws InterruptedException {
-        wait(RequestType.ALL_WORKERS_UPDATE_COORDINATOR, ResponseType.ALL_WORKERS_UPDATE_COORDINATOR);
+        awaitBarrier(RequestType.ALL_WORKERS_UPDATE_COORDINATOR, ResponseType.ALL_WORKERS_UPDATE_COORDINATOR);
     }
 
     /**

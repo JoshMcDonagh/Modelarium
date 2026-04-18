@@ -31,5 +31,6 @@ public enum ResponseType {
     /**
      * Response containing the current state of environment attributes.
      */
-    ENVIRONMENT_ATTRIBUTES_ACCESS
+    ENVIRONMENT_ATTRIBUTES_ACCESS,
+    ERROR
 }

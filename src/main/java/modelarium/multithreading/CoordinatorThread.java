@@ -3,10 +3,7 @@ package modelarium.multithreading;
 import modelarium.Config;
 import modelarium.entities.agents.sets.AgentSet;
 import modelarium.entities.environments.Environment;
-import modelarium.multithreading.requestresponse.CoordinatorRequestHandler;
-import modelarium.multithreading.requestresponse.Request;
-import modelarium.multithreading.requestresponse.RequestResponseController;
-import modelarium.multithreading.requestresponse.RequestType;
+import modelarium.multithreading.requestresponse.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -105,6 +102,18 @@ public class CoordinatorThread implements Runnable {
                 new CoordinatorRequestHandler.EnvironmentAttributesAccess(threadName, config, requestResponseController, globalAgentSet, environment));
     }
 
+    private void notifyRequesterOfError(Request request, Throwable cause) {
+        String requester = request.getRequester();
+        if (requester == null || "SYSTEM".equals(requester))
+            return;
+        try {
+            requestResponseController.getResponseQueue(requester)
+                    .put(new Response(threadName, requester, ResponseType.ERROR, cause));
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
     /**
      * Main execution loop for the coordinator thread.
      *
@@ -116,17 +125,38 @@ public class CoordinatorThread implements Runnable {
 
         // Continuously poll for and handle incoming requests from workers
         while (isRunning || !requestResponseController.getRequestQueue().isEmpty()) {
+            Request request;
             try {
-                Request request = requestResponseController.getRequestQueue().take(); // blocks
-                if (request.getRequestType() == RequestType.SHUTDOWN) {
-                    isRunning = false;
-                    continue;
-                }
-                requestHandlerMap.get(request.getRequestType()).handleRequest(request);
+                request = requestResponseController.getRequestQueue().take();
             } catch (InterruptedException e) {
-                if (!isRunning)
-                    break;
+                // Interrupted while waiting for a request - honour shutdown intent
+                if (isRunning)
+                    Thread.currentThread().interrupt();
+                break;
+            }
+
+            if (request.getRequestType() == RequestType.SHUTDOWN) {
+                isRunning = false;
+                continue;
+            }
+
+            CoordinatorRequestHandler handler = requestHandlerMap.get(request.getRequestType());
+            if (handler == null) {
+                notifyRequesterOfError(request, new IllegalStateException("No handler registered for request type: "
+                        + request.getRequestType()));
+                continue;
+            }
+
+            try {
+                handler.handleRequest(request);
+            } catch (InterruptedException e) {
+                // Handler was interrupted - coordinator is shutting down
                 Thread.currentThread().interrupt();
+                notifyRequesterOfError(request, e);
+                break;
+            } catch (Throwable t) {
+                // Handler failed - notify the requester so it doesn't block forever
+                notifyRequesterOfError(request, t);
             }
         }
     }

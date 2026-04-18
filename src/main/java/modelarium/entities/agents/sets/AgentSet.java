@@ -2,6 +2,7 @@ package modelarium.entities.agents.sets;
 
 import modelarium.entities.agents.Agent;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
+import modelarium.exceptions.AgentNotFoundException;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -123,7 +124,11 @@ public class AgentSet implements Iterable<Agent> {
      * @return the agent instance
      */
     public Agent get(String agentName) {
-        int index = agentIndexMap.get(agentName);
+        Integer index = agentIndexMap.get(agentName);
+
+        if (index == null)
+            throw new AgentNotFoundException("No agent named '" + agentName + "' in set");
+
         return agentList.get(index);
     }
 

@@ -13,6 +13,7 @@ public record Config(
         int populationSize,
         int tickCount,
         int threadCount,
+        long threadTimeoutSeconds,
         boolean areThreadsSynced,
         AgentGenerator agentGenerator,
         EnvironmentGenerator environmentGenerator,
@@ -27,6 +28,7 @@ public record Config(
         private int populationSize = 100;
         private int tickCount = 100;
         private int threadCount = 2;
+        private long threadTimeoutSeconds = 60;
         private boolean areThreadsSynced = true;
         private AgentGenerator agentGenerator;
         private EnvironmentGenerator environmentGenerator;
@@ -45,6 +47,11 @@ public record Config(
 
         public ConfigBuilder threadCount(int threadCount) {
             this.threadCount = threadCount;
+            return this;
+        }
+
+        public ConfigBuilder threadTimeoutSeconds(long threadTimeoutSeconds) {
+            this.threadTimeoutSeconds = threadTimeoutSeconds;
             return this;
         }
 
@@ -90,6 +97,7 @@ public record Config(
                     populationSize,
                     tickCount,
                     threadCount,
+                    threadTimeoutSeconds,
                     areThreadsSynced,
                     agentGenerator,
                     environmentGenerator,

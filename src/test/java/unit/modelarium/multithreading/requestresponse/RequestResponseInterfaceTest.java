@@ -41,7 +41,7 @@ class RequestResponseInterfaceTest {
     }
 
     @Test
-    void testWaitUntilAllWorkersFinishTick() throws InterruptedException {
+    void testAwaitBarrierUntilAllWorkersFinishTick() throws InterruptedException {
         Response response = new Response("Coordinator", threadName, ResponseType.ALL_WORKERS_FINISH_TICK, null);
         responseQueue.put(response);
 
