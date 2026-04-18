@@ -1,26 +1,45 @@
 package modelarium.results.immutable;
 
-import modelarium.entities.attributes.EnvironmentAttributeSet;
-import modelarium.entities.contexts.EnvironmentContext;
-import modelarium.entities.logging.AttributeSetLog;
-import modelarium.results.ResultsForEntities;
 import modelarium.results.ResultsForEnvironment;
+import modelarium.results.mutable.MutableResultsForEnvironment;
 
+import java.util.List;
 import java.util.Map;
 
-public class ImmutableResultsForEnvironment extends ResultsForEnvironment {
-    public ImmutableResultsForEnvironment(ResultsForEnvironment mutableResultsForEnvironment) {
-        super(mutableResultsForEnvironment);
-    }
+public class ImmutableResultsForEnvironment implements ResultsForEnvironment {
+    private final MutableResultsForEnvironment results;
 
-    private void throwUnsupportedOperationException() {
-        throw new UnsupportedOperationException("ImmutableResultsForEnvironment cannot be modified");
+    public ImmutableResultsForEnvironment(MutableResultsForEnvironment results) {
+        this.results = results;
     }
 
     @Override
-    public void mergeWith(
-            ResultsForEntities<EnvironmentContext,EnvironmentAttributeSet, AttributeSetLog<EnvironmentContext>> other
-    ) {
-        throwUnsupportedOperationException();
+    public int attributeSetLogCount() {
+        return results.attributeSetLogCount();
+    }
+
+    @Override
+    public int attributeSetLogCount(String attributeSetName) {
+        return results.attributeSetLogCount(attributeSetName);
+    }
+
+    @Override
+    public List<Object> attributeLogs(String attributeSetName, String attributeName) {
+        return results.attributeLogs(attributeSetName, attributeName);
+    }
+
+    @Override
+    public <T> List<T> attributeLogs(String attributeSetName, String attributeName, Class<T> type) {
+        return results.attributeLogs(attributeSetName, attributeName, type);
+    }
+
+    @Override
+    public Map<String, List<Object>> attributeSetLogs(String attributeSetName) {
+        return results.attributeSetLogs(attributeSetName);
+    }
+
+    @Override
+    public Map<String, Map<String, List<Object>>> environmentLogs() {
+        return results.environmentLogs();
     }
 }

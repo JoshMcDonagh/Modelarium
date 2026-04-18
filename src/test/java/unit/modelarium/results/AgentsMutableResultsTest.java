@@ -3,7 +3,7 @@ package unit.modelarium.results;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.logging.AttributeSetLog;
-import modelarium.results.ResultsForAgents;
+import modelarium.results.mutable.MutableResultsForAgents;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,9 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for {@link ResultsForAgents}.
+ * Unit tests for {@link MutableResultsForAgents}.
  */
-public class AgentsResultsTest {
+public class AgentsMutableResultsTest {
 
     private Agent mockAgent1;
     private Agent mockAgent2;
@@ -64,7 +64,7 @@ public class AgentsResultsTest {
         MutableAgentSet agentSet = mock(MutableAgentSet.class);
         when(agentSet.getAsList()).thenReturn(List.of(mockAgent1, mockAgent2));
 
-        ResultsForAgents agentsResults = new ResultsForAgents(agentSet);
+        MutableResultsForAgents agentsResults = new MutableResultsForAgents(agentSet);
 
         assertEquals(2, agentsResults.getAttributeSetCollectionSetCount());
         assertNotNull(agentsResults.getAttributeSetCollectionResults("A1"));
@@ -75,7 +75,7 @@ public class AgentsResultsTest {
     void testGetPropertyValuesDelegatesCorrectly() {
         MutableAgentSet agentSet = mock(MutableAgentSet.class);
         when(agentSet.getAsList()).thenReturn(List.of(mockAgent1));
-        ResultsForAgents agentsResults = new ResultsForAgents(agentSet);
+        MutableResultsForAgents agentsResults = new MutableResultsForAgents(agentSet);
 
         List<Object> values = agentsResults.getPropertyValues("A1", "behaviour", "prop");
         assertEquals(List.of("X"), values);
@@ -85,7 +85,7 @@ public class AgentsResultsTest {
     void testGetPostEventValuesDelegatesCorrectly() {
         MutableAgentSet agentSet = mock(MutableAgentSet.class);
         when(agentSet.getAsList()).thenReturn(List.of(mockAgent2));
-        ResultsForAgents agentsResults = new ResultsForAgents(agentSet);
+        MutableResultsForAgents agentsResults = new MutableResultsForAgents(agentSet);
 
         List<Boolean> values = agentsResults.getPostEventValues("A2", "behaviour", "event");
         assertEquals(List.of(true), values);
@@ -96,7 +96,7 @@ public class AgentsResultsTest {
         MutableAgentSet agentSet = mock(MutableAgentSet.class);
         when(agentSet.getAsList()).thenReturn(List.of(mockAgent1, mockAgent2));
 
-        ResultsForAgents agentsResults = new ResultsForAgents(agentSet);
+        MutableResultsForAgents agentsResults = new MutableResultsForAgents(agentSet);
         agentsResults.disconnectDatabases();
 
         verify(results1).disconnectDatabases();

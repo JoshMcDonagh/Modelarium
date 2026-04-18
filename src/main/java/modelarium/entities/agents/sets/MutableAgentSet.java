@@ -123,6 +123,7 @@ public class MutableAgentSet implements AgentSet {
      * @param agentName the agent's unique name
      * @return the agent instance
      */
+    @Override
     public Agent get(String agentName) {
         Integer index = agentIndexMap.get(agentName);
 
@@ -138,6 +139,7 @@ public class MutableAgentSet implements AgentSet {
      * @param index the index of the agent
      * @return the agent at the given position
      */
+    @Override
     public Agent get(int index) {
         return agentList.get(index);
     }
@@ -147,6 +149,7 @@ public class MutableAgentSet implements AgentSet {
      *
      * @return a list of agent instances
      */
+    @Override
     public List<Agent> getAsList() {
         return new ArrayList<>(agentList);
     }
@@ -156,6 +159,7 @@ public class MutableAgentSet implements AgentSet {
      *
      * @return the size of the agent set
      */
+    @Override
     public int size() {
         return agentList.size();
     }
@@ -179,6 +183,7 @@ public class MutableAgentSet implements AgentSet {
      * @param agentName the name to check
      * @return true if the agent exists
      */
+    @Override
     public boolean doesAgentExist(String agentName) {
         return agentIndexMap.containsKey(agentName);
     }
@@ -205,6 +210,7 @@ public class MutableAgentSet implements AgentSet {
      * @param agentFilter a predicate to apply to each agent
      * @return a new {@code AgentSet} containing only matching agents
      */
+    @Override
     public MutableAgentSet getFilteredAgents(Predicate<Agent> agentFilter) {
         List<Agent> filteredAgents = new ArrayList<>();
 

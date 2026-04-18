@@ -1,10 +1,10 @@
 package integration.diskDatabaseSanityIntegrationTest;
 
 import integration.agentEnvironmentSyncIntegrationTest.attributes.ModelAttributes;
-import integration.agentEnvironmentSyncIntegrationTest.results.ModelResults;
+import integration.agentEnvironmentSyncIntegrationTest.results.ModelMutableResults;
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.results.Results;
+import modelarium.results.mutable.MutableResults;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.Test;
 
@@ -42,8 +42,8 @@ public class DiskDatabaseSanityIntegrationTest {
         s.setBaseAgentAttributeSetCollection(ModelAttributes.getAgentAttributeSetCollection());
         s.setBaseEnvironmentAttributeSetCollection(ModelAttributes.getEnvironmentAttributeSetCollection());
 
-        s.setResultsClass(ModelResults.class);
-        s.setResults(new ModelResults());
+        s.setResultsClass(ModelMutableResults.class);
+        s.setResults(new ModelMutableResults());
 
         s.setAgentGenerator(new DefaultAgentGenerator());
         s.setEnvironmentGenerator(new DefaultEnvironmentGenerator());
@@ -51,7 +51,7 @@ public class DiskDatabaseSanityIntegrationTest {
 
         s.setAreAttributeSetResultsStoredOnDisk(true);
 
-        Results r = new Model(s).run();
+        MutableResults r = new Model(s).run();
 
         // Pull out the internal DB lists from Results
         List<Object> agentDBs = getPrivateList(r, "accumulatedAgentAttributeSetResultsDatabaseList");

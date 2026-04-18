@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * <p>Verifies that the functional delegate methods are invoked correctly for accumulating
  * agent property and event data.</p>
  */
-public class FunctionalResultsTest {
+public class FunctionalMutableResultsTest {
 
     private String lastPropertyAttrSet;
     private String lastPropertyName;

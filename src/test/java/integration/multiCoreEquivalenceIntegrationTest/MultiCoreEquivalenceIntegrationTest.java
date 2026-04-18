@@ -1,10 +1,10 @@
 package integration.multiCoreEquivalenceIntegrationTest;
 
 import integration.syncedCachedBasicModelUsageIntegrationTest.attributes.ModelAttributes;
-import integration.syncedCachedBasicModelUsageIntegrationTest.results.ModelResults;
+import integration.syncedCachedBasicModelUsageIntegrationTest.results.ModelMutableResults;
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.results.Results;
+import modelarium.results.mutable.MutableResults;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,8 +34,8 @@ public class MultiCoreEquivalenceIntegrationTest {
         base.setIsCacheUsed(false);
         base.setDoAgentStoresHoldAgentCopies(false);
 
-        base.setResultsClass(ModelResults.class);
-        base.setResults(new ModelResults());
+        base.setResultsClass(ModelMutableResults.class);
+        base.setResults(new ModelMutableResults());
 
         base.setAgentGenerator(new DefaultAgentGenerator());
         base.setEnvironmentGenerator(new DefaultEnvironmentGenerator());
@@ -48,7 +48,7 @@ public class MultiCoreEquivalenceIntegrationTest {
     public void testSingleCoreMatchesMultiCore() throws Exception {
         Config s1 = base;
         s1.setNumOfCores(1);
-        Results r1 = new Model(s1).run();
+        MutableResults r1 = new Model(s1).run();
         List<Object> h1 = r1.getAccumulatedAgentPropertyValues("food", "Hunger");
 
         Config s4 = new Config();
@@ -61,15 +61,15 @@ public class MultiCoreEquivalenceIntegrationTest {
         s4.setAreProcessesSynced(true);
         s4.setIsCacheUsed(false);
         s4.setDoAgentStoresHoldAgentCopies(false);
-        s4.setResultsClass(ModelResults.class);
-        s4.setResults(new ModelResults());
+        s4.setResultsClass(ModelMutableResults.class);
+        s4.setResults(new ModelMutableResults());
         s4.setAgentGenerator(new DefaultAgentGenerator());
         s4.setEnvironmentGenerator(new DefaultEnvironmentGenerator());
         s4.setModelScheduler(new InOrderScheduler());
         s4.setAreAttributeSetResultsStoredOnDisk(false);
 
         s4.setNumOfCores(4);
-        Results r4 = new Model(s4).run();
+        MutableResults r4 = new Model(s4).run();
         List<Object> h4 = r4.getAccumulatedAgentPropertyValues("food", "Hunger");
 
         assertEquals(h1.size(), h4.size());

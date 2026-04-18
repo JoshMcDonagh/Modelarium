@@ -1,11 +1,11 @@
 package integration.agentEnvironmentSyncIntegrationTest.results;
 
-import modelarium.results.Results;
+import modelarium.results.mutable.MutableResults;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModelResults extends Results {
+public class ModelMutableResults extends MutableResults {
 
     private static double asDouble(Object o) {
         if (o == null) return 0.0;

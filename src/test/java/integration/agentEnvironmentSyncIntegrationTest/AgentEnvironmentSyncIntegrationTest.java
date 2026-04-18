@@ -1,10 +1,10 @@
 package integration.agentEnvironmentSyncIntegrationTest;
 
 import integration.agentEnvironmentSyncIntegrationTest.attributes.ModelAttributes;
-import integration.agentEnvironmentSyncIntegrationTest.results.ModelResults;
+import integration.agentEnvironmentSyncIntegrationTest.results.ModelMutableResults;
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.results.Results;
+import modelarium.results.mutable.MutableResults;
 import modelarium.scheduler.InOrderScheduler; // or RandomOrderScheduler — either is fine
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,8 +31,8 @@ public class AgentEnvironmentSyncIntegrationTest {
         base.setBaseAgentAttributeSetCollection(ModelAttributes.getAgentAttributeSetCollection());
         base.setBaseEnvironmentAttributeSetCollection(ModelAttributes.getEnvironmentAttributeSetCollection());
 
-        base.setResultsClass(ModelResults.class);
-        base.setResults(new ModelResults());
+        base.setResultsClass(ModelMutableResults.class);
+        base.setResults(new ModelMutableResults());
 
         base.setAgentGenerator(new DefaultAgentGenerator());
         base.setEnvironmentGenerator(new DefaultEnvironmentGenerator());
@@ -40,7 +40,7 @@ public class AgentEnvironmentSyncIntegrationTest {
     }
 
     private void runAndAssert(Config s) throws Exception {
-        Results results = new Model(s).run();
+        MutableResults results = new Model(s).run();
 
         // After run(), Results has already: setEnvironmentResults, accumulateAgentAttributeData, processEnvironmentAttributeData, seal()
 

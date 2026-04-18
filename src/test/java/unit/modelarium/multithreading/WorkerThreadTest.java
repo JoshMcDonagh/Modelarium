@@ -7,7 +7,7 @@ import modelarium.entities.contexts.Context;
 import modelarium.multithreading.WorkerThread;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
-import modelarium.results.Results;
+import modelarium.results.mutable.MutableResults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -42,7 +42,7 @@ public class WorkerThreadTest {
         when(settings.getAreProcessesSynced()).thenReturn(false);
         when(settings.getTotalNumOfTicks()).thenReturn(2);  // keep it small for test speed
         when(settings.getModelScheduler()).thenReturn(tick -> {}); // no-op scheduler
-        when(settings.getResults()).thenReturn(new DummyResults());
+        when(settings.getResults()).thenReturn(new DummyMutableResults());
         when(agents.duplicate()).thenReturn(duplicatedAgents);
         when(controller.getInterface(any())).thenReturn(requestInterface);
 
@@ -54,18 +54,18 @@ public class WorkerThreadTest {
 
     @Test
     void testWorkerThreadCallReturnsValidResults() throws Exception {
-        WorkerThread<Results> worker = new WorkerThread<>("Worker-Test", settings, controller, agents);
-        Results results = worker.call();
+        WorkerThread<MutableResults> worker = new WorkerThread<>("Worker-Test", settings, controller, agents);
+        MutableResults results = worker.call();
 
         assertNotNull(results, "Worker should return non-null results.");
-        assertTrue(results instanceof DummyResults, "Results should be of type DummyResults.");
+        assertTrue(results instanceof DummyMutableResults, "Results should be of type DummyResults.");
     }
 
     /**
-     * A concrete implementation of {@link Results} for test purposes.
+     * A concrete implementation of {@link MutableResults} for test purposes.
      * The accumulation methods return empty lists to satisfy abstract requirements.
      */
-    public static class DummyResults extends Results {
+    public static class DummyMutableResults extends MutableResults {
         @Override
         protected List<?> accumulateAgentPropertyResults(String attributeSetName, String propertyName,
                                                          List<?> accumulatedValues, List<?> valuesToBeProcessed) {

@@ -1,10 +1,10 @@
 package integration.unsyncedNoCacheBasicModelUsageIntegrationTest;
 
 import integration.unsyncedNoCacheBasicModelUsageIntegrationTest.attributes.ModelAttributes;
-import integration.unsyncedNoCacheBasicModelUsageIntegrationTest.results.ModelResults;
+import integration.unsyncedNoCacheBasicModelUsageIntegrationTest.results.ModelMutableResults;
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.results.Results;
+import modelarium.results.mutable.MutableResults;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,8 +45,8 @@ public class UnsyncedNoCacheBasicModelUsageIntegrationTest {
         settings.setDoAgentStoresHoldAgentCopies(false);
         settings.setIsCacheUsed(false);
 
-        settings.setResultsClass(ModelResults.class);
-        settings.setResults(new ModelResults());
+        settings.setResultsClass(ModelMutableResults.class);
+        settings.setResults(new ModelMutableResults());
 
         settings.setAgentGenerator(new DefaultAgentGenerator());
         settings.setEnvironmentGenerator(new DefaultEnvironmentGenerator());
@@ -56,7 +56,7 @@ public class UnsyncedNoCacheBasicModelUsageIntegrationTest {
     }
 
     public void runModelUsage() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        Results results = new Model(settings).run();
+        MutableResults results = new Model(settings).run();
 
         // Aggregated per-tick hunger AFTER warm-up
         List<Object> hunger = results.getAccumulatedAgentPropertyValues("food", "Hunger");

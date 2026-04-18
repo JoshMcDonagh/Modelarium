@@ -1,53 +1,26 @@
 package modelarium.results.immutable;
 
-import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.results.Results;
 import modelarium.results.ResultsForAgents;
 import modelarium.results.ResultsForEnvironment;
+import modelarium.results.mutable.MutableResults;
 
-import java.util.List;
+public class ImmutableResults implements Results {
+    private final ImmutableResultsForAgents resultsForAgents;
+    private final ImmutableResultsForEnvironment resultsForEnvironment;
 
-public class ImmutableResults extends Results {
-    public ImmutableResults(Results mutableResults) {
-        super(mutableResults);
-    }
-
-    private void throwUnsupportedOperationException() {
-        throw new UnsupportedOperationException("ImmutableResults cannot be modified");
-    }
-
-    @Override
-    public void setAgentNames(MutableAgentSet agents) {
-        throwUnsupportedOperationException();
+    public ImmutableResults(MutableResults results) {
+        resultsForAgents = results.agents().getAsImmutable();
+        resultsForEnvironment = results.environment().getAsImmutable();
     }
 
     @Override
-    public void setAgentNames(List<MutableAgentSet> agentSetList) {
-        throwUnsupportedOperationException();
+    public ResultsForAgents agents() {
+        return resultsForAgents;
     }
 
     @Override
-    public void setAgentResults(ResultsForAgents agentsResults) {
-        throwUnsupportedOperationException();
-    }
-
-    @Override
-    public void setEnvironmentResults(ResultsForEnvironment environmentResults) {
-        throwUnsupportedOperationException();
-    }
-
-    @Override
-    public void mergeWith(Results other) {
-        throwUnsupportedOperationException();
-    }
-
-    @Override
-    public ImmutableResultsForAgents agents() {
-        return super.agents().getAsImmutable();
-    }
-
-    @Override
-    public ImmutableResultsForEnvironment environment() {
-        return super.environment().getAsImmutable();
+    public ResultsForEnvironment environment() {
+        return resultsForEnvironment;
     }
 }

@@ -3,9 +3,9 @@ package unit.modelarium.results;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.logging.databases.AttributeSetLogDatabase;
-import modelarium.results.Results;
-import modelarium.results.ResultsForAgents;
-import modelarium.results.ResultsForEnvironment;
+import modelarium.results.mutable.MutableResults;
+import modelarium.results.mutable.MutableResultsForAgents;
+import modelarium.results.mutable.MutableResultsForEnvironment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,15 +19,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for the {@link Results} class using a minimal concrete subclass.
+ * Unit tests for the {@link MutableResults} class using a minimal concrete subclass.
  */
-public class ResultsTest {
+public class MutableResultsTest {
 
     private Agent agent;
     private MutableAgentSet agentSet;
-    private ResultsForAgents mockAgentsResults;
-    private ResultsForEnvironment mockEnvironmentResults;
-    private TestResults results;
+    private MutableResultsForAgents mockAgentsResults;
+    private MutableResultsForEnvironment mockEnvironmentResults;
+    private TestMutableResults results;
 
     @BeforeEach
     void setUp() {
@@ -37,10 +37,10 @@ public class ResultsTest {
         agentSet = new MutableAgentSet();
         agentSet.add(agent);
 
-        mockAgentsResults = mock(ResultsForAgents.class);
-        mockEnvironmentResults = mock(ResultsForEnvironment.class);
+        mockAgentsResults = mock(MutableResultsForAgents.class);
+        mockEnvironmentResults = mock(MutableResultsForEnvironment.class);
 
-        results = new TestResults();
+        results = new TestMutableResults();
     }
 
     @Test
@@ -110,9 +110,9 @@ public class ResultsTest {
     }
 
     /**
-     * Minimal concrete subclass of {@link Results} for testing.
+     * Minimal concrete subclass of {@link MutableResults} for testing.
      */
-    static class TestResults extends Results {
+    static class TestMutableResults extends MutableResults {
         @Override
         protected List<?> accumulateAgentPropertyResults(String attributeSetName, String propertyName,
                                                          List<?> accumulatedValues, List<?> valuesToBeProcessed) {
@@ -134,9 +134,9 @@ public class ResultsTest {
         // Inject mock databases using reflection since private fields are not accessible via subclass
         void injectMockAccumulatedAgentDb(String name, AttributeSetLogDatabase db) {
             try {
-                Field mapField = Results.class.getDeclaredField("accumulatedAgentAttributeSetResultsDatabaseMap");
-                Field listField = Results.class.getDeclaredField("accumulatedAgentAttributeSetResultsDatabaseList");
-                Field flagField = Results.class.getDeclaredField("isAccumulatedAgentAttributeSetDataConnected");
+                Field mapField = MutableResults.class.getDeclaredField("accumulatedAgentAttributeSetResultsDatabaseMap");
+                Field listField = MutableResults.class.getDeclaredField("accumulatedAgentAttributeSetResultsDatabaseList");
+                Field flagField = MutableResults.class.getDeclaredField("isAccumulatedAgentAttributeSetDataConnected");
 
                 mapField.setAccessible(true);
                 listField.setAccessible(true);
@@ -152,9 +152,9 @@ public class ResultsTest {
 
         void injectMockProcessedEnvironmentDb(String name, AttributeSetLogDatabase db) {
             try {
-                Field mapField = Results.class.getDeclaredField("processedEnvironmentAttributeSetResultsDatabaseMap");
-                Field listField = Results.class.getDeclaredField("processedEnvironmentAttributeSetResultsDatabaseList");
-                Field flagField = Results.class.getDeclaredField("isProcessedEnvironmentAttributeSetDataConnected");
+                Field mapField = MutableResults.class.getDeclaredField("processedEnvironmentAttributeSetResultsDatabaseMap");
+                Field listField = MutableResults.class.getDeclaredField("processedEnvironmentAttributeSetResultsDatabaseList");
+                Field flagField = MutableResults.class.getDeclaredField("isProcessedEnvironmentAttributeSetDataConnected");
 
                 mapField.setAccessible(true);
                 listField.setAccessible(true);

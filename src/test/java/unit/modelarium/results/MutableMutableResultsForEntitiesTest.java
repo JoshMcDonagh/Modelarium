@@ -2,7 +2,7 @@ package unit.modelarium.results;
 
 import modelarium.entities.Entity;
 import modelarium.entities.logging.AttributeSetLog;
-import modelarium.results.ResultsForEntities;
+import modelarium.results.mutable.MutableResultsForEntities;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for {@link ResultsForEntities}.
+ * Unit tests for {@link MutableResultsForEntities}.
  */
-public class ResultsForEntitiesTest {
+public class MutableMutableResultsForEntitiesTest {
     private Entity mockElement;
     private AttributeSetCollection mockCollection;
     private AttributeSetCollectionResults mockCollectionResults;
@@ -42,7 +42,7 @@ public class ResultsForEntitiesTest {
 
     @Test
     void testSingleModelElementConstruction() {
-        ResultsForEntities results = new ResultsForEntities(mockElement);
+        MutableResultsForEntities results = new MutableResultsForEntities(mockElement);
         assertEquals(1, results.getAttributeSetCollectionSetCount());
         assertEquals(mockCollectionResults, results.getAttributeSetCollectionResults("Agent1"));
         assertEquals(mockCollectionResults, results.getAttributeSetCollectionResults(0));
@@ -58,14 +58,14 @@ public class ResultsForEntitiesTest {
         when(mockAnotherCollection.getResults()).thenReturn(anotherResults);
         when(anotherResults.getModelElementName()).thenReturn("Agent2");
 
-        ResultsForEntities results = new ResultsForEntities(List.of(mockElement, anotherElement));
+        MutableResultsForEntities results = new MutableResultsForEntities(List.of(mockElement, anotherElement));
         assertEquals(2, results.getAttributeSetCollectionSetCount());
         assertEquals(anotherResults, results.getAttributeSetCollectionResults("Agent2"));
     }
 
     @Test
     void testMergeWithAddsAllElements() {
-        ResultsForEntities results1 = new ResultsForEntities(mockElement);
+        MutableResultsForEntities results1 = new MutableResultsForEntities(mockElement);
 
         Entity mockOther = mock(Entity.class);
         AttributeSetCollection mockOtherCollection = mock(AttributeSetCollection.class);
@@ -75,7 +75,7 @@ public class ResultsForEntitiesTest {
         when(mockOtherCollection.getResults()).thenReturn(mockOtherResults);
         when(mockOtherResults.getModelElementName()).thenReturn("Other");
 
-        ResultsForEntities results2 = new ResultsForEntities(mockOther);
+        MutableResultsForEntities results2 = new MutableResultsForEntities(mockOther);
         results1.mergeWith(results2);
 
         assertEquals(2, results1.getAttributeSetCollectionSetCount());
@@ -84,28 +84,28 @@ public class ResultsForEntitiesTest {
 
     @Test
     void testGetPropertyValuesDelegatesCorrectly() {
-        ResultsForEntities results = new ResultsForEntities(mockElement);
+        MutableResultsForEntities results = new MutableResultsForEntities(mockElement);
         List<Object> values = results.getPropertyValues("Agent1", "set1", "prop1");
         assertEquals(List.of("value1"), values);
     }
 
     @Test
     void testGetPreEventValuesDelegatesCorrectly() {
-        ResultsForEntities results = new ResultsForEntities(mockElement);
+        MutableResultsForEntities results = new MutableResultsForEntities(mockElement);
         List<Boolean> values = results.getPreEventValues("Agent1", "set1", "eventA");
         assertEquals(List.of(true), values);
     }
 
     @Test
     void testGetPostEventValuesDelegatesCorrectly() {
-        ResultsForEntities results = new ResultsForEntities(mockElement);
+        MutableResultsForEntities results = new MutableResultsForEntities(mockElement);
         List<Boolean> values = results.getPostEventValues("Agent1", "set1", "eventB");
         assertEquals(List.of(false), values);
     }
 
     @Test
     void testDisconnectDatabasesClearsAll() {
-        ResultsForEntities results = new ResultsForEntities(mockElement);
+        MutableResultsForEntities results = new MutableResultsForEntities(mockElement);
         results.disconnectDatabases();
         verify(mockCollectionResults).disconnectDatabases();
         assertEquals(0, results.getAttributeSetCollectionSetCount());

@@ -3,7 +3,7 @@ package unit.modelarium;
 import modelarium.Config;
 import modelarium.entities.agents.generators.AgentGenerator;
 import modelarium.entities.environments.EnvironmentGenerator;
-import modelarium.results.Results;
+import modelarium.results.mutable.MutableResults;
 import modelarium.scheduler.Scheduler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -88,8 +88,8 @@ public class ConfigTest {
 
     @Test
     public void testResultsClassSetterAndGetter() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        settings.setResultsClass(MockResults.class);
-        assertEquals(MockResults.class, settings.getResults().getClass(), "Should return the same results class that was set.");
+        settings.setResultsClass(MockMutableResults.class);
+        assertEquals(MockMutableResults.class, settings.getResults().getClass(), "Should return the same results class that was set.");
     }
 
     @Test
@@ -124,7 +124,7 @@ public class ConfigTest {
     }
 
     // Dummy Results class for testing
-    public static class MockResults extends Results {
+    public static class MockMutableResults extends MutableResults {
         @Override
         protected List<?> accumulateAgentPropertyResults(String attributeSetName, String propertyName, List<?> accumulatedValues, List<?> valuesToBeProcessed) {
             return valuesToBeProcessed;

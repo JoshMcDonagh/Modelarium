@@ -2,7 +2,7 @@ package unit.modelarium;
 
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.results.Results;
+import modelarium.results.mutable.MutableResults;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +21,7 @@ public class ModelTest {
     /**
      * A minimal mock subclass of Results for testing purposes.
      */
-    public static class MockResults extends Results {
+    public static class MockMutableResults extends MutableResults {
         @Override
         protected List<?> accumulateAgentPropertyResults(String attributeSetName, String propertyName, List<?> accumulatedValues, List<?> valuesToBeProcessed) {
             return valuesToBeProcessed;
@@ -51,7 +51,7 @@ public class ModelTest {
         settings.setAgentGenerator(new DefaultAgentGenerator());
         settings.setEnvironmentGenerator(new DefaultEnvironmentGenerator());
         settings.setModelScheduler(new InOrderScheduler());
-        settings.setResultsClass(MockResults.class);
+        settings.setResultsClass(MockMutableResults.class);
 
         AttributeSetCollection agentAttributes = new AttributeSetCollection();
         agentAttributes.add(new AttributeSet("agentSet"));
@@ -65,7 +65,7 @@ public class ModelTest {
         Model model = new Model(settings);
 
         try {
-            Results results = model.run();
+            MutableResults results = model.run();
             assertNotNull(results, "Results should not be null after running the model.");
             assertTrue(results.getAgentNames().size() > 0, "At least one agent should be recorded in the results.");
         } catch (Exception e) {

@@ -8,8 +8,8 @@ import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
-import modelarium.results.Results;
-import modelarium.results.ResultsForAgents;
+import modelarium.results.mutable.MutableResults;
+import modelarium.results.mutable.MutableResultsForAgents;
 
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -22,9 +22,9 @@ import java.util.concurrent.Callable;
  * {@link ContextCache} for caching, and optionally communicates with a coordinator via
  * {@link RequestResponseInterface} if synchronisation is enabled.
  *
- * @param <T> the type of {@link Results} this worker will return
+ * @param <T> the type of {@link MutableResults} this worker will return
  */
-public class WorkerThread<T extends Results> implements Callable<Results> {
+public class WorkerThread<T extends MutableResults> implements Callable<MutableResults> {
 
     /** The name or ID assigned to this worker thread (usually based on core index) */
     private final String threadName;
@@ -75,10 +75,10 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
      * <p>This includes calling the scheduler each tick, synchronising with the coordinator
      * if needed, and collecting agent results after the simulation ends.
      *
-     * @return a {@link Results} object containing final agent-level outputs
+     * @return a {@link MutableResults} object containing final agent-level outputs
      */
     @Override
-    public Results call() throws InterruptedException {
+    public MutableResults call() throws InterruptedException {
         Clock clock = Objects.requireNonNullElseGet(sharedClock, () -> new Clock(config.tickCount()));
         ContextCache cache = new ContextCache();
 
@@ -121,8 +121,8 @@ public class WorkerThread<T extends Results> implements Callable<Results> {
         }
 
         // Final setup and result collection
-        ResultsForAgents agentsResults = new ResultsForAgents(agentsInThread);
-        Results results = new Results();
+        MutableResultsForAgents agentsResults = new MutableResultsForAgents(agentsInThread);
+        MutableResults results = new MutableResults();
         results.setAgentNames(agentsInThread);
         results.setAgentResults(agentsResults);
 
