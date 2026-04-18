@@ -124,13 +124,8 @@ public class RequestResponseInterface {
      * @return the {@link Agent} instance returned by the coordinator
      */
     public Agent getAgentFromCoordinator(String requesterAgentName, String targetAgentName) throws InterruptedException {
-        requestQueue.put(new Request(requesterAgentName, targetAgentName, RequestType.AGENT_ACCESS, null));
-        while (true) {
-            Response response = responseQueue.take();
-            if (Objects.equals(response.getResponseType(), ResponseType.AGENT_ACCESS) && Objects.equals(response.getDestination(), requesterAgentName))
-                return (Agent) response.getPayload();
-            responseQueue.put(response);
-        }
+        Request request = new Request(requesterAgentName, targetAgentName, RequestType.AGENT_ACCESS, null);
+        return (Agent) sendAndAwait(request, ResponseType.AGENT_ACCESS);
     }
 
     /**
@@ -141,14 +136,8 @@ public class RequestResponseInterface {
      * @return an {@link AgentSet} containing matching agents
      */
     public AgentSet getFilteredAgentsFromCoordinator(String requesterAgentName, Predicate<Agent> agentFilter) throws InterruptedException {
-        requestQueue.put(new Request(requesterAgentName, null, RequestType.FILTERED_AGENTS_ACCESS, agentFilter));
-
-        while (true) {
-            Response response = responseQueue.take();
-            if (Objects.equals(response.getResponseType(), ResponseType.FILTERED_AGENTS_ACCESS) && Objects.equals(response.getDestination(), requesterAgentName))
-                return (AgentSet) response.getPayload();
-            responseQueue.put(response);
-        }
+        Request request = new Request(requesterAgentName, null, RequestType.FILTERED_AGENTS_ACCESS, agentFilter);
+        return (AgentSet) sendAndAwait(request, ResponseType.FILTERED_AGENTS_ACCESS);
     }
 
     /**
@@ -158,14 +147,8 @@ public class RequestResponseInterface {
      * @return the current {@link Environment} instance
      */
     public Environment getEnvironmentFromCoordinator(String requesterAgentName) throws InterruptedException {
-        requestQueue.put(new Request(requesterAgentName, null, RequestType.ENVIRONMENT_ATTRIBUTES_ACCESS, null));
-
-        while (true) {
-            Response response = responseQueue.take();
-            if (Objects.equals(response.getResponseType(), ResponseType.ENVIRONMENT_ATTRIBUTES_ACCESS) && Objects.equals(response.getDestination(), requesterAgentName))
-                return (Environment) response.getPayload();
-            responseQueue.put(response);
-        }
+        Request request = new Request(requesterAgentName, null, RequestType.ENVIRONMENT_ATTRIBUTES_ACCESS, null);
+        return (Environment) sendAndAwait(request, ResponseType.ENVIRONMENT_ATTRIBUTES_ACCESS);
     }
 
     /**
