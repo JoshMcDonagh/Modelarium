@@ -1,7 +1,7 @@
 package unit.modelarium.scheduler;
 
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
@@ -26,7 +26,7 @@ public class InOrderSchedulerTest {
         when(agent2.name()).thenReturn("agent2");
         when(agent3.name()).thenReturn("agent3");
 
-        AgentSet agentSet = new AgentSet();
+        MutableAgentSet agentSet = new MutableAgentSet();
         agentSet.add(agent1);
         agentSet.add(agent2);
         agentSet.add(agent3);

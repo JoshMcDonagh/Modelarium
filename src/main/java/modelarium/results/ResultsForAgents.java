@@ -1,6 +1,6 @@
 package modelarium.results;
 
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.attributes.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.logging.AttributeSetLog;
@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * A concrete results container for a set of agents.
  *
- * <p>Wraps an {@link AgentSet} into a {@link ResultsForEntities} structure,
+ * <p>Wraps an {@link MutableAgentSet} into a {@link ResultsForEntities} structure,
  * enabling easy access to recorded properties and events for all agents over time.
  */
 public class ResultsForAgents extends ResultsForEntities<AgentContext, AgentAttributeSet, AttributeSetLog<AgentContext>> {
@@ -22,7 +22,7 @@ public class ResultsForAgents extends ResultsForEntities<AgentContext, AgentAttr
      *
      * @param agentSet the set of agents whose results will be stored and accessed
      */
-    public ResultsForAgents(AgentSet agentSet) {
+    public ResultsForAgents(MutableAgentSet agentSet) {
         super(agentSet.getAsList());
     }
 

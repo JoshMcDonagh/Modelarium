@@ -2,7 +2,7 @@ package unit.modelarium.multithreading;
 
 import modelarium.Config;
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.environments.Environment;
 import modelarium.multithreading.CoordinatorThread;
 import modelarium.multithreading.requestresponse.*;
@@ -69,7 +69,7 @@ public class CoordinatorThreadTest {
         when(dummyAgent.name()).thenReturn("agent-123");
 
         // Add dummy agent to a real agent set
-        AgentSet realAgentSet = new AgentSet();
+        MutableAgentSet realAgentSet = new MutableAgentSet();
         realAgentSet.add(dummyAgent);
 
         // Let the static initialise method run normally

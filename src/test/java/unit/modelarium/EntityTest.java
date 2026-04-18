@@ -2,7 +2,7 @@ package unit.modelarium;
 
 import modelarium.entities.Entity;
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.environments.Environment;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +43,7 @@ public class EntityTest {
             return accessExternalAgentByName(targetAgentName);
         }
 
-        public AgentSet callAccessExternalAgentsByFilter(Predicate<Agent> filter) {
+        public MutableAgentSet callAccessExternalAgentsByFilter(Predicate<Agent> filter) {
             return accessExternalAgentsByFilter(filter);
         }
 
@@ -114,14 +114,14 @@ public class EntityTest {
     @Test
     public void testAccessExternalAgentsByFilterDelegatesToAccessor() {
         Context accessor = mock(Context.class);
-        AgentSet agentSet = mock(AgentSet.class);
+        MutableAgentSet agentSet = mock(MutableAgentSet.class);
 
         dummyElement.setModelElementAccessor(accessor);
 
         Predicate<Agent> filter = a -> true; // any predicate object is fine
         when(accessor.getFilteredAgents(filter)).thenReturn(agentSet);
 
-        AgentSet result = dummyElement.callAccessExternalAgentsByFilter(filter);
+        MutableAgentSet result = dummyElement.callAccessExternalAgentsByFilter(filter);
 
         assertSame(agentSet, result);
         verify(accessor).getFilteredAgents(filter);

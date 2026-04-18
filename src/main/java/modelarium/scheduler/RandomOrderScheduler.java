@@ -1,7 +1,7 @@
 package modelarium.scheduler;
 
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 
 import java.util.Iterator;
 
@@ -20,7 +20,7 @@ public class RandomOrderScheduler implements Scheduler {
      * @param agentSet the set of agents to run for this tick
      */
     @Override
-    public void runTick(AgentSet agentSet) {
+    public void runTick(MutableAgentSet agentSet) {
         Iterator<Agent> randomIterator = agentSet.getRandomIterator();
         while (randomIterator.hasNext())
             randomIterator.next().run();

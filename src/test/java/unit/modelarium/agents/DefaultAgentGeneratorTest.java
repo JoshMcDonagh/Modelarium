@@ -2,7 +2,7 @@ package unit.modelarium.agents;
 
 import modelarium.Config;
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +44,7 @@ public class DefaultAgentGeneratorTest {
 
     @Test
     public void testGenerateMultipleAgents() {
-        AgentSet agents = generator.generateAgents(settings);
+        MutableAgentSet agents = generator.generateAgents(settings);
 
         assertEquals(5, agents.size(), "Generated agent set should contain 5 agents.");
         for (int i = 0; i < 5; i++) {
@@ -67,18 +67,18 @@ public class DefaultAgentGeneratorTest {
 
     @Test
     public void testGetAgentsForEachCoreDistributesCorrectly() {
-        List<AgentSet> agentSets = generator.getAgentsForEachCore(settings);
+        List<MutableAgentSet> agentSets = generator.getAgentsForEachCore(settings);
 
         assertEquals(2, agentSets.size(), "There should be two sets of agents (one per core).");
 
-        int totalAgents = agentSets.stream().mapToInt(AgentSet::size).sum();
+        int totalAgents = agentSets.stream().mapToInt(MutableAgentSet::size).sum();
         assertEquals(5, totalAgents, "Total number of agents across cores should match model settings.");
     }
 
     @Test
     public void testGetAgentsForEachCoreIsEmptyWithZeroCores() {
         settings.setNumOfCores(0);
-        List<AgentSet> agentSets = generator.getAgentsForEachCore(settings);
+        List<MutableAgentSet> agentSets = generator.getAgentsForEachCore(settings);
 
         assertTrue(agentSets.isEmpty(), "Agent sets should be empty if zero cores are configured.");
     }

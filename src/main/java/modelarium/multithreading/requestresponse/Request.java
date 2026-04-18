@@ -1,6 +1,6 @@
 package modelarium.multithreading.requestresponse;
 
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 
 /**
  * Represents a request sent from a worker thread to the coordinator thread
@@ -37,7 +37,7 @@ public class Request {
         this.requestType = requestType;
         // Type-level validation
         if (requestType == RequestType.UPDATE_COORDINATOR_AGENTS) {
-            if (!(payload instanceof AgentSet)) {
+            if (!(payload instanceof MutableAgentSet)) {
                 throw new IllegalArgumentException(
                         "Request UPDATE_COORDINATOR_AGENTS requires non-null AgentSet payload; got: " +
                                 (payload == null ? "null" : payload.getClass().getName()) +

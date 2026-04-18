@@ -4,7 +4,7 @@ import modelarium.Clock;
 import modelarium.Config;
 import modelarium.entities.Entity;
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.agents.sets.ImmutableAgentSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeSet;
@@ -30,7 +30,7 @@ import java.util.function.Predicate;
 public abstract class Context {
 
     private final Entity<?,?,?> entity;
-    private final AgentSet localAgentSet;
+    private final MutableAgentSet localAgentSet;
     private final Config config;
     private final ContextCache cache;
     private final Clock clock;
@@ -41,7 +41,7 @@ public abstract class Context {
 
     public Context(
             Entity<?,?,?> entity,
-            AgentSet localAgentSet,
+            MutableAgentSet localAgentSet,
             Config config,
             ContextCache cache,
             Clock clock,
@@ -131,7 +131,7 @@ public abstract class Context {
         if (cache.doesAgentFilterExist(filter))
             return cache.getFilteredAgents(filter).getAsImmutable();
 
-        AgentSet filteredAgentSet;
+        MutableAgentSet filteredAgentSet;
 
         if (config.areThreadsSynced()) {
             // Request filtered agents from the coordinator

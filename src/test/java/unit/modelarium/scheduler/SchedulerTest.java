@@ -1,7 +1,7 @@
 package unit.modelarium.scheduler;
 
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.scheduler.Scheduler;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +19,7 @@ public class SchedulerTest {
      */
     private static class BasicScheduler implements Scheduler {
         @Override
-        public void runTick(AgentSet agentSet) {
+        public void runTick(MutableAgentSet agentSet) {
             for (Agent agent : agentSet)
                 agent.run();
         }
@@ -34,7 +34,7 @@ public class SchedulerTest {
         when(mockAgent1.name()).thenReturn("mock1");
         when(mockAgent2.name()).thenReturn("mock2");
 
-        AgentSet agentSet = new AgentSet();
+        MutableAgentSet agentSet = new MutableAgentSet();
         agentSet.add(mockAgent1);
         agentSet.add(mockAgent2);
 

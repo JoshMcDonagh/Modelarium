@@ -1,7 +1,7 @@
 package unit.modelarium.results;
 
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.results.ResultsForAgents;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,7 +61,7 @@ public class AgentsResultsTest {
 
     @Test
     void testConstructionStoresAllAgents() {
-        AgentSet agentSet = mock(AgentSet.class);
+        MutableAgentSet agentSet = mock(MutableAgentSet.class);
         when(agentSet.getAsList()).thenReturn(List.of(mockAgent1, mockAgent2));
 
         ResultsForAgents agentsResults = new ResultsForAgents(agentSet);
@@ -73,7 +73,7 @@ public class AgentsResultsTest {
 
     @Test
     void testGetPropertyValuesDelegatesCorrectly() {
-        AgentSet agentSet = mock(AgentSet.class);
+        MutableAgentSet agentSet = mock(MutableAgentSet.class);
         when(agentSet.getAsList()).thenReturn(List.of(mockAgent1));
         ResultsForAgents agentsResults = new ResultsForAgents(agentSet);
 
@@ -83,7 +83,7 @@ public class AgentsResultsTest {
 
     @Test
     void testGetPostEventValuesDelegatesCorrectly() {
-        AgentSet agentSet = mock(AgentSet.class);
+        MutableAgentSet agentSet = mock(MutableAgentSet.class);
         when(agentSet.getAsList()).thenReturn(List.of(mockAgent2));
         ResultsForAgents agentsResults = new ResultsForAgents(agentSet);
 
@@ -93,7 +93,7 @@ public class AgentsResultsTest {
 
     @Test
     void testDisconnectDatabasesDelegates() {
-        AgentSet agentSet = mock(AgentSet.class);
+        MutableAgentSet agentSet = mock(MutableAgentSet.class);
         when(agentSet.getAsList()).thenReturn(List.of(mockAgent1, mockAgent2));
 
         ResultsForAgents agentsResults = new ResultsForAgents(agentSet);

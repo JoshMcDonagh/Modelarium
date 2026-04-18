@@ -3,7 +3,7 @@ package modelarium.entities.environments;
 import modelarium.Clock;
 import modelarium.Config;
 import modelarium.entities.Entity;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.attributes.EnvironmentAttributeSet;
 import modelarium.entities.attributes.events.EnvironmentEvent;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
@@ -22,7 +22,7 @@ public class Environment extends Entity<EnvironmentContext, EnvironmentAttribute
 
     @Override
     protected EnvironmentContext makeContextInstance(
-            AgentSet agentSet,
+            MutableAgentSet agentSet,
             Config config,
             ContextCache contextCache,
             Clock clock,

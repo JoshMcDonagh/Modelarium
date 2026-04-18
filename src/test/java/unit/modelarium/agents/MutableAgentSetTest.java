@@ -1,7 +1,7 @@
 package unit.modelarium.agents;
 
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,10 +10,10 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the {@link AgentSet} class.
+ * Unit tests for the {@link MutableAgentSet} class.
  * Verifies expected behaviour in both deep-copy and reference modes.
  */
-public class AgentSetTest {
+public class MutableAgentSetTest {
 
     private Agent agentA;
     private Agent agentB;
@@ -28,7 +28,7 @@ public class AgentSetTest {
 
     @Test
     public void testAddAndRetrieveAgent() {
-        AgentSet agentSet = new AgentSet();
+        MutableAgentSet agentSet = new MutableAgentSet();
         agentSet.add(agentA);
 
         assertEquals(1, agentSet.size(), "Agent set should contain one agent.");
@@ -37,7 +37,7 @@ public class AgentSetTest {
 
     @Test
     public void testAddListOfAgents() {
-        AgentSet agentSet = new AgentSet();
+        MutableAgentSet agentSet = new MutableAgentSet();
         agentSet.add(Arrays.asList(agentA, agentB));
 
         assertEquals(2, agentSet.size(), "Agent set should contain two agents.");
@@ -47,8 +47,8 @@ public class AgentSetTest {
 
     @Test
     public void testAddAgentSet() {
-        AgentSet sourceSet = new AgentSet(Arrays.asList(agentA, agentB));
-        AgentSet targetSet = new AgentSet();
+        MutableAgentSet sourceSet = new MutableAgentSet(Arrays.asList(agentA, agentB));
+        MutableAgentSet targetSet = new MutableAgentSet();
         targetSet.add(sourceSet);
 
         assertEquals(2, targetSet.size(), "Target set should have agents copied from source set.");
@@ -56,7 +56,7 @@ public class AgentSetTest {
 
     @Test
     public void testReplaceExistingAgent() {
-        AgentSet agentSet = new AgentSet();
+        MutableAgentSet agentSet = new MutableAgentSet();
         agentSet.add(agentA);
         agentSet.add(new Agent("A", new AttributeSetCollection()));
 
@@ -65,7 +65,7 @@ public class AgentSetTest {
 
     @Test
     public void testClearAgentSet() {
-        AgentSet agentSet = new AgentSet(Arrays.asList(agentA, agentB));
+        MutableAgentSet agentSet = new MutableAgentSet(Arrays.asList(agentA, agentB));
         agentSet.clear();
 
         assertEquals(0, agentSet.size(), "Agent set should be empty after clear.");
@@ -73,8 +73,8 @@ public class AgentSetTest {
 
     @Test
     public void testGetFilteredAgents() {
-        AgentSet agentSet = new AgentSet(Arrays.asList(agentA, agentB, agentC));
-        AgentSet filtered = agentSet.getFilteredAgents(a -> a.name().equals("B"));
+        MutableAgentSet agentSet = new MutableAgentSet(Arrays.asList(agentA, agentB, agentC));
+        MutableAgentSet filtered = agentSet.getFilteredAgents(a -> a.name().equals("B"));
 
         assertEquals(1, filtered.size(), "Only one agent should match the filter.");
         assertEquals("B", filtered.get(0).name(), "Filtered agent should be B.");
@@ -82,7 +82,7 @@ public class AgentSetTest {
 
     @Test
     public void testGetRandomIteratorShufflesAgents() {
-        AgentSet agentSet = new AgentSet(Arrays.asList(agentA, agentB, agentC));
+        MutableAgentSet agentSet = new MutableAgentSet(Arrays.asList(agentA, agentB, agentC));
         Set<String> names = new HashSet<>();
         Iterator<Agent> iterator = agentSet.getRandomIterator();
 
@@ -95,9 +95,9 @@ public class AgentSetTest {
 
     @Test
     public void testDuplicateWithCloneDisabled() {
-        AgentSet agentSet = new AgentSet(false);
+        MutableAgentSet agentSet = new MutableAgentSet(false);
         agentSet.add(agentA);
-        AgentSet duplicate = agentSet.duplicate();
+        MutableAgentSet duplicate = agentSet.duplicate();
 
         assertEquals(1, duplicate.size(), "Duplicate should contain same number of agents.");
         assertSame(agentA, duplicate.get(0), "Agent should be same instance if deep copy is disabled.");
@@ -105,9 +105,9 @@ public class AgentSetTest {
 
     @Test
     public void testDuplicateWithCloneEnabled() {
-        AgentSet agentSet = new AgentSet(true);
+        MutableAgentSet agentSet = new MutableAgentSet(true);
         agentSet.add(agentA);
-        AgentSet duplicate = agentSet.duplicate();
+        MutableAgentSet duplicate = agentSet.duplicate();
 
         assertEquals(1, duplicate.size(), "Duplicate should contain same number of agents.");
         assertNotSame(agentA, duplicate.get(0), "Agent should be a different instance if deep copy is enabled.");
@@ -117,8 +117,8 @@ public class AgentSetTest {
     @Test
     public void testUpdateReplacesAgentsWithSameName() {
         Agent updatedAgentA = new Agent("A", new AttributeSetCollection());
-        AgentSet originalSet = new AgentSet(Arrays.asList(agentA, agentB));
-        AgentSet updateSet = new AgentSet(Collections.singletonList(updatedAgentA));
+        MutableAgentSet originalSet = new MutableAgentSet(Arrays.asList(agentA, agentB));
+        MutableAgentSet updateSet = new MutableAgentSet(Collections.singletonList(updatedAgentA));
 
         originalSet.update(updateSet);
 

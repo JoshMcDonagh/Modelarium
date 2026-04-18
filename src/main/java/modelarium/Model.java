@@ -1,6 +1,6 @@
 package modelarium;
 
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
 import modelarium.exceptions.ModelRunException;
@@ -41,10 +41,10 @@ public class Model {
         this.config = config;
     }
 
-    private List<AgentSet> generateAgentsForEachCoreAsList() {
-        List<AgentSet> agentsForEachCore = config.agentGenerator().getAgentsForEachCore(config);
+    private List<MutableAgentSet> generateAgentsForEachCoreAsList() {
+        List<MutableAgentSet> agentsForEachCore = config.agentGenerator().getAgentsForEachCore(config);
 
-        for (AgentSet agentSet : agentsForEachCore)
+        for (MutableAgentSet agentSet : agentsForEachCore)
             agentSet.setLogDatabaseFactory(config.runLogDatabaseFactory());
 
         return agentsForEachCore;
@@ -56,9 +56,9 @@ public class Model {
         return environment;
     }
 
-    private void setupResultsContainer(List<AgentSet> agentsForEachCore) {
+    private void setupResultsContainer(List<MutableAgentSet> agentsForEachCore) {
         results.setAgentNames(agentsForEachCore);
-        results.setAgentResults(new ResultsForAgents(new AgentSet()));
+        results.setAgentResults(new ResultsForAgents(new MutableAgentSet()));
     }
 
     private Clock makeClockIfSynced() {
@@ -78,7 +78,7 @@ public class Model {
         clock = Objects.requireNonNullElseGet(sharedClock, () -> new Clock(config.tickCount()));
 
         environment.createContext(
-                new AgentSet(),
+                new MutableAgentSet(),
                 config,
                 new ContextCache(),
                 clock,
@@ -105,7 +105,7 @@ public class Model {
     }
 
     private void launchWorkers(
-            List<AgentSet> agentsForEachCore,
+            List<MutableAgentSet> agentsForEachCore,
             Environment environment,
             RequestResponseController requestResponseController,
             Clock sharedClock
@@ -116,12 +116,12 @@ public class Model {
         // Launch worker threads
         for (int threadIndex = 0; threadIndex < config.threadCount(); threadIndex++) {
             // Create an agent set for the current core
-            AgentSet threadAgentSet = new AgentSet(true);
-            AgentSet perThreadAgentSet = agentsForEachCore.get(threadIndex);
+            MutableAgentSet threadAgentSet = new MutableAgentSet(true);
+            MutableAgentSet perThreadAgentSet = agentsForEachCore.get(threadIndex);
 
             // Make sure agent set is not null
             if (perThreadAgentSet == null)
-                perThreadAgentSet = new AgentSet(true);
+                perThreadAgentSet = new MutableAgentSet(true);
 
             // Add the pre-assigned agent set for this core
             threadAgentSet.add(perThreadAgentSet);
@@ -172,7 +172,7 @@ public class Model {
     public void run() {
         results = new Results();
 
-        List<AgentSet> agentsForEachCore = generateAgentsForEachCoreAsList();
+        List<MutableAgentSet> agentsForEachCore = generateAgentsForEachCoreAsList();
         Environment environment = generateEnvironment();
 
         setupResultsContainer(agentsForEachCore);

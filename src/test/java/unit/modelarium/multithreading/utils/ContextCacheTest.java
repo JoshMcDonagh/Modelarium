@@ -1,7 +1,7 @@
 package unit.modelarium.multithreading.utils;
 
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,14 +45,14 @@ public class ContextCacheTest {
         Agent agent1 = new Agent("A", new AttributeSetCollection());
         Agent agent2 = new Agent("B", new AttributeSetCollection());
 
-        AgentSet set = new AgentSet();
+        MutableAgentSet set = new MutableAgentSet();
         set.add(agent1);
         set.add(agent2);
 
         cache.addAgents(set);
 
         Predicate<Agent> startsWithA = a -> a.name().startsWith("A");
-        AgentSet filtered = cache.getFilteredAgents(startsWithA);
+        MutableAgentSet filtered = cache.getFilteredAgents(startsWithA);
 
         assertEquals(1, filtered.size());
         assertEquals("A", filtered.get(0).name());

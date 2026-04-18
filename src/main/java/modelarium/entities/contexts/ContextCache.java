@@ -1,7 +1,7 @@
 package modelarium.entities.contexts;
 
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.environments.Environment;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ public class ContextCache {
     private final List<Predicate<Agent>> agentFiltersCacheList = new ArrayList<>();
 
     /** Locally cached set of agents (filtered or directly fetched) */
-    private final AgentSet agentSetCache;
+    private final MutableAgentSet agentSetCache;
 
     /** Cached environment instance, if retrieved */
     private Environment environment = null;
@@ -23,7 +23,7 @@ public class ContextCache {
      * Constructs a new worker cache.
      */
     public ContextCache() {
-        agentSetCache = new AgentSet(true);
+        agentSetCache = new MutableAgentSet(true);
     }
 
     /**
@@ -58,9 +58,9 @@ public class ContextCache {
      * Retrieves a filtered set of agents using the cached filter.
      *
      * @param agentFilter the predicate used to filter agents
-     * @return a filtered {@link AgentSet}
+     * @return a filtered {@link MutableAgentSet}
      */
-    public AgentSet getFilteredAgents(Predicate<Agent> agentFilter) {
+    public MutableAgentSet getFilteredAgents(Predicate<Agent> agentFilter) {
         return agentSetCache.getFilteredAgents(agentFilter);
     }
 
@@ -98,7 +98,7 @@ public class ContextCache {
      *
      * @param agentSet the agent set to add
      */
-    public void addAgents(AgentSet agentSet) {
+    public void addAgents(MutableAgentSet agentSet) {
         agentSetCache.add(agentSet);
     }
 

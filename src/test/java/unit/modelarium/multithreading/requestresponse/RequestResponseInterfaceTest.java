@@ -2,7 +2,7 @@ package unit.modelarium.multithreading.requestresponse;
 
 import modelarium.Config;
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.environments.Environment;
 import modelarium.multithreading.requestresponse.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,12 +66,12 @@ class RequestResponseInterfaceTest {
 
     @Test
     void testGetFilteredAgentsFromCoordinatorReturnsCorrectSet() throws InterruptedException {
-        AgentSet mockSet = mock(AgentSet.class);
+        MutableAgentSet mockSet = mock(MutableAgentSet.class);
         Predicate<Agent> filter = agent -> true;
 
         responseQueue.put(new Response("Coordinator", threadName, ResponseType.FILTERED_AGENTS_ACCESS, mockSet));
 
-        AgentSet result = requestResponseInterface.getFilteredAgentsFromCoordinator(threadName, filter);
+        MutableAgentSet result = requestResponseInterface.getFilteredAgentsFromCoordinator(threadName, filter);
 
         Request request = requestQueue.take();
         assertEquals(RequestType.FILTERED_AGENTS_ACCESS, request.getRequestType());
@@ -92,7 +92,7 @@ class RequestResponseInterfaceTest {
 
     @Test
     void testUpdateCoordinatorAgentsPutsRequest() throws InterruptedException {
-        AgentSet agentSet = new AgentSet();
+        MutableAgentSet agentSet = new MutableAgentSet();
 
         requestResponseInterface.updateCoordinatorAgents(agentSet);
 

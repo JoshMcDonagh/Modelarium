@@ -1,7 +1,7 @@
 package modelarium.results;
 
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.results.immutable.ImmutableResults;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class Results {
      *
      * @param agents the set of agents
      */
-    public void setAgentNames(AgentSet agents) {
+    public void setAgentNames(MutableAgentSet agents) {
         for (Agent agent : agents)
             agentNames.add(agent.name());
     }
@@ -41,8 +41,8 @@ public class Results {
      *
      * @param agentSetList list of agent sets
      */
-    public void setAgentNames(List<AgentSet> agentSetList) {
-        for (AgentSet agents : agentSetList)
+    public void setAgentNames(List<MutableAgentSet> agentSetList) {
+        for (MutableAgentSet agents : agentSetList)
             setAgentNames(agents);
     }
 

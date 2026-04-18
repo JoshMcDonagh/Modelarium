@@ -3,7 +3,7 @@ package modelarium.entities;
 import com.rits.cloning.Cloner;
 import modelarium.Clock;
 import modelarium.Config;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.attributes.*;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.ContextCache;
@@ -45,7 +45,7 @@ public abstract class Entity<C extends Context, A extends AttributeSet<C>, L ext
     }
 
     protected abstract C makeContextInstance(
-            AgentSet agentSet,
+            MutableAgentSet agentSet,
             Config config,
             ContextCache contextCache,
             Clock clock,
@@ -54,7 +54,7 @@ public abstract class Entity<C extends Context, A extends AttributeSet<C>, L ext
     );
 
     public void createContext(
-            AgentSet agentSet,
+            MutableAgentSet agentSet,
             Config config,
             ContextCache contextCache,
             Clock clock,

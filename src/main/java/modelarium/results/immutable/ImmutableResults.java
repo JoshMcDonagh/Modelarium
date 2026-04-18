@@ -1,6 +1,6 @@
 package modelarium.results.immutable;
 
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.results.Results;
 import modelarium.results.ResultsForAgents;
 import modelarium.results.ResultsForEnvironment;
@@ -17,12 +17,12 @@ public class ImmutableResults extends Results {
     }
 
     @Override
-    public void setAgentNames(AgentSet agents) {
+    public void setAgentNames(MutableAgentSet agents) {
         throwUnsupportedOperationException();
     }
 
     @Override
-    public void setAgentNames(List<AgentSet> agentSetList) {
+    public void setAgentNames(List<MutableAgentSet> agentSetList) {
         throwUnsupportedOperationException();
     }
 

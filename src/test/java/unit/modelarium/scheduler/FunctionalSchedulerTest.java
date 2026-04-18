@@ -1,7 +1,7 @@
 package unit.modelarium.scheduler;
 
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.scheduler.FunctionalScheduler;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +25,7 @@ public class FunctionalSchedulerTest {
         Agent agent2 = mock(Agent.class);
 
         Iterator<Agent> mockIterator = mock(Iterator.class);
-        AgentSet agentSet = mock(AgentSet.class);
+        MutableAgentSet agentSet = mock(MutableAgentSet.class);
 
         // Set up the iterator to return the agents
         when(agentSet.iterator()).thenReturn(mockIterator);
@@ -33,7 +33,7 @@ public class FunctionalSchedulerTest {
         when(mockIterator.next()).thenReturn(agent1, agent2);
 
         // Define a tick function that runs each agent in order
-        Consumer<AgentSet> tickFunction = set -> {
+        Consumer<MutableAgentSet> tickFunction = set -> {
             for (Agent agent : set) {
                 agent.run();
             }

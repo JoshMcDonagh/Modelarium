@@ -3,7 +3,7 @@ package unit.modelarium.agents;
 import modelarium.Config;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.generators.FunctionalAgentGenerator;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -44,7 +44,7 @@ public class FunctionalAgentGeneratorTest {
         FunctionalAgentGenerator generator = new FunctionalAgentGenerator(createUniqueMockAgentGenerator());
 
         // Act
-        AgentSet result = generator.generateAgents(settings);
+        MutableAgentSet result = generator.generateAgents(settings);
 
         // Assert
         assertEquals(5, result.size(), "Expected 5 agents in the generated AgentSet");
@@ -60,7 +60,7 @@ public class FunctionalAgentGeneratorTest {
         FunctionalAgentGenerator generator = new FunctionalAgentGenerator(createUniqueMockAgentGenerator());
 
         // Act
-        List<AgentSet> coreAssignments = generator.getAgentsForEachCore(settings);
+        List<MutableAgentSet> coreAssignments = generator.getAgentsForEachCore(settings);
 
         // Assert
         assertEquals(2, coreAssignments.size(), "Expected 2 cores");
@@ -78,7 +78,7 @@ public class FunctionalAgentGeneratorTest {
         FunctionalAgentGenerator generator = new FunctionalAgentGenerator(createUniqueMockAgentGenerator());
 
         // Act
-        List<AgentSet> result = generator.getAgentsForEachCore(settings);
+        List<MutableAgentSet> result = generator.getAgentsForEachCore(settings);
 
         // Assert
         assertTrue(result.isEmpty(), "Expected an empty list when core count is zero");
@@ -94,7 +94,7 @@ public class FunctionalAgentGeneratorTest {
         FunctionalAgentGenerator generator = new FunctionalAgentGenerator(createUniqueMockAgentGenerator());
 
         // Act
-        List<AgentSet> result = generator.getAgentsForEachCore(settings);
+        List<MutableAgentSet> result = generator.getAgentsForEachCore(settings);
 
         // Assert
         assertEquals(1, result.size(), "Expected only one core");

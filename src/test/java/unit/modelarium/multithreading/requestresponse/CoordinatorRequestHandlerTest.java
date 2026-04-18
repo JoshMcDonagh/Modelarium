@@ -2,7 +2,7 @@ package unit.modelarium.multithreading.requestresponse;
 
 import modelarium.Config;
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.environments.Environment;
 import modelarium.multithreading.requestresponse.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 class CoordinatorRequestHandlerTest {
 
     private BlockingQueue<Response> responseQueue;
-    private AgentSet agentSet;
+    private MutableAgentSet agentSet;
     private Environment environment;
     private Config settings;
     private final String coordinatorThreadName = "Coordinator";
@@ -27,7 +27,7 @@ class CoordinatorRequestHandlerTest {
     @BeforeEach
     void setUp() {
         responseQueue = new LinkedBlockingQueue<>();
-        agentSet = mock(AgentSet.class);
+        agentSet = mock(MutableAgentSet.class);
         environment = mock(Environment.class);
         settings = mock(Config.class);
 
@@ -58,7 +58,7 @@ class CoordinatorRequestHandlerTest {
 
     @Test
     void testUpdateCoordinatorAgentsHandler() throws InterruptedException {
-        AgentSet updateSet = mock(AgentSet.class);
+        MutableAgentSet updateSet = mock(MutableAgentSet.class);
         Request request = new Request("Worker_1", null, RequestType.UPDATE_COORDINATOR_AGENTS, updateSet);
 
         CoordinatorRequestHandler.handleCoordinatorRequest(request);
@@ -69,7 +69,7 @@ class CoordinatorRequestHandlerTest {
     @Test
     void testFilteredAgentsAccessHandler() throws InterruptedException {
         Predicate<Agent> predicate = agent -> true;
-        AgentSet filteredSet = mock(AgentSet.class);
+        MutableAgentSet filteredSet = mock(MutableAgentSet.class);
         when(agentSet.getFilteredAgents(predicate)).thenReturn(filteredSet);
 
         Request request = new Request("Worker_1", null, RequestType.FILTERED_AGENTS_ACCESS, predicate);

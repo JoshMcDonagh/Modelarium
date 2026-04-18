@@ -1,7 +1,7 @@
 package unit.modelarium.scheduler;
 
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.scheduler.RandomOrderScheduler;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +28,7 @@ public class RandomOrderSchedulerTest {
 
         List<Agent> mockAgentList = Arrays.asList(agent1, agent2, agent3);
 
-        AgentSet agentSet = mock(AgentSet.class);
+        MutableAgentSet agentSet = mock(MutableAgentSet.class);
         Iterator<Agent> mockIterator = mock(Iterator.class);
 
         // Setup a mocked iterator that returns the agents one by one

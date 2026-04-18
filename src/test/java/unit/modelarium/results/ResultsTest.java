@@ -1,7 +1,7 @@
 package unit.modelarium.results;
 
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.logging.databases.AttributeSetLogDatabase;
 import modelarium.results.Results;
 import modelarium.results.ResultsForAgents;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
 public class ResultsTest {
 
     private Agent agent;
-    private AgentSet agentSet;
+    private MutableAgentSet agentSet;
     private ResultsForAgents mockAgentsResults;
     private ResultsForEnvironment mockEnvironmentResults;
     private TestResults results;
@@ -34,7 +34,7 @@ public class ResultsTest {
         agent = mock(Agent.class);
         when(agent.name()).thenReturn("Agent1");
 
-        agentSet = new AgentSet();
+        agentSet = new MutableAgentSet();
         agentSet.add(agent);
 
         mockAgentsResults = mock(ResultsForAgents.class);

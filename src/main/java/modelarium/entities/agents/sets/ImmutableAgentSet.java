@@ -1,57 +1,58 @@
 package modelarium.entities.agents.sets;
 
+import com.rits.cloning.Cloner;
 import modelarium.entities.agents.Agent;
-import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
-public class ImmutableAgentSet extends AgentSet {
-    ImmutableAgentSet(AgentSet mutableAgentSet) {
-        super();
-        super.add(mutableAgentSet);
-    }
+public class ImmutableAgentSet implements AgentSet {
+    private static final Cloner cloner = new Cloner();
 
-    private void throwUnsupportedOperationException() {
-        throw new UnsupportedOperationException("ImmutableAgentSet cannot be modified");
-    }
+    private final MutableAgentSet agentSet;
 
-    @Override
-    public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory databaseFactory) {
-        throwUnsupportedOperationException();
+    ImmutableAgentSet(MutableAgentSet mutableAgentSet) {
+        agentSet = mutableAgentSet;
     }
 
     @Override
-    public void add(Agent agent) {
-        throwUnsupportedOperationException();
+    public Agent get(String agentName) {
+        return agentSet.get(agentName);
     }
 
     @Override
-    public void add(List<Agent> agents) {
-        throwUnsupportedOperationException();
+    public Agent get(int index) {
+        return agentSet.get(index);
     }
 
     @Override
-    public void add(AgentSet agentSet) {
-        throwUnsupportedOperationException();
+    public List<Agent> getAsList() {
+        return cloner.deepClone(agentSet.getAsList());
     }
 
     @Override
-    public void clear() {
-        throwUnsupportedOperationException();
+    public int size() {
+        return agentSet.size();
     }
 
     @Override
-    public void update(AgentSet otherAgentSet) {
-        throwUnsupportedOperationException();
+    public boolean isEmpty() {
+        return agentSet.isEmpty();
     }
 
     @Override
-    public ImmutableAgentSet getAsImmutable() {
-        throw new UnsupportedOperationException("ImmutableAgentSet is already immutable");
+    public boolean doesAgentExist(String agentName) {
+        return agentSet.doesAgentExist(agentName);
     }
 
     @Override
-    public ImmutableAgentSet duplicate() {
-        return new ImmutableAgentSet(super.duplicate());
+    public AgentSet getFilteredAgents(Predicate<Agent> agentFilter) {
+        return agentSet.getFilteredAgents(agentFilter);
+    }
+
+    @Override
+    public Iterator<Agent> iterator() {
+        return getAsList().iterator();
     }
 }

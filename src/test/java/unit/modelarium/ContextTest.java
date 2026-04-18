@@ -3,7 +3,7 @@ package unit.modelarium;
 import modelarium.Config;
 import modelarium.entities.Entity;
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
@@ -24,7 +24,7 @@ public class ContextTest {
 
     private Agent mockAgent;
     private Environment mockEnvironment;
-    private AgentSet localAgentSet;
+    private MutableAgentSet localAgentSet;
     private Config settings;
     private ContextCache cache;
     private RequestResponseInterface requestInterface;
@@ -36,7 +36,7 @@ public class ContextTest {
         mockEnvironment = mock(Environment.class);
         when(mockAgent.name()).thenReturn("Agent_X");
 
-        localAgentSet = new AgentSet();
+        localAgentSet = new MutableAgentSet();
         settings = new Config();
         settings.setIsCacheUsed(true);
         cache = new ContextCache(true);
@@ -108,7 +108,7 @@ public class ContextTest {
         settings.setIsCacheUsed(false);
         settings.setAreProcessesSynced(false);
 
-        AgentSet result = accessor.getFilteredAgents(filter);
+        MutableAgentSet result = accessor.getFilteredAgents(filter);
         assertNotNull(result);
         assertNotEquals(0, result.size(), "Should return filtered agents from the local set.");
     }
@@ -116,7 +116,7 @@ public class ContextTest {
     @Test
     public void testGetFilteredAgents_fromCoordinator() throws Exception {
         Predicate<Agent> filter = a -> true;
-        AgentSet filtered = new AgentSet();
+        MutableAgentSet filtered = new MutableAgentSet();
         filtered.add(mockAgent);
 
         settings.setIsCacheUsed(true);
@@ -124,7 +124,7 @@ public class ContextTest {
 
         when(requestInterface.getFilteredAgentsFromCoordinator("Agent_X", filter)).thenReturn(filtered);
 
-        AgentSet result = accessor.getFilteredAgents(filter);
+        MutableAgentSet result = accessor.getFilteredAgents(filter);
         assertNotNull(result);
         assertTrue(cache.doesAgentFilterExist(filter), "Filter should be cached.");
         assertNotEquals(0, result.size(), "Should return the filtered agent set.");

@@ -3,7 +3,7 @@ package unit.modelarium.agents;
 import modelarium.Config;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.generators.AgentGenerator;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.sets.MutableAgentSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +31,7 @@ public class AgentGeneratorTest {
     public void testGenerateAgents_returnsCorrectNumberOfAgents() {
         config.setNumOfAgents(5);
 
-        AgentSet agents = testAgentGenerator.generateAgents(config);
+        MutableAgentSet agents = testAgentGenerator.generateAgents(config);
 
         assertEquals(5, agents.size(), "Should generate the specified number of agents.");
         for (int i = 0; i < agents.size(); i++) {
@@ -44,7 +44,7 @@ public class AgentGeneratorTest {
         config.setNumOfAgents(4);
         config.setNumOfCores(1);
 
-        List<AgentSet> cores = testAgentGenerator.getAgentsForEachCore(config);
+        List<MutableAgentSet> cores = testAgentGenerator.getAgentsForEachCore(config);
 
         assertEquals(1, cores.size(), "Should return a single agent set for one core.");
         assertEquals(4, cores.get(0).size(), "All agents should be in the one agent set.");
@@ -55,7 +55,7 @@ public class AgentGeneratorTest {
         config.setNumOfAgents(4);
         config.setNumOfCores(2);
 
-        List<AgentSet> cores = testAgentGenerator.getAgentsForEachCore(config);
+        List<MutableAgentSet> cores = testAgentGenerator.getAgentsForEachCore(config);
 
         assertEquals(2, cores.size(), "Should return one agent set per core.");
         assertEquals(2, cores.get(0).size(), "Each core should receive 2 agents.");
@@ -67,7 +67,7 @@ public class AgentGeneratorTest {
         config.setNumOfAgents(3);
         config.setNumOfCores(0);
 
-        List<AgentSet> cores = testAgentGenerator.getAgentsForEachCore(config);
+        List<MutableAgentSet> cores = testAgentGenerator.getAgentsForEachCore(config);
 
         assertTrue(cores.isEmpty(), "Should return an empty list when zero cores are specified.");
     }
