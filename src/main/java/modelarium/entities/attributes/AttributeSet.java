@@ -6,6 +6,7 @@ import modelarium.entities.attributes.routines.Routine;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
+import modelarium.exceptions.AttributeAccessException;
 
 import java.util.HashMap;
 import java.util.List;

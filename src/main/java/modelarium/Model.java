@@ -28,7 +28,7 @@ public class Model {
     /** Configuration settings for this model run */
     private final Config config;
 
-    private final Results results = new Results();
+    private Results results = null;
 
     /**
      * Constructs a new model instance with the specified settings.
@@ -146,6 +146,8 @@ public class Model {
     }
 
     public void run() {
+        results = new Results();
+
         List<AgentSet> agentsForEachCore = generateAgentsForEachCoreAsList();
         Environment environment = generateEnvironment();
 
@@ -167,6 +169,9 @@ public class Model {
     }
 
     public ImmutableResults getResults() {
+        if (results == null)
+            throw new IllegalStateException("Results cannot be accessed before a model run has been completed");
+
         return results.getAsImmutable();
     }
 }

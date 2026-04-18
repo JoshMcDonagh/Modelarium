@@ -9,6 +9,7 @@ import modelarium.entities.agents.sets.ImmutableAgentSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeSet;
 import modelarium.entities.environments.Environment;
+import modelarium.exceptions.AgentNotFoundException;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
 import java.util.function.Predicate;

@@ -1,4 +1,4 @@
-package modelarium.entities.attributes;
+package modelarium.exceptions;
 
 public class AttributeAccessException extends RuntimeException{
     public AttributeAccessException(String message) {
