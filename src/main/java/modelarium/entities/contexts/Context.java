@@ -10,6 +10,9 @@ import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeSet;
 import modelarium.entities.environments.Environment;
 import modelarium.exceptions.AgentNotFoundException;
+import modelarium.exceptions.CoordinatorErrorException;
+import modelarium.exceptions.CoordinatorTimeoutException;
+import modelarium.exceptions.SimulationInterruptedException;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
 import java.util.function.Predicate;
@@ -122,7 +125,10 @@ public abstract class Context {
             Agent requestedAgent = requestResponseInterface.getAgentFromCoordinator(entity.name(), targetAgentName);
             cache.addAgent(requestedAgent);
             return requestedAgent;
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new SimulationInterruptedException("Interrupted while fetching agent '" + targetAgentName + "'", e);
+        } catch (CoordinatorTimeoutException | CoordinatorErrorException e) {
             throw new AgentNotFoundException("Agent '" + targetAgentName + "' requested by '" + entity.name()
                     + "' not found");
         }
@@ -139,7 +145,11 @@ public abstract class Context {
             // Request filtered agents from the coordinator
             try {
                 filteredAgentSet = requestResponseInterface.getFilteredAgentsFromCoordinator(entity.name(), filter);
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new SimulationInterruptedException("Interrupted while retrieving filtered agents requested by " +
+                        "'" + entity.name() + "'", e);
+            } catch (CoordinatorTimeoutException | CoordinatorErrorException e) {
                 throw new  AgentNotFoundException("Failed to retrieve filtered agents requested by '" + entity.name()
                         + "' from this thread (threads are not synced)");
             }

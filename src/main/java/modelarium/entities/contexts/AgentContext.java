@@ -7,7 +7,10 @@ import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.attributes.AgentAttributeSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.environments.Environment;
+import modelarium.exceptions.CoordinatorErrorException;
+import modelarium.exceptions.CoordinatorTimeoutException;
 import modelarium.exceptions.EnvironmentNotFoundException;
+import modelarium.exceptions.SimulationInterruptedException;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
 public class AgentContext extends Context {
@@ -54,7 +57,11 @@ public class AgentContext extends Context {
         Environment requestedEnvironment;
         try {
             requestedEnvironment = requestResponseInterface().getEnvironmentFromCoordinator(entity().name());
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new SimulationInterruptedException("Interrupted while fetching environment requested by '"
+                    + entity().name() + "'", e);
+        } catch (CoordinatorTimeoutException | CoordinatorErrorException e) {
             throw new EnvironmentNotFoundException("Environment requested by '" + entity().name()
                     + "' could not be found");
         }
