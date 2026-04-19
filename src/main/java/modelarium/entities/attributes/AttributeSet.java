@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AttributeSet<C extends Context> {
+public abstract class AttributeSet<C extends Context> {
     private final String ownerName;
     private final String name;
     private final List<Attribute<C>> attributeList;
