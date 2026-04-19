@@ -30,6 +30,12 @@ public class MemoryBasedAttributeSetLogDatabase extends AttributeSetLogDatabase 
     }
 
     @Override
+    public void disconnect() {
+        attributesMap.clear();
+        attributeClassesMap.clear();
+    }
+
+    @Override
     public <T> void addAttributeValue(String attributeName, T attributeValue) {
         attributesMap.computeIfAbsent(attributeName, k -> new ArrayList<>());
         if (attributeValue != null && !attributeClassesMap.containsKey(attributeName)) {

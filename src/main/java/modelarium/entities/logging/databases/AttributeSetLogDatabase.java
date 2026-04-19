@@ -29,10 +29,7 @@ public abstract class AttributeSetLogDatabase {
         return;
     }
 
-    public void disconnect() {
-        // Default implementation: No operation
-        return;
-    }
+    public abstract void disconnect();
 
     public abstract <T> void addAttributeValue(String attributeName, T attributeValue);
 
