@@ -141,7 +141,16 @@ public abstract class CoordinatorRequestHandler {
 
         @Override
         public void handleRequest(Request request) throws InterruptedException {
-            Agent agent = getGlobalAgentSet().get((String) request.getPayload());
+            Object payload = request.getPayload();
+
+            if (!(payload instanceof String)) {
+                throw new IllegalArgumentException("AGENT_ACCESS payload must be a string (got: "
+                        + (payload == null ? "null" : payload.getClass().getName()) +
+                        ") from requester: " + request.getRequester()
+                );
+            }
+
+            Agent agent = getGlobalAgentSet().get((String) payload);
             getResponseQueue(request.getRequester()).put(new Response(getThreadName(), request.getRequester(), ResponseType.AGENT_ACCESS, agent));
         }
     }
@@ -158,10 +167,9 @@ public abstract class CoordinatorRequestHandler {
         public void handleRequest(Request request) {
             Object payload = request.getPayload();
             if (!(payload instanceof MutableAgentSet)) {
-                throw new IllegalArgumentException(
-                        "UPDATE_COORDINATOR_AGENTS payload must be an AgentSet (got: " +
-                                (payload == null ? "null" : payload.getClass().getName()) +
-                                ") from requester: " + request.getRequester()
+                throw new IllegalArgumentException("UPDATE_COORDINATOR_AGENTS payload must be an AgentSet (got: "
+                        + (payload == null ? "null" : payload.getClass().getName())
+                        + ") from requester: " + request.getRequester()
                 );
             }
             getGlobalAgentSet().update((MutableAgentSet) payload);
@@ -181,9 +189,8 @@ public abstract class CoordinatorRequestHandler {
         public void handleRequest(Request request) throws InterruptedException {
             Object payload = request.getPayload();
             if (!(payload instanceof Predicate<?>)) {
-                throw new IllegalArgumentException(
-                        "FILTERED_AGENTS_ACCESS payload must be a Predicate<Agent> (got: " +
-                                (payload == null ? "null" : payload.getClass().getName()) + ")"
+                throw new IllegalArgumentException("FILTERED_AGENTS_ACCESS payload must be a Predicate<Agent> (got: "
+                        + (payload == null ? "null" : payload.getClass().getName()) + ")"
                 );
             }
             Predicate<Agent> filter = (Predicate<Agent>) payload;

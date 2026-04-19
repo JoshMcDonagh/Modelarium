@@ -3,6 +3,7 @@ package modelarium.entities.attributes.properties.functional;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.contexts.AgentContext;
+import modelarium.exceptions.MissingAttributeFunctionException;
 
 /**
  * A property whose behaviour is defined using functional interfaces.
@@ -45,11 +46,17 @@ public class FunctionalAgentProperty<T> extends AgentProperty<T> {
 
     @Override
     public void set(AgentContext context, T value) {
+        if (setter == null)
+            throw new MissingAttributeFunctionException("No setter function provided for '" + name() +"'");
+
         propertyValue = setter.set(context, propertyValue, value);
     }
 
     @Override
     public T get(AgentContext context) {
+        if (getter == null)
+            throw new MissingAttributeFunctionException("No getter function provided for '" + name() +"'");
+
         return getter.get(context, propertyValue);
     }
 }

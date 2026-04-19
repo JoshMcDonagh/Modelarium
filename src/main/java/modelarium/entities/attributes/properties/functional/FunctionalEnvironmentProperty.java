@@ -3,6 +3,7 @@ package modelarium.entities.attributes.properties.functional;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.contexts.EnvironmentContext;
+import modelarium.exceptions.MissingAttributeFunctionException;
 
 public class FunctionalEnvironmentProperty<T> extends EnvironmentProperty<T> {
     private final EnvironmentPropertyGetterFunction<T> getter;
@@ -36,11 +37,17 @@ public class FunctionalEnvironmentProperty<T> extends EnvironmentProperty<T> {
 
     @Override
     public void set(EnvironmentContext context, T value) {
+        if (setter == null)
+            throw new MissingAttributeFunctionException("No setter function provided for '" + name() +"'");
+
         propertyValue = setter.set(context, propertyValue, value);
     }
 
     @Override
     public T get(EnvironmentContext context) {
+        if (getter == null)
+            throw new MissingAttributeFunctionException("No getter function provided for '" + name() +"'");
+
         return getter.get(context, propertyValue);
     }
 }
