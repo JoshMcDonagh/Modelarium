@@ -23,7 +23,7 @@ public class ContextCache {
      * Constructs a new worker cache.
      */
     public ContextCache() {
-        agentSetCache = new MutableAgentSet(true);
+        agentSetCache = new MutableAgentSet();
     }
 
     /**

@@ -21,10 +21,8 @@ import java.util.concurrent.Callable;
  * <p>Each {@code WorkerThread} operates on its own {@link MutableAgentSet}, may use a local
  * {@link ContextCache} for caching, and optionally communicates with a coordinator via
  * {@link RequestResponseInterface} if synchronisation is enabled.
- *
- * @param <T> the type of {@link MutableResults} this worker will return
  */
-public class WorkerThread<T extends MutableResults> implements Callable<MutableResults> {
+public class WorkerThread implements Callable<MutableResults> {
 
     /** The name or ID assigned to this worker thread (usually based on core index) */
     private final String threadName;

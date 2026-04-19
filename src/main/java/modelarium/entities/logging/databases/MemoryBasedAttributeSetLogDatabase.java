@@ -38,8 +38,9 @@ public class MemoryBasedAttributeSetLogDatabase extends AttributeSetLogDatabase 
         if (attributeValue == null || attributeClassesMap.get(attributeName).isInstance(attributeValue)) {
             attributesMap.get(attributeName).add(attributeValue);
         } else {
-            throw new IllegalArgumentException(
-                    "Attribute '" + attributeName + "' is not an instance of " + attributeValue.getClass().getSimpleName());
+            Class<?> expectedType = attributeClassesMap.get(attributeName);
+            throw new IllegalArgumentException("Attribute '" + attributeName + "' is not an instance of "
+                    + expectedType.getSimpleName());
         }
     }
 

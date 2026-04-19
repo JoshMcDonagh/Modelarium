@@ -32,11 +32,6 @@ public class MutableResultsForEnvironment extends MutableResultsForEntities<Envi
         this.environmentName = environment.name();
     }
 
-    protected MutableResultsForEnvironment(MutableResultsForEnvironment other) {
-        super(other);
-        this.environmentName = other.environmentName;
-    }
-
     @Override
     public int attributeSetLogCount() {
         return entityAttributeSetLogCount(environmentName);

@@ -118,18 +118,18 @@ public class Model {
         // Launch worker threads
         for (int threadIndex = 0; threadIndex < config.threadCount(); threadIndex++) {
             // Create an agent set for the current core
-            MutableAgentSet threadAgentSet = new MutableAgentSet(true);
+            MutableAgentSet threadAgentSet = new MutableAgentSet();
             MutableAgentSet perThreadAgentSet = agentsForEachCore.get(threadIndex);
 
             // Make sure agent set is not null
             if (perThreadAgentSet == null)
-                perThreadAgentSet = new MutableAgentSet(true);
+                perThreadAgentSet = new MutableAgentSet();
 
             // Add the pre-assigned agent set for this core
             threadAgentSet.add(perThreadAgentSet);
 
             // Create and submit the worker task
-            Callable<MutableResults> worker = new WorkerThread<>(
+            Callable<MutableResults> worker = new WorkerThread(
                     String.valueOf(threadIndex),
                     config,
                     requestResponseController,

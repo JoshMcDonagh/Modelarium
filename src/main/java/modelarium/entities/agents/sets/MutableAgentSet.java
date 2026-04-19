@@ -19,10 +19,6 @@ import java.util.function.Predicate;
  * <p>This class is iterable and designed to support both sequential and parallel simulation use cases.
  */
 public class MutableAgentSet implements AgentSet {
-
-    /** Whether to store deep copies of added agents rather than references */
-    private final boolean isStoringAgentCopies;
-
     /** Ordered list of agents in the set */
     private List<Agent> agentList = new ArrayList<>();
 
@@ -30,39 +26,16 @@ public class MutableAgentSet implements AgentSet {
     private Map<String, Integer> agentIndexMap = new HashMap<>();
 
     /**
-     * Constructs an empty agent set with optional deep copy behaviour.
-     *
-     * @param isStoringAgentCopies whether added agents should be deep copied
-     */
-    public MutableAgentSet(boolean isStoringAgentCopies) {
-        this.isStoringAgentCopies = isStoringAgentCopies;
-    }
-
-    /**
-     * Constructs a new agent set from a list of agents, with optional deep copying.
-     *
-     * @param agentsList list of agents to add
-     * @param isStoringAgentCopies whether to store deep copies
-     */
-    public MutableAgentSet(List<Agent> agentsList, boolean isStoringAgentCopies) {
-        this(isStoringAgentCopies);
-        add(agentsList);
-    }
-
-    /**
      * Constructs a new agent set from a list of agents, without deep copying.
      *
      * @param agentsList list of agents to add
      */
     public MutableAgentSet(List<Agent> agentsList) {
-        this();
         add(agentsList);
     }
 
     /** Constructs an empty agent set without deep copying. */
-    public MutableAgentSet() {
-        this(false);
-    }
+    public MutableAgentSet() {}
 
     public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory databaseFactory) {
         for (Agent agent : agentList)
@@ -85,10 +58,7 @@ public class MutableAgentSet implements AgentSet {
             agentList.add(agent); // Ensure list is long enough before setting
         }
 
-        if (isStoringAgentCopies)
-            agentList.set(index, agent.clone());
-        else
-            agentList.set(index, agent);
+        agentList.set(index, agent.clone());
     }
 
     /**
@@ -244,7 +214,7 @@ public class MutableAgentSet implements AgentSet {
      * @return a new {@code AgentSet} with the same agents
      */
     public MutableAgentSet duplicate() {
-        return new MutableAgentSet(agentList, isStoringAgentCopies);
+        return new MutableAgentSet(agentList);
     }
 
     /**

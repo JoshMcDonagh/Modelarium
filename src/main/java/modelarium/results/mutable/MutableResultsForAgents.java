@@ -27,10 +27,6 @@ public class MutableResultsForAgents extends MutableResultsForEntities<AgentCont
         super(agentSet.getAsList());
     }
 
-    protected MutableResultsForAgents(MutableResultsForAgents other) {
-        super(other);
-    }
-
     @Override
     public int agentLogCount() {
         return entityLogCount();

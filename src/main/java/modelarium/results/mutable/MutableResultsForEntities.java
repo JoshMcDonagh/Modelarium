@@ -29,11 +29,6 @@ public abstract class MutableResultsForEntities<C extends Context, A extends Att
         entityLogIndexMap.put(entity.name(), 0);
     }
 
-    MutableResultsForEntities(MutableResultsForEntities<C,A,L> other) {
-        this.entityLogList.addAll(other.entityLogList);
-        this.entityLogIndexMap.putAll(other.entityLogIndexMap);
-    }
-
     public void mergeWith(MutableResultsForEntities<C,A,L> other) {
         int originalLogListSize = entityLogList.size();
         entityLogList.addAll(other.entityLogList);
