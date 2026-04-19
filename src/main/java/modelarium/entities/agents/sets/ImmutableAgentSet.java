@@ -18,12 +18,12 @@ public class ImmutableAgentSet implements AgentSet {
 
     @Override
     public Agent get(String agentName) {
-        return agentSet.get(agentName);
+        return cloner.deepClone(agentSet.get(agentName));
     }
 
     @Override
     public Agent get(int index) {
-        return agentSet.get(index);
+        return cloner.deepClone(agentSet.get(index));
     }
 
     @Override
@@ -47,8 +47,8 @@ public class ImmutableAgentSet implements AgentSet {
     }
 
     @Override
-    public AgentSet getFilteredAgents(Predicate<Agent> agentFilter) {
-        return agentSet.getFilteredAgents(agentFilter);
+    public ImmutableAgentSet getFilteredAgents(Predicate<Agent> agentFilter) {
+        return agentSet.getFilteredAgents(agentFilter).getAsImmutable();
     }
 
     @Override

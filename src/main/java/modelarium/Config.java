@@ -7,13 +7,14 @@ import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLo
 import modelarium.scheduler.InOrderScheduler;
 import modelarium.scheduler.Scheduler;
 
+import java.time.Duration;
 import java.util.Objects;
 
 public record Config(
         int populationSize,
         int tickCount,
         int threadCount,
-        long threadTimeoutSeconds,
+        Duration threadTimeout,
         boolean areThreadsSynced,
         AgentGenerator agentGenerator,
         EnvironmentGenerator environmentGenerator,
@@ -28,7 +29,7 @@ public record Config(
         private int populationSize = 100;
         private int tickCount = 100;
         private int threadCount = 2;
-        private long threadTimeoutSeconds = 60;
+        private Duration threadTimeout = Duration.ofSeconds(60);
         private boolean areThreadsSynced = true;
         private AgentGenerator agentGenerator;
         private EnvironmentGenerator environmentGenerator;
@@ -50,8 +51,8 @@ public record Config(
             return this;
         }
 
-        public ConfigBuilder threadTimeoutSeconds(long threadTimeoutSeconds) {
-            this.threadTimeoutSeconds = threadTimeoutSeconds;
+        public ConfigBuilder threadTimeoutSeconds(Duration threadTimeout) {
+            this.threadTimeout = threadTimeout;
             return this;
         }
 
@@ -97,7 +98,7 @@ public record Config(
                     populationSize,
                     tickCount,
                     threadCount,
-                    threadTimeoutSeconds,
+                    threadTimeout,
                     areThreadsSynced,
                     agentGenerator,
                     environmentGenerator,

@@ -31,7 +31,6 @@ import java.util.function.Predicate;
  * </ul>
  */
 public abstract class Context {
-
     private final Entity<?,?,?> entity;
     private final MutableAgentSet localAgentSet;
     private final Config config;
@@ -130,7 +129,7 @@ public abstract class Context {
             throw new SimulationInterruptedException("Interrupted while fetching agent '" + targetAgentName + "'", e);
         } catch (CoordinatorTimeoutException | CoordinatorErrorException e) {
             throw new AgentNotFoundException("Agent '" + targetAgentName + "' requested by '" + entity.name()
-                    + "' not found");
+                    + "' not found", e);
         }
     }
 
@@ -151,7 +150,7 @@ public abstract class Context {
                         "'" + entity.name() + "'", e);
             } catch (CoordinatorTimeoutException | CoordinatorErrorException e) {
                 throw new  AgentNotFoundException("Failed to retrieve filtered agents requested by '" + entity.name()
-                        + "' from this thread (threads are not synced)");
+                        + "' from this thread (threads are not synced)", e);
             }
         } else {
             // Use only local agent set

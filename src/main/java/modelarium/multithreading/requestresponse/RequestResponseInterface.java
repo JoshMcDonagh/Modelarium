@@ -46,7 +46,7 @@ public class RequestResponseInterface {
     public RequestResponseInterface(String name, Config config, RequestResponseController requestResponseController) {
         this.name = name;
         this.areProcessesSynced = config.areThreadsSynced();
-        this.coordinatorTimeout = Duration.ofSeconds(config.threadTimeoutSeconds());
+        this.coordinatorTimeout = config.threadTimeout();
         this.requestQueue = requestResponseController.getRequestQueue();
         this.responseQueue = requestResponseController.getResponseQueue(name);
     }

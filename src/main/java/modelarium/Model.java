@@ -195,9 +195,6 @@ public class Model {
                 stopCoordinator(coordinatorHandle);
         }
 
-        if (config.areThreadsSynced())
-            stopCoordinator(coordinatorHandle);
-
         results.setEnvironmentResults(new MutableResultsForEnvironment(environment));
     }
 

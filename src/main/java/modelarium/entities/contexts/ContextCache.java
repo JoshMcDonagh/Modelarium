@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class ContextCache {
-
     /** List of previously applied agent filters (for caching filtered sets) */
     private final List<Predicate<Agent>> agentFiltersCacheList = new ArrayList<>();
 

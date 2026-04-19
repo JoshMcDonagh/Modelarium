@@ -41,6 +41,7 @@ public class AgentContext extends Context {
 
     @Override
     public Attribute<AgentContext> getThisAttribute() {
+        // noinspection unchecked
         return (Attribute<AgentContext>) attribute();
     }
 
@@ -63,7 +64,7 @@ public class AgentContext extends Context {
                     + entity().name() + "'", e);
         } catch (CoordinatorTimeoutException | CoordinatorErrorException e) {
             throw new EnvironmentNotFoundException("Environment requested by '" + entity().name()
-                    + "' could not be found");
+                    + "' could not be found", e);
         }
 
         // Cache the result
