@@ -17,7 +17,7 @@ import java.util.Map;
  * <p>Extends {@link MutableResultsForEntities} to store and access recorded property
  * and event values specific to the environment, using its name to simplify queries.
  */
-public class MutableResultsForEnvironment extends MutableResultsForEntities<EnvironmentContext, EnvironmentAttributeSet, AttributeSetLog<EnvironmentContext>> implements ResultsForEnvironment {
+public final class MutableResultsForEnvironment extends MutableResultsForEntities<EnvironmentContext, EnvironmentAttributeSet, AttributeSetLog<EnvironmentContext>> implements ResultsForEnvironment {
 
     /** The name of the environment used as a key for data access */
     private final String environmentName;

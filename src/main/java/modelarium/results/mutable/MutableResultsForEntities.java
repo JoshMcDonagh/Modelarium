@@ -11,7 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class MutableResultsForEntities<C extends Context, A extends AttributeSet<C>, L extends AttributeSetLog<C>> {
+public sealed abstract class MutableResultsForEntities<C extends Context, A extends AttributeSet<C>, L extends AttributeSetLog<C>>
+        permits MutableResultsForAgents, MutableResultsForEnvironment {
 
     private final List<EntityLog<C,A,L>> entityLogList = new ArrayList<>();
     private final Map<String, Integer> entityLogIndexMap = new HashMap<>();

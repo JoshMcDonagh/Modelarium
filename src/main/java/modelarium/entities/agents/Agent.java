@@ -16,7 +16,7 @@ import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
 import java.util.List;
 
-public class Agent extends Entity<AgentContext, AgentAttributeSet, AttributeSetLog<AgentContext>> {
+public final class Agent extends Entity<AgentContext, AgentAttributeSet, AttributeSetLog<AgentContext>> {
     public Agent(String name, List<AgentAttributeSet> attributeSets) {
         super(name, attributeSets);
     }

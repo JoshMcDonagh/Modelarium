@@ -4,7 +4,7 @@ import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.contexts.Context;
 
-public abstract class Routine<C extends Context> extends Attribute<C> {
+public sealed abstract class Routine<C extends Context> extends Attribute<C> permits AgentRoutine, EnvironmentRoutine {
     Routine(String name, AttributeAccessLevel accessLevel) {
         super(name, false, accessLevel);
     }

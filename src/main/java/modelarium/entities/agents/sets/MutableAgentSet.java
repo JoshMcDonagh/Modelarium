@@ -18,7 +18,7 @@ import java.util.function.Predicate;
  *
  * <p>This class is iterable and designed to support both sequential and parallel simulation use cases.
  */
-public class MutableAgentSet implements AgentSet {
+public final class MutableAgentSet implements AgentSet {
     /** Ordered list of agents in the set */
     private List<Agent> agentList = new ArrayList<>();
 

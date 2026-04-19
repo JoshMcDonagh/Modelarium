@@ -30,7 +30,7 @@ import java.util.function.Predicate;
  *     <li>The associated model clock</li>
  * </ul>
  */
-public abstract class Context {
+public sealed abstract class Context permits AgentContext, EnvironmentContext {
     private final Entity<?,?,?> entity;
     private final MutableAgentSet localAgentSet;
     private final Config config;

@@ -13,7 +13,7 @@ import modelarium.exceptions.EnvironmentNotFoundException;
 import modelarium.exceptions.SimulationInterruptedException;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
-public class AgentContext extends Context {
+public final class AgentContext extends Context {
     private final Environment localEnvironment;
 
     public AgentContext(

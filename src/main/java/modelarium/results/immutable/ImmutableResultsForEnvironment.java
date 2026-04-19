@@ -6,7 +6,7 @@ import modelarium.results.mutable.MutableResultsForEnvironment;
 import java.util.List;
 import java.util.Map;
 
-public class ImmutableResultsForEnvironment implements ResultsForEnvironment {
+public final class ImmutableResultsForEnvironment implements ResultsForEnvironment {
     private final MutableResultsForEnvironment results;
 
     public ImmutableResultsForEnvironment(MutableResultsForEnvironment results) {

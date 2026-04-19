@@ -5,7 +5,7 @@ import modelarium.results.ResultsForAgents;
 import modelarium.results.ResultsForEnvironment;
 import modelarium.results.mutable.MutableResults;
 
-public class ImmutableResults implements Results {
+public final class ImmutableResults implements Results {
     private final ImmutableResultsForAgents resultsForAgents;
     private final ImmutableResultsForEnvironment resultsForEnvironment;
 

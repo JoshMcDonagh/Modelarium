@@ -1,9 +1,13 @@
 package modelarium.results;
 
+import modelarium.results.immutable.ImmutableResultsForEnvironment;
+import modelarium.results.mutable.MutableResultsForEnvironment;
+
 import java.util.List;
 import java.util.Map;
 
-public interface ResultsForEnvironment extends ResultsForEntities {
+public sealed interface ResultsForEnvironment extends ResultsForEntities
+        permits MutableResultsForEnvironment, ImmutableResultsForEnvironment {
     int attributeSetLogCount();
     int attributeLogCount(String attributeSetName);
     List<Object> attributeLogs(String attributeSetName, String attributeName);

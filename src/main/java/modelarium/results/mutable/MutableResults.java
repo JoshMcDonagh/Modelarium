@@ -2,12 +2,13 @@ package modelarium.results.mutable;
 
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.MutableAgentSet;
+import modelarium.results.Results;
 import modelarium.results.immutable.ImmutableResults;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MutableResults {
+public final class MutableResults implements Results {
     private MutableResultsForAgents agentsResults;
     private MutableResultsForEnvironment environmentResults;
 

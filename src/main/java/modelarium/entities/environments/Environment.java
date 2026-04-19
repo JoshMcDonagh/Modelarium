@@ -15,7 +15,7 @@ import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
 import java.util.List;
 
-public class Environment extends Entity<EnvironmentContext, EnvironmentAttributeSet, AttributeSetLog<EnvironmentContext>> {
+public final class Environment extends Entity<EnvironmentContext, EnvironmentAttributeSet, AttributeSetLog<EnvironmentContext>> {
     public Environment(String name, List<EnvironmentAttributeSet> attributeSets) {
         super(name, attributeSets);
     }

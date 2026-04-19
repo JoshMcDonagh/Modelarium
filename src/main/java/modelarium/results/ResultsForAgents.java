@@ -1,9 +1,13 @@
 package modelarium.results;
 
+import modelarium.results.immutable.ImmutableResultsForAgents;
+import modelarium.results.mutable.MutableResultsForAgents;
+
 import java.util.List;
 import java.util.Map;
 
-public interface ResultsForAgents extends ResultsForEntities {
+public sealed interface ResultsForAgents extends ResultsForEntities
+        permits MutableResultsForAgents, ImmutableResultsForAgents {
     int agentLogCount();
     int attributeSetLogCount(String agentName);
     int attributeLogCount(String agentName, String attributeSetName);

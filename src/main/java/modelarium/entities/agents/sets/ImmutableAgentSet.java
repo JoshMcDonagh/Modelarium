@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class ImmutableAgentSet implements AgentSet {
+public final class ImmutableAgentSet implements AgentSet {
     private static final Cloner cloner = new Cloner();
 
     private final MutableAgentSet agentSet;

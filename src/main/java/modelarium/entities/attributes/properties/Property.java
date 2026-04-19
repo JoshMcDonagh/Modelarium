@@ -4,7 +4,8 @@ import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.contexts.Context;
 
-public abstract class Property<T,C extends Context> extends Attribute<C> {
+public sealed abstract class Property<T,C extends Context> extends Attribute<C>
+        permits AgentProperty, EnvironmentProperty {
     private final Class<T> type;
 
     Property(String name, boolean isLogged, AttributeAccessLevel accessLevel, Class<T> type) {

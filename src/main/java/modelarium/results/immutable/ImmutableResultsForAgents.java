@@ -6,7 +6,7 @@ import modelarium.results.mutable.MutableResultsForAgents;
 import java.util.List;
 import java.util.Map;
 
-public class ImmutableResultsForAgents implements ResultsForAgents {
+public final class ImmutableResultsForAgents implements ResultsForAgents {
     private final MutableResultsForAgents results;
 
     public ImmutableResultsForAgents(MutableResultsForAgents results) {

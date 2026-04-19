@@ -17,7 +17,7 @@ import java.util.Map;
  * <p>Wraps an {@link MutableAgentSet} into a {@link MutableResultsForEntities} structure,
  * enabling easy access to recorded properties and events for all agents over time.
  */
-public class MutableResultsForAgents extends MutableResultsForEntities<AgentContext, AgentAttributeSet, AttributeSetLog<AgentContext>> implements ResultsForAgents {
+public final class MutableResultsForAgents extends MutableResultsForEntities<AgentContext, AgentAttributeSet, AttributeSetLog<AgentContext>> implements ResultsForAgents {
     /**
      * Constructs agent results from a given agent set.
      *

@@ -4,7 +4,7 @@ import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.contexts.Context;
 
-public abstract class Event<C extends Context> extends Attribute<C> {
+public sealed abstract class Event<C extends Context> extends Attribute<C> permits AgentEvent, EnvironmentEvent {
     Event(String name, boolean isLogged, AttributeAccessLevel accessLevel) {
         super(name, isLogged, accessLevel);
     }

@@ -8,7 +8,7 @@ import modelarium.entities.attributes.EnvironmentAttributeSet;
 import modelarium.entities.environments.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
-public class EnvironmentContext extends Context {
+public final class EnvironmentContext extends Context {
     public EnvironmentContext(
             Environment entity,
             MutableAgentSet localAgentSet,

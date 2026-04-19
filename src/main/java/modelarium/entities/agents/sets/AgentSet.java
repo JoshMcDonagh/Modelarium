@@ -5,7 +5,7 @@ import modelarium.entities.agents.Agent;
 import java.util.List;
 import java.util.function.Predicate;
 
-public interface AgentSet extends Iterable<Agent> {
+public sealed interface AgentSet extends Iterable<Agent> permits MutableAgentSet, ImmutableAgentSet {
     Agent get(String agentName);
     Agent get(int index);
     List<Agent> getAsList();

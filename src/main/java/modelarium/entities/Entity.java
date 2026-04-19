@@ -3,6 +3,7 @@ package modelarium.entities;
 import com.rits.cloning.Cloner;
 import modelarium.Clock;
 import modelarium.Config;
+import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.attributes.AttributeSet;
 import modelarium.entities.contexts.Context;
@@ -17,7 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class Entity<C extends Context, A extends AttributeSet<C>, L extends AttributeSetLog<C>> {
+public sealed abstract class Entity<C extends Context, A extends AttributeSet<C>, L extends AttributeSetLog<C>>
+        permits Agent, Environment {
     private static final Cloner cloner = new Cloner();
 
     protected static Cloner getCloner() {
