@@ -16,7 +16,7 @@ public class AttributeSet<C extends Context> {
     private final String ownerName;
     private final String name;
     private final List<Attribute<C>> attributeList;
-    private final Map<String, Integer> attributeIndexMap = new HashMap<String, Integer>();
+    private final Map<String, Integer> attributeIndexMap = new HashMap<>();
 
     private AttributeSetLog<C> log = null;
 
@@ -100,7 +100,7 @@ public class AttributeSet<C extends Context> {
         if (attribute == null)
             return null;
 
-        throw new IllegalArgumentException("Expected a Routine, but got: " + attribute.getClass().getName());
+        throw new AttributeAccessException("Expected a Routine, but got: " + attribute.getClass().getName());
     }
 
     Routine<C> getRoutine(String processName) {
@@ -116,7 +116,7 @@ public class AttributeSet<C extends Context> {
         if (attribute == null)
             return null;
 
-        throw new IllegalArgumentException("Expected a Property, but got: " + attribute.getClass().getName());
+        throw new AttributeAccessException("Expected a Property, but got: " + attribute.getClass().getName());
     }
 
     Property<?,C> getProperty(String propertyName) {
