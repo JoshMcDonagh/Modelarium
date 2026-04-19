@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface ResultsForEnvironment extends ResultsForEntities {
     int attributeSetLogCount();
-    int attributeSetLogCount(String attributeSetName);
+    int attributeLogCount(String attributeSetName);
     List<Object> attributeLogs(String attributeSetName, String attributeName);
     <T> List<T> attributeLogs(String attributeSetName, String attributeName, Class<T> type);
     Map<String, List<Object>> attributeSetLogs(String attributeSetName);

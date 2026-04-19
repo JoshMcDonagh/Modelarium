@@ -19,8 +19,8 @@ public class ImmutableResultsForEnvironment implements ResultsForEnvironment {
     }
 
     @Override
-    public int attributeSetLogCount(String attributeSetName) {
-        return results.attributeSetLogCount(attributeSetName);
+    public int attributeLogCount(String attributeSetName) {
+        return results.attributeLogCount(attributeSetName);
     }
 
     @Override

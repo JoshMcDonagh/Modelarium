@@ -43,7 +43,7 @@ public class MutableResultsForEnvironment extends MutableResultsForEntities<Envi
     }
 
     @Override
-    public int attributeSetLogCount(String attributeSetName) {
+    public int attributeLogCount(String attributeSetName) {
         return entityAttributeSetAttributeLogCount(environmentName, attributeSetName);
     }
 
