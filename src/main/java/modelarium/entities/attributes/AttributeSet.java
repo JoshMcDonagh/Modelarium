@@ -3,6 +3,7 @@ package modelarium.entities.attributes;
 import modelarium.entities.attributes.events.Event;
 import modelarium.entities.attributes.properties.Property;
 import modelarium.entities.attributes.routines.Routine;
+import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
@@ -13,17 +14,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AttributeSet<C extends SimulationContext> {
+public abstract class AttributeSet<SC extends SimulationContext, C extends Context> {
     private final String ownerName;
     private final String name;
-    private final List<Attribute<C>> attributeList;
+    private final List<Attribute<SC>> attributeList;
     private final Map<String, Integer> attributeIndexMap = new HashMap<>();
 
-    private AttributeSetLog<C> log = null;
+    private AttributeSetLog<SC> log = null;
 
-    private C context = null;
+    private SC context = null;
 
-    AttributeSet(String ownerName, String attributeSetName, List<Attribute<C>> attributeList) {
+    AttributeSet(String ownerName, String attributeSetName, List<Attribute<SC>> attributeList) {
         this.ownerName = ownerName;
         this.name = attributeSetName;
         this.attributeList = attributeList;
@@ -33,6 +34,7 @@ public abstract class AttributeSet<C extends SimulationContext> {
         }
     }
 
+    @Internal
     public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory database) {
         if (log != null)
             return;
@@ -49,11 +51,11 @@ public abstract class AttributeSet<C extends SimulationContext> {
     }
 
     @Internal
-    public void setContext(C context) {
+    public void setContext(SC context) {
         if (this.context != null)
             return;
 
-        for (Attribute<C> attribute : attributeList)
+        for (Attribute<SC> attribute : attributeList)
             attribute.setContext(context);
 
         this.context = context;
@@ -61,14 +63,16 @@ public abstract class AttributeSet<C extends SimulationContext> {
 
 
     private Attribute<C> get(int attributeIndex) {
-        Attribute<C> attribute = attributeList.get(attributeIndex);
+        // noinspection unchecked
+        Attribute<C> attribute = (Attribute<C>) attributeList.get(attributeIndex);
         if (attribute.accessLevel() == AttributeAccessLevel.PUBLIC)
             return attribute;
         throw new AttributeAccessException(attribute.name() + " is a PRIVATE attribute and cannot be returned.");
     }
 
     private Attribute<C> get(String attributeName) {
-        Attribute<C> attribute = attributeList.get(attributeIndexMap.get(attributeName));
+        // noinspection unchecked
+        Attribute<C> attribute = (Attribute<C>) attributeList.get(attributeIndexMap.get(attributeName));
         if (attribute.accessLevel() == AttributeAccessLevel.PUBLIC)
             return attribute;
         throw new AttributeAccessException(attribute.name() + " is a PRIVATE attribute and cannot be returned.");
@@ -100,36 +104,36 @@ public abstract class AttributeSet<C extends SimulationContext> {
         return getRoutine(attributeIndexMap.get(processName));
     }
 
-    Property<?,C> getProperty(int propertyIndex) {
+    Property<?, C> getProperty(int propertyIndex) {
         Attribute<C> attribute = get(propertyIndex);
 
-        if (attribute instanceof Property<?,C> property)
+        if (attribute instanceof Property<?, C> property)
             return property;
 
         throw new AttributeAccessException("Expected a Property, but got: " + attribute.getClass().getName());
     }
 
-    Property<?,C> getProperty(String propertyName) {
+    Property<?, C> getProperty(String propertyName) {
         return getProperty(attributeIndexMap.get(propertyName));
     }
 
-    public AttributeSetLog<C> getLog() {
+    public AttributeSetLog<SC> getLog() {
         return log;
     }
 
     public void run() {
         context.setCurrentAttributeSet(this);
-        for (Attribute<C> attribute : attributeList) {
+        for (Attribute<SC> attribute : attributeList) {
             context.setCurrentAttribute(attribute);
             Object valueToLog = null;
 
-            if (attribute instanceof Event<C> event) {
+            if (attribute instanceof Event<SC> event) {
                 boolean isTriggered = event.isTriggered();
                 if (isTriggered)
                     event.run();
                 valueToLog = isTriggered;
 
-            } else if (attribute instanceof Property<?, C> property) {
+            } else if (attribute instanceof Property<?, SC> property) {
                 property.run();
                 valueToLog = property.get();
 

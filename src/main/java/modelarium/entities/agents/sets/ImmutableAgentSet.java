@@ -3,6 +3,8 @@ package modelarium.entities.agents.sets;
 import com.rits.cloning.Cloner;
 import modelarium.entities.agents.Agent;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
@@ -49,6 +51,13 @@ public final class ImmutableAgentSet implements AgentSet {
     @Override
     public ImmutableAgentSet getFilteredAgents(Predicate<Agent> agentFilter) {
         return agentSet.getFilteredAgents(agentFilter).getAsImmutable();
+    }
+
+    @Override
+    public Iterator<Agent> getRandomIterator() {
+        List<Agent> shuffledAgents = getAsList();
+        Collections.shuffle(shuffledAgents);
+        return shuffledAgents.iterator();
     }
 
     @Override

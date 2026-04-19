@@ -3,11 +3,12 @@ package modelarium.entities.attributes;
 import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.routines.AgentRoutine;
+import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.AgentSimulationContext;
 
 import java.util.List;
 
-public class AgentAttributeSet extends AttributeSet<AgentSimulationContext> {
+public class AgentAttributeSet extends AttributeSet<AgentSimulationContext, AgentContext> {
     public AgentAttributeSet(String ownerName, String attributeSetName, List<Attribute<AgentSimulationContext>> attributes) {
         super(ownerName, attributeSetName, attributes);
     }

@@ -3,6 +3,7 @@ package modelarium.entities.agents.sets;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 import modelarium.exceptions.AgentNotFoundException;
+import modelarium.internal.Internal;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -37,6 +38,7 @@ public final class MutableAgentSet implements AgentSet {
     /** Constructs an empty agent set without deep copying. */
     public MutableAgentSet() {}
 
+    @Internal
     public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory databaseFactory) {
         for (Agent agent : agentList)
             agent.setLogDatabaseFactory(databaseFactory);

@@ -32,7 +32,7 @@ import java.util.function.Predicate;
  *     <li>The associated model clock</li>
  * </ul>
  */
-public sealed abstract class SimulationContext permits AgentSimulationContext, EnvironmentSimulationContext {
+public sealed abstract class SimulationContext implements Context permits AgentSimulationContext, EnvironmentSimulationContext {
     private final Entity<?,?,?> entity;
     private final MutableAgentSet localAgentSet;
     private final Config config;
@@ -43,6 +43,7 @@ public sealed abstract class SimulationContext permits AgentSimulationContext, E
     private AttributeSet<?> attributeSet = null;
     private Attribute<?> attribute = null;
 
+    @Internal
     public SimulationContext(
             Entity<?,?,?> entity,
             MutableAgentSet localAgentSet,

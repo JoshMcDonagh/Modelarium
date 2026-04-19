@@ -57,6 +57,7 @@ public sealed abstract class Entity<C extends SimulationContext, A extends Attri
             Environment localEnvironment
     );
 
+    @Internal
     public void createContext(
             MutableAgentSet agentSet,
             Config config,

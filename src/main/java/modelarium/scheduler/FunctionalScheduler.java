@@ -1,6 +1,6 @@
 package modelarium.scheduler;
 
-import modelarium.entities.agents.sets.MutableAgentSet;
+import modelarium.entities.agents.sets.AgentSet;
 
 import java.util.function.Consumer;
 
@@ -20,15 +20,15 @@ import java.util.function.Consumer;
 public class FunctionalScheduler implements Scheduler {
 
     /** The function to be executed on each tick, taking an AgentSet as input */
-    private final Consumer<MutableAgentSet> tickFunction;
+    private final Consumer<AgentSet> tickFunction;
 
     /**
      * Constructs a FunctionalScheduler with the specified tick function.
      *
      * @param tickFunction the logic to execute on each tick,
-     *                     defined as a {@link Consumer} of {@link MutableAgentSet}
+     *                     defined as a {@link Consumer} of {@link AgentSet}
      */
-    public FunctionalScheduler(Consumer<MutableAgentSet> tickFunction) {
+    public FunctionalScheduler(Consumer<AgentSet> tickFunction) {
         this.tickFunction = tickFunction;
     }
 
@@ -38,7 +38,7 @@ public class FunctionalScheduler implements Scheduler {
      * @param agentSet the set of agents to act upon during this tick
      */
     @Override
-    public void runTick(MutableAgentSet agentSet) {
+    public void runTick(AgentSet agentSet) {
         tickFunction.accept(agentSet);
     }
 }
