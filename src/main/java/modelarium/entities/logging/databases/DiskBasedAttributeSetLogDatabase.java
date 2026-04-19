@@ -396,12 +396,6 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
         }
     }
 
-    private boolean isDirectoryEmpty(Path directory) throws IOException {
-        try (var entries = Files.list(directory)) {
-            return entries.findAny().isEmpty();
-        }
-    }
-
     // === JSON (De)serialisation Utilities ===
 
     private static String serialiseValue(Object value) {

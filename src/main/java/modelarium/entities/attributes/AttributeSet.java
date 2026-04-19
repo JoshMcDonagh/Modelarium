@@ -81,9 +81,6 @@ public abstract class AttributeSet<C extends Context> {
         if (attribute instanceof Event<C> event)
             return event;
 
-        if (attribute == null)
-            return null;
-
         throw new AttributeAccessException("Expected an Event, but got: " + attribute.getClass().getName());
     }
 
@@ -97,9 +94,6 @@ public abstract class AttributeSet<C extends Context> {
         if (attribute instanceof Routine<C> routine)
             return routine;
 
-        if (attribute == null)
-            return null;
-
         throw new AttributeAccessException("Expected a Routine, but got: " + attribute.getClass().getName());
     }
 
@@ -112,9 +106,6 @@ public abstract class AttributeSet<C extends Context> {
 
         if (attribute instanceof Property<?,C> property)
             return property;
-
-        if (attribute == null)
-            return null;
 
         throw new AttributeAccessException("Expected a Property, but got: " + attribute.getClass().getName());
     }

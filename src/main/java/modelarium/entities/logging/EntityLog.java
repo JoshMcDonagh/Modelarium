@@ -17,6 +17,7 @@ public class EntityLog<C extends Context, A extends AttributeSet<C>, L extends A
         this.entityName = entityName;
         for (int i = 0; i < attributeSets.size(); i++) {
             A attributeSet = attributeSets.get(i);
+            // noinspection unchecked
             attributeSetLogList.add((L) attributeSet.getLog());
             attributeSetLogIndexList.put(attributeSet.name(), i);
         }

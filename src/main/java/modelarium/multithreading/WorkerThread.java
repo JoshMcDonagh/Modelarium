@@ -91,7 +91,7 @@ public class WorkerThread implements Callable<MutableResults> {
                     config,
                     cache,
                     clock,
-                    new RequestResponseInterface(agent.name(), config, requestResponseController),
+                    requestResponseController.getInterface(agent.name()),
                     localEnvironment
             );
         }

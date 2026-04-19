@@ -9,10 +9,10 @@ import modelarium.multithreading.CoordinatorThread;
 import modelarium.multithreading.WorkerThread;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
+import modelarium.results.immutable.ImmutableResults;
 import modelarium.results.mutable.MutableResults;
 import modelarium.results.mutable.MutableResultsForAgents;
 import modelarium.results.mutable.MutableResultsForEnvironment;
-import modelarium.results.immutable.ImmutableResults;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,8 @@
 package unit.modelarium.results;
 
+import modelarium.utils.QuadFunction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import modelarium.utils.QuadFunction;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

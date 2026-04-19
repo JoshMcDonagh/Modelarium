@@ -4,7 +4,7 @@ import com.rits.cloning.Cloner;
 import modelarium.Clock;
 import modelarium.Config;
 import modelarium.entities.agents.sets.MutableAgentSet;
-import modelarium.entities.attributes.*;
+import modelarium.entities.attributes.AttributeSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;

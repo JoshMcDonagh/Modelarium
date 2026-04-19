@@ -5,7 +5,7 @@ import integration.agentEnvironmentSyncIntegrationTest.results.ModelMutableResul
 import modelarium.Config;
 import modelarium.Model;
 import modelarium.results.mutable.MutableResults;
-import modelarium.scheduler.InOrderScheduler; // or RandomOrderScheduler — either is fine
+import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

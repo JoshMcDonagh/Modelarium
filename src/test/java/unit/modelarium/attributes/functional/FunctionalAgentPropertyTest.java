@@ -1,9 +1,9 @@
 package unit.modelarium.attributes.functional;
 
-import modelarium.entities.attributes.properties.functional.FunctionalAgentProperty;
 import modelarium.entities.attributes.properties.functional.AgentPropertyGetterFunction;
 import modelarium.entities.attributes.properties.functional.AgentPropertyRunFunction;
 import modelarium.entities.attributes.properties.functional.AgentPropertySetterFunction;
+import modelarium.entities.attributes.properties.functional.FunctionalAgentProperty;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
