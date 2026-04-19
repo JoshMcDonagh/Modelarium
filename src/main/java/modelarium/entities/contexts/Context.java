@@ -149,8 +149,8 @@ public abstract class Context {
                 throw new SimulationInterruptedException("Interrupted while retrieving filtered agents requested by " +
                         "'" + entity.name() + "'", e);
             } catch (CoordinatorTimeoutException | CoordinatorErrorException e) {
-                throw new  AgentNotFoundException("Failed to retrieve filtered agents requested by '" + entity.name()
-                        + "' from this thread (threads are not synced)", e);
+                throw new AgentNotFoundException("Failed to retrieve filtered agents requested by '" + entity.name()
+                        + "' from the coordinator", e);
             }
         } else {
             // Use only local agent set

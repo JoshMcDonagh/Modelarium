@@ -51,7 +51,7 @@ public record Config(
             return this;
         }
 
-        public ConfigBuilder threadTimeoutSeconds(Duration threadTimeout) {
+        public ConfigBuilder threadTimeout(Duration threadTimeout) {
             this.threadTimeout = threadTimeout;
             return this;
         }

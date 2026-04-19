@@ -30,8 +30,6 @@ public final class Clock {
      * Triggers the passing of another tick if the model is running.
      */
     public void triggerTick() {
-        if (isFinished())
-            return;
-        tick.incrementAndGet();
+        tick.updateAndGet(current -> current >= totalTickCount ? current : current + 1);
     }
 }
