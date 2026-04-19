@@ -37,6 +37,6 @@ public class EnvironmentContext extends Context {
 
     @Override
     public Environment getEnvironment() {
-        throw new UnsupportedOperationException("Context requester is already an Environment - use 'getThis()' instead");
+        throw new UnsupportedOperationException("Context requester is already an Environment - use 'getThisEntity()' instead");
     }
 }
