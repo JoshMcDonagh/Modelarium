@@ -3,12 +3,12 @@ package modelarium.entities.attributes;
 import modelarium.entities.attributes.events.EnvironmentEvent;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.attributes.routines.EnvironmentRoutine;
-import modelarium.entities.contexts.EnvironmentContext;
+import modelarium.entities.contexts.EnvironmentSimulationContext;
 
 import java.util.List;
 
-public class EnvironmentAttributeSet extends AttributeSet<EnvironmentContext> {
-    public EnvironmentAttributeSet(String ownerName, String attributeSetName, List<Attribute<EnvironmentContext>> attributes) {
+public class EnvironmentAttributeSet extends AttributeSet<EnvironmentSimulationContext> {
+    public EnvironmentAttributeSet(String ownerName, String attributeSetName, List<Attribute<EnvironmentSimulationContext>> attributes) {
         super(ownerName, attributeSetName, attributes);
     }
 

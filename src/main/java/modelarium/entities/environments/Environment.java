@@ -1,6 +1,6 @@
 package modelarium.entities.environments;
 
-import modelarium.Clock;
+import modelarium.clock.SimulationClock;
 import modelarium.Config;
 import modelarium.entities.Entity;
 import modelarium.entities.agents.sets.MutableAgentSet;
@@ -9,27 +9,27 @@ import modelarium.entities.attributes.events.EnvironmentEvent;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.attributes.routines.EnvironmentRoutine;
 import modelarium.entities.contexts.ContextCache;
-import modelarium.entities.contexts.EnvironmentContext;
+import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
 import java.util.List;
 
-public final class Environment extends Entity<EnvironmentContext, EnvironmentAttributeSet, AttributeSetLog<EnvironmentContext>> {
+public final class Environment extends Entity<EnvironmentSimulationContext, EnvironmentAttributeSet, AttributeSetLog<EnvironmentSimulationContext>> {
     public Environment(String name, List<EnvironmentAttributeSet> attributeSets) {
         super(name, attributeSets);
     }
 
     @Override
-    protected EnvironmentContext makeContextInstance(
+    protected EnvironmentSimulationContext makeContextInstance(
             MutableAgentSet agentSet,
             Config config,
             ContextCache contextCache,
-            Clock clock,
+            SimulationClock clock,
             RequestResponseInterface requestResponseInterface,
             Environment localEnvironment
     ) {
-        return new EnvironmentContext(
+        return new EnvironmentSimulationContext(
                 this,
                 agentSet,
                 config,

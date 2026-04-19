@@ -1,14 +1,14 @@
 package modelarium.entities.logging;
 
 import modelarium.entities.attributes.AttributeSet;
-import modelarium.entities.contexts.Context;
+import modelarium.entities.contexts.SimulationContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EntityLog<C extends Context, A extends AttributeSet<C>, L extends AttributeSetLog<C>> {
+public class EntityLog<C extends SimulationContext, A extends AttributeSet<C>, L extends AttributeSetLog<C>> {
     private final String entityName;
     private final List<L> attributeSetLogList = new ArrayList<>();
     private final Map<String, Integer> attributeSetLogIndexList = new HashMap<>();

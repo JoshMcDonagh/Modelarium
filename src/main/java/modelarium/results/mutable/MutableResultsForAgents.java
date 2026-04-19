@@ -2,7 +2,7 @@ package modelarium.results.mutable;
 
 import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.attributes.AgentAttributeSet;
-import modelarium.entities.contexts.AgentContext;
+import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.results.ResultsForAgents;
 import modelarium.results.immutable.ImmutableResultsForAgents;
@@ -17,7 +17,7 @@ import java.util.Map;
  * <p>Wraps an {@link MutableAgentSet} into a {@link MutableResultsForEntities} structure,
  * enabling easy access to recorded properties and events for all agents over time.
  */
-public final class MutableResultsForAgents extends MutableResultsForEntities<AgentContext, AgentAttributeSet, AttributeSetLog<AgentContext>> implements ResultsForAgents {
+public final class MutableResultsForAgents extends MutableResultsForEntities<AgentSimulationContext, AgentAttributeSet, AttributeSetLog<AgentSimulationContext>> implements ResultsForAgents {
     /**
      * Constructs agent results from a given agent set.
      *

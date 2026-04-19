@@ -3,9 +3,9 @@ package modelarium.entities.attributes;
 import modelarium.entities.attributes.events.Event;
 import modelarium.entities.attributes.properties.Property;
 import modelarium.entities.attributes.routines.Routine;
-import modelarium.entities.contexts.Context;
+import modelarium.entities.contexts.EntityContext;
 
-public sealed abstract class Attribute<C extends Context> permits Property, Event, Routine {
+public sealed abstract class Attribute<C extends EntityContext> permits Property, Event, Routine {
     private final String name;
     private final boolean isLogged;
     private final AttributeAccessLevel accessLevel;

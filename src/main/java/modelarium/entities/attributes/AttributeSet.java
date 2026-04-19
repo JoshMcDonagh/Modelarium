@@ -3,16 +3,17 @@ package modelarium.entities.attributes;
 import modelarium.entities.attributes.events.Event;
 import modelarium.entities.attributes.properties.Property;
 import modelarium.entities.attributes.routines.Routine;
-import modelarium.entities.contexts.Context;
+import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 import modelarium.exceptions.AttributeAccessException;
+import modelarium.internal.Internal;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AttributeSet<C extends Context> {
+public abstract class AttributeSet<C extends SimulationContext> {
     private final String ownerName;
     private final String name;
     private final List<Attribute<C>> attributeList;
@@ -47,6 +48,7 @@ public abstract class AttributeSet<C extends Context> {
         return attributeList.size();
     }
 
+    @Internal
     public void setContext(C context) {
         if (this.context != null)
             return;
@@ -57,9 +59,6 @@ public abstract class AttributeSet<C extends Context> {
         this.context = context;
     }
 
-    public C context() {
-        return context;
-    }
 
     private Attribute<C> get(int attributeIndex) {
         Attribute<C> attribute = attributeList.get(attributeIndex);

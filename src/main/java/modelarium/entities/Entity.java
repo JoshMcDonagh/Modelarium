@@ -1,24 +1,25 @@
 package modelarium.entities;
 
 import com.rits.cloning.Cloner;
-import modelarium.Clock;
+import modelarium.clock.SimulationClock;
 import modelarium.Config;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.attributes.AttributeSet;
-import modelarium.entities.contexts.Context;
+import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
+import modelarium.internal.Internal;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public sealed abstract class Entity<C extends Context, A extends AttributeSet<C>, L extends AttributeSetLog<C>>
+public sealed abstract class Entity<C extends SimulationContext, A extends AttributeSet<C>, L extends AttributeSetLog<C>>
         permits Agent, Environment {
     private static final Cloner cloner = new Cloner();
 
@@ -41,6 +42,7 @@ public sealed abstract class Entity<C extends Context, A extends AttributeSet<C>
         }
     }
 
+    @Internal
     public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory databaseFactory) {
         for (A attributeSet : attributeSetList)
             attributeSet.setLogDatabaseFactory(databaseFactory);
@@ -50,7 +52,7 @@ public sealed abstract class Entity<C extends Context, A extends AttributeSet<C>
             MutableAgentSet agentSet,
             Config config,
             ContextCache contextCache,
-            Clock clock,
+            SimulationClock clock,
             RequestResponseInterface requestResponseInterface,
             Environment localEnvironment
     );
@@ -59,7 +61,7 @@ public sealed abstract class Entity<C extends Context, A extends AttributeSet<C>
             MutableAgentSet agentSet,
             Config config,
             ContextCache contextCache,
-            Clock clock,
+            SimulationClock clock,
             RequestResponseInterface requestResponseInterface,
             Environment localEnvironment
     ) {

@@ -1,5 +1,6 @@
 package modelarium;
 
+import modelarium.clock.SimulationClock;
 import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
@@ -61,9 +62,9 @@ public class Model {
         results.setAgentResults(new MutableResultsForAgents(new MutableAgentSet()));
     }
 
-    private Clock makeClockIfSynced() {
+    private SimulationClock makeClockIfSynced() {
         if (config.areThreadsSynced())
-            return new Clock(config.tickCount());
+            return new SimulationClock(config.tickCount());
 
         return null;
     }
@@ -71,11 +72,11 @@ public class Model {
     private void createAndSetEnvironmentContext(
             Environment environment,
             RequestResponseController requestResponseController,
-            Clock sharedClock
+            SimulationClock sharedClock
     ) {
-        Clock clock;
+        SimulationClock clock;
 
-        clock = Objects.requireNonNullElseGet(sharedClock, () -> new Clock(config.tickCount()));
+        clock = Objects.requireNonNullElseGet(sharedClock, () -> new SimulationClock(config.tickCount()));
 
         environment.createContext(
                 new MutableAgentSet(),
@@ -90,7 +91,7 @@ public class Model {
     private CoordinatorHandle launchCoordinator(
             Environment environment,
             RequestResponseController requestResponseController,
-            Clock sharedClock
+            SimulationClock sharedClock
     ) {
         CoordinatorThread coordinator = new CoordinatorThread(
                 String.valueOf(config.threadCount()),
@@ -110,7 +111,7 @@ public class Model {
             List<MutableAgentSet> agentsForEachCore,
             Environment environment,
             RequestResponseController requestResponseController,
-            Clock sharedClock
+            SimulationClock sharedClock
     ) {
         ExecutorService executorService = Executors.newFixedThreadPool(config.threadCount());
         List<Future<MutableResults>> futures = new ArrayList<>();
@@ -179,7 +180,7 @@ public class Model {
 
         setupResultsContainer(agentsForEachCore);
 
-        Clock sharedClock = makeClockIfSynced();
+        SimulationClock sharedClock = makeClockIfSynced();
 
         RequestResponseController requestResponseController = new RequestResponseController(config);
         createAndSetEnvironmentContext(environment, requestResponseController, sharedClock);

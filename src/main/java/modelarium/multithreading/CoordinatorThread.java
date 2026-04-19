@@ -1,6 +1,6 @@
 package modelarium.multithreading;
 
-import modelarium.Clock;
+import modelarium.clock.SimulationClock;
 import modelarium.Config;
 import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.environments.Environment;
@@ -31,7 +31,7 @@ public class CoordinatorThread implements Runnable {
     /** Controller that manages the request and response queues for inter-thread communication */
     private final RequestResponseController requestResponseController;
 
-    private final Clock sharedClock;
+    private final SimulationClock sharedClock;
 
     /** Global agent set of the model */
     private final MutableAgentSet predefinedGlobalAgentSet;
@@ -54,7 +54,7 @@ public class CoordinatorThread implements Runnable {
                              Config config,
                              Environment environment,
                              RequestResponseController requestResponseController,
-                             Clock sharedClock
+                             SimulationClock sharedClock
     ) {
         this(name, config, environment, requestResponseController, sharedClock, null);
     }
@@ -72,7 +72,7 @@ public class CoordinatorThread implements Runnable {
                              Config config,
                              Environment environment,
                              RequestResponseController requestResponseController,
-                             Clock sharedClock,
+                             SimulationClock sharedClock,
                              MutableAgentSet globalAgentSet
     ) {
         this.threadName = name;

@@ -1,6 +1,7 @@
 module modelarium {
-    // Public API — users may import and extend these
+    // Public API
     exports modelarium;
+    exports modelarium.clock;
     exports modelarium.entities;
     exports modelarium.entities.agents;
     exports modelarium.entities.agents.sets;
@@ -18,11 +19,12 @@ module modelarium {
     exports modelarium.entities.logging.databases;
     exports modelarium.entities.logging.databases.factories;
     exports modelarium.exceptions;
+    exports modelarium.internal;
     exports modelarium.results;
     exports modelarium.results.immutable;
     exports modelarium.scheduler;
 
-    // NOT exported — entire packages hidden from external consumers:
+    // Private API
     //   modelarium.multithreading
     //   modelarium.multithreading.requestresponse
     //   modelarium.results.mutable

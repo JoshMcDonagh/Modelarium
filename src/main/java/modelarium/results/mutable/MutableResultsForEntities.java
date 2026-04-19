@@ -2,7 +2,7 @@ package modelarium.results.mutable;
 
 import modelarium.entities.Entity;
 import modelarium.entities.attributes.AttributeSet;
-import modelarium.entities.contexts.Context;
+import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
 
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public sealed abstract class MutableResultsForEntities<C extends Context, A extends AttributeSet<C>, L extends AttributeSetLog<C>>
+public sealed abstract class MutableResultsForEntities<C extends SimulationContext, A extends AttributeSet<C>, L extends AttributeSetLog<C>>
         permits MutableResultsForAgents, MutableResultsForEnvironment {
 
     private final List<EntityLog<C,A,L>> entityLogList = new ArrayList<>();

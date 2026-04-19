@@ -1,6 +1,6 @@
 package modelarium.multithreading;
 
-import modelarium.Clock;
+import modelarium.clock.SimulationClock;
 import modelarium.Config;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.MutableAgentSet;
@@ -38,7 +38,7 @@ public class WorkerThread implements Callable<MutableResults> {
     /** The original set of agents this worker is responsible for simulating */
     private final MutableAgentSet agentsInThread;
 
-    private final Clock sharedClock;
+    private final SimulationClock sharedClock;
 
     /** A duplicate of the agent set to allow for safe merging during synchronisation */
     private final MutableAgentSet updatedAgents;
@@ -56,7 +56,7 @@ public class WorkerThread implements Callable<MutableResults> {
                         RequestResponseController requestResponseController,
                         Environment environment,
                         MutableAgentSet agentsInThread,
-                        Clock sharedClock
+                        SimulationClock sharedClock
     ) {
         this.threadName = Objects.requireNonNull(threadName, "threadName");
         this.config = Objects.requireNonNull(config, "settings");
@@ -77,7 +77,7 @@ public class WorkerThread implements Callable<MutableResults> {
      */
     @Override
     public MutableResults call() throws InterruptedException {
-        Clock clock = Objects.requireNonNullElseGet(sharedClock, () -> new Clock(config.tickCount()));
+        SimulationClock clock = Objects.requireNonNullElseGet(sharedClock, () -> new SimulationClock(config.tickCount()));
         ContextCache cache = new ContextCache();
 
         for (Agent agent : agentsInThread) {

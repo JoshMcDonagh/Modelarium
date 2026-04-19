@@ -3,6 +3,7 @@ package modelarium.entities.contexts;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.environments.Environment;
+import modelarium.internal.Internal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class ContextCache {
     /**
      * Constructs a new worker cache.
      */
+    @Internal
     public ContextCache() {
         agentSetCache = new MutableAgentSet();
     }

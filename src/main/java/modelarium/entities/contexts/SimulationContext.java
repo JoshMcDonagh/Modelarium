@@ -1,6 +1,7 @@
 package modelarium.entities.contexts;
 
-import modelarium.Clock;
+import modelarium.clock.Clock;
+import modelarium.clock.SimulationClock;
 import modelarium.Config;
 import modelarium.entities.Entity;
 import modelarium.entities.agents.Agent;
@@ -13,6 +14,7 @@ import modelarium.exceptions.AgentNotFoundException;
 import modelarium.exceptions.CoordinatorErrorException;
 import modelarium.exceptions.CoordinatorTimeoutException;
 import modelarium.exceptions.SimulationInterruptedException;
+import modelarium.internal.Internal;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
 import java.util.function.Predicate;
@@ -30,23 +32,23 @@ import java.util.function.Predicate;
  *     <li>The associated model clock</li>
  * </ul>
  */
-public sealed abstract class Context permits AgentContext, EnvironmentContext {
+public sealed abstract class SimulationContext permits AgentSimulationContext, EnvironmentSimulationContext {
     private final Entity<?,?,?> entity;
     private final MutableAgentSet localAgentSet;
     private final Config config;
     private final ContextCache cache;
-    private final Clock clock;
+    private final SimulationClock clock;
     private final RequestResponseInterface requestResponseInterface;
 
     private AttributeSet<?> attributeSet = null;
     private Attribute<?> attribute = null;
 
-    public Context(
+    public SimulationContext(
             Entity<?,?,?> entity,
             MutableAgentSet localAgentSet,
             Config config,
             ContextCache cache,
-            Clock clock,
+            SimulationClock clock,
             RequestResponseInterface requestResponseInterface
     ) {
         this.entity = entity;
@@ -65,10 +67,12 @@ public sealed abstract class Context permits AgentContext, EnvironmentContext {
         return localAgentSet.doesAgentExist(agentName);
     }
 
+    @Internal
     public void setCurrentAttributeSet(AttributeSet<?> attributeSet) {
         this.attributeSet = attributeSet;
     }
 
+    @Internal
     public void setCurrentAttribute(Attribute<?> attribute) {
         this.attribute = attribute;
     }

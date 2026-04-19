@@ -4,7 +4,7 @@ import com.rits.cloning.Cloner;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeSet;
 import modelarium.entities.attributes.properties.Property;
-import modelarium.entities.contexts.Context;
+import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.logging.databases.AttributeSetLogDatabase;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 
@@ -20,7 +20,7 @@ import java.util.Map;
  * <p>This class is responsible for writing tick-level data to the backing database,
  * and for providing access to stored values after simulation.
  */
-public class AttributeSetLog<C extends Context> {
+public class AttributeSetLog<C extends SimulationContext> {
     private static final Cloner cloner = new Cloner();
 
     /** Name of the agent or environment this result set belongs to */
