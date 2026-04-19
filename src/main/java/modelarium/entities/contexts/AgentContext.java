@@ -7,6 +7,7 @@ import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.attributes.AgentAttributeSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.environments.Environment;
+import modelarium.exceptions.EnvironmentNotFoundException;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
 public class AgentContext extends Context {
@@ -54,7 +55,8 @@ public class AgentContext extends Context {
         try {
             requestedEnvironment = requestResponseInterface().getEnvironmentFromCoordinator(entity().name());
         } catch (Exception e) {
-            return null;
+            throw new EnvironmentNotFoundException("Environment requested by '" + entity().name()
+                    + "' could not be found");
         }
 
         // Cache the result
