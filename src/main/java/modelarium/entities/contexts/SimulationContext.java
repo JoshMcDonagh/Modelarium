@@ -164,8 +164,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
         }
 
         // Cache the result for future access
-        cache.addAgentFilter(filter);
-        cache.addAgents(filteredAgentSet);
+        cache.addFilteredAgents(filter, filteredAgentSet);
 
         return filteredAgentSet.getAsImmutable();
     }
