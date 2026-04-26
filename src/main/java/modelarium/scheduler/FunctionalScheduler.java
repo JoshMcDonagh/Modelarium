@@ -1,6 +1,6 @@
 package modelarium.scheduler;
 
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.AgentSet;
 
 import java.util.function.Consumer;
 

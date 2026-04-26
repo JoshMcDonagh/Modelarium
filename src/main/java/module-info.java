@@ -4,7 +4,6 @@ module modelarium {
     exports modelarium.clock;
     exports modelarium.entities;
     exports modelarium.entities.agents;
-    exports modelarium.entities.agents.sets;
     exports modelarium.entities.agents.generators;
     exports modelarium.entities.attributes;
     exports modelarium.entities.attributes.events;
@@ -15,6 +14,8 @@ module modelarium {
     exports modelarium.entities.attributes.routines.functional;
     exports modelarium.entities.contexts;
     exports modelarium.entities.environments;
+    exports modelarium.entities.immutable;
+    exports modelarium.entities.immutable.attributes;
     exports modelarium.entities.logging;
     exports modelarium.entities.logging.databases;
     exports modelarium.entities.logging.databases.factories;

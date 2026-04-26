@@ -1,13 +1,14 @@
 package modelarium.entities;
 
 import com.rits.cloning.Cloner;
-import modelarium.clock.SimulationClock;
 import modelarium.Config;
+import modelarium.clock.SimulationClock;
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.MutableAgentSet;
+import modelarium.entities.agents.AgentSet;
 import modelarium.entities.attributes.AttributeSet;
-import modelarium.entities.contexts.SimulationContext;
+import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.ContextCache;
+import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
@@ -19,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public sealed abstract class Entity<C extends SimulationContext, A extends AttributeSet<C>, L extends AttributeSetLog<C>>
+public sealed abstract class Entity<SC extends SimulationContext, C extends Context, AS extends AttributeSet<SC,C>, ASL extends AttributeSetLog<SC>>
         permits Agent, Environment {
     private static final Cloner cloner = new Cloner();
 
@@ -28,28 +29,28 @@ public sealed abstract class Entity<C extends SimulationContext, A extends Attri
     }
 
     private final String name;
-    private final List<A> attributeSetList;
+    private final List<AS> attributeSetList;
     private final Map<String, Integer> attributeSetIndexMap = new HashMap<>();
 
-    private C context = null;
+    private SC context = null;
 
-    protected Entity(String name, List<A> attributeSetList) {
+    protected Entity(String name, List<AS> attributeSetList) {
         this.name = name;
         this.attributeSetList = attributeSetList;
         for (int i = 0; i < this.attributeSetList.size(); i++) {
-            A attributeSet = this.attributeSetList.get(i);
+            AS attributeSet = this.attributeSetList.get(i);
             this.attributeSetIndexMap.put(attributeSet.name(), i);
         }
     }
 
     @Internal
     public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory databaseFactory) {
-        for (A attributeSet : attributeSetList)
+        for (AS attributeSet : attributeSetList)
             attributeSet.setLogDatabaseFactory(databaseFactory);
     }
 
-    protected abstract C makeContextInstance(
-            MutableAgentSet agentSet,
+    protected abstract SC makeContextInstance(
+            AgentSet agentSet,
             Config config,
             ContextCache contextCache,
             SimulationClock clock,
@@ -59,7 +60,7 @@ public sealed abstract class Entity<C extends SimulationContext, A extends Attri
 
     @Internal
     public void createContext(
-            MutableAgentSet agentSet,
+            AgentSet agentSet,
             Config config,
             ContextCache contextCache,
             SimulationClock clock,
@@ -78,11 +79,11 @@ public sealed abstract class Entity<C extends SimulationContext, A extends Attri
                 localEnvironment
         );
 
-        for (A attributeSet : attributeSetList)
+        for (AS attributeSet : attributeSetList)
             attributeSet.setContext(context);
     }
 
-    public C context() {
+    public SC context() {
         return context;
     }
 
@@ -97,28 +98,28 @@ public sealed abstract class Entity<C extends SimulationContext, A extends Attri
     public int attributeCount() {
         int count = 0;
 
-        for (A attributeSet : attributeSetList)
+        for (AS attributeSet : attributeSetList)
             count += attributeSet.size();
 
         return count;
     }
 
-    public A getAttributeSet(int attributeSetIndex) {
+    public AS getAttributeSet(int attributeSetIndex) {
         return attributeSetList.get(attributeSetIndex);
     }
 
-    public A getAttributeSet(String attributeSetName) {
+    public AS getAttributeSet(String attributeSetName) {
         return getAttributeSet(attributeSetIndexMap.get(attributeSetName));
     }
 
-    public EntityLog<C,A,L> getLog() {
-        return new EntityLog<C,A,L>(name, (List<A>) attributeSetList);
+    public EntityLog<SC, AS, ASL> getLog() {
+        return new EntityLog<SC, AS, ASL>(name, attributeSetList);
     }
 
     public void run() {
-        for (A attributeSet : attributeSetList)
+        for (AS attributeSet : attributeSetList)
             attributeSet.run();
     }
 
-    public abstract Entity<C,A,L> clone();
+    public abstract Entity<SC, C, AS, ASL> clone();
 }

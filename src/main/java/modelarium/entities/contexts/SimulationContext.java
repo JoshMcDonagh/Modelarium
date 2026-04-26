@@ -1,12 +1,12 @@
 package modelarium.entities.contexts;
 
+import modelarium.Config;
 import modelarium.clock.Clock;
 import modelarium.clock.SimulationClock;
-import modelarium.Config;
 import modelarium.entities.Entity;
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.ImmutableAgentSet;
-import modelarium.entities.agents.sets.MutableAgentSet;
+import modelarium.entities.immutable.ImmutableAgentSet;
+import modelarium.entities.agents.AgentSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeSet;
 import modelarium.entities.environments.Environment;
@@ -34,7 +34,7 @@ import java.util.function.Predicate;
  */
 public sealed abstract class SimulationContext implements Context permits AgentSimulationContext, EnvironmentSimulationContext {
     private final Entity<?,?,?> entity;
-    private final MutableAgentSet localAgentSet;
+    private final AgentSet localAgentSet;
     private final Config config;
     private final ContextCache cache;
     private final SimulationClock clock;
@@ -46,7 +46,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     @Internal
     public SimulationContext(
             Entity<?,?,?> entity,
-            MutableAgentSet localAgentSet,
+            AgentSet localAgentSet,
             Config config,
             ContextCache cache,
             SimulationClock clock,
@@ -143,7 +143,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
         if (cache.doesAgentFilterExist(filter))
             return cache.getFilteredAgents(filter).getAsImmutable();
 
-        MutableAgentSet filteredAgentSet;
+        AgentSet filteredAgentSet;
 
         if (config.areThreadsSynced()) {
             // Request filtered agents from the coordinator

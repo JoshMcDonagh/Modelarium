@@ -1,7 +1,7 @@
 package modelarium.scheduler;
 
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.AgentSet;
+import modelarium.entities.agents.AgentSet;
 
 /**
  * A scheduler that executes each agent in the order they appear in the agent set.

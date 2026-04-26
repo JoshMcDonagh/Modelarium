@@ -1,9 +1,9 @@
 package modelarium.entities.contexts;
 
-import modelarium.clock.SimulationClock;
 import modelarium.Config;
+import modelarium.clock.SimulationClock;
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.MutableAgentSet;
+import modelarium.entities.agents.AgentSet;
 import modelarium.entities.attributes.AgentAttributeSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.environments.Environment;
@@ -18,7 +18,7 @@ public final class AgentSimulationContext extends SimulationContext implements A
 
     public AgentSimulationContext(
             Agent entity,
-            MutableAgentSet localAgentSet,
+            AgentSet localAgentSet,
             Config config,
             ContextCache cache,
             SimulationClock clock,

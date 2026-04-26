@@ -2,7 +2,7 @@ package modelarium.entities.contexts;
 
 import modelarium.clock.Clock;
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.ImmutableAgentSet;
+import modelarium.entities.immutable.ImmutableAgentSet;
 
 import java.util.function.Predicate;
 

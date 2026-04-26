@@ -1,13 +1,13 @@
 package modelarium.entities.agents;
 
-import modelarium.clock.SimulationClock;
 import modelarium.Config;
+import modelarium.clock.SimulationClock;
 import modelarium.entities.Entity;
-import modelarium.entities.agents.sets.MutableAgentSet;
 import modelarium.entities.attributes.AgentAttributeSet;
 import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.routines.AgentRoutine;
+import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
@@ -16,14 +16,14 @@ import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
 import java.util.List;
 
-public final class Agent extends Entity<AgentSimulationContext, AgentAttributeSet, AttributeSetLog<AgentSimulationContext>> {
+public final class Agent extends Entity<AgentSimulationContext, AgentContext, AgentAttributeSet, AttributeSetLog<AgentSimulationContext>> {
     public Agent(String name, List<AgentAttributeSet> attributeSets) {
         super(name, attributeSets);
     }
 
     @Override
     protected AgentSimulationContext makeContextInstance(
-            MutableAgentSet agentSet,
+            AgentSet agentSet,
             Config config,
             ContextCache contextCache,
             SimulationClock clock,

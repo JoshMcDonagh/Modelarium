@@ -2,7 +2,7 @@ package modelarium.entities.agents.generators;
 
 import modelarium.Config;
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.MutableAgentSet;
+import modelarium.entities.agents.AgentSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +22,13 @@ import java.util.List;
 public abstract class AgentGenerator {
 
     /**
-     * Generates a complete {@link MutableAgentSet} based on the number of agents specified in the model settings.
+     * Generates a complete {@link AgentSet} based on the number of agents specified in the model settings.
      *
      * @param config the simulation configuration containing the agent count
-     * @return an {@link MutableAgentSet} containing all generated agents
+     * @return an {@link AgentSet} containing all generated agents
      */
-    public MutableAgentSet generateAgents(Config config) {
-        MutableAgentSet agents = new MutableAgentSet();
+    public AgentSet generateAgents(Config config) {
+        AgentSet agents = new AgentSet();
         int numOfAgents = config.populationSize();
 
         for (int i = 0; i < numOfAgents; i++)
@@ -42,10 +42,10 @@ public abstract class AgentGenerator {
      * This ensures an even workload split for multithreaded simulations.
      *
      * @param config the simulation settings containing agent and core counts
-     * @return a list of {@link MutableAgentSet} objects, one per core
+     * @return a list of {@link AgentSet} objects, one per core
      */
-    public List<MutableAgentSet> getAgentsForEachCore(Config config) {
-        MutableAgentSet agents = generateAgents(config);
+    public List<AgentSet> getAgentsForEachCore(Config config) {
+        AgentSet agents = generateAgents(config);
         int numOfCores = config.threadCount();
 
         // If no cores are defined, return an empty list
@@ -54,15 +54,15 @@ public abstract class AgentGenerator {
 
         // If only one core is used, assign all agents to it
         if (numOfCores == 1) {
-            List<MutableAgentSet> singleCoreList = new ArrayList<>();
+            List<AgentSet> singleCoreList = new ArrayList<>();
             singleCoreList.add(agents);
             return singleCoreList;
         }
 
         // Prepare empty agent sets for each core
-        List<MutableAgentSet> agentsForEachCore = new ArrayList<>();
+        List<AgentSet> agentsForEachCore = new ArrayList<>();
         for (int i = 0; i < numOfCores; i++)
-            agentsForEachCore.add(new MutableAgentSet());
+            agentsForEachCore.add(new AgentSet());
 
         // Distribute agents evenly across cores (round-robin)
         int core = 0;

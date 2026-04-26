@@ -1,8 +1,8 @@
 package modelarium.multithreading;
 
-import modelarium.clock.SimulationClock;
 import modelarium.Config;
-import modelarium.entities.agents.sets.MutableAgentSet;
+import modelarium.clock.SimulationClock;
+import modelarium.entities.agents.AgentSet;
 import modelarium.entities.environments.Environment;
 import modelarium.multithreading.requestresponse.*;
 
@@ -34,7 +34,7 @@ public class CoordinatorThread implements Runnable {
     private final SimulationClock sharedClock;
 
     /** Global agent set of the model */
-    private final MutableAgentSet predefinedGlobalAgentSet;
+    private final AgentSet predefinedGlobalAgentSet;
 
     private final Map<RequestType, CoordinatorRequestHandler> requestHandlerMap = new HashMap<>();
 
@@ -73,7 +73,7 @@ public class CoordinatorThread implements Runnable {
                              Environment environment,
                              RequestResponseController requestResponseController,
                              SimulationClock sharedClock,
-                             MutableAgentSet globalAgentSet
+                             AgentSet globalAgentSet
     ) {
         this.threadName = name;
         this.config = config;
@@ -92,9 +92,9 @@ public class CoordinatorThread implements Runnable {
     }
 
     private void initialiseHandlers() {
-        MutableAgentSet globalAgentSet;
+        AgentSet globalAgentSet;
 
-        globalAgentSet = Objects.requireNonNullElseGet(predefinedGlobalAgentSet, MutableAgentSet::new);
+        globalAgentSet = Objects.requireNonNullElseGet(predefinedGlobalAgentSet, AgentSet::new);
 
         requestHandlerMap.put(RequestType.ALL_WORKERS_FINISH_TICK,
                 new CoordinatorRequestHandler.AllWorkersFinishTick(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));

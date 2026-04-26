@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AttributeSet<SC extends SimulationContext, C extends Context> {
+public sealed abstract class AttributeSet<SC extends SimulationContext, C extends Context> permits AgentAttributeSet, EnvironmentAttributeSet {
     private final String ownerName;
     private final String name;
     private final List<Attribute<SC>> attributeList;
@@ -91,8 +91,8 @@ public abstract class AttributeSet<SC extends SimulationContext, C extends Conte
         return getEvent(attributeIndexMap.get(eventName));
     }
 
-    Routine<C> getRoutine(int processIndex) {
-        Attribute<C> attribute = get(processIndex);
+    Routine<C> getRoutine(int routineIndex) {
+        Attribute<C> attribute = get(routineIndex);
 
         if (attribute instanceof Routine<C> routine)
             return routine;
@@ -100,11 +100,11 @@ public abstract class AttributeSet<SC extends SimulationContext, C extends Conte
         throw new AttributeAccessException("Expected a Routine, but got: " + attribute.getClass().getName());
     }
 
-    Routine<C> getRoutine(String processName) {
-        return getRoutine(attributeIndexMap.get(processName));
+    Routine<C> getRoutine(String routineName) {
+        return getRoutine(attributeIndexMap.get(routineName));
     }
 
-    Property<?, C> getProperty(int propertyIndex) {
+    Property<?,C> getProperty(int propertyIndex) {
         Attribute<C> attribute = get(propertyIndex);
 
         if (attribute instanceof Property<?, C> property)
@@ -113,7 +113,7 @@ public abstract class AttributeSet<SC extends SimulationContext, C extends Conte
         throw new AttributeAccessException("Expected a Property, but got: " + attribute.getClass().getName());
     }
 
-    Property<?, C> getProperty(String propertyName) {
+    Property<?,C> getProperty(String propertyName) {
         return getProperty(attributeIndexMap.get(propertyName));
     }
 

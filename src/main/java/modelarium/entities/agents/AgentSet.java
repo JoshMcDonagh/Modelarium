@@ -1,6 +1,6 @@
-package modelarium.entities.agents.sets;
+package modelarium.entities.agents;
 
-import modelarium.entities.agents.Agent;
+import modelarium.entities.immutable.ImmutableAgentSet;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 import modelarium.exceptions.AgentNotFoundException;
 import modelarium.internal.Internal;
@@ -19,7 +19,7 @@ import java.util.function.Predicate;
  *
  * <p>This class is iterable and designed to support both sequential and parallel simulation use cases.
  */
-public final class MutableAgentSet implements AgentSet {
+public final class AgentSet implements Iterable<Agent> {
     /** Ordered list of agents in the set */
     private List<Agent> agentList = new ArrayList<>();
 
@@ -31,12 +31,12 @@ public final class MutableAgentSet implements AgentSet {
      *
      * @param agentsList list of agents to add
      */
-    public MutableAgentSet(List<Agent> agentsList) {
+    public AgentSet(List<Agent> agentsList) {
         add(agentsList);
     }
 
     /** Constructs an empty agent set without deep copying. */
-    public MutableAgentSet() {}
+    public AgentSet() {}
 
     @Internal
     public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory databaseFactory) {
@@ -74,12 +74,12 @@ public final class MutableAgentSet implements AgentSet {
     }
 
     /**
-     * Adds all agents from another {@link MutableAgentSet} that do not already exist in this set.
+     * Adds all agents from another {@link AgentSet} that do not already exist in this set.
      * Existing agents (by name) are not modified or replaced.
      *
      * @param agentSet the agent set to add from
      */
-    public void add(MutableAgentSet agentSet) {
+    public void add(AgentSet agentSet) {
         if (agentSet == null)
             throw new IllegalArgumentException("agentSet cannot be null");
 
@@ -95,7 +95,6 @@ public final class MutableAgentSet implements AgentSet {
      * @param agentName the agent's unique name
      * @return the agent instance
      */
-    @Override
     public Agent get(String agentName) {
         Integer index = agentIndexMap.get(agentName);
 
@@ -111,7 +110,6 @@ public final class MutableAgentSet implements AgentSet {
      * @param index the index of the agent
      * @return the agent at the given position
      */
-    @Override
     public Agent get(int index) {
         return agentList.get(index);
     }
@@ -121,7 +119,6 @@ public final class MutableAgentSet implements AgentSet {
      *
      * @return a list of agent instances
      */
-    @Override
     public List<Agent> getAsList() {
         return new ArrayList<>(agentList);
     }
@@ -131,12 +128,10 @@ public final class MutableAgentSet implements AgentSet {
      *
      * @return the size of the agent set
      */
-    @Override
     public int size() {
         return agentList.size();
     }
 
-    @Override
     public boolean isEmpty() {
         return agentList.isEmpty();
     }
@@ -155,7 +150,6 @@ public final class MutableAgentSet implements AgentSet {
      * @param agentName the name to check
      * @return true if the agent exists
      */
-    @Override
     public boolean doesAgentExist(String agentName) {
         return agentIndexMap.containsKey(agentName);
     }
@@ -166,7 +160,7 @@ public final class MutableAgentSet implements AgentSet {
      *
      * @param otherAgentSet the other agent set to pull from
      */
-    public void update(MutableAgentSet otherAgentSet) {
+    public void update(AgentSet otherAgentSet) {
         if (otherAgentSet == null)
             throw new IllegalArgumentException("otherAgentSet cannot be null");
 
@@ -182,8 +176,7 @@ public final class MutableAgentSet implements AgentSet {
      * @param agentFilter a predicate to apply to each agent
      * @return a new {@code AgentSet} containing only matching agents
      */
-    @Override
-    public MutableAgentSet getFilteredAgents(Predicate<Agent> agentFilter) {
+    public AgentSet getFilteredAgents(Predicate<Agent> agentFilter) {
         List<Agent> filteredAgents = new ArrayList<>();
 
         for (Agent agent : agentList) {
@@ -191,7 +184,7 @@ public final class MutableAgentSet implements AgentSet {
                 filteredAgents.add(agent);
         }
 
-        return new MutableAgentSet(filteredAgents);
+        return new AgentSet(filteredAgents);
     }
 
     /**
@@ -215,8 +208,8 @@ public final class MutableAgentSet implements AgentSet {
      *
      * @return a new {@code AgentSet} with the same agents
      */
-    public MutableAgentSet duplicate() {
-        return new MutableAgentSet(agentList);
+    public AgentSet duplicate() {
+        return new AgentSet(agentList);
     }
 
     /**

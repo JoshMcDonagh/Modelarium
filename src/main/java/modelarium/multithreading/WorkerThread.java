@@ -1,9 +1,9 @@
 package modelarium.multithreading;
 
-import modelarium.clock.SimulationClock;
 import modelarium.Config;
+import modelarium.clock.SimulationClock;
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.sets.MutableAgentSet;
+import modelarium.entities.agents.AgentSet;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseController;
@@ -18,7 +18,7 @@ import java.util.concurrent.Callable;
  * Represents a single worker thread responsible for simulating one subset of agents
  * across the configured number of ticks.
  *
- * <p>Each {@code WorkerThread} operates on its own {@link MutableAgentSet}, may use a local
+ * <p>Each {@code WorkerThread} operates on its own {@link AgentSet}, may use a local
  * {@link ContextCache} for caching, and optionally communicates with a coordinator via
  * {@link RequestResponseInterface} if synchronisation is enabled.
  */
@@ -36,12 +36,12 @@ public class WorkerThread implements Callable<MutableResults> {
     private final Environment environment;
 
     /** The original set of agents this worker is responsible for simulating */
-    private final MutableAgentSet agentsInThread;
+    private final AgentSet agentsInThread;
 
     private final SimulationClock sharedClock;
 
     /** A duplicate of the agent set to allow for safe merging during synchronisation */
-    private final MutableAgentSet updatedAgents;
+    private final AgentSet updatedAgents;
 
     /**
      * Constructs a new worker thread to simulate a subset of agents.
@@ -55,7 +55,7 @@ public class WorkerThread implements Callable<MutableResults> {
                         Config config,
                         RequestResponseController requestResponseController,
                         Environment environment,
-                        MutableAgentSet agentsInThread,
+                        AgentSet agentsInThread,
                         SimulationClock sharedClock
     ) {
         this.threadName = Objects.requireNonNull(threadName, "threadName");
