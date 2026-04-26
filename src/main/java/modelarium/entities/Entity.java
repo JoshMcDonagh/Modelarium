@@ -22,12 +22,6 @@ import java.util.Map;
 
 public sealed abstract class Entity<SC extends SimulationContext, C extends Context, AS extends AttributeSet<SC,C>, ASL extends AttributeSetLog<SC>>
         permits Agent, Environment {
-    private static final Cloner cloner = new Cloner();
-
-    protected static Cloner getCloner() {
-        return cloner;
-    }
-
     private final String name;
     private final List<AS> attributeSetList;
     private final Map<String, Integer> attributeSetIndexMap = new HashMap<>();
@@ -112,14 +106,12 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
         return getAttributeSet(attributeSetIndexMap.get(attributeSetName));
     }
 
-    public EntityLog<SC, AS, ASL> getLog() {
-        return new EntityLog<SC, AS, ASL>(name, attributeSetList);
+    public EntityLog<SC,C,AS,ASL> getLog() {
+        return new EntityLog<>(name, attributeSetList);
     }
 
     public void run() {
         for (AS attributeSet : attributeSetList)
             attributeSet.run();
     }
-
-    public abstract Entity<SC, C, AS, ASL> clone();
 }

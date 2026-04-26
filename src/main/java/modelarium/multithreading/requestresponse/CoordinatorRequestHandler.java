@@ -170,7 +170,7 @@ public abstract class CoordinatorRequestHandler {
                         + ") from requester: " + request.getRequester()
                 );
             }
-            getGlobalAgentSet().update((AgentSet) payload);
+            getGlobalAgentSet().update((AgentSet) payload, true);
         }
     }
 

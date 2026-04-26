@@ -7,6 +7,7 @@ import modelarium.entities.agents.AgentSet;
 import modelarium.entities.attributes.AgentAttributeSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.environments.Environment;
+import modelarium.entities.immutable.ImmutableEnvironment;
 import modelarium.exceptions.CoordinatorErrorException;
 import modelarium.exceptions.CoordinatorTimeoutException;
 import modelarium.exceptions.EnvironmentNotFoundException;
@@ -46,13 +47,13 @@ public final class AgentSimulationContext extends SimulationContext implements A
     }
 
     @Override
-    public Environment getEnvironment() {
+    public ImmutableEnvironment getEnvironment() {
         if (!config().areThreadsSynced())
-            return localEnvironment;
+            return new ImmutableEnvironment(localEnvironment);
 
         // Return cached environment if available
         if (cache().doesEnvironmentExist())
-            return cache().getEnvironment();
+            return new ImmutableEnvironment(cache().getEnvironment());
 
         // Request environment from coordinator
         Environment requestedEnvironment;
@@ -70,6 +71,6 @@ public final class AgentSimulationContext extends SimulationContext implements A
         // Cache the result
         cache().addEnvironment(requestedEnvironment);
 
-        return requestedEnvironment;
+        return new ImmutableEnvironment(requestedEnvironment);
     }
 }

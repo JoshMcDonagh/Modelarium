@@ -1,5 +1,6 @@
 package modelarium.entities.agents;
 
+import com.rits.cloning.Cloner;
 import modelarium.entities.immutable.ImmutableAgentSet;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 import modelarium.exceptions.AgentNotFoundException;
@@ -20,6 +21,8 @@ import java.util.function.Predicate;
  * <p>This class is iterable and designed to support both sequential and parallel simulation use cases.
  */
 public final class AgentSet implements Iterable<Agent> {
+    private static final Cloner cloner = new Cloner();
+
     /** Ordered list of agents in the set */
     private List<Agent> agentList = new ArrayList<>();
 
@@ -54,13 +57,15 @@ public final class AgentSet implements Iterable<Agent> {
 
         if (doesAgentExist(agent.name())) {
             index = agentIndexMap.get(agent.name());
-        } else {
-            index = agentList.size();
-            agentIndexMap.put(agent.name(), index);
-            agentList.add(agent); // Ensure list is long enough before setting
+            agentList.set(index, agent);
+            return;
         }
 
-        agentList.set(index, agent.clone());
+        index = agentList.size();
+        agentIndexMap.put(agent.name(), index);
+        agentList.add(agent);
+
+        agentList.set(index, agent);
     }
 
     /**
@@ -80,6 +85,37 @@ public final class AgentSet implements Iterable<Agent> {
      * @param agentSet the agent set to add from
      */
     public void add(AgentSet agentSet) {
+        if (agentSet == null)
+            throw new IllegalArgumentException("agentSet cannot be null");
+
+        for (Agent agent : agentSet) {
+            if (!doesAgentExist(agent.name()))
+                add(agent);
+        }
+    }
+
+    public void addDeepCopy(Agent agent) {
+        int index;
+
+        if (doesAgentExist(agent.name())) {
+            index = agentIndexMap.get(agent.name());
+            agentList.set(index, agent);
+            return;
+        }
+
+        index = agentList.size();
+        agentIndexMap.put(agent.name(), index);
+        agentList.add(agent);
+
+        agentList.set(index, cloner.deepClone(agent));
+    }
+
+    public void addDeepCopy(List<Agent> agents) {
+        for (Agent agent : agents)
+            add(agent);
+    }
+
+    public void addDeepCopy(AgentSet agentSet) {
         if (agentSet == null)
             throw new IllegalArgumentException("agentSet cannot be null");
 
@@ -160,13 +196,16 @@ public final class AgentSet implements Iterable<Agent> {
      *
      * @param otherAgentSet the other agent set to pull from
      */
-    public void update(AgentSet otherAgentSet) {
+    public void update(AgentSet otherAgentSet, boolean areDeepCopied) {
         if (otherAgentSet == null)
             throw new IllegalArgumentException("otherAgentSet cannot be null");
 
         for (int i = 0; i < otherAgentSet.size(); i++) {
             Agent agent = otherAgentSet.get(i);
-            add(agent);
+            if (areDeepCopied)
+                addDeepCopy(agent);
+            else
+                add(agent);
         }
     }
 

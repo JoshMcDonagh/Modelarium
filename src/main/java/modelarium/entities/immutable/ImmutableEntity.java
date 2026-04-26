@@ -35,7 +35,7 @@ public sealed abstract class ImmutableEntity<SC extends SimulationContext, C ext
 
     public abstract ImmutableAttributeSet<SC,C> getAttributeSet(String attributeSetName);
 
-    public EntityLog<SC, AS, ASL> getLog() {
+    public EntityLog<SC,C,AS,ASL> getLog() {
         return entity.getLog();
     }
 }

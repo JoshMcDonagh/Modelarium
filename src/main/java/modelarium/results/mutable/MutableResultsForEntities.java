@@ -2,6 +2,7 @@ package modelarium.results.mutable;
 
 import modelarium.entities.Entity;
 import modelarium.entities.attributes.AttributeSet;
+import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
@@ -11,26 +12,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public sealed abstract class MutableResultsForEntities<C extends SimulationContext, A extends AttributeSet<C>, L extends AttributeSetLog<C>>
+public sealed abstract class MutableResultsForEntities<SC extends SimulationContext, C extends Context, AS extends AttributeSet<SC,C>, ASL extends AttributeSetLog<SC>>
         permits MutableResultsForAgents, MutableResultsForEnvironment {
 
-    private final List<EntityLog<C,A,L>> entityLogList = new ArrayList<>();
+    private final List<EntityLog<SC,C,AS,ASL>> entityLogList = new ArrayList<>();
     private final Map<String, Integer> entityLogIndexMap = new HashMap<>();
 
-    MutableResultsForEntities(List<? extends Entity<C,A,L>> entities) {
+    MutableResultsForEntities(List<? extends Entity<SC,C,AS,ASL>> entities) {
         for (int i = 0; i < entities.size(); i++) {
-            Entity<C,A,L> entity = entities.get(i);
+            Entity<SC,C,AS,ASL> entity = entities.get(i);
             entityLogList.add(entity.getLog());
             entityLogIndexMap.put(entity.name(), i);
         }
     }
 
-    MutableResultsForEntities(Entity<C,A,L> entity) {
+    MutableResultsForEntities(Entity<SC,C,AS,ASL> entity) {
         entityLogList.add(entity.getLog());
         entityLogIndexMap.put(entity.name(), 0);
     }
 
-    public void mergeWith(MutableResultsForEntities<C,A,L> other) {
+    public void mergeWith(MutableResultsForEntities<SC,C,AS,ASL> other) {
         int originalLogListSize = entityLogList.size();
         entityLogList.addAll(other.entityLogList);
         for (Map.Entry<String, Integer> otherIndexMapEntry : other.entityLogIndexMap.entrySet()) {
@@ -41,7 +42,7 @@ public sealed abstract class MutableResultsForEntities<C extends SimulationConte
         }
     }
 
-    private EntityLog<C,A,L> getEntityLog(String entityName) {
+    private EntityLog<SC,C,AS,ASL> getEntityLog(String entityName) {
         return entityLogList.get(entityLogIndexMap.get(entityName));
     }
 
@@ -62,7 +63,7 @@ public sealed abstract class MutableResultsForEntities<C extends SimulationConte
     }
 
     protected Map<String, List<Object>> getLogsForEntityAttributeSetAsMap(String entityName, String attributeSetName) {
-        L attributeSetLog = getEntityLog(entityName).get(attributeSetName);
+        ASL attributeSetLog = getEntityLog(entityName).get(attributeSetName);
         List<String> attributeNamesList = attributeSetLog.getAttributeNamesList();
         Map<String, List<Object>> logsForEntityAttributeSet = new HashMap<>();
 
@@ -73,11 +74,11 @@ public sealed abstract class MutableResultsForEntities<C extends SimulationConte
     }
 
     protected Map<String, Map<String, List<Object>>> getLogsForEntityAsMap(String entityName) {
-        EntityLog<C,A,L> entityLog = getEntityLog(entityName);
+        EntityLog<SC,C,AS,ASL> entityLog = getEntityLog(entityName);
         Map<String, Map<String, List<Object>>> logsForEntity = new HashMap<>();
 
         for (int i = 0; i < entityLog.attributeSetLogCount(); i++) {
-            L attributeSetLog = entityLog.get(i);
+            ASL attributeSetLog = entityLog.get(i);
             String attributeSetName = attributeSetLog.getAttributeSetName();
             logsForEntity.put(attributeSetName, getLogsForEntityAttributeSetAsMap(entityName, attributeSetName));
         }
@@ -87,7 +88,7 @@ public sealed abstract class MutableResultsForEntities<C extends SimulationConte
 
     protected Map<String, Map<String, Map<String, List<Object>>>> allLogs() {
         Map<String, Map<String, Map<String, List<Object>>>> allLogs = new HashMap<>();
-        for (EntityLog<C,A,L> entityLog : entityLogList) {
+        for (EntityLog<SC,C,AS,ASL> entityLog : entityLogList) {
             String entityName = entityLog.getEntityName();
             allLogs.put(entityName, getLogsForEntityAsMap(entityName));
         }
@@ -95,7 +96,7 @@ public sealed abstract class MutableResultsForEntities<C extends SimulationConte
     }
 
     public void disconnectDatabases() {
-        for (EntityLog<C,A,L> entityLog : entityLogList)
+        for (EntityLog<SC,C,AS,ASL> entityLog : entityLogList)
             entityLog.disconnectDatabases();
 
         entityLogList.clear();

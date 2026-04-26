@@ -40,11 +40,6 @@ public final class Environment extends Entity<EnvironmentSimulationContext, Envi
         );
     }
 
-    @Override
-    public Environment clone() {
-        return getCloner().deepClone(this);
-    }
-
     public EnvironmentEvent getEvent(String attributeSetName, String eventName) {
         return getAttributeSet(attributeSetName).getEvent(eventName);
     }

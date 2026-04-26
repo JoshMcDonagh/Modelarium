@@ -6,6 +6,7 @@ import modelarium.entities.agents.AgentSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.EnvironmentAttributeSet;
 import modelarium.entities.environments.Environment;
+import modelarium.entities.immutable.ImmutableEnvironment;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
 public final class EnvironmentSimulationContext extends SimulationContext implements EnvironmentContext {
@@ -36,7 +37,7 @@ public final class EnvironmentSimulationContext extends SimulationContext implem
     }
 
     @Override
-    public Environment getEnvironment() {
+    public ImmutableEnvironment getEnvironment() {
         throw new UnsupportedOperationException("Context requester is already an Environment - use 'getThisEntity()' instead");
     }
 }

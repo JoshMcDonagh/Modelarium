@@ -41,11 +41,6 @@ public final class Agent extends Entity<AgentSimulationContext, AgentContext, Ag
         );
     }
 
-    @Override
-    public Agent clone() {
-        return getCloner().deepClone(this);
-    }
-
     public AgentEvent getEvent(String attributeSetName, String eventName) {
         return getAttributeSet(attributeSetName).getEvent(eventName);
     }

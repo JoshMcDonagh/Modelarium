@@ -5,11 +5,12 @@ import modelarium.clock.Clock;
 import modelarium.clock.SimulationClock;
 import modelarium.entities.Entity;
 import modelarium.entities.agents.Agent;
+import modelarium.entities.immutable.ImmutableAgent;
 import modelarium.entities.immutable.ImmutableAgentSet;
 import modelarium.entities.agents.AgentSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeSet;
-import modelarium.entities.environments.Environment;
+import modelarium.entities.immutable.ImmutableEnvironment;
 import modelarium.exceptions.AgentNotFoundException;
 import modelarium.exceptions.CoordinatorErrorException;
 import modelarium.exceptions.CoordinatorTimeoutException;
@@ -33,19 +34,19 @@ import java.util.function.Predicate;
  * </ul>
  */
 public sealed abstract class SimulationContext implements Context permits AgentSimulationContext, EnvironmentSimulationContext {
-    private final Entity<?,?,?> entity;
+    private final Entity<?,?,?,?> entity;
     private final AgentSet localAgentSet;
     private final Config config;
     private final ContextCache cache;
     private final SimulationClock clock;
     private final RequestResponseInterface requestResponseInterface;
 
-    private AttributeSet<?> attributeSet = null;
+    private AttributeSet<?,?> attributeSet = null;
     private Attribute<?> attribute = null;
 
     @Internal
     public SimulationContext(
-            Entity<?,?,?> entity,
+            Entity<?,?,?,?> entity,
             AgentSet localAgentSet,
             Config config,
             ContextCache cache,
@@ -69,7 +70,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     }
 
     @Internal
-    public void setCurrentAttributeSet(AttributeSet<?> attributeSet) {
+    public void setCurrentAttributeSet(AttributeSet<?,?> attributeSet) {
         this.attributeSet = attributeSet;
     }
 
@@ -78,11 +79,11 @@ public sealed abstract class SimulationContext implements Context permits AgentS
         this.attribute = attribute;
     }
 
-    protected Entity<?,?,?> entity() {
+    protected Entity<?,?,?,?> entity() {
         return entity;
     }
 
-    protected AttributeSet<?> attributeSet() {
+    protected AttributeSet<?,?> attributeSet() {
         return attributeSet;
     }
 
@@ -102,22 +103,22 @@ public sealed abstract class SimulationContext implements Context permits AgentS
         return requestResponseInterface;
     }
 
-    public abstract Entity<?,?,?> getThisEntity();
+    public abstract Entity<?,?,?,?> getThisEntity();
 
-    public abstract AttributeSet<?> getThisAttributeSet();
+    public abstract AttributeSet<?,?> getThisAttributeSet();
 
     public abstract Attribute<?> getThisAttribute();
 
-    public abstract Environment getEnvironment();
+    public abstract ImmutableEnvironment getEnvironment();
 
-    public Agent getAgent(String targetAgentName) {
+    public ImmutableAgent getAgent(String targetAgentName) {
         // Check local agent set
         if (doesAgentExistInThisCore(targetAgentName))
-            return localAgentSet.get(targetAgentName);
+            return new ImmutableAgent(localAgentSet.get(targetAgentName));
 
         // Check cache if enabled
         if (cache.doesAgentExist(targetAgentName))
-            return cache.getAgent(targetAgentName);
+            return new ImmutableAgent(cache.getAgent(targetAgentName));
 
         // If not synchronised, cannot retrieve further
         if (!config.areThreadsSynced())
@@ -128,7 +129,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
         try {
             Agent requestedAgent = requestResponseInterface.getAgentFromCoordinator(entity.name(), targetAgentName);
             cache.addAgent(requestedAgent);
-            return requestedAgent;
+            return new ImmutableAgent(requestedAgent);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new SimulationInterruptedException("Interrupted while fetching agent '" + targetAgentName + "'", e);
