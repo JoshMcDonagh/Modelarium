@@ -5,6 +5,7 @@ import modelarium.clock.Clock;
 import modelarium.clock.SimulationClock;
 import modelarium.entities.Entity;
 import modelarium.entities.agents.Agent;
+import modelarium.entities.environments.Environment;
 import modelarium.entities.immutable.ImmutableAgent;
 import modelarium.entities.immutable.ImmutableAgentSet;
 import modelarium.entities.agents.AgentSet;
@@ -16,8 +17,10 @@ import modelarium.exceptions.CoordinatorErrorException;
 import modelarium.exceptions.CoordinatorTimeoutException;
 import modelarium.exceptions.SimulationInterruptedException;
 import modelarium.internal.Internal;
+import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -39,7 +42,9 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     private final Config config;
     private final ContextCache cache;
     private final SimulationClock clock;
+    private final RequestResponseController requestResponseController;
     private final RequestResponseInterface requestResponseInterface;
+    private final Environment localEnvironment;
 
     private AttributeSet<?,?> attributeSet = null;
     private Attribute<?> attribute = null;
@@ -51,14 +56,17 @@ public sealed abstract class SimulationContext implements Context permits AgentS
             Config config,
             ContextCache cache,
             SimulationClock clock,
-            RequestResponseInterface requestResponseInterface
+            RequestResponseController requestResponseController,
+            Environment localEnvironment
     ) {
         this.entity = entity;
         this.localAgentSet = localAgentSet;
         this.config = config;
         this.cache = cache;
         this.clock = clock;
-        this.requestResponseInterface = requestResponseInterface;
+        this.requestResponseController = requestResponseController;
+        this.requestResponseInterface = requestResponseController.getInterface(entity().name());
+        this.localEnvironment = localEnvironment;
     }
 
     public Clock getClock() {
@@ -110,6 +118,27 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     public abstract Attribute<?> getThisAttribute();
 
     public abstract ImmutableEnvironment getEnvironment();
+
+    public void addAgent(Agent agent) {
+        agent.createContext(
+                localAgentSet,
+                config,
+                cache,
+                clock,
+                requestResponseController,
+                localEnvironment
+        );
+
+        localAgentSet.add(agent);
+    }
+
+    public void addAgent(AgentSet agentSet) {
+        localAgentSet.add(agentSet);
+    }
+
+    public void addAgent(List<Agent> agentList) {
+        localAgentSet.add(agentList);
+    }
 
     public ImmutableAgent getAgent(String targetAgentName) {
         // Check local agent set

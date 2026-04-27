@@ -1,5 +1,6 @@
 package modelarium.multithreading;
 
+import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.clock.SimulationClock;
 import modelarium.entities.agents.Agent;
@@ -77,6 +78,8 @@ public class WorkerThread implements Callable<MutableResults> {
      */
     @Override
     public MutableResults call() throws InterruptedException {
+        Cloner cloner = new Cloner();
+
         SimulationClock clock = Objects.requireNonNullElseGet(sharedClock, () -> new SimulationClock(config.tickCount()));
         ContextCache cache = new ContextCache();
 
@@ -84,14 +87,14 @@ public class WorkerThread implements Callable<MutableResults> {
             Environment localEnvironment = null;
 
             if (config.areThreadsSynced())
-                localEnvironment = environment.clone();
+                localEnvironment = cloner.deepClone(environment);
 
             agent.createContext(
                     agentsInThread,
                     config,
                     cache,
                     clock,
-                    requestResponseController.getInterface(agent.name()),
+                    requestResponseController,
                     localEnvironment
             );
         }

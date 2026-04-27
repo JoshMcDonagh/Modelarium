@@ -6,12 +6,12 @@ import modelarium.entities.agents.Agent;
 import java.util.function.Function;
 
 /**
- * An implementation of {@link AgentGenerator} that delegates agent creation logic
+ * An implementation of {@link DefaultAgentGenerator} that delegates agent creation logic
  * to a user-defined functional interface.
  *
  * <p>Intended for flexibility and cross-language use (e.g. from Python).</p>
  */
-public class FunctionalAgentGenerator extends AgentGenerator {
+public class FunctionalDefaultAgentGenerator extends DefaultAgentGenerator {
 
     private final Function<Config, Agent> generatorFunction;
 
@@ -20,7 +20,7 @@ public class FunctionalAgentGenerator extends AgentGenerator {
      *
      * @param generatorFunction the function used to generate each agent
      */
-    public FunctionalAgentGenerator(Function<Config, Agent> generatorFunction) {
+    public FunctionalDefaultAgentGenerator(Function<Config, Agent> generatorFunction) {
         this.generatorFunction = generatorFunction;
     }
 

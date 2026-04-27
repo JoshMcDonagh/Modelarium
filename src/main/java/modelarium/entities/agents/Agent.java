@@ -12,7 +12,7 @@ import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.logging.AttributeSetLog;
-import modelarium.multithreading.requestresponse.RequestResponseInterface;
+import modelarium.multithreading.requestresponse.RequestResponseController;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public final class Agent extends Entity<AgentSimulationContext, AgentContext, Ag
             Config config,
             ContextCache contextCache,
             SimulationClock clock,
-            RequestResponseInterface requestResponseInterface,
+            RequestResponseController requestResponseController,
             Environment localEnvironment
     ) {
         return new AgentSimulationContext(
@@ -36,7 +36,7 @@ public final class Agent extends Entity<AgentSimulationContext, AgentContext, Ag
                 config,
                 contextCache,
                 clock,
-                requestResponseInterface,
+                requestResponseController,
                 localEnvironment
         );
     }

@@ -12,7 +12,7 @@ import modelarium.exceptions.CoordinatorErrorException;
 import modelarium.exceptions.CoordinatorTimeoutException;
 import modelarium.exceptions.EnvironmentNotFoundException;
 import modelarium.exceptions.SimulationInterruptedException;
-import modelarium.multithreading.requestresponse.RequestResponseInterface;
+import modelarium.multithreading.requestresponse.RequestResponseController;
 
 public final class AgentSimulationContext extends SimulationContext implements AgentContext {
     private final Environment localEnvironment;
@@ -23,10 +23,10 @@ public final class AgentSimulationContext extends SimulationContext implements A
             Config config,
             ContextCache cache,
             SimulationClock clock,
-            RequestResponseInterface requestResponseInterface,
+            RequestResponseController requestResponseController,
             Environment localEnvironment
     ) {
-        super(entity, localAgentSet, config, cache, clock, requestResponseInterface);
+        super(entity, localAgentSet, config, cache, clock, requestResponseController, localEnvironment);
         this.localEnvironment = localEnvironment;
     }
 

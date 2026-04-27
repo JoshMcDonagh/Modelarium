@@ -7,7 +7,7 @@ import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.EnvironmentAttributeSet;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.immutable.ImmutableEnvironment;
-import modelarium.multithreading.requestresponse.RequestResponseInterface;
+import modelarium.multithreading.requestresponse.RequestResponseController;
 
 public final class EnvironmentSimulationContext extends SimulationContext implements EnvironmentContext {
     public EnvironmentSimulationContext(
@@ -16,9 +16,10 @@ public final class EnvironmentSimulationContext extends SimulationContext implem
             Config config,
             ContextCache cache,
             SimulationClock clock,
-            RequestResponseInterface requestResponseInterface
+            RequestResponseController requestResponseController,
+            Environment localEnvironment
     ) {
-        super(entity, localAgentSet, config, cache, clock, requestResponseInterface);
+        super(entity, localAgentSet, config, cache, clock, requestResponseController, localEnvironment);
     }
 
     @Override

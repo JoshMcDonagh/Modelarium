@@ -83,7 +83,7 @@ public class Model {
                 config,
                 new ContextCache(),
                 clock,
-                new RequestResponseInterface(environment.name(), config, requestResponseController),
+                requestResponseController,
                 null
         );
     }

@@ -47,25 +47,33 @@ public final class AgentSet implements Iterable<Agent> {
             agent.setLogDatabaseFactory(databaseFactory);
     }
 
+    private void addExistingAgent(Agent agent, boolean isDeepCopied) {
+        int index = agentIndexMap.get(agent.name());
+        if (isDeepCopied)
+            agentList.set(index, cloner.deepClone(agent));
+        else
+            agentList.set(index, agent);
+    }
+
+    private void addNewAgent(Agent agent, boolean isDeepCopied) {
+        int index = agentList.size();
+        agentIndexMap.put(agent.name(), index);
+        if (isDeepCopied)
+            agentList.add(cloner.deepClone(agent));
+        else
+            agentList.add(agent);
+    }
+
     /**
      * Adds an agent to the set. If the agent already exists, it will be replaced.
      *
      * @param agent the agent to add
      */
     public void add(Agent agent) {
-        int index;
-
-        if (doesAgentExist(agent.name())) {
-            index = agentIndexMap.get(agent.name());
-            agentList.set(index, agent);
-            return;
-        }
-
-        index = agentList.size();
-        agentIndexMap.put(agent.name(), index);
-        agentList.add(agent);
-
-        agentList.set(index, agent);
+        if (doesAgentExist(agent.name()))
+            addExistingAgent(agent, false);
+        else
+            addNewAgent(agent, false);
     }
 
     /**
@@ -95,24 +103,15 @@ public final class AgentSet implements Iterable<Agent> {
     }
 
     public void addDeepCopy(Agent agent) {
-        int index;
-
-        if (doesAgentExist(agent.name())) {
-            index = agentIndexMap.get(agent.name());
-            agentList.set(index, agent);
-            return;
-        }
-
-        index = agentList.size();
-        agentIndexMap.put(agent.name(), index);
-        agentList.add(agent);
-
-        agentList.set(index, cloner.deepClone(agent));
+        if (doesAgentExist(agent.name()))
+            addExistingAgent(agent, true);
+        else
+            addNewAgent(agent, true);
     }
 
     public void addDeepCopy(List<Agent> agents) {
         for (Agent agent : agents)
-            add(agent);
+            addDeepCopy(agent);
     }
 
     public void addDeepCopy(AgentSet agentSet) {
@@ -121,7 +120,7 @@ public final class AgentSet implements Iterable<Agent> {
 
         for (Agent agent : agentSet) {
             if (!doesAgentExist(agent.name()))
-                add(agent);
+                addDeepCopy(agent);
         }
     }
 

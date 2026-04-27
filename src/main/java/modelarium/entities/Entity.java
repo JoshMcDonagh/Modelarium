@@ -1,6 +1,5 @@
 package modelarium.entities;
 
-import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.clock.SimulationClock;
 import modelarium.entities.agents.Agent;
@@ -14,7 +13,7 @@ import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 import modelarium.internal.Internal;
-import modelarium.multithreading.requestresponse.RequestResponseInterface;
+import modelarium.multithreading.requestresponse.RequestResponseController;
 
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +47,7 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
             Config config,
             ContextCache contextCache,
             SimulationClock clock,
-            RequestResponseInterface requestResponseInterface,
+            RequestResponseController requestResponseController,
             Environment localEnvironment
     );
 
@@ -58,7 +57,7 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
             Config config,
             ContextCache contextCache,
             SimulationClock clock,
-            RequestResponseInterface requestResponseInterface,
+            RequestResponseController requestResponseController,
             Environment localEnvironment
     ) {
         if (context != null)
@@ -69,7 +68,7 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
                 config,
                 contextCache,
                 clock,
-                requestResponseInterface,
+                requestResponseController,
                 localEnvironment
         );
 

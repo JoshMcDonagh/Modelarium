@@ -193,7 +193,11 @@ public abstract class CoordinatorRequestHandler {
             }
             Predicate<Agent> filter = (Predicate<Agent>) payload;
             AgentSet filtered = getGlobalAgentSet().getFilteredAgents(filter);
-            getResponseQueue(request.getRequester()).put(new Response(getThreadName(), request.getRequester(), ResponseType.FILTERED_AGENTS_ACCESS, filtered));
+            getResponseQueue(request.getRequester()).put(new Response(
+                    getThreadName(),
+                    request.getRequester(),
+                    ResponseType.FILTERED_AGENTS_ACCESS,
+                    filtered));
         }
     }
 
@@ -207,7 +211,11 @@ public abstract class CoordinatorRequestHandler {
 
         @Override
         public void handleRequest(Request request) throws InterruptedException {
-            getResponseQueue(request.getRequester()).put(new Response(getThreadName(), request.getRequester(), ResponseType.ENVIRONMENT_ATTRIBUTES_ACCESS, getEnvironment()));
+            getResponseQueue(request.getRequester()).put(new Response(
+                    getThreadName(),
+                    request.getRequester(),
+                    ResponseType.ENVIRONMENT_ATTRIBUTES_ACCESS,
+                    getEnvironment()));
         }
     }
 }
