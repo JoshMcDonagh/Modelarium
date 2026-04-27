@@ -1,5 +1,6 @@
 package modelarium.entities.contexts;
 
+import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.clock.Clock;
 import modelarium.clock.SimulationClock;
@@ -37,6 +38,8 @@ import java.util.function.Predicate;
  * </ul>
  */
 public sealed abstract class SimulationContext implements Context permits AgentSimulationContext, EnvironmentSimulationContext {
+    private static final Cloner cloner = new Cloner();
+
     private final Entity<?,?,?,?> entity;
     private final AgentSet localAgentSet;
     private final Config config;
@@ -119,7 +122,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
 
     public abstract ImmutableEnvironment getEnvironment();
 
-    public void addAgent(Agent agent) {
+    private void createAgentContext(Agent agent) {
         agent.createContext(
                 localAgentSet,
                 config,
@@ -128,16 +131,43 @@ public sealed abstract class SimulationContext implements Context permits AgentS
                 requestResponseController,
                 localEnvironment
         );
+    }
 
+    private void createAgentContexts(AgentSet agentSet) {
+        for (Agent agent : agentSet)
+            createAgentContext(agent);
+    }
+
+    private void createAgentContexts(List<Agent> agentList) {
+        for (Agent agent : agentList)
+            createAgentContext(agent);
+    }
+
+    public void addAgent(Agent agent) {
+        createAgentContext(agent);
         localAgentSet.add(agent);
     }
 
-    public void addAgent(AgentSet agentSet) {
+    public void addAgents(AgentSet agentSet) {
+        createAgentContexts(agentSet);
         localAgentSet.add(agentSet);
     }
 
-    public void addAgent(List<Agent> agentList) {
+    public void addAgents(List<Agent> agentList) {
+        createAgentContexts(agentList);
         localAgentSet.add(agentList);
+    }
+
+    public void addAgentDeepCopy(Agent agent) {
+        addAgent(cloner.deepClone(agent));
+    }
+
+    public void addAgentsDeepCopy(AgentSet agentSet) {
+        addAgents(cloner.deepClone(agentSet));
+    }
+
+    public void addAgentsDeepCopy(List<Agent> agentList) {
+        addAgents(cloner.deepClone(agentList));
     }
 
     public ImmutableAgent getAgent(String targetAgentName) {
