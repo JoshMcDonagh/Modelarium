@@ -3,7 +3,7 @@ package modelarium.entities.contexts;
 import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.clock.Clock;
-import modelarium.clock.SimulationClock;
+import modelarium.clock.MutableClock;
 import modelarium.entities.Entity;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.environments.Environment;
@@ -44,7 +44,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     private final AgentSet localAgentSet;
     private final Config config;
     private final ContextCache cache;
-    private final SimulationClock clock;
+    private final MutableClock clock;
     private final RequestResponseController requestResponseController;
     private final RequestResponseInterface requestResponseInterface;
     private final Environment localEnvironment;
@@ -58,7 +58,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
             AgentSet localAgentSet,
             Config config,
             ContextCache cache,
-            SimulationClock clock,
+            MutableClock clock,
             RequestResponseController requestResponseController,
             Environment localEnvironment
     ) {

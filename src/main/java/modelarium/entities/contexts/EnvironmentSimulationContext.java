@@ -1,7 +1,7 @@
 package modelarium.entities.contexts;
 
 import modelarium.Config;
-import modelarium.clock.SimulationClock;
+import modelarium.clock.MutableClock;
 import modelarium.entities.agents.AgentSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.EnvironmentAttributeSet;
@@ -15,7 +15,7 @@ public final class EnvironmentSimulationContext extends SimulationContext implem
             AgentSet localAgentSet,
             Config config,
             ContextCache cache,
-            SimulationClock clock,
+            MutableClock clock,
             RequestResponseController requestResponseController,
             Environment localEnvironment
     ) {

@@ -1,7 +1,7 @@
 package modelarium.entities;
 
 import modelarium.Config;
-import modelarium.clock.SimulationClock;
+import modelarium.clock.MutableClock;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.AgentSet;
 import modelarium.entities.attributes.AttributeSet;
@@ -46,7 +46,7 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
             AgentSet agentSet,
             Config config,
             ContextCache contextCache,
-            SimulationClock clock,
+            MutableClock clock,
             RequestResponseController requestResponseController,
             Environment localEnvironment
     );
@@ -56,7 +56,7 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
             AgentSet agentSet,
             Config config,
             ContextCache contextCache,
-            SimulationClock clock,
+            MutableClock clock,
             RequestResponseController requestResponseController,
             Environment localEnvironment
     ) {

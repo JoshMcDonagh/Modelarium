@@ -2,11 +2,13 @@ package modelarium.multithreading;
 
 import com.rits.cloning.Cloner;
 import modelarium.Config;
-import modelarium.clock.SimulationClock;
+import modelarium.clock.ImmutableClock;
+import modelarium.clock.MutableClock;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.AgentSet;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
+import modelarium.entities.immutable.ImmutableEnvironment;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 import modelarium.results.mutable.MutableResults;
@@ -39,7 +41,7 @@ public class WorkerThread implements Callable<MutableResults> {
     /** The original set of agents this worker is responsible for simulating */
     private final AgentSet agentsInThread;
 
-    private final SimulationClock sharedClock;
+    private final MutableClock sharedClock;
 
     /** A duplicate of the agent set to allow for safe merging during synchronisation */
     private final AgentSet updatedAgents;
@@ -57,7 +59,7 @@ public class WorkerThread implements Callable<MutableResults> {
                         RequestResponseController requestResponseController,
                         Environment environment,
                         AgentSet agentsInThread,
-                        SimulationClock sharedClock
+                        MutableClock sharedClock
     ) {
         this.threadName = Objects.requireNonNull(threadName, "threadName");
         this.config = Objects.requireNonNull(config, "settings");
@@ -80,7 +82,7 @@ public class WorkerThread implements Callable<MutableResults> {
     public MutableResults call() throws InterruptedException {
         Cloner cloner = new Cloner();
 
-        SimulationClock clock = Objects.requireNonNullElseGet(sharedClock, () -> new SimulationClock(config.tickCount()));
+        MutableClock clock = Objects.requireNonNullElseGet(sharedClock, () -> new MutableClock(config.tickCount()));
         ContextCache cache = new ContextCache();
 
         for (Agent agent : agentsInThread) {
@@ -99,6 +101,9 @@ public class WorkerThread implements Callable<MutableResults> {
             );
         }
 
+        ImmutableClock immutableClock = new ImmutableClock(clock);
+        ImmutableEnvironment immutableEnvironment = new ImmutableEnvironment(environment);
+
         RequestResponseInterface requestResponseInterface = requestResponseController.getInterface(threadName);
 
         // Initial broadcast of agent state to coordinator
@@ -107,7 +112,7 @@ public class WorkerThread implements Callable<MutableResults> {
 
         // Simulation main loop
         while (!clock.isFinished()) {
-            config.scheduler().runTick(agentsInThread);
+            config.scheduler().runTick(immutableClock, immutableEnvironment, agentsInThread);
 
             if (config.areThreadsSynced()) {
                 requestResponseInterface.waitUntilAllWorkersFinishTick();

@@ -1,7 +1,7 @@
 package modelarium.entities.environments;
 
 import modelarium.Config;
-import modelarium.clock.SimulationClock;
+import modelarium.clock.MutableClock;
 import modelarium.entities.Entity;
 import modelarium.entities.agents.AgentSet;
 import modelarium.entities.attributes.EnvironmentAttributeSet;
@@ -13,7 +13,6 @@ import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.multithreading.requestresponse.RequestResponseController;
-import modelarium.multithreading.requestresponse.RequestResponseInterface;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public final class Environment extends Entity<EnvironmentSimulationContext, Envi
             AgentSet agentSet,
             Config config,
             ContextCache contextCache,
-            SimulationClock clock,
+            MutableClock clock,
             RequestResponseController requestResponseController,
             Environment localEnvironment
     ) {

@@ -1,7 +1,9 @@
 package modelarium.scheduler;
 
+import modelarium.clock.ImmutableClock;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.AgentSet;
+import modelarium.entities.immutable.ImmutableEnvironment;
 
 /**
  * A scheduler that executes each agent in the order they appear in the agent set.
@@ -18,7 +20,7 @@ public class InOrderScheduler implements Scheduler {
      * @param agentSet the set of agents to run for this tick
      */
     @Override
-    public void runTick(AgentSet agentSet) {
+    public void runTick(ImmutableClock clock, ImmutableEnvironment environment, AgentSet agentSet) {
         for (Agent agent : agentSet)
             agent.run();
     }

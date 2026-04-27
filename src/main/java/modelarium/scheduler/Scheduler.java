@@ -1,6 +1,8 @@
 package modelarium.scheduler;
 
+import modelarium.clock.ImmutableClock;
 import modelarium.entities.agents.AgentSet;
+import modelarium.entities.immutable.ImmutableEnvironment;
 
 /**
  * Interface representing a scheduling policy for running a single tick
@@ -17,5 +19,5 @@ public interface Scheduler {
      *
      * @param agentSet the set of agents to execute for this tick
      */
-    void runTick(AgentSet agentSet);
+    void runTick(ImmutableClock clock, ImmutableEnvironment environment, AgentSet agentSet);
 }

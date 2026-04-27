@@ -4,13 +4,13 @@ import modelarium.internal.Internal;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public final class SimulationClock implements Clock {
+public final class MutableClock implements Clock {
     private final int totalTickCount;
 
     private final AtomicInteger tick = new AtomicInteger(0);
 
     @Internal
-    public SimulationClock(int totalTickCount) {
+    public MutableClock(int totalTickCount) {
         this.totalTickCount = totalTickCount;
     }
 

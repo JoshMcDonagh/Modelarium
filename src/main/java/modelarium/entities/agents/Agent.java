@@ -1,7 +1,7 @@
 package modelarium.entities.agents;
 
 import modelarium.Config;
-import modelarium.clock.SimulationClock;
+import modelarium.clock.MutableClock;
 import modelarium.entities.Entity;
 import modelarium.entities.attributes.AgentAttributeSet;
 import modelarium.entities.attributes.events.AgentEvent;
@@ -26,7 +26,7 @@ public final class Agent extends Entity<AgentSimulationContext, AgentContext, Ag
             AgentSet agentSet,
             Config config,
             ContextCache contextCache,
-            SimulationClock clock,
+            MutableClock clock,
             RequestResponseController requestResponseController,
             Environment localEnvironment
     ) {

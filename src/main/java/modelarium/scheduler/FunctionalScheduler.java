@@ -1,6 +1,8 @@
 package modelarium.scheduler;
 
+import modelarium.clock.ImmutableClock;
 import modelarium.entities.agents.AgentSet;
+import modelarium.entities.immutable.ImmutableEnvironment;
 
 import java.util.function.Consumer;
 
@@ -38,7 +40,7 @@ public class FunctionalScheduler implements Scheduler {
      * @param agentSet the set of agents to act upon during this tick
      */
     @Override
-    public void runTick(AgentSet agentSet) {
+    public void runTick(ImmutableClock clock, ImmutableEnvironment environment, AgentSet agentSet) {
         tickFunction.accept(agentSet);
     }
 }
