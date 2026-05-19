@@ -1,5 +1,6 @@
 package modelarium.results;
 
+
 import modelarium.results.immutable.ImmutableResults;
 import modelarium.results.mutable.MutableResults;
 

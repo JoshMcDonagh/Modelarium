@@ -146,7 +146,7 @@ public class Model {
             for (Future<MutableResults> future : futures) {
                 try {
                     MutableResults resultsForThread = future.get();
-                    results.mergeWith(resultsForThread);
+                    results.mergeAgentsWith(resultsForThread);
                 } catch (ExecutionException e) {
                     // A worker threw. Cancel the rest and propagate.
                     futures.forEach(f -> f.cancel(true));

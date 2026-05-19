@@ -19,14 +19,6 @@ public final class MutableResults implements Results {
 
     public MutableResults() {}
 
-    protected MutableResults(MutableResults other) {
-        this.agentsResults = other.agentsResults;
-        this.environmentResults = other.environmentResults;
-        this.agentNames.addAll(other.agentNames);
-        this.isAgentAttributeSetDataConnected = other.isAgentAttributeSetDataConnected;
-        this.isEnvironmentAttributeSetDataConnected = other.isEnvironmentAttributeSetDataConnected;
-    }
-
     /**
      * Stores the names of all agents in the model.
      *
@@ -105,7 +97,7 @@ public final class MutableResults implements Results {
      *
      * @param other the results to merge into this one
      */
-    public void mergeWith(MutableResults other) {
+    public void mergeAgentsWith(MutableResults other) {
         agentsResults.mergeWith(other.agentsResults);
     }
 
