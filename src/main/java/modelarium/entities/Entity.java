@@ -61,7 +61,7 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
             Environment localEnvironment
     ) {
         if (context != null)
-            return;
+            throw new IllegalStateException("Context already created");
 
         context = makeContextInstance(
                 agentSet,

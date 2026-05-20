@@ -32,7 +32,7 @@ public sealed abstract class Attribute<C extends Context> permits Property, Even
 
     void setContext(C context) {
         if (this.context != null)
-            return;
+            throw new IllegalStateException("Context already set");
 
         this.context = context;
     }
