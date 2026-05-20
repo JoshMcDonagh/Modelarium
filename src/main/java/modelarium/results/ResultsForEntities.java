@@ -1,4 +1,4 @@
 package modelarium.results;
 
-public interface ResultsForEntities {
+public sealed interface ResultsForEntities permits ResultsForAgents, ResultsForEnvironment {
 }
