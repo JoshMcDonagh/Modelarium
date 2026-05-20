@@ -31,15 +31,15 @@ public sealed abstract class ImmutableAttributeSet<SC extends SimulationContext,
         return attributeSet.getLog();
     }
 
-    abstract Event<C> getEvent(int eventIndex);
+    public abstract Event<C> getEvent(int eventIndex);
 
-    abstract Event<C> getEvent(String eventName);
+    public abstract Event<C> getEvent(String eventName);
 
-    abstract Routine<C> getRoutine(int routineIndex);
+    public abstract Routine<C> getRoutine(int routineIndex);
 
-    abstract Routine<C> getRoutine(String routineName);
+    public abstract Routine<C> getRoutine(String routineName);
 
-    abstract Property<?,C> getProperty(int propertyIndex);
+    public abstract Property<?,C> getProperty(int propertyIndex);
 
-    abstract Property<?,C> getProperty(String propertyName);
+    public abstract Property<?,C> getProperty(String propertyName);
 }

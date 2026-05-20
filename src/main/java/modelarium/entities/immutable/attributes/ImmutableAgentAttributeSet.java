@@ -16,32 +16,32 @@ public final class ImmutableAgentAttributeSet extends ImmutableAttributeSet<Agen
     }
 
     @Override
-    AgentEvent getEvent(int eventIndex) {
+    public AgentEvent getEvent(int eventIndex) {
         return cloner.deepClone(((AgentAttributeSet) getMutableAttributeSet()).getEvent(eventIndex));
     }
 
     @Override
-    AgentEvent getEvent(String eventName) {
+    public AgentEvent getEvent(String eventName) {
         return cloner.deepClone(((AgentAttributeSet) getMutableAttributeSet()).getEvent(eventName));
     }
 
     @Override
-    AgentRoutine getRoutine(int routineIndex) {
+    public AgentRoutine getRoutine(int routineIndex) {
         return cloner.deepClone(((AgentAttributeSet) getMutableAttributeSet()).getRoutine(routineIndex));
     }
 
     @Override
-    AgentRoutine getRoutine(String routineName) {
+    public AgentRoutine getRoutine(String routineName) {
         return cloner.deepClone(((AgentAttributeSet) getMutableAttributeSet()).getRoutine(routineName));
     }
 
     @Override
-    AgentProperty<?> getProperty(int propertyIndex) {
+    public AgentProperty<?> getProperty(int propertyIndex) {
         return cloner.deepClone(((AgentAttributeSet) getMutableAttributeSet()).getProperty(propertyIndex));
     }
 
     @Override
-    AgentProperty<?> getProperty(String propertyName) {
+    public AgentProperty<?> getProperty(String propertyName) {
         return cloner.deepClone(((AgentAttributeSet) getMutableAttributeSet()).getProperty(propertyName));
     }
 }

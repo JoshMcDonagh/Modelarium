@@ -16,32 +16,32 @@ public final class ImmutableEnvironmentAttributeSet extends ImmutableAttributeSe
     }
 
     @Override
-    EnvironmentEvent getEvent(int eventIndex) {
+    public EnvironmentEvent getEvent(int eventIndex) {
         return cloner.deepClone(((EnvironmentAttributeSet) getMutableAttributeSet()).getEvent(eventIndex));
     }
 
     @Override
-    EnvironmentEvent getEvent(String eventName) {
+    public EnvironmentEvent getEvent(String eventName) {
         return cloner.deepClone(((EnvironmentAttributeSet) getMutableAttributeSet()).getEvent(eventName));
     }
 
     @Override
-    EnvironmentRoutine getRoutine(int routineIndex) {
+    public EnvironmentRoutine getRoutine(int routineIndex) {
         return cloner.deepClone(((EnvironmentAttributeSet) getMutableAttributeSet()).getRoutine(routineIndex));
     }
 
     @Override
-    EnvironmentRoutine getRoutine(String routineName) {
+    public EnvironmentRoutine getRoutine(String routineName) {
         return cloner.deepClone(((EnvironmentAttributeSet) getMutableAttributeSet()).getRoutine(routineName));
     }
 
     @Override
-    EnvironmentProperty<?> getProperty(int propertyIndex) {
+    public EnvironmentProperty<?> getProperty(int propertyIndex) {
         return cloner.deepClone(((EnvironmentAttributeSet) getMutableAttributeSet()).getProperty(propertyIndex));
     }
 
     @Override
-    EnvironmentProperty<?> getProperty(String propertyName) {
+    public EnvironmentProperty<?> getProperty(String propertyName) {
         return cloner.deepClone(((EnvironmentAttributeSet) getMutableAttributeSet()).getProperty(propertyName));
     }
 }
