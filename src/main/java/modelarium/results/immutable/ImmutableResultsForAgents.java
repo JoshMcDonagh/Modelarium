@@ -3,7 +3,10 @@ package modelarium.results.immutable;
 import modelarium.results.ResultsForAgents;
 import modelarium.results.mutable.MutableResultsForAgents;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class ImmutableResultsForAgents implements ResultsForAgents {
     private final MutableResultsForAgents results;

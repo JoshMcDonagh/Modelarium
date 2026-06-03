@@ -5,9 +5,7 @@ import modelarium.entities.agents.AgentSet;
 import modelarium.entities.environments.Environment;
 import modelarium.internal.Internal;
 
-import java.util.ArrayList;
 import java.util.IdentityHashMap;
-import java.util.List;
 import java.util.function.Predicate;
 
 public class ContextCache {
