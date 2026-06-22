@@ -1,4 +1,4 @@
-package unit.modelarium.config;
+package unit.modelarium;
 
 import helpers.TestFixtures;
 import modelarium.Config;
