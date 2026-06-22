@@ -64,7 +64,7 @@ public class AgentGeneratorTest {
     @Test
     public void testFunctionalGenerator_delegatesToFunction() {
         FunctionalDefaultAgentGenerator gen = new FunctionalDefaultAgentGenerator(
-                config -> TestFixtures.agentWithCounter("functional_agent")
+                config -> TestFixtures.uniqueAgent()
         );
 
         Config config = TestFixtures.syncedConfig(3, 5, 1);
