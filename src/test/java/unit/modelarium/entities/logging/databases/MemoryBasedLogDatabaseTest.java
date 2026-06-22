@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Unit tests for {@link MemoryBasedAttributeSetLogDatabase}.
  */
-public class MemoryBasedAttributeSetLogDatabaseTest {
+public class MemoryBasedLogDatabaseTest {
 
     private MemoryBasedAttributeSetLogDatabase db;
 
