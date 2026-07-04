@@ -123,4 +123,11 @@ public final class TestFixtures {
                 .environmentGenerator(simpleEnvironmentGenerator())
                 .build();
     }
+
+    public static void openToCloningModule(String... packages) {
+        Module self = TestFixtures.class.getModule();
+        Module cloning = com.rits.cloning.Cloner.class.getModule();
+        for (String pkg : packages)
+            self.addOpens(pkg, cloning);
+    }
 }

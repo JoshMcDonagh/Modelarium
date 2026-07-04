@@ -1,5 +1,6 @@
 package integration.agentEnvironmentInteraction;
 
+import helpers.TestFixtures;
 import modelarium.Config;
 import modelarium.Model;
 import modelarium.entities.agents.Agent;
@@ -20,6 +21,7 @@ import modelarium.entities.immutable.ImmutableEnvironment;
 import modelarium.entities.immutable.attributes.ImmutableEnvironmentAttributeSet;
 import modelarium.results.immutable.ImmutableResults;
 import modelarium.scheduler.InOrderScheduler;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -36,6 +38,11 @@ import static org.junit.jupiter.api.Assertions.*;
  * tick (the coordinator runs the environment between worker ticks).
  */
 public class AgentEnvironmentInteractionIntegrationTest {
+
+    @BeforeAll
+    static void openForCloning() {
+        TestFixtures.openToCloningModule("helpers", "integration.agentEnvironmentInteraction");
+    }
 
     // ---- Environment property: temperature increases each tick ----
 

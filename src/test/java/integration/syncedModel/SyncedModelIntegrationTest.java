@@ -1,5 +1,6 @@
 package integration.syncedModel;
 
+import helpers.TestFixtures;
 import modelarium.Config;
 import modelarium.Model;
 import modelarium.entities.agents.Agent;
@@ -19,6 +20,7 @@ import modelarium.entities.environments.EnvironmentGenerator;
 import modelarium.entities.environments.FunctionalEnvironmentGenerator;
 import modelarium.results.immutable.ImmutableResults;
 import modelarium.scheduler.InOrderScheduler;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -35,6 +37,11 @@ import static org.junit.jupiter.api.Assertions.*;
  * The environment has a tick counter.
  */
 public class SyncedModelIntegrationTest {
+
+    @BeforeAll
+    static void openForCloning() {
+        TestFixtures.openToCloningModule("helpers", "integration.syncedModel");
+    }
 
     // ---- Attribute implementations local to this test ----
 

@@ -35,4 +35,16 @@ module modelarium {
     requires com.fasterxml.jackson.core;
     requires java.sql;
     requires cloning;
+
+    // Reflective deep-clone access for the Rits Cloner (see modelarium.utils.Cloners)
+    opens modelarium.entities to cloning;
+    opens modelarium.entities.agents to cloning;
+    opens modelarium.entities.attributes to cloning;
+    opens modelarium.entities.attributes.properties to cloning;
+    opens modelarium.entities.attributes.properties.functional to cloning;
+    opens modelarium.entities.attributes.events.functional to cloning;
+    opens modelarium.entities.attributes.routines.functional to cloning;
+    opens modelarium.entities.environments to cloning;
+    opens modelarium.entities.attributes.events to cloning;
+    opens modelarium.entities.attributes.routines to cloning;
 }

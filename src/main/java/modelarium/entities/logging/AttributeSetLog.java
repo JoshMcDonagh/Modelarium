@@ -1,12 +1,12 @@
 package modelarium.entities.logging;
 
-import com.rits.cloning.Cloner;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeSet;
 import modelarium.entities.attributes.properties.Property;
 import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.logging.databases.AttributeSetLogDatabase;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
+import modelarium.utils.Cloners;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,8 +21,6 @@ import java.util.Map;
  * and for providing access to stored values after simulation.
  */
 public class AttributeSetLog<C extends SimulationContext> {
-    private static final Cloner cloner = new Cloner();
-
     /** Name of the agent or environment this result set belongs to */
     private final String ownerName;
 
@@ -96,7 +94,7 @@ public class AttributeSetLog<C extends SimulationContext> {
     }
 
     public List<Object> getValues(String attributeName) {
-        return cloner.deepClone(database.getAttributeColumnAsList(attributeName));
+        return Cloners.standard().deepClone(database.getAttributeColumnAsList(attributeName));
     }
 
     /**

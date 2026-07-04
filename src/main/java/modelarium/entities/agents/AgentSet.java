@@ -1,10 +1,10 @@
 package modelarium.entities.agents;
 
-import com.rits.cloning.Cloner;
 import modelarium.entities.immutable.ImmutableAgentSet;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 import modelarium.exceptions.AgentNotFoundException;
 import modelarium.internal.Internal;
+import modelarium.utils.Cloners;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -21,8 +21,6 @@ import java.util.function.Predicate;
  * <p>This class is iterable and designed to support both sequential and parallel simulation use cases.
  */
 public final class AgentSet implements Iterable<Agent> {
-    private static final Cloner cloner = new Cloner();
-
     /** Ordered list of agents in the set */
     private List<Agent> agentList = new ArrayList<>();
 
@@ -50,7 +48,7 @@ public final class AgentSet implements Iterable<Agent> {
     private void addExistingAgent(Agent agent, boolean isDeepCopied) {
         int index = agentIndexMap.get(agent.name());
         if (isDeepCopied)
-            agentList.set(index, cloner.deepClone(agent));
+            agentList.set(index, Cloners.standard().deepClone(agent));
         else
             agentList.set(index, agent);
     }
@@ -59,7 +57,7 @@ public final class AgentSet implements Iterable<Agent> {
         int index = agentList.size();
         agentIndexMap.put(agent.name(), index);
         if (isDeepCopied)
-            agentList.add(cloner.deepClone(agent));
+            agentList.add(Cloners.standard().deepClone(agent));
         else
             agentList.add(agent);
     }

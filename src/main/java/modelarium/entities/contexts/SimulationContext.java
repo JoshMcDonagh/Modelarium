@@ -1,6 +1,5 @@
 package modelarium.entities.contexts;
 
-import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.clock.Clock;
 import modelarium.clock.MutableClock;
@@ -20,6 +19,7 @@ import modelarium.exceptions.SimulationInterruptedException;
 import modelarium.internal.Internal;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
+import modelarium.utils.Cloners;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -38,8 +38,6 @@ import java.util.function.Predicate;
  * </ul>
  */
 public sealed abstract class SimulationContext implements Context permits AgentSimulationContext, EnvironmentSimulationContext {
-    private static final Cloner cloner = new Cloner();
-
     private final Entity<?,?,?,?> entity;
     private final AgentSet localAgentSet;
     private final Config config;
@@ -159,15 +157,15 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     }
 
     public void addAgentDeepCopy(Agent agent) {
-        addAgent(cloner.deepClone(agent));
+        addAgent(Cloners.standard().deepClone(agent));
     }
 
     public void addAgentsDeepCopy(AgentSet agentSet) {
-        addAgents(cloner.deepClone(agentSet));
+        addAgents(Cloners.standard().deepClone(agentSet));
     }
 
     public void addAgentsDeepCopy(List<Agent> agentList) {
-        addAgents(cloner.deepClone(agentList));
+        addAgents(Cloners.standard().deepClone(agentList));
     }
 
     public ImmutableAgent getAgent(String targetAgentName) {
