@@ -19,7 +19,8 @@ public record Config(
         AgentGenerator agentGenerator,
         EnvironmentGenerator environmentGenerator,
         Scheduler scheduler,
-        AttributeSetLogDatabaseFactory runLogDatabaseFactory
+        AttributeSetLogDatabaseFactory runLogDatabaseFactory,
+        long seed
 ) {
     public static ConfigBuilder builder() {
         return new ConfigBuilder();
@@ -35,6 +36,7 @@ public record Config(
         private EnvironmentGenerator environmentGenerator;
         private Scheduler scheduler = new InOrderScheduler();
         private AttributeSetLogDatabaseFactory runLogDatabaseFactory = new MemoryBasedAttributeSetLogDatabaseFactory();
+        private long seed = System.nanoTime();
 
         public ConfigBuilder populationSize(int populationSize) {
             this.populationSize = populationSize;
@@ -81,6 +83,11 @@ public record Config(
             return this;
         }
 
+        public ConfigBuilder seed(long seed) {
+            this.seed = seed;
+            return this;
+        }
+
         public Config build() {
             Objects.requireNonNull(agentGenerator, "agentGenerator must be set");
             Objects.requireNonNull(environmentGenerator, "environmentGenerator must be set");
@@ -103,7 +110,8 @@ public record Config(
                     agentGenerator,
                     environmentGenerator,
                     scheduler,
-                    runLogDatabaseFactory
+                    runLogDatabaseFactory,
+                    seed
             );
         }
     }
