@@ -5,6 +5,7 @@ import modelarium.entities.agents.AgentSet;
 import modelarium.entities.immutable.ImmutableEnvironment;
 
 import java.util.function.Consumer;
+import java.util.random.RandomGenerator;
 
 /**
  * A scheduler implementation that delegates each simulation tick

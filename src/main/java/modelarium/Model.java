@@ -13,6 +13,7 @@ import modelarium.results.immutable.ImmutableResults;
 import modelarium.results.mutable.MutableResults;
 import modelarium.results.mutable.MutableResultsForAgents;
 import modelarium.results.mutable.MutableResultsForEnvironment;
+import modelarium.utils.random.RndGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -172,6 +173,8 @@ public class Model {
     }
 
     public void run() {
+        RndGenerator.setSeed(config.seed());
+
         results = new MutableResults();
 
         List<AgentSet> agentsForEachCore = generateAgentsForEachCoreAsList();

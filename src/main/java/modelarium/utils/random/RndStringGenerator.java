@@ -1,4 +1,4 @@
-package modelarium.utils;
+package modelarium.utils.random;
 
 import java.security.SecureRandom;
 import java.util.Set;
@@ -10,9 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * Note: Uniqueness is maintained in-memory for the life of the JVM.
  */
-public final class RandomStringGenerator {
+public final class RndStringGenerator {
 
-    private RandomStringGenerator() {}
+    private RndStringGenerator() {}
 
     private static final String CHARACTERS =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -32,9 +32,9 @@ public final class RandomStringGenerator {
      * @throws IllegalArgumentException if length is negative
      */
     public static String generateRandomString(int length) {
-        if (length < 0) {
+        if (length < 0)
             throw new IllegalArgumentException("Length must be non-negative.");
-        }
+
         StringBuilder sb = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
             int idx = RNG.nextInt(CHARACTERS.length());

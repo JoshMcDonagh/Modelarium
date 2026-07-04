@@ -6,6 +6,7 @@ import modelarium.entities.agents.AgentSet;
 import modelarium.entities.immutable.ImmutableEnvironment;
 
 import java.util.Iterator;
+import java.util.random.RandomGenerator;
 
 /**
  * A scheduler that executes agents in a randomised order for each tick.

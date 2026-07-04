@@ -2,7 +2,7 @@ package modelarium.entities.logging.databases;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import modelarium.utils.RandomStringGenerator;
+import modelarium.utils.random.RndStringGenerator;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -62,9 +62,9 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
     }
 
     private static String createTempDatabasePath() {
-        String folderName = "temp_" + RandomStringGenerator.generateUniqueRandomString(20);
+        String folderName = "temp_" + RndStringGenerator.generateUniqueRandomString(20);
         Path tempDir = Paths.get(System.getProperty("java.io.tmpdir"), folderName);
-        return tempDir.resolve(RandomStringGenerator.generateUniqueRandomString(20) + ".db").toString();
+        return tempDir.resolve(RndStringGenerator.generateUniqueRandomString(20) + ".db").toString();
     }
 
     /** Registers this instance for automatic disconnect on JVM shutdown. */

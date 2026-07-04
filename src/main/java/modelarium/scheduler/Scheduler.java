@@ -4,6 +4,8 @@ import modelarium.clock.ImmutableClock;
 import modelarium.entities.agents.AgentSet;
 import modelarium.entities.immutable.ImmutableEnvironment;
 
+import java.util.random.RandomGenerator;
+
 /**
  * Interface representing a scheduling policy for running a single tick
  * of the agent-based model.
