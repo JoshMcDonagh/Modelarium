@@ -9,6 +9,8 @@ import modelarium.entities.environments.Environment;
 import modelarium.entities.immutable.ImmutableEnvironment;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 
+import java.util.random.RandomGenerator;
+
 public final class EnvironmentSimulationContext extends SimulationContext implements EnvironmentContext {
     public EnvironmentSimulationContext(
             Environment entity,
@@ -17,9 +19,10 @@ public final class EnvironmentSimulationContext extends SimulationContext implem
             ContextCache cache,
             MutableClock clock,
             RequestResponseController requestResponseController,
-            Environment localEnvironment
+            Environment localEnvironment,
+            RandomGenerator randomGenerator
     ) {
-        super(entity, localAgentSet, config, cache, clock, requestResponseController, localEnvironment);
+        super(entity, localAgentSet, config, cache, clock, requestResponseController, localEnvironment, randomGenerator);
     }
 
     @Override

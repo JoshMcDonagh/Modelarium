@@ -101,7 +101,8 @@ public class WorkerThread implements Callable<MutableResults> {
                     cache,
                     clock,
                     requestResponseController,
-                    localEnvironment
+                    localEnvironment,
+                    randomGenerator
             );
         }
 

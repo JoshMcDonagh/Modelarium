@@ -18,6 +18,7 @@ import modelarium.multithreading.requestresponse.RequestResponseController;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.random.RandomGenerator;
 
 public sealed abstract class Entity<SC extends SimulationContext, C extends Context, AS extends AttributeSet<SC,C>, ASL extends AttributeSetLog<SC>>
         permits Agent, Environment {
@@ -48,7 +49,8 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
             ContextCache contextCache,
             MutableClock clock,
             RequestResponseController requestResponseController,
-            Environment localEnvironment
+            Environment localEnvironment,
+            RandomGenerator randomGenerator
     );
 
     @Internal
@@ -58,7 +60,8 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
             ContextCache contextCache,
             MutableClock clock,
             RequestResponseController requestResponseController,
-            Environment localEnvironment
+            Environment localEnvironment,
+            RandomGenerator randomGenerator
     ) {
         if (context != null)
             throw new IllegalStateException("Context already created");
@@ -69,7 +72,8 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
                 contextCache,
                 clock,
                 requestResponseController,
-                localEnvironment
+                localEnvironment,
+                randomGenerator
         );
 
         for (AS attributeSet : attributeSetList)

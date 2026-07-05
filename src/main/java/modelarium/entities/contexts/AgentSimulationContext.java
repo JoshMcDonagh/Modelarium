@@ -14,6 +14,8 @@ import modelarium.exceptions.EnvironmentNotFoundException;
 import modelarium.exceptions.SimulationInterruptedException;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 
+import java.util.random.RandomGenerator;
+
 public final class AgentSimulationContext extends SimulationContext implements AgentContext {
     private final Environment localEnvironment;
 
@@ -24,9 +26,10 @@ public final class AgentSimulationContext extends SimulationContext implements A
             ContextCache cache,
             MutableClock clock,
             RequestResponseController requestResponseController,
-            Environment localEnvironment
+            Environment localEnvironment,
+            RandomGenerator randomGenerator
     ) {
-        super(entity, localAgentSet, config, cache, clock, requestResponseController, localEnvironment);
+        super(entity, localAgentSet, config, cache, clock, requestResponseController, localEnvironment, randomGenerator);
         this.localEnvironment = localEnvironment;
     }
 

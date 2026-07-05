@@ -23,6 +23,7 @@ import modelarium.utils.Cloners;
 
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.random.RandomGenerator;
 
 /**
  * Provides a model element (either an agent or the environment) with access
@@ -46,6 +47,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     private final RequestResponseController requestResponseController;
     private final RequestResponseInterface requestResponseInterface;
     private final Environment localEnvironment;
+    private final RandomGenerator randomGenerator;
 
     private AttributeSet<?,?> attributeSet = null;
     private Attribute<?> attribute = null;
@@ -58,7 +60,8 @@ public sealed abstract class SimulationContext implements Context permits AgentS
             ContextCache cache,
             MutableClock clock,
             RequestResponseController requestResponseController,
-            Environment localEnvironment
+            Environment localEnvironment,
+            RandomGenerator randomGenerator
     ) {
         this.entity = entity;
         this.localAgentSet = localAgentSet;
@@ -68,6 +71,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
         this.requestResponseController = requestResponseController;
         this.requestResponseInterface = requestResponseController.getInterface(entity().name());
         this.localEnvironment = localEnvironment;
+        this.randomGenerator = randomGenerator;
     }
 
     public Clock getClock() {
@@ -76,6 +80,10 @@ public sealed abstract class SimulationContext implements Context permits AgentS
 
     public boolean doesAgentExistInThisCore(String agentName) {
         return localAgentSet.doesAgentExist(agentName);
+    }
+
+    public RandomGenerator getRandomGenerator() {
+        return randomGenerator;
     }
 
     @Internal
@@ -127,7 +135,8 @@ public sealed abstract class SimulationContext implements Context permits AgentS
                 cache,
                 clock,
                 requestResponseController,
-                localEnvironment
+                localEnvironment,
+                randomGenerator
         );
     }
 
