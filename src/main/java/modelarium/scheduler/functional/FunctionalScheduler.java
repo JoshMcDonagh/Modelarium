@@ -1,11 +1,11 @@
-package modelarium.scheduler;
+package modelarium.scheduler.functional;
 
 import modelarium.clock.ImmutableClock;
 import modelarium.entities.agents.AgentSet;
 import modelarium.entities.immutable.ImmutableEnvironment;
+import modelarium.scheduler.Scheduler;
 
 import java.util.function.Consumer;
-import java.util.random.RandomGenerator;
 
 /**
  * A scheduler implementation that delegates each simulation tick
@@ -20,10 +20,10 @@ import java.util.random.RandomGenerator;
  * to customise the tick logic externally, for example from another Java module
  * or from Python via JPype with a proxy.</p>
  */
-public class FunctionalScheduler implements Scheduler {
+public class FunctionalScheduler extends Scheduler {
 
     /** The function to be executed on each tick, taking an AgentSet as input */
-    private final Consumer<AgentSet> tickFunction;
+    private final TickFunction tickFunction;
 
     /**
      * Constructs a FunctionalScheduler with the specified tick function.
@@ -31,7 +31,7 @@ public class FunctionalScheduler implements Scheduler {
      * @param tickFunction the logic to execute on each tick,
      *                     defined as a {@link Consumer} of {@link AgentSet}
      */
-    public FunctionalScheduler(Consumer<AgentSet> tickFunction) {
+    public FunctionalScheduler(TickFunction tickFunction) {
         this.tickFunction = tickFunction;
     }
 
@@ -42,6 +42,6 @@ public class FunctionalScheduler implements Scheduler {
      */
     @Override
     public void runTick(ImmutableClock clock, ImmutableEnvironment environment, AgentSet agentSet) {
-        tickFunction.accept(agentSet);
+        tickFunction.runTick(clock, environment, agentSet, getRandomGenerator());
     }
 }

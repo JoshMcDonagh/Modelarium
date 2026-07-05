@@ -12,7 +12,7 @@ import modelarium.entities.immutable.ImmutableEnvironment;
  * and predictably for each simulation tick.
  * </p>
  */
-public class InOrderScheduler implements Scheduler {
+public class InOrderScheduler extends Scheduler {
 
     /**
      * Executes each agent's {@code run()} method in the order they are stored in the agent set.

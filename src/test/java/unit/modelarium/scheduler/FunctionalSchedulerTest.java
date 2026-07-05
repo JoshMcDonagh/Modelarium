@@ -5,7 +5,7 @@ import modelarium.clock.MutableClock;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.AgentSet;
 import modelarium.entities.immutable.ImmutableEnvironment;
-import modelarium.scheduler.FunctionalScheduler;
+import modelarium.scheduler.functional.FunctionalScheduler;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

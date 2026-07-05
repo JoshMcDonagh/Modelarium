@@ -5,10 +5,10 @@ import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFa
 import modelarium.exceptions.AgentNotFoundException;
 import modelarium.internal.Internal;
 import modelarium.utils.Cloners;
-import modelarium.utils.random.RndGenerator;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.random.RandomGenerator;
 
 /**
  * A collection class for managing {@link Agent} instances, with support for:
@@ -229,9 +229,9 @@ public final class AgentSet implements Iterable<Agent> {
      *
      * @return an iterator that yields agents in random order
      */
-    public Iterator<Agent> getRandomIterator() {
+    public Iterator<Agent> getRandomIterator(RandomGenerator randomGenerator) {
         List<Agent> shuffledAgents = new ArrayList<>(agentList);
-        Collections.shuffle(shuffledAgents, RndGenerator.get());
+        Collections.shuffle(shuffledAgents, randomGenerator);
         return shuffledAgents.iterator();
     }
 

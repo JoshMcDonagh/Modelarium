@@ -13,11 +13,11 @@ import modelarium.results.immutable.ImmutableResults;
 import modelarium.results.mutable.MutableResults;
 import modelarium.results.mutable.MutableResultsForAgents;
 import modelarium.results.mutable.MutableResultsForEnvironment;
-import modelarium.utils.random.RndGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.SplittableRandom;
 import java.util.concurrent.*;
 
 /**
@@ -115,6 +115,7 @@ public class Model {
     ) {
         ExecutorService executorService = Executors.newFixedThreadPool(config.threadCount());
         List<Future<MutableResults>> futures = new ArrayList<>();
+        SplittableRandom randomGenerator = new SplittableRandom(config.seed());
 
         // Launch worker threads
         for (int threadIndex = 0; threadIndex < config.threadCount(); threadIndex++) {
@@ -136,7 +137,8 @@ public class Model {
                     requestResponseController,
                     environment,
                     threadAgentSet,
-                    sharedClock
+                    sharedClock,
+                    randomGenerator.split()
             );
 
             futures.add(executorService.submit(worker));
@@ -173,8 +175,6 @@ public class Model {
     }
 
     public void run() {
-        RndGenerator.setSeed(config.seed());
-
         results = new MutableResults();
 
         List<AgentSet> agentsForEachCore = generateAgentsForEachCoreAsList();

@@ -16,6 +16,7 @@ import modelarium.utils.Cloners;
 
 import java.util.Objects;
 import java.util.concurrent.Callable;
+import java.util.random.RandomGenerator;
 
 /**
  * Represents a single worker thread responsible for simulating one subset of agents
@@ -46,6 +47,8 @@ public class WorkerThread implements Callable<MutableResults> {
     /** A duplicate of the agent set to allow for safe merging during synchronisation */
     private final AgentSet updatedAgents;
 
+    private final RandomGenerator randomGenerator;
+
     /**
      * Constructs a new worker thread to simulate a subset of agents.
      *
@@ -59,15 +62,17 @@ public class WorkerThread implements Callable<MutableResults> {
                         RequestResponseController requestResponseController,
                         Environment environment,
                         AgentSet agentsInThread,
-                        MutableClock sharedClock
+                        MutableClock sharedClock,
+                        RandomGenerator randomGenerator
     ) {
         this.threadName = Objects.requireNonNull(threadName, "threadName");
-        this.config = Objects.requireNonNull(config, "settings");
+        this.config = Objects.requireNonNull(config, "config");
         this.requestResponseController = Objects.requireNonNull(requestResponseController, "requestResponseController");
         this.environment = environment;
         this.agentsInThread = Objects.requireNonNull(agentsInThread, "agents");
         this.sharedClock = sharedClock;
         this.updatedAgents = this.agentsInThread.duplicate();
+        this.randomGenerator = Objects.requireNonNull(randomGenerator, "randomGenerator");
     }
 
     /**
@@ -82,6 +87,7 @@ public class WorkerThread implements Callable<MutableResults> {
     public MutableResults call() throws InterruptedException {
         MutableClock clock = Objects.requireNonNullElseGet(sharedClock, () -> new MutableClock(config.tickCount()));
         ContextCache cache = new ContextCache();
+        config.scheduler().setRandomGenerator(randomGenerator);
 
         for (Agent agent : agentsInThread) {
             Environment localEnvironment = null;

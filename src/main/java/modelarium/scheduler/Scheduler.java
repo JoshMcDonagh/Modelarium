@@ -7,19 +7,28 @@ import modelarium.entities.immutable.ImmutableEnvironment;
 import java.util.random.RandomGenerator;
 
 /**
- * Interface representing a scheduling policy for running a single tick
+ * Abstract class representing a scheduling policy for running a single tick
  * of the agent-based model.
  * <p>
- * Implementations of this interface define how a tick is executed over
+ * Implementations of this abstract class define how a tick is executed over
  * a given set of agents.
  * </p>
  */
-public interface Scheduler {
+public abstract class Scheduler {
+    private RandomGenerator randomGenerator;
+
+    public void setRandomGenerator(RandomGenerator randomGenerator) {
+        this.randomGenerator = randomGenerator;
+    }
+
+    protected RandomGenerator getRandomGenerator() {
+        return randomGenerator;
+    }
 
     /**
      * Executes a single simulation tick for the provided agent set.
      *
      * @param agentSet the set of agents to execute for this tick
      */
-    void runTick(ImmutableClock clock, ImmutableEnvironment environment, AgentSet agentSet);
+    public abstract void runTick(ImmutableClock clock, ImmutableEnvironment environment, AgentSet agentSet);
 }

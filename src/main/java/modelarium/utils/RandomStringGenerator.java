@@ -1,4 +1,4 @@
-package modelarium.utils.random;
+package modelarium.utils;
 
 import java.security.SecureRandom;
 import java.util.Set;
@@ -10,9 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * Note: Uniqueness is maintained in-memory for the life of the JVM.
  */
-public final class RndStringGenerator {
+public final class RandomStringGenerator {
 
-    private RndStringGenerator() {}
+    private RandomStringGenerator() {}
 
     private static final String CHARACTERS =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

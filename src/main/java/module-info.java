@@ -47,4 +47,5 @@ module modelarium {
     opens modelarium.entities.environments to cloning;
     opens modelarium.entities.attributes.events to cloning;
     opens modelarium.entities.attributes.routines to cloning;
+    exports modelarium.scheduler.functional;
 }
