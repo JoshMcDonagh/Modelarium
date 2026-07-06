@@ -25,7 +25,7 @@ import java.util.TreeMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class determinismTest {
+public class DeterminismTest {
     private static final int POPULATION = 24;
     private static final int TICKS = 15;
     private static final int THREADS = 3;
