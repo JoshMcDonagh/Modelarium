@@ -1,15 +1,24 @@
 package helpers;
 
 import modelarium.Config;
+import modelarium.clock.MutableClock;
 import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.AgentSet;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
 import modelarium.entities.attributes.AgentAttributeSet;
+import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeSet;
 import modelarium.entities.attributes.EnvironmentAttributeSet;
+import modelarium.entities.contexts.AgentSimulationContext;
+import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.EnvironmentGenerator;
+import modelarium.multithreading.requestresponse.RequestResponseController;
 
 import java.util.List;
+import java.util.SplittableRandom;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.random.RandomGenerator;
 
 /**
  * Factories for constructing test-ready agents, environments, and configs.
@@ -122,6 +131,104 @@ public final class TestFixtures {
                 .agentGenerator(counterAgentGenerator())
                 .environmentGenerator(simpleEnvironmentGenerator())
                 .build();
+    }
+
+    /**
+     * An agent set consisting of given agents.
+     */
+    public static AgentSet agentSet(Agent... agents) {
+        return new AgentSet(List.of(agents));
+    }
+
+    /**
+     * A context cache.
+     */
+    public static ContextCache contextCache() {
+        return new ContextCache();
+    }
+
+    /**
+     * A mutable clock constructed using the tick count from a given config.
+     */
+    public static MutableClock mutableClockFromConfig(Config config) {
+        return new MutableClock(config.tickCount());
+    }
+
+    /**
+     * A request response controller constructed using a given config.
+     */
+    public static RequestResponseController requestResponseController(Config config) {
+        return new RequestResponseController(config);
+    }
+
+    /**
+     * An agent simulation context.
+     */
+    public static AgentSimulationContext agentSimulationContext(
+            Agent agent,
+            AgentSet agentSet,
+            Config config
+    ) {
+        return new AgentSimulationContext(
+                agent,
+                agentSet,
+                config,
+                contextCache(),
+                mutableClockFromConfig(config),
+                requestResponseController(config),
+                emptyEnvironment(),
+                new SplittableRandom()
+        );
+    }
+
+    /**
+     * An agent simulation context with a given current attribute set.
+     */
+    public static AgentSimulationContext agentSimulationContextWithAttributeSet(
+            Agent agent,
+            AgentSet agentSet,
+            Config config,
+            AttributeSet<?,?> attributeSet
+    ) {
+        AgentSimulationContext agentSimulationContext = new AgentSimulationContext(
+                agent,
+                agentSet,
+                config,
+                contextCache(),
+                mutableClockFromConfig(config),
+                requestResponseController(config),
+                emptyEnvironment(),
+                new SplittableRandom()
+        );
+
+        agentSimulationContext.setCurrentAttributeSet(attributeSet);
+
+        return agentSimulationContext;
+    }
+
+    /**
+     * An agent simulation context with a given current attribute.
+     */
+    public static AgentSimulationContext agentSimulationContextWithAttribute(
+            Agent agent,
+            AgentSet agentSet,
+            Config config,
+            Attribute<?> attribute
+    ) {
+        AgentSimulationContext agentSimulationContext = new AgentSimulationContext(
+                agent,
+                agentSet,
+                config,
+                contextCache(),
+                mutableClockFromConfig(config),
+                requestResponseController(config),
+                emptyEnvironment(),
+                new SplittableRandom()
+        );
+
+        agentSimulationContext.setCurrentAttribute(attribute);
+
+        return agentSimulationContext;
     }
 
     public static void openToCloningModule(String... packages) {
