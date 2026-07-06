@@ -113,7 +113,7 @@ public class AgentSetTest {
     public void testGetRandomIteratorCoversAllAgents() {
         AgentSet set = new AgentSet(Arrays.asList(agentA, agentB, agentC));
         Set<String> names = new HashSet<>();
-        Iterator<Agent> it = set.getRandomIterator();
+        Iterator<Agent> it = set.getRandomIterator(new SplittableRandom(42));
 
         while (it.hasNext())
             names.add(it.next().name());

@@ -8,6 +8,8 @@ import modelarium.entities.immutable.ImmutableEnvironment;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.Test;
 
+import java.util.SplittableRandom;
+
 import static org.mockito.Mockito.*;
 
 public class InOrderSchedulerTest {
@@ -35,7 +37,7 @@ public class InOrderSchedulerTest {
         set.add(a2);
         set.add(a3);
 
-        new InOrderScheduler().runTick(dummyClock(), dummyEnvironment(), set);
+        new InOrderScheduler().runTick("0", dummyClock(), dummyEnvironment(), set, new SplittableRandom(42));
 
         org.mockito.InOrder inOrder = inOrder(a1, a2, a3);
         inOrder.verify(a1).run();

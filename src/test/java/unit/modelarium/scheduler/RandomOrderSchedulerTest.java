@@ -9,6 +9,7 @@ import modelarium.scheduler.RandomOrderScheduler;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.SplittableRandom;
 
 import static org.mockito.Mockito.*;
 
@@ -35,7 +36,7 @@ public class RandomOrderSchedulerTest {
         // We need a real AgentSet to test this properly.
         AgentSet set = new AgentSet(List.of(a1, a2));
 
-        new RandomOrderScheduler().runTick(dummyClock(), dummyEnvironment(), set);
+        new RandomOrderScheduler().runTick("0", dummyClock(), dummyEnvironment(), set, new SplittableRandom(42));
 
         verify(a1, times(1)).run();
         verify(a2, times(1)).run();

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SplittableRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,10 +31,12 @@ public class FunctionalSchedulerTest {
     @Test
     void delegatesToProvidedConsumer() {
         AtomicInteger callCount = new AtomicInteger(0);
-        FunctionalScheduler scheduler = new FunctionalScheduler(agents -> callCount.incrementAndGet());
+        FunctionalScheduler scheduler = new FunctionalScheduler(
+                (threadName, clock, env, agents, rng)
+                        -> callCount.incrementAndGet());
 
         AgentSet set = new AgentSet();
-        scheduler.runTick(dummyClock(), dummyEnvironment(), set);
+        scheduler.runTick("0", dummyClock(), dummyEnvironment(), set, new SplittableRandom(42));
 
         assertEquals(1, callCount.get(), "Consumer should have been called exactly once.");
     }
@@ -45,8 +48,10 @@ public class FunctionalSchedulerTest {
         AgentSet set = new AgentSet(List.of(a));
 
         List<AgentSet> captured = new ArrayList<>();
-        FunctionalScheduler scheduler = new FunctionalScheduler(captured::add);
-        scheduler.runTick(dummyClock(), dummyEnvironment(), set);
+        FunctionalScheduler scheduler = new FunctionalScheduler(
+                (threadName, clock, env, agents, rng)
+                        -> captured.add(agents));
+        scheduler.runTick("0", dummyClock(), dummyEnvironment(), set, new SplittableRandom(42));
 
         assertSame(set, captured.get(0), "Consumer should receive the original agent set.");
     }
