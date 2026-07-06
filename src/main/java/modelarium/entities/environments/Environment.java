@@ -15,6 +15,7 @@ import modelarium.entities.logging.AttributeSetLog;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 
 import java.util.List;
+import java.util.random.RandomGenerator;
 
 public final class Environment extends Entity<EnvironmentSimulationContext, EnvironmentContext, EnvironmentAttributeSet, AttributeSetLog<EnvironmentSimulationContext>> {
     public Environment(String name, List<EnvironmentAttributeSet> attributeSets) {
@@ -28,7 +29,8 @@ public final class Environment extends Entity<EnvironmentSimulationContext, Envi
             ContextCache contextCache,
             MutableClock clock,
             RequestResponseController requestResponseController,
-            Environment localEnvironment
+            Environment localEnvironment,
+            RandomGenerator randomGenerator
     ) {
         return new EnvironmentSimulationContext(
                 this,
@@ -37,7 +39,8 @@ public final class Environment extends Entity<EnvironmentSimulationContext, Envi
                 contextCache,
                 clock,
                 requestResponseController,
-                localEnvironment
+                localEnvironment,
+                randomGenerator
         );
     }
 

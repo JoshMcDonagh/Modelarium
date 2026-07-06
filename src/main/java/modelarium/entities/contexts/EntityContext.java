@@ -6,10 +6,12 @@ import modelarium.entities.immutable.ImmutableAgent;
 import modelarium.entities.immutable.ImmutableAgentSet;
 
 import java.util.function.Predicate;
+import java.util.random.RandomGenerator;
 
 public sealed interface EntityContext extends Context permits AgentContext, EnvironmentContext {
     Clock getClock();
     boolean doesAgentExistInThisCore(String agentName);
     ImmutableAgent getAgent(String targetAgentName);
     ImmutableAgentSet getFilteredAgents(Predicate<Agent> filter);
+    RandomGenerator getRandom();
 }

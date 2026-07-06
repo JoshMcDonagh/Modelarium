@@ -82,7 +82,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
         return localAgentSet.doesAgentExist(agentName);
     }
 
-    public RandomGenerator getRandomGenerator() {
+    public RandomGenerator getRandom() {
         return randomGenerator;
     }
 
