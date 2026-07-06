@@ -9,6 +9,7 @@ import java.util.random.RandomGenerator;
 @FunctionalInterface
 public interface TickFunction {
     void runTick(
+            String threadName,
             ImmutableClock clock,
             ImmutableEnvironment environment,
             AgentSet agentSet,

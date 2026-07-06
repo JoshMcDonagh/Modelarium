@@ -72,7 +72,8 @@ public class Model {
     private void createAndSetEnvironmentContext(
             Environment environment,
             RequestResponseController requestResponseController,
-            MutableClock sharedClock
+            MutableClock sharedClock,
+            SplittableRandom randomGenerator
     ) {
         MutableClock clock;
 
@@ -84,7 +85,8 @@ public class Model {
                 new ContextCache(),
                 clock,
                 requestResponseController,
-                null
+                null,
+                randomGenerator.split()
         );
     }
 
@@ -111,11 +113,11 @@ public class Model {
             List<AgentSet> agentsForEachCore,
             Environment environment,
             RequestResponseController requestResponseController,
-            MutableClock sharedClock
+            MutableClock sharedClock,
+            SplittableRandom randomGenerator
     ) {
         ExecutorService executorService = Executors.newFixedThreadPool(config.threadCount());
         List<Future<MutableResults>> futures = new ArrayList<>();
-        SplittableRandom randomGenerator = new SplittableRandom(config.seed());
 
         // Launch worker threads
         for (int threadIndex = 0; threadIndex < config.threadCount(); threadIndex++) {
@@ -185,14 +187,17 @@ public class Model {
         MutableClock sharedClock = makeClockIfSynced();
 
         RequestResponseController requestResponseController = new RequestResponseController(config);
-        createAndSetEnvironmentContext(environment, requestResponseController, sharedClock);
+
+        SplittableRandom randomGenerator = new SplittableRandom(config.seed());
+
+        createAndSetEnvironmentContext(environment, requestResponseController, sharedClock, randomGenerator);
 
         CoordinatorHandle coordinatorHandle = null;
         if (config.areThreadsSynced())
             coordinatorHandle = launchCoordinator(environment, requestResponseController, sharedClock);
 
         try {
-            launchWorkers(agentsForEachCore, environment, requestResponseController, sharedClock);
+            launchWorkers(agentsForEachCore, environment, requestResponseController, sharedClock, randomGenerator);
         } finally {
             if (coordinatorHandle != null)
                 stopCoordinator(coordinatorHandle);

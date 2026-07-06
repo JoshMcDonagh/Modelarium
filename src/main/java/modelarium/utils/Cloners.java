@@ -2,9 +2,13 @@ package modelarium.utils;
 
 import com.rits.cloning.Cloner;
 import com.rits.cloning.IFastCloner;
-import modelarium.entities.attributes.events.functional.*;
+import modelarium.entities.attributes.events.functional.AgentEventIsTriggeredFunction;
+import modelarium.entities.attributes.events.functional.AgentEventRunFunction;
+import modelarium.entities.attributes.events.functional.EnvironmentEventIsTriggeredFunction;
+import modelarium.entities.attributes.events.functional.EnvironmentEventRunFunction;
 import modelarium.entities.attributes.properties.functional.*;
-import modelarium.entities.attributes.routines.functional.*;
+import modelarium.entities.attributes.routines.functional.AgentRoutineRunFunction;
+import modelarium.entities.attributes.routines.functional.EnvironmentRoutineRunFunction;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.logging.AttributeSetLog;

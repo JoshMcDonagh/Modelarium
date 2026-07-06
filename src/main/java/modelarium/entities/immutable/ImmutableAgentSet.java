@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.random.RandomGenerator;
 
 public final class ImmutableAgentSet implements Iterable<ImmutableAgent> {
     private final AgentSet agentSet;
@@ -50,9 +51,9 @@ public final class ImmutableAgentSet implements Iterable<ImmutableAgent> {
         return agentSet.getFilteredAgents(agentFilter).getAsImmutable();
     }
 
-    public Iterator<ImmutableAgent> getRandomIterator() {
+    public Iterator<ImmutableAgent> getRandomIterator(RandomGenerator randomGenerator) {
         List<ImmutableAgent> shuffledAgents = getAsList();
-        Collections.shuffle(shuffledAgents);
+        Collections.shuffle(shuffledAgents, randomGenerator);
         return shuffledAgents.iterator();
     }
 

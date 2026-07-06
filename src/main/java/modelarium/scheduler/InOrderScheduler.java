@@ -5,6 +5,8 @@ import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.AgentSet;
 import modelarium.entities.immutable.ImmutableEnvironment;
 
+import java.util.random.RandomGenerator;
+
 /**
  * A scheduler that executes each agent in the order they appear in the agent set.
  * <p>
@@ -12,7 +14,7 @@ import modelarium.entities.immutable.ImmutableEnvironment;
  * and predictably for each simulation tick.
  * </p>
  */
-public class InOrderScheduler extends Scheduler {
+public class InOrderScheduler implements Scheduler {
 
     /**
      * Executes each agent's {@code run()} method in the order they are stored in the agent set.
@@ -20,7 +22,13 @@ public class InOrderScheduler extends Scheduler {
      * @param agentSet the set of agents to run for this tick
      */
     @Override
-    public void runTick(ImmutableClock clock, ImmutableEnvironment environment, AgentSet agentSet) {
+    public void runTick(
+            String threadName,
+            ImmutableClock clock,
+            ImmutableEnvironment environment,
+            AgentSet agentSet,
+            RandomGenerator randomGenerator
+    ) {
         for (Agent agent : agentSet)
             agent.run();
     }

@@ -87,7 +87,6 @@ public class WorkerThread implements Callable<MutableResults> {
     public MutableResults call() throws InterruptedException {
         MutableClock clock = Objects.requireNonNullElseGet(sharedClock, () -> new MutableClock(config.tickCount()));
         ContextCache cache = new ContextCache();
-        config.scheduler().setRandomGenerator(randomGenerator);
 
         for (Agent agent : agentsInThread) {
             Environment localEnvironment = null;
@@ -117,7 +116,13 @@ public class WorkerThread implements Callable<MutableResults> {
 
         // Simulation main loop
         while (!clock.isFinished()) {
-            config.scheduler().runTick(immutableClock, immutableEnvironment, agentsInThread);
+            config.scheduler().runTick(
+                    threadName,
+                    immutableClock,
+                    immutableEnvironment,
+                    agentsInThread,
+                    randomGenerator
+            );
 
             if (config.areThreadsSynced()) {
                 requestResponseInterface.waitUntilAllWorkersFinishTick();

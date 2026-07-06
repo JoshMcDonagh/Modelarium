@@ -1,7 +1,10 @@
 package unit.modelarium.multithreading.requestresponse;
 
 import modelarium.entities.agents.AgentSet;
-import modelarium.multithreading.requestresponse.*;
+import modelarium.multithreading.requestresponse.Request;
+import modelarium.multithreading.requestresponse.RequestType;
+import modelarium.multithreading.requestresponse.Response;
+import modelarium.multithreading.requestresponse.ResponseType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

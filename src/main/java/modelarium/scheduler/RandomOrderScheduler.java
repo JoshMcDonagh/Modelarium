@@ -6,6 +6,7 @@ import modelarium.entities.agents.AgentSet;
 import modelarium.entities.immutable.ImmutableEnvironment;
 
 import java.util.Iterator;
+import java.util.random.RandomGenerator;
 
 /**
  * A scheduler that executes agents in a randomised order for each tick.
@@ -14,7 +15,7 @@ import java.util.Iterator;
  * orders and may more closely reflect stochastic processes in real-world systems.
  * </p>
  */
-public class RandomOrderScheduler extends Scheduler {
+public class RandomOrderScheduler implements Scheduler {
 
     /**
      * Executes each agent's {@code run()} method in a randomised order.
@@ -22,8 +23,14 @@ public class RandomOrderScheduler extends Scheduler {
      * @param agentSet the set of agents to run for this tick
      */
     @Override
-    public void runTick(ImmutableClock clock, ImmutableEnvironment environment, AgentSet agentSet) {
-        Iterator<Agent> randomIterator = agentSet.getRandomIterator(getRandomGenerator());
+    public void runTick(
+            String threadName,
+            ImmutableClock clock,
+            ImmutableEnvironment environment,
+            AgentSet agentSet,
+            RandomGenerator randomGenerator
+    ) {
+        Iterator<Agent> randomIterator = agentSet.getRandomIterator(randomGenerator);
         while (randomIterator.hasNext())
             randomIterator.next().run();
     }

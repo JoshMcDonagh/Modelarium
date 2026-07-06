@@ -16,9 +16,11 @@ import modelarium.results.immutable.ImmutableResults;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Integration test: verifies that a deterministic model produces equivalent
