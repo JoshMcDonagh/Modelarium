@@ -1,0 +1,128 @@
+package integration.determinism;
+
+import helpers.TestFixtures;
+import modelarium.Config;
+import modelarium.Model;
+import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.generators.DefaultAgentGenerator;
+import modelarium.entities.attributes.AgentAttributeSet;
+import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeAccessLevel;
+import modelarium.entities.attributes.properties.AgentProperty;
+import modelarium.entities.contexts.AgentContext;
+import modelarium.entities.contexts.AgentSimulationContext;
+import modelarium.entities.environments.Environment;
+import modelarium.entities.environments.FunctionalEnvironmentGenerator;
+import modelarium.results.immutable.ImmutableResults;
+import modelarium.scheduler.RandomOrderScheduler;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
+public class determinismTest {
+    private static final int POPULATION = 24;
+    private static final int TICKS = 15;
+    private static final int THREADS = 3;
+
+    @BeforeAll
+    static void openForCloning() {
+        TestFixtures.openToCloningModule("integration.determinism");
+    }
+
+    // ---- Agent property: a seeded random walk ----
+
+    static class RandomWalk extends AgentProperty<Long> {
+        private long value = 0;
+
+        RandomWalk() {
+            super("walk", true, AttributeAccessLevel.PUBLIC, Long.class);
+        }
+
+        @Override
+        protected void run(AgentContext context) {
+            value += context.getRandom().nextLong(1_000_000);
+        }
+
+        @Override
+        protected void set(AgentContext context, Long v) {
+            value = v;
+        }
+
+        @Override
+        protected Long get(AgentContext context) {
+            return value;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, List<Long>> runModel(long seed) {
+        DefaultAgentGenerator agentGen = new DefaultAgentGenerator() {
+            private int idx = 0;
+
+            @Override
+            protected Agent generateAgent(Config config) {
+                String name = String.format("agent_%02d", idx++);
+                AgentAttributeSet set = new AgentAttributeSet(name, "state",
+                        (List<Attribute<AgentSimulationContext>>) (List<?>) List.of(new RandomWalk()));
+                return new Agent(name, List.of(set));
+            }
+        };
+
+        Config config = Config.builder()
+                .populationSize(POPULATION)
+                .tickCount(TICKS)
+                .threadCount(THREADS)
+                .areThreadsSynced(false)
+                .agentGenerator(agentGen)
+                .environmentGenerator(new FunctionalEnvironmentGenerator(c -> new Environment("env", List.of())))
+                .scheduler(new RandomOrderScheduler())
+                .seed(seed)
+                .build();
+
+        Model model = new Model(config);
+        model.run();
+
+        ImmutableResults results = model.getResults();
+        Map<String, List<Long>> logs = new TreeMap<>();
+
+        for (int i = 0; i < POPULATION; i++) {
+            String name = String.format("agent_%02d", i);
+            logs.put(name, results.agents().attributeLogs(name, "state", "walk", Long.class));
+        }
+
+        return logs;
+    }
+
+    @Test
+    public void sameSeedAndThreadCountProducesIdenticalLogs() {
+        Map<String, List<Long>> first = runModel(42L);
+        Map<String, List<Long>> second = runModel(42L);
+
+        for (Map.Entry<String, List<Long>> entry : first.entrySet())
+            assertEquals(TICKS, entry.getValue().size(),
+                    "Agent " + entry.getKey() + " should log one value per tick.");
+
+        assertEquals(first, second,
+                "Two runs with the same seed and thread count must produce "
+                        + "identical full attribute logs, not just final values.");
+    }
+
+    @Test
+    public void differentSeedsProduceDifferentLogs() {
+        Map<String, List<Long>> first = runModel(42L);
+        Map<String, List<Long>> third = runModel(43L);
+
+        // 24 agents x 15 ticks of independent bounded draws colliding across
+        // two seeds is astronomically unlikely; if this fails, the seed is
+        // not reaching agent behaviour at all.
+        assertNotEquals(first, third,
+                "Runs with different seeds should diverge; if they match, "
+                        + "Config.seed() is not being consumed.");
+    }
+}
