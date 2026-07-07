@@ -1,6 +1,7 @@
 package helpers;
 
 import modelarium.Config;
+import modelarium.clock.Clock;
 import modelarium.clock.MutableClock;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.AgentSet;
@@ -192,6 +193,27 @@ public final class TestFixtures {
     }
 
     /**
+     * An agent simulation context with a given clock.
+     */
+    public static AgentSimulationContext agentSimulationContextWithClock(
+            Config config,
+            MutableClock clock
+    ) {
+        AgentSet agentSet = TestFixtures.agentSetOfSize(config.populationSize());
+
+        return new AgentSimulationContext(
+                agentSet.get(0),
+                agentSet,
+                config,
+                contextCache(),
+                clock,
+                requestResponseController(config),
+                emptyEnvironment(),
+                new SplittableRandom()
+        );
+    }
+
+    /**
      * An agent simulation context with a given agent.
      */
     public static AgentSimulationContext agentSimulationContextWithAgent(
@@ -301,6 +323,27 @@ public final class TestFixtures {
         agentSimulationContext.setCurrentAttribute(attribute);
 
         return agentSimulationContext;
+    }
+
+    /**
+     * An agent simulation context with a given random generator.
+     */
+    public static AgentSimulationContext agentSimulationContextWithRandomGenerator(
+            Config config,
+            RandomGenerator randomGenerator
+    ) {
+        AgentSet agentSet = TestFixtures.agentSetOfSize(config.populationSize());
+
+        return new AgentSimulationContext(
+                agentSet.get(0),
+                agentSet,
+                config,
+                contextCache(),
+                mutableClockFromConfig(config),
+                requestResponseController(config),
+                emptyEnvironment(),
+                randomGenerator
+        );
     }
 
     public static void openToCloningModule(String... packages) {

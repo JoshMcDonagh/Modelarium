@@ -3,6 +3,7 @@ package unit.modelarium.entities.contexts;
 import helpers.TestAttributes;
 import helpers.TestFixtures;
 import modelarium.Config;
+import modelarium.clock.MutableClock;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.AgentSet;
 import modelarium.entities.attributes.AgentAttributeSet;
@@ -20,9 +21,9 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.SplittableRandom;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class AgentSimulationContextTest {
@@ -118,21 +119,45 @@ public class AgentSimulationContextTest {
 
     @Test
     public void testGetClock() {
-        fail("Test not implemented...");
+        Config config  = TestFixtures.syncedConfig(2, 10, 1);
+        MutableClock clock = TestFixtures.mutableClockFromConfig(config);
+        AgentSimulationContext context = TestFixtures.agentSimulationContextWithClock(config, clock);
+
+        assertSame(clock, context.getClock());
     }
 
     @Test
     public void testDoesAgentExistInThisCoreTrue() {
-        fail("Test not implemented...");
+        int populationSize = 20;
+
+        Config config  = TestFixtures.syncedConfig(populationSize, 10, 1);
+        AgentSet agentSet = TestFixtures.agentSetOfSize(populationSize);
+        AgentSimulationContext context = TestFixtures.agentSimulationContextWithAgent(agentSet.get(0), agentSet, config);
+
+        String agentName = agentSet.get(12).name();
+
+        assertTrue(context.doesAgentExistInThisCore(agentName));
     }
 
     @Test
     public void testDoesAgentExistInThisCoreFalse() {
-        fail("Test not implemented...");
+        int populationSize = 20;
+
+        Config config  = TestFixtures.syncedConfig(populationSize, 10, 1);
+        AgentSet agentSet = TestFixtures.agentSetOfSize(populationSize);
+        AgentSimulationContext context = TestFixtures.agentSimulationContextWithAgent(agentSet.get(0), agentSet, config);
+
+        String agentName = "James";
+
+        assertFalse(context.doesAgentExistInThisCore(agentName));
     }
 
     @Test
     public void testGetRandom() {
-        fail("Test not implemented...");
+        Config config  = TestFixtures.syncedConfig(2, 10, 1);
+        SplittableRandom randomGenerator = new SplittableRandom();
+        AgentSimulationContext context = TestFixtures.agentSimulationContextWithRandomGenerator(config, randomGenerator);
+
+        assertSame(randomGenerator, context.getRandom());
     }
 }
