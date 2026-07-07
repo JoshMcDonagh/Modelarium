@@ -8,10 +8,22 @@ import modelarium.entities.agents.AgentSet;
 import modelarium.entities.attributes.AgentAttributeSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.contexts.AgentSimulationContext;
+import modelarium.entities.contexts.ContextCache;
+import modelarium.entities.contexts.SimulationContext;
+import modelarium.entities.environments.Environment;
+import modelarium.entities.immutable.ImmutableEntity;
+import modelarium.entities.immutable.ImmutableEnvironment;
+import modelarium.multithreading.requestresponse.RequestResponseController;
+import modelarium.multithreading.requestresponse.RequestResponseInterface;
 import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.*;
 
 public class AgentSimulationContextTest {
     @Test
@@ -20,48 +32,88 @@ public class AgentSimulationContextTest {
         Agent otherAgent = TestFixtures.emptyAgent("Bob");
         AgentSet agentSet = TestFixtures.agentSet(agent, otherAgent);
         Config config = TestFixtures.syncedConfig(2, 10, 1);
-        AgentSimulationContext context = TestFixtures.agentSimulationContext(agent, agentSet, config);
+        AgentSimulationContext context = TestFixtures.agentSimulationContextWithAgent(agent, agentSet, config);
 
         assertSame(agent, context.getThisEntity());
     }
 
     @Test
     public void testGetThisAttributeSet() {
-        Agent agent = TestFixtures.emptyAgent("Alice");
-        Agent otherAgent = TestFixtures.emptyAgent("Bob");
-        AgentSet agentSet = TestFixtures.agentSet(agent, otherAgent);
         Config config = TestFixtures.syncedConfig(2, 10, 1);
         AgentAttributeSet set = TestAttributes.singlePropertyAgentSet("owner", "food", "hunger");
-        AgentSimulationContext context = TestFixtures.agentSimulationContextWithAttributeSet(agent, agentSet, config, set);
+        AgentSimulationContext context = TestFixtures.agentSimulationContextWithAttributeSet(config, set);
 
         assertSame(set, context.getThisAttributeSet());
     }
 
     @Test
     public void testGetThisAttribute() {
-        Agent agent = TestFixtures.emptyAgent("Alice");
-        Agent otherAgent = TestFixtures.emptyAgent("Bob");
-        AgentSet agentSet = TestFixtures.agentSet(agent, otherAgent);
         Config config = TestFixtures.syncedConfig(2, 10, 1);
         Attribute<?> attribute = new TestAttributes.CounterProperty("a");
-        AgentSimulationContext context = TestFixtures.agentSimulationContextWithAttribute(agent, agentSet, config, attribute);
+        AgentSimulationContext context = TestFixtures.agentSimulationContextWithAttribute(config, attribute);
 
         assertSame(attribute, context.getThisAttribute());
     }
 
     @Test
-    public void testGetEnvironmentWithUnsyncedThreads() {
-        fail("Test not implemented...");
+    public void testGetEnvironmentWithUnsyncedThreads() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Config config = TestFixtures.unsyncedConfig(2, 10, 1);
+        Environment environment = TestFixtures.emptyEnvironment();
+        AgentSimulationContext context = TestFixtures.agentSimulationContextWithEnvironment(config, environment);
+
+        ImmutableEnvironment returnedImmutableEnvironment = context.getEnvironment();
+        Method getMutableEntityMethod = ImmutableEntity.class.getDeclaredMethod("getMutableEntity");
+        getMutableEntityMethod.setAccessible(true);
+        Environment returnedEnvironment = (Environment) getMutableEntityMethod.invoke(returnedImmutableEnvironment);
+
+        assertSame(environment, returnedEnvironment);
     }
 
     @Test
-    public void testGetEnvironmentWithSyncedThreadsIsCached() {
-        fail("Test not implemented...");
+    public void testGetEnvironmentWithSyncedThreadsIsCached() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Config config = TestFixtures.syncedConfig(2, 10, 1);
+        ContextCache cache = TestFixtures.contextCache();
+        Environment environment = TestFixtures.emptyEnvironment();
+        cache.addEnvironment(environment);
+        AgentSimulationContext context = TestFixtures.agentSimulationContextWithCache(config, cache);
+
+        ImmutableEnvironment returnedImmutableEnvironment = context.getEnvironment();
+        Method getMutableEntityMethod = ImmutableEntity.class.getDeclaredMethod("getMutableEntity");
+        getMutableEntityMethod.setAccessible(true);
+        Environment returnedEnvironment = (Environment) getMutableEntityMethod.invoke(returnedImmutableEnvironment);
+
+        assertSame(environment, returnedEnvironment);
     }
 
     @Test
-    public void testGetEnvironmentWithSyncedThreadsIsNotCached() {
-        fail("Test not implemented...");
+    public void testGetEnvironmentWithSyncedThreadsIsNotCached() throws InterruptedException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        Config config = TestFixtures.syncedConfig(2, 10, 1);
+        Environment environment = TestFixtures.emptyEnvironment();
+        RequestResponseInterface mockRequestResponseInterface = mock(RequestResponseInterface.class);
+        doReturn(environment).when(mockRequestResponseInterface).getEnvironmentFromCoordinator(any());
+        AgentSimulationContext context = TestFixtures.emptyAgentSimulationContext(config);
+        Field requestResponseInterfaceField = SimulationContext.class.getDeclaredField(
+                "requestResponseInterface"
+        );
+        requestResponseInterfaceField.setAccessible(true);
+        requestResponseInterfaceField.set(context, mockRequestResponseInterface);
+
+        ImmutableEnvironment returnedImmutableEnvironment = context.getEnvironment();
+        Method getMutableEntityMethod = ImmutableEntity.class.getDeclaredMethod("getMutableEntity");
+        getMutableEntityMethod.setAccessible(true);
+        Environment returnedEnvironment = (Environment) getMutableEntityMethod.invoke(returnedImmutableEnvironment);
+
+        assertSame(environment, returnedEnvironment);
+    }
+
+    @Test
+    public void testGetEnvironmentSimulationInterruptedException() {
+        fail("Not yet implemented...");
+    }
+
+    @Test
+    public void testGetEnvironmentEnvironmentNotFoundException() {
+        fail("Not yet implemented...");
     }
 
     @Test

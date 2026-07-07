@@ -134,6 +134,18 @@ public final class TestFixtures {
     }
 
     /**
+     * An agent set aof set size.
+     */
+    public static AgentSet agentSetOfSize(int size) {
+        AgentSet agentSet = new AgentSet();
+
+        for (int i = 0; i < size; i++)
+            agentSet.add(emptyAgent(String.valueOf(i)));
+
+        return agentSet;
+    }
+
+    /**
      * An agent set consisting of given agents.
      */
     public static AgentSet agentSet(Agent... agents) {
@@ -162,9 +174,27 @@ public final class TestFixtures {
     }
 
     /**
-     * An agent simulation context.
+     * An empty agent simulation context.
      */
-    public static AgentSimulationContext agentSimulationContext(
+    public static AgentSimulationContext emptyAgentSimulationContext(Config config) {
+        AgentSet agentSet = TestFixtures.agentSetOfSize(config.populationSize());
+
+        return new AgentSimulationContext(
+                agentSet.get(0),
+                agentSet,
+                config,
+                contextCache(),
+                mutableClockFromConfig(config),
+                requestResponseController(config),
+                emptyEnvironment(),
+                new SplittableRandom()
+        );
+    }
+
+    /**
+     * An agent simulation context with a given agent.
+     */
+    public static AgentSimulationContext agentSimulationContextWithAgent(
             Agent agent,
             AgentSet agentSet,
             Config config
@@ -182,16 +212,58 @@ public final class TestFixtures {
     }
 
     /**
+     * An agent simulation context with a given environment.
+     */
+    public static AgentSimulationContext agentSimulationContextWithEnvironment(
+            Config config,
+            Environment environment
+    ) {
+        AgentSet agentSet = TestFixtures.agentSetOfSize(config.populationSize());
+
+        return new AgentSimulationContext(
+                agentSet.get(0),
+                agentSet,
+                config,
+                contextCache(),
+                mutableClockFromConfig(config),
+                requestResponseController(config),
+                environment,
+                new SplittableRandom()
+        );
+    }
+
+    /**
+     * An agent simulation context with a given context cache,
+     */
+    public static AgentSimulationContext agentSimulationContextWithCache(
+            Config config,
+            ContextCache cache
+    ) {
+        AgentSet agentSet = TestFixtures.agentSetOfSize(config.populationSize());
+
+        return new AgentSimulationContext(
+                agentSet.get(0),
+                agentSet,
+                config,
+                cache,
+                mutableClockFromConfig(config),
+                requestResponseController(config),
+                emptyEnvironment(),
+                new SplittableRandom()
+        );
+    }
+
+    /**
      * An agent simulation context with a given current attribute set.
      */
     public static AgentSimulationContext agentSimulationContextWithAttributeSet(
-            Agent agent,
-            AgentSet agentSet,
             Config config,
             AttributeSet<?,?> attributeSet
     ) {
+        AgentSet agentSet = TestFixtures.agentSetOfSize(config.populationSize());
+
         AgentSimulationContext agentSimulationContext = new AgentSimulationContext(
-                agent,
+                agentSet.get(0),
                 agentSet,
                 config,
                 contextCache(),
@@ -210,13 +282,13 @@ public final class TestFixtures {
      * An agent simulation context with a given current attribute.
      */
     public static AgentSimulationContext agentSimulationContextWithAttribute(
-            Agent agent,
-            AgentSet agentSet,
             Config config,
             Attribute<?> attribute
     ) {
+        AgentSet agentSet = TestFixtures.agentSetOfSize(config.populationSize());
+
         AgentSimulationContext agentSimulationContext = new AgentSimulationContext(
-                agent,
+                agentSet.get(0),
                 agentSet,
                 config,
                 contextCache(),
