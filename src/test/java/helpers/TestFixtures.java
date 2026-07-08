@@ -224,6 +224,52 @@ public final class TestFixtures {
     }
 
     /**
+     * A simulation context with a given agent set.
+     */
+    public static <C extends SimulationContext> C simulationContextWithAgentSet(
+            Class<C> contextClass,
+            Config config,
+            AgentSet agentSet
+    ) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        Environment environment = emptyEnvironment();
+
+        Class<?> entityClass;
+        Entity<?,?,?,?> entity;
+
+        if (contextClass.equals(AgentSimulationContext.class)) {
+            entityClass = Agent.class;
+            entity = agentSet.get(0);
+        }
+        else if (contextClass.equals(EnvironmentSimulationContext.class)) {
+            entityClass = Environment.class;
+            entity = environment;
+        }
+        else {
+            throw new IllegalArgumentException("'" + contextClass.getName() + "' is not supported");
+        }
+
+        return contextClass.getConstructor(
+                entityClass,
+                AgentSet.class,
+                Config.class,
+                ContextCache.class,
+                MutableClock.class,
+                RequestResponseController.class,
+                Environment.class,
+                RandomGenerator.class
+        ).newInstance(
+                entity,
+                agentSet,
+                config,
+                contextCache(),
+                mutableClockFromConfig(config),
+                requestResponseController(config),
+                emptyEnvironment(),
+                new SplittableRandom()
+        );
+    }
+
+    /**
      * A simulation context with a given clock.
      */
     public static <C extends SimulationContext> C simulationContextWithClock(
