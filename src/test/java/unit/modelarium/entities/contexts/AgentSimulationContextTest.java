@@ -14,6 +14,10 @@ import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.immutable.ImmutableEntity;
 import modelarium.entities.immutable.ImmutableEnvironment;
+import modelarium.exceptions.CoordinatorErrorException;
+import modelarium.exceptions.CoordinatorTimeoutException;
+import modelarium.exceptions.EnvironmentNotFoundException;
+import modelarium.exceptions.SimulationInterruptedException;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 import org.junit.jupiter.api.Test;
@@ -107,14 +111,99 @@ public class AgentSimulationContextTest {
         assertSame(environment, returnedEnvironment);
     }
 
-    @Test
-    public void testGetEnvironmentSimulationInterruptedException() {
-        fail("Not yet implemented...");
+    private <E extends Throwable> AgentSimulationContext generateContextWhereGetEnvironmentFromCoordinatorThrows(
+            Class<E> exceptionClass,
+            String thisAgentName,
+            Config config
+    ) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, InterruptedException, NoSuchFieldException {
+        Agent thisAgent = TestFixtures.emptyAgent(thisAgentName);
+        Agent otherAgent = TestFixtures.emptyAgent("Not_" + thisAgentName);
+        AgentSet agentSet = TestFixtures.agentSet(thisAgent, otherAgent);
+
+        RequestResponseInterface mockRequestResponseInterface = mock(RequestResponseInterface.class);
+        doThrow(mock(exceptionClass)).when(mockRequestResponseInterface).getEnvironmentFromCoordinator(any());
+
+        AgentSimulationContext context = TestFixtures.agentSimulationContextWithAgent(thisAgent, agentSet, config);
+
+        Field requestResponseInterfaceField = SimulationContext.class.getDeclaredField(
+                "requestResponseInterface"
+        );
+        requestResponseInterfaceField.setAccessible(true);
+        requestResponseInterfaceField.set(context, mockRequestResponseInterface);
+
+        return context;
     }
 
     @Test
-    public void testGetEnvironmentEnvironmentNotFoundException() {
-        fail("Not yet implemented...");
+    public void testGetEnvironmentWithSyncedThreadsSimulationInterruptedException() throws InterruptedException, NoSuchFieldException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
+        String thisAgentName = "Alice";
+        Config config = TestFixtures.syncedConfig(2, 10, 1);
+
+        AgentSimulationContext context = generateContextWhereGetEnvironmentFromCoordinatorThrows(
+                InterruptedException.class,
+                thisAgentName,
+                config
+        );
+
+        SimulationInterruptedException exception = assertThrows(
+                SimulationInterruptedException.class,
+                context::getEnvironment
+        );
+
+        assertEquals(
+                "Interrupted while fetching environment requested by '" + thisAgentName + "'",
+                exception.getMessage()
+        );
+
+        assertInstanceOf(InterruptedException.class, exception.getCause());
+    }
+
+    @Test
+    public void testGetEnvironmentWithSyncedThreadsEnvironmentNotFoundException_CoordinatorTimeoutException() throws NoSuchFieldException, InterruptedException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+        String thisAgentName = "Alice";
+        Config config = TestFixtures.syncedConfig(2, 10, 1);
+
+        AgentSimulationContext context = generateContextWhereGetEnvironmentFromCoordinatorThrows(
+                CoordinatorTimeoutException.class,
+                thisAgentName,
+                config
+        );
+
+        EnvironmentNotFoundException exception = assertThrows(
+                EnvironmentNotFoundException.class,
+                context::getEnvironment
+        );
+
+        assertEquals(
+                "Environment requested by '" + thisAgentName + "' could not be found",
+                exception.getMessage()
+        );
+
+        assertInstanceOf(CoordinatorTimeoutException.class, exception.getCause());
+    }
+
+    @Test
+    public void testGetEnvironmentWithSyncedThreadsEnvironmentNotFoundException_CoordinatorErrorException() throws NoSuchFieldException, InterruptedException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        String thisAgentName = "Alice";
+        Config config = TestFixtures.syncedConfig(2, 10, 1);
+
+        AgentSimulationContext context = generateContextWhereGetEnvironmentFromCoordinatorThrows(
+                CoordinatorErrorException.class,
+                thisAgentName,
+                config
+        );
+
+        EnvironmentNotFoundException exception = assertThrows(
+                EnvironmentNotFoundException.class,
+                context::getEnvironment
+        );
+
+        assertEquals(
+                "Environment requested by '" + thisAgentName + "' could not be found",
+                exception.getMessage()
+        );
+
+        assertInstanceOf(CoordinatorErrorException.class, exception.getCause());
     }
 
     @Test
