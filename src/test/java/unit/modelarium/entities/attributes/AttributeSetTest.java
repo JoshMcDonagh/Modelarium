@@ -31,8 +31,8 @@ public class AttributeSetTest {
 
     @Test
     void testSizeReflectsAttributeCount() {
-        TestAttributes.CounterProperty p1 = new TestAttributes.CounterProperty("a");
-        TestAttributes.CounterProperty p2 = new TestAttributes.CounterProperty("b");
+        TestAttributes.AgentCounterProperty p1 = new TestAttributes.AgentCounterProperty("a");
+        TestAttributes.AgentCounterProperty p2 = new TestAttributes.AgentCounterProperty("b");
         AgentAttributeSet set = TestAttributes.agentAttributeSet("owner", "s", p1, p2);
 
         assertEquals(2, set.size());
@@ -51,7 +51,7 @@ public class AttributeSetTest {
 
     @Test
     void testPublicPropertyIsAccessible() {
-        TestAttributes.CounterProperty prop = new TestAttributes.CounterProperty("counter");
+        TestAttributes.AgentCounterProperty prop = new TestAttributes.AgentCounterProperty("counter");
         AgentAttributeSet set = TestAttributes.agentAttributeSet("owner", "s", prop);
 
         // getProperty is package-private on AttributeSet but public on AgentAttributeSet
@@ -90,7 +90,7 @@ public class AttributeSetTest {
 
     @Test
     void testGetEventThrowsWhenGivenAProperty() {
-        TestAttributes.CounterProperty prop = new TestAttributes.CounterProperty("hp");
+        TestAttributes.AgentCounterProperty prop = new TestAttributes.AgentCounterProperty("hp");
         AgentAttributeSet set = TestAttributes.agentAttributeSet("owner", "s", prop);
 
         assertThrows(AttributeAccessException.class, () -> set.getEvent("hp"),

@@ -1,8 +1,8 @@
 package helpers;
 
 import modelarium.Config;
-import modelarium.clock.Clock;
 import modelarium.clock.MutableClock;
+import modelarium.entities.Entity;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.AgentSet;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
@@ -12,10 +12,13 @@ import modelarium.entities.attributes.AttributeSet;
 import modelarium.entities.attributes.EnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.ContextCache;
+import modelarium.entities.contexts.EnvironmentSimulationContext;
+import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.EnvironmentGenerator;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.SplittableRandom;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -175,34 +178,88 @@ public final class TestFixtures {
     }
 
     /**
-     * An empty agent simulation context.
+     * An empty simulation context.
      */
-    public static AgentSimulationContext emptyAgentSimulationContext(Config config) {
+    public static <C extends SimulationContext> C emptySimulationContext(
+            Class<C> contextClass,
+            Config config
+    ) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         AgentSet agentSet = TestFixtures.agentSetOfSize(config.populationSize());
+        Environment environment = emptyEnvironment();
 
-        return new AgentSimulationContext(
-                agentSet.get(0),
+        Class<?> entityClass;
+        Entity<?,?,?,?> entity;
+
+        if (contextClass.equals(AgentSimulationContext.class)) {
+            entityClass = Agent.class;
+            entity = agentSet.get(0);
+        }
+        else if (contextClass.equals(EnvironmentSimulationContext.class)) {
+            entityClass = Environment.class;
+            entity = environment;
+        }
+        else {
+            throw new IllegalArgumentException("'" + contextClass.getName() + "' is not supported");
+        }
+
+        return contextClass.getConstructor(
+                entityClass,
+                AgentSet.class,
+                Config.class,
+                ContextCache.class,
+                MutableClock.class,
+                RequestResponseController.class,
+                Environment.class,
+                RandomGenerator.class
+        ).newInstance(
+                entity,
                 agentSet,
                 config,
                 contextCache(),
                 mutableClockFromConfig(config),
                 requestResponseController(config),
-                emptyEnvironment(),
+                environment,
                 new SplittableRandom()
         );
     }
 
     /**
-     * An agent simulation context with a given clock.
+     * A simulation context with a given clock.
      */
-    public static AgentSimulationContext agentSimulationContextWithClock(
+    public static <C extends SimulationContext> C simulationContextWithClock(
+            Class<C> contextClass,
             Config config,
             MutableClock clock
-    ) {
+    ) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         AgentSet agentSet = TestFixtures.agentSetOfSize(config.populationSize());
+        Environment environment = emptyEnvironment();
 
-        return new AgentSimulationContext(
-                agentSet.get(0),
+        Class<?> entityClass;
+        Entity<?,?,?,?> entity;
+
+        if (contextClass.equals(AgentSimulationContext.class)) {
+            entityClass = Agent.class;
+            entity = agentSet.get(0);
+        }
+        else if (contextClass.equals(EnvironmentSimulationContext.class)) {
+            entityClass = Environment.class;
+            entity = environment;
+        }
+        else {
+            throw new IllegalArgumentException("'" + contextClass.getName() + "' is not supported");
+        }
+
+        return contextClass.getConstructor(
+                entityClass,
+                AgentSet.class,
+                Config.class,
+                ContextCache.class,
+                MutableClock.class,
+                RequestResponseController.class,
+                Environment.class,
+                RandomGenerator.class
+        ).newInstance(
+                entity,
                 agentSet,
                 config,
                 contextCache(),
@@ -217,9 +274,9 @@ public final class TestFixtures {
      * An agent simulation context with a given agent.
      */
     public static AgentSimulationContext agentSimulationContextWithAgent(
+            Config config,
             Agent agent,
-            AgentSet agentSet,
-            Config config
+            AgentSet agentSet
     ) {
         return new AgentSimulationContext(
                 agent,
@@ -234,16 +291,41 @@ public final class TestFixtures {
     }
 
     /**
-     * An agent simulation context with a given environment.
+     * A simulation context with a given environment.
      */
-    public static AgentSimulationContext agentSimulationContextWithEnvironment(
+    public static <C extends SimulationContext> C simulationContextWithEnvironment(
+            Class<C> contextClass,
             Config config,
             Environment environment
-    ) {
+    ) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         AgentSet agentSet = TestFixtures.agentSetOfSize(config.populationSize());
 
-        return new AgentSimulationContext(
-                agentSet.get(0),
+        Class<?> entityClass;
+        Entity<?,?,?,?> entity;
+
+        if (contextClass.equals(AgentSimulationContext.class)) {
+            entityClass = Agent.class;
+            entity = agentSet.get(0);
+        }
+        else if (contextClass.equals(EnvironmentSimulationContext.class)) {
+            entityClass = Environment.class;
+            entity = environment;
+        }
+        else {
+            throw new IllegalArgumentException("'" + contextClass.getName() + "' is not supported");
+        }
+
+        return contextClass.getConstructor(
+                entityClass,
+                AgentSet.class,
+                Config.class,
+                ContextCache.class,
+                MutableClock.class,
+                RequestResponseController.class,
+                Environment.class,
+                RandomGenerator.class
+        ).newInstance(
+                entity,
                 agentSet,
                 config,
                 contextCache(),
@@ -255,16 +337,42 @@ public final class TestFixtures {
     }
 
     /**
-     * An agent simulation context with a given context cache,
+     * A simulation context with a given context cache,
      */
-    public static AgentSimulationContext agentSimulationContextWithCache(
+    public static <C extends SimulationContext> C simulationContextWithCache(
+            Class<C> contextClass,
             Config config,
             ContextCache cache
-    ) {
+    ) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         AgentSet agentSet = TestFixtures.agentSetOfSize(config.populationSize());
+        Environment environment = emptyEnvironment();
 
-        return new AgentSimulationContext(
-                agentSet.get(0),
+        Class<?> entityClass;
+        Entity<?,?,?,?> entity;
+
+        if (contextClass.equals(AgentSimulationContext.class)) {
+            entityClass = Agent.class;
+            entity = agentSet.get(0);
+        }
+        else if (contextClass.equals(EnvironmentSimulationContext.class)) {
+            entityClass = Environment.class;
+            entity = environment;
+        }
+        else {
+            throw new IllegalArgumentException("'" + contextClass.getName() + "' is not supported");
+        }
+
+        return contextClass.getConstructor(
+                entityClass,
+                AgentSet.class,
+                Config.class,
+                ContextCache.class,
+                MutableClock.class,
+                RequestResponseController.class,
+                Environment.class,
+                RandomGenerator.class
+        ).newInstance(
+                entity,
                 agentSet,
                 config,
                 cache,
@@ -276,16 +384,42 @@ public final class TestFixtures {
     }
 
     /**
-     * An agent simulation context with a given current attribute set.
+     * A simulation context with a given current attribute set.
      */
-    public static AgentSimulationContext agentSimulationContextWithAttributeSet(
+    public static <C extends SimulationContext> C simulationContextWithAttributeSet(
+            Class<C> contextClass,
             Config config,
             AttributeSet<?,?> attributeSet
-    ) {
+    ) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         AgentSet agentSet = TestFixtures.agentSetOfSize(config.populationSize());
+        Environment environment = emptyEnvironment();
 
-        AgentSimulationContext agentSimulationContext = new AgentSimulationContext(
-                agentSet.get(0),
+        Class<?> entityClass;
+        Entity<?,?,?,?> entity;
+
+        if (contextClass.equals(AgentSimulationContext.class)) {
+            entityClass = Agent.class;
+            entity = agentSet.get(0);
+        }
+        else if (contextClass.equals(EnvironmentSimulationContext.class)) {
+            entityClass = Environment.class;
+            entity = environment;
+        }
+        else {
+            throw new IllegalArgumentException("'" + contextClass.getName() + "' is not supported");
+        }
+
+        C context = contextClass.getConstructor(
+                entityClass,
+                AgentSet.class,
+                Config.class,
+                ContextCache.class,
+                MutableClock.class,
+                RequestResponseController.class,
+                Environment.class,
+                RandomGenerator.class
+        ).newInstance(
+                entity,
                 agentSet,
                 config,
                 contextCache(),
@@ -295,22 +429,48 @@ public final class TestFixtures {
                 new SplittableRandom()
         );
 
-        agentSimulationContext.setCurrentAttributeSet(attributeSet);
+        context.setCurrentAttributeSet(attributeSet);
 
-        return agentSimulationContext;
+        return context;
     }
 
     /**
-     * An agent simulation context with a given current attribute.
+     * A simulation context with a given current attribute.
      */
-    public static AgentSimulationContext agentSimulationContextWithAttribute(
+    public static <C extends SimulationContext> C simulationContextWithAttribute(
+            Class<C> contextClass,
             Config config,
             Attribute<?> attribute
-    ) {
+    ) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         AgentSet agentSet = TestFixtures.agentSetOfSize(config.populationSize());
+        Environment environment = emptyEnvironment();
 
-        AgentSimulationContext agentSimulationContext = new AgentSimulationContext(
-                agentSet.get(0),
+        Class<?> entityClass;
+        Entity<?,?,?,?> entity;
+
+        if (contextClass.equals(AgentSimulationContext.class)) {
+            entityClass = Agent.class;
+            entity = agentSet.get(0);
+        }
+        else if (contextClass.equals(EnvironmentSimulationContext.class)) {
+            entityClass = Environment.class;
+            entity = environment;
+        }
+        else {
+            throw new IllegalArgumentException("'" + contextClass.getName() + "' is not supported");
+        }
+
+        C context = contextClass.getConstructor(
+                entityClass,
+                AgentSet.class,
+                Config.class,
+                ContextCache.class,
+                MutableClock.class,
+                RequestResponseController.class,
+                Environment.class,
+                RandomGenerator.class
+        ).newInstance(
+                entity,
                 agentSet,
                 config,
                 contextCache(),
@@ -320,22 +480,48 @@ public final class TestFixtures {
                 new SplittableRandom()
         );
 
-        agentSimulationContext.setCurrentAttribute(attribute);
+        context.setCurrentAttribute(attribute);
 
-        return agentSimulationContext;
+        return context;
     }
 
     /**
-     * An agent simulation context with a given random generator.
+     * A simulation context with a given random generator.
      */
-    public static AgentSimulationContext agentSimulationContextWithRandomGenerator(
+    public static <C extends SimulationContext> C simulationContextWithRandomGenerator(
+            Class<C> contextClass,
             Config config,
             RandomGenerator randomGenerator
-    ) {
+    ) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         AgentSet agentSet = TestFixtures.agentSetOfSize(config.populationSize());
+        Environment environment = emptyEnvironment();
 
-        return new AgentSimulationContext(
-                agentSet.get(0),
+        Class<?> entityClass;
+        Entity<?,?,?,?> entity;
+
+        if (contextClass.equals(AgentSimulationContext.class)) {
+            entityClass = Agent.class;
+            entity = agentSet.get(0);
+        }
+        else if (contextClass.equals(EnvironmentSimulationContext.class)) {
+            entityClass = Environment.class;
+            entity = environment;
+        }
+        else {
+            throw new IllegalArgumentException("'" + contextClass.getName() + "' is not supported");
+        }
+
+        return contextClass.getConstructor(
+                entityClass,
+                AgentSet.class,
+                Config.class,
+                ContextCache.class,
+                MutableClock.class,
+                RequestResponseController.class,
+                Environment.class,
+                RandomGenerator.class
+        ).newInstance(
+                entity,
                 agentSet,
                 config,
                 contextCache(),

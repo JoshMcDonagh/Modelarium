@@ -29,15 +29,15 @@ public final class TestAttributes {
 
     // ---- Agent property: stores a double and increments each tick ----
 
-    public static class CounterProperty extends AgentProperty<Double> {
+    public static class AgentCounterProperty extends AgentProperty<Double> {
         private double value;
 
-        public CounterProperty(String name, double initialValue) {
+        public AgentCounterProperty(String name, double initialValue) {
             super(name, true, AttributeAccessLevel.PUBLIC, Double.class);
             this.value = initialValue;
         }
 
-        public CounterProperty(String name) {
+        public AgentCounterProperty(String name) {
             this(name, 0.0);
         }
 
@@ -236,19 +236,23 @@ public final class TestAttributes {
 
     // ---- Factory methods for building attribute sets ----
 
-    /**
-     * Creates an agent attribute set with a single counter property.
-     */
     @SuppressWarnings("unchecked")
     public static AgentAttributeSet singlePropertyAgentSet(String ownerName, String setName, String propertyName) {
-        CounterProperty property = new CounterProperty(propertyName);
+        AgentCounterProperty property = new AgentCounterProperty(propertyName);
         return new AgentAttributeSet(ownerName, setName,
                 (List<Attribute<AgentSimulationContext>>) (List<?>) List.of(property));
     }
 
-    /**
-     * Creates an agent attribute set with the given attributes.
-     */
+    @SuppressWarnings("unchecked")
+    public static EnvironmentAttributeSet singlePropertyEnvironmentSet(String ownerName, String setName, String propertyName) {
+        EnvironmentTickProperty property = new EnvironmentTickProperty(propertyName);
+        return new EnvironmentAttributeSet(
+                ownerName,
+                setName,
+                (List<Attribute<EnvironmentSimulationContext>>) (List<?>) List.of(property)
+        );
+    };
+
     @SuppressWarnings("unchecked")
     public static AgentAttributeSet agentAttributeSet(String ownerName, String setName, AgentProperty<?>... properties) {
         return new AgentAttributeSet(ownerName, setName,

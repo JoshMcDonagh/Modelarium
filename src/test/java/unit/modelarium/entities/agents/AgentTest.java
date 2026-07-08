@@ -56,8 +56,8 @@ public class AgentTest {
 
     @Test
     public void testTotalAttributeCountAcrossSets() {
-        TestAttributes.CounterProperty p1 = new TestAttributes.CounterProperty("a");
-        TestAttributes.CounterProperty p2 = new TestAttributes.CounterProperty("b");
+        TestAttributes.AgentCounterProperty p1 = new TestAttributes.AgentCounterProperty("a");
+        TestAttributes.AgentCounterProperty p2 = new TestAttributes.AgentCounterProperty("b");
         AgentAttributeSet setA = TestAttributes.agentAttributeSet("agent", "s1", p1);
         AgentAttributeSet setB = TestAttributes.agentAttributeSet("agent", "s2", p2);
         Agent agent = new Agent("agent", List.of(setA, setB));
