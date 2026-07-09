@@ -242,11 +242,32 @@ public class EnvironmentSimulationContextTest {
         assertSame(agent, returnedAgent);
     }
 
+    private Object anyFor(Class<?> parameterType) {
+        if (!parameterType.isPrimitive())
+            return any();
+        if (parameterType == int.class)
+            return anyInt();
+        if (parameterType == long.class)
+            return anyLong();
+        if (parameterType == double.class)
+            return anyDouble();
+        if (parameterType == float.class)
+            return anyFloat();
+        if (parameterType == boolean.class)
+            return anyBoolean();
+        if (parameterType == byte.class)
+            return anyByte();
+        if (parameterType == short.class)
+            return anyShort();
+        if (parameterType == char.class)
+            return anyChar();
+        throw new IllegalArgumentException("Unhandled primitive parameter type: " + parameterType);
+    }
+
     private <E extends Throwable> EnvironmentSimulationContext generateContextWhereRequestResponseInterfaceMethodThrows(
             Class<E> exceptionClass,
             String methodName,
             Class<?>[] methodParameterTypes,
-            Object[] methodArgs,
             Config config,
             Environment environment
     ) throws IllegalAccessException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException {
@@ -255,7 +276,12 @@ public class EnvironmentSimulationContextTest {
                 methodParameterTypes
         );
         RequestResponseInterface mockRequestResponseInterface = mock(RequestResponseInterface.class);
-        method.invoke(doThrow(mock(exceptionClass)).when(mockRequestResponseInterface), methodArgs);
+        RequestResponseInterface stubbing = doThrow(mock(exceptionClass)).when(mockRequestResponseInterface);
+
+        Object[] args = new Object[methodParameterTypes.length];
+        for (int i = 0; i < args.length; i++)
+            args[i] = anyFor(methodParameterTypes[i]);
+        method.invoke(stubbing, args);
 
         EnvironmentSimulationContext context = TestFixtures.simulationContextWithEnvironment(
                 EnvironmentSimulationContext.class,
@@ -282,7 +308,6 @@ public class EnvironmentSimulationContextTest {
                 InterruptedException.class,
                 "getAgentFromCoordinator",
                 new Class<?>[]{String.class, String.class},
-                new Object[]{ArgumentMatchers.any(), ArgumentMatchers.any()},
                 config,
                 environment
         );
@@ -310,7 +335,6 @@ public class EnvironmentSimulationContextTest {
                 CoordinatorTimeoutException.class,
                 "getAgentFromCoordinator",
                 new Class<?>[]{String.class, String.class},
-                new Object[]{ArgumentMatchers.any(), ArgumentMatchers.any()},
                 config,
                 environment
         );
@@ -338,7 +362,6 @@ public class EnvironmentSimulationContextTest {
                 CoordinatorErrorException.class,
                 "getAgentFromCoordinator",
                 new Class<?>[]{String.class, String.class},
-                new Object[]{ArgumentMatchers.any(), ArgumentMatchers.any()},
                 config,
                 environment
         );
@@ -405,7 +428,83 @@ public class EnvironmentSimulationContextTest {
     }
 
     @Test
-    public void testGetFilteredAgents_ThreadsSynced_SimulationInterruptedException() {
+    public void testGetFilteredAgents_ThreadsSynced_SimulationInterruptedException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
+        Config config = TestFixtures.syncedConfig(2, 10, 1);
+        Environment environment = TestFixtures.emptyEnvironment();
+        Predicate<Agent> filter = a -> true;
 
+        EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
+                InterruptedException.class,
+                "getFilteredAgentsFromCoordinator",
+                new Class<?>[]{String.class, Predicate.class},
+                config,
+                environment
+        );
+
+        SimulationInterruptedException exception = assertThrows(
+                SimulationInterruptedException.class,
+                () -> context.getFilteredAgents(filter)
+        );
+
+        assertEquals(
+                "Interrupted while retrieving filtered agents requested by " + "'" + environment.name() + "'",
+                exception.getMessage()
+        );
+
+        assertInstanceOf(InterruptedException.class, exception.getCause());
+    }
+
+    @Test
+    public void testGetFilteredAgents_ThreadsSynced_AgentNotFoundException_CoordinatorTimeoutException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
+        Config config = TestFixtures.syncedConfig(2, 10, 1);
+        Environment environment = TestFixtures.emptyEnvironment();
+        Predicate<Agent> filter = a -> true;
+
+        EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
+                CoordinatorTimeoutException.class,
+                "getFilteredAgentsFromCoordinator",
+                new Class<?>[]{String.class, Predicate.class},
+                config,
+                environment
+        );
+
+        AgentNotFoundException exception = assertThrows(
+                AgentNotFoundException.class,
+                () -> context.getFilteredAgents(filter)
+        );
+
+        assertEquals(
+                "Failed to retrieve filtered agents requested by '" + environment.name() + "' from the coordinator",
+                exception.getMessage()
+        );
+
+        assertInstanceOf(CoordinatorTimeoutException.class, exception.getCause());
+    }
+
+    @Test
+    public void testGetFilteredAgents_ThreadsSynced_AgentNotFoundException_CoordinatorErrorException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
+        Config config = TestFixtures.syncedConfig(2, 10, 1);
+        Environment environment = TestFixtures.emptyEnvironment();
+        Predicate<Agent> filter = a -> true;
+
+        EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
+                CoordinatorErrorException.class,
+                "getFilteredAgentsFromCoordinator",
+                new Class<?>[]{String.class, Predicate.class},
+                config,
+                environment
+        );
+
+        AgentNotFoundException exception = assertThrows(
+                AgentNotFoundException.class,
+                () -> context.getFilteredAgents(filter)
+        );
+
+        assertEquals(
+                "Failed to retrieve filtered agents requested by '" + environment.name() + "' from the coordinator",
+                exception.getMessage()
+        );
+
+        assertInstanceOf(CoordinatorErrorException.class, exception.getCause());
     }
 }
