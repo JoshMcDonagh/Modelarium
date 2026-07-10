@@ -97,6 +97,9 @@ class ContextTestHelpers {
         throw new IllegalArgumentException("Unhandled primitive parameter type: " + parameterType);
     }
 
+    private static final Function<Object, Stubber> DO_RETURN = Mockito::doReturn;
+    private static final Function<Object, Stubber> DO_THROW = v -> Mockito.doThrow(mock((Class<Throwable>) v));
+
     private static <C extends SimulationContext, T, E extends Entity<?,?,?,?>> C generateContextWithMockRequestResponseInterface(
             Class<C> contextClass,
             T returned,
@@ -118,21 +121,20 @@ class ContextTestHelpers {
         C context;
 
         if (contextClass.equals(AgentSimulationContext.class)) {
-            context = TestFixtures.simulationContextWithEnvironment(
-                    contextClass,
-                    config,
-                    (Environment) thisEntity
-            );
-        }
-        else if (contextClass.equals(EnvironmentSimulationContext.class)) {
-            // Need to differentiate based on if doMethod is doReturn or doThrow
             Agent agent = (Agent) thisEntity;
-            AgentSet agentSet = TestFixtures.agentSetOfSize(config.populationSize());
+            AgentSet agentSet = TestFixtures.agentSetOfSize(config.populationSize() - 1);
             agentSet.add(agent);
             context = (C) TestFixtures.agentSimulationContextWithAgent(
                     config,
                     agent,
                     agentSet
+            );
+        }
+        else if (contextClass.equals(EnvironmentSimulationContext.class)) {
+            context = TestFixtures.simulationContextWithEnvironment(
+                    contextClass,
+                    config,
+                    (Environment) thisEntity
             );
         }
         else {
@@ -163,7 +165,7 @@ class ContextTestHelpers {
                 methodParameterTypes,
                 config,
                 thisEntity,
-                Mockito::doReturn
+                DO_RETURN
         );
     }
 
@@ -182,7 +184,7 @@ class ContextTestHelpers {
                 methodParameterTypes,
                 config,
                 thisEntity,
-                Mockito::doThrow
+                DO_THROW
         );
     }
 
