@@ -195,7 +195,7 @@ public class EnvironmentSimulationContextTest {
     }
 
     @Test
-    public void testGetAgent_ThreadsSynced() throws InterruptedException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+    public void testGetAgent_ThreadsSynced() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         Config config = TestFixtures.syncedConfig(20, 10, 1);
         Agent agent = TestFixtures.emptyAgent("Carol");
 
@@ -302,7 +302,7 @@ public class EnvironmentSimulationContextTest {
     }
 
     @Test
-    public void testGetFilteredAgents_ThreadsSynced() throws InterruptedException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+    public void testGetFilteredAgents_ThreadsSynced() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         int populationSize = 7;
         Config config = TestFixtures.syncedConfig(populationSize, 10, 1);
         AgentSet agentSet = TestFixtures.agentSetOfSize(populationSize);
