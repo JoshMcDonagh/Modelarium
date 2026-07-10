@@ -153,7 +153,7 @@ public class EnvironmentSimulationContextTest {
         );
         String agentName = agentSet.get(agentIndex).name();
 
-        Agent returnedAgent = getMutableAgentFromImmutable(context.getAgent(agentName));
+        Agent returnedAgent = getMutableFromImmutable(context.getAgent(agentName));
 
         assertSame(agentSet.get(agentIndex), returnedAgent);
     }
@@ -170,7 +170,7 @@ public class EnvironmentSimulationContextTest {
                 cache
         );
 
-        Agent returnedAgent = getMutableAgentFromImmutable(context.getAgent(agent.name()));
+        Agent returnedAgent = getMutableFromImmutable(context.getAgent(agent.name()));
 
         assertSame(agent, returnedAgent);
     }
@@ -208,13 +208,13 @@ public class EnvironmentSimulationContextTest {
                 TestFixtures.emptyEnvironment()
         );
 
-        Agent returnedAgent = getMutableAgentFromImmutable(context.getAgent(agent.name()));
+        Agent returnedAgent = getMutableFromImmutable(context.getAgent(agent.name()));
 
         assertSame(agent, returnedAgent);
     }
 
     @Test
-    public void testGetAgent_ThreadsSynced_SimulationInterruptedException() throws NoSuchFieldException, InterruptedException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
+    public void testGetAgent_ThreadsSynced_SimulationInterruptedException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         String requestedAgentName = "John";
         Config config = TestFixtures.syncedConfig(2, 10, 1);
         Environment environment = TestFixtures.emptyEnvironment();
@@ -237,7 +237,7 @@ public class EnvironmentSimulationContextTest {
     }
 
     @Test
-    public void testGetAgent_ThreadsSynced_AgentNotFoundException_CoordinatorTimeoutException() throws NoSuchFieldException, InterruptedException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
+    public void testGetAgent_ThreadsSynced_AgentNotFoundException_CoordinatorTimeoutException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         String requestedAgentName = "John";
         Config config = TestFixtures.syncedConfig(2, 10, 1);
         Environment environment = TestFixtures.emptyEnvironment();
@@ -260,7 +260,7 @@ public class EnvironmentSimulationContextTest {
     }
 
     @Test
-    public void testGetAgent_ThreadsSynced_AgentNotFoundException_CoordinatorErrorException() throws NoSuchFieldException, InterruptedException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
+    public void testGetAgent_ThreadsSynced_AgentNotFoundException_CoordinatorErrorException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         String requestedAgentName = "John";
         Config config = TestFixtures.syncedConfig(2, 10, 1);
         Environment environment = TestFixtures.emptyEnvironment();
@@ -298,7 +298,7 @@ public class EnvironmentSimulationContextTest {
 
         ImmutableAgentSet filteredAgentSet = context.getFilteredAgents(filter);
 
-        assertSame(agentSet, getMutableAgentSetFromImmutable(filteredAgentSet));
+        assertSame(agentSet, getMutableFromImmutable(filteredAgentSet));
     }
 
     @Test
@@ -317,7 +317,7 @@ public class EnvironmentSimulationContextTest {
                 TestFixtures.emptyEnvironment()
         );
 
-        assertSame(agentSet, getMutableAgentSetFromImmutable(context.getFilteredAgents(filter)));
+        assertSame(agentSet, getMutableFromImmutable(context.getFilteredAgents(filter)));
     }
 
     @Test

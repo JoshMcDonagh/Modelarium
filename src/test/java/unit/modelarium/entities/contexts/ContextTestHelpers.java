@@ -2,20 +2,26 @@ package unit.modelarium.entities.contexts;
 
 import helpers.TestFixtures;
 import modelarium.Config;
+import modelarium.entities.Entity;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.AgentSet;
+import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.immutable.ImmutableAgent;
 import modelarium.entities.immutable.ImmutableAgentSet;
 import modelarium.entities.immutable.ImmutableEntity;
+import modelarium.entities.immutable.ImmutableEnvironment;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 import org.junit.jupiter.api.function.Executable;
+import org.mockito.Mockito;
+import org.mockito.stubbing.Stubber;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -27,20 +33,28 @@ import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.anyShort;
 import static org.mockito.Mockito.*;
 
-public class ContextTestHelpers {
-    public static Agent getMutableAgentFromImmutable(ImmutableAgent immutableAgent) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+class ContextTestHelpers {
+    private ContextTestHelpers() {}
+
+    static Agent getMutableFromImmutable(ImmutableAgent immutableAgent) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         Method getMutableEntityMethod = ImmutableEntity.class.getDeclaredMethod("getMutableEntity");
         getMutableEntityMethod.setAccessible(true);
         return (Agent) getMutableEntityMethod.invoke(immutableAgent);
     }
 
-    public static AgentSet getMutableAgentSetFromImmutable(ImmutableAgentSet immutableAgentSet) throws NoSuchFieldException, IllegalAccessException {
+    static Environment getMutableFromImmutable(ImmutableEnvironment immutableEnvironment) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method getMutableEntityMethod = ImmutableEntity.class.getDeclaredMethod("getMutableEntity");
+        getMutableEntityMethod.setAccessible(true);
+        return (Environment) getMutableEntityMethod.invoke(immutableEnvironment);
+    }
+
+    static AgentSet getMutableFromImmutable(ImmutableAgentSet immutableAgentSet) throws NoSuchFieldException, IllegalAccessException {
         Field agentSetField = ImmutableAgentSet.class.getDeclaredField("agentSet");
         agentSetField.setAccessible(true);
         return (AgentSet) agentSetField.get(immutableAgentSet);
     }
 
-    public static <E extends Throwable, C extends Throwable> void assertCorrectExceptionThrown(
+    static <E extends Throwable, C extends Throwable> void assertCorrectExceptionThrown(
             Class<E> expectedException,
             Executable executableToCheck,
             String expectedMessage,
@@ -53,23 +67,12 @@ public class ContextTestHelpers {
             assertInstanceOf(causingException, exception.getCause());
     }
 
-    public static <E extends Throwable> void assertCorrectExceptionThrown(
+    static <E extends Throwable> void assertCorrectExceptionThrown(
             Class<E> expectedException,
             Executable executableToCheck,
             String expectedMessage
     ) {
         assertCorrectExceptionThrown(expectedException, executableToCheck, expectedMessage, null);
-    }
-
-    public static void setContextsRequestResponseInterfaceField(
-            SimulationContext context,
-            RequestResponseInterface requestResponseInterface
-    ) throws NoSuchFieldException, IllegalAccessException {
-        Field requestResponseInterfaceField = SimulationContext.class.getDeclaredField(
-                "requestResponseInterface"
-        );
-        requestResponseInterfaceField.setAccessible(true);
-        requestResponseInterfaceField.set(context, requestResponseInterface);
     }
 
     private static Object anyFor(Class<?> parameterType) {
@@ -94,60 +97,93 @@ public class ContextTestHelpers {
         throw new IllegalArgumentException("Unhandled primitive parameter type: " + parameterType);
     }
 
-    public static <C extends SimulationContext, T> C generateContextWhereRequestResponseInterfaceMethodReturns(
-            Class<C> simulationContextClass,
+    private static <C extends SimulationContext, T, E extends Entity<?,?,?,?>> C generateContextWithMockRequestResponseInterface(
+            Class<C> contextClass,
             T returned,
             String methodName,
             Class<?>[] methodParameterTypes,
             Config config,
-            Environment environment
+            E thisEntity,
+            Function<T, Stubber> doMethod
     ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchFieldException {
         Method method = RequestResponseInterface.class.getDeclaredMethod(methodName, methodParameterTypes);
         RequestResponseInterface mockRequestResponseInterface = mock(RequestResponseInterface.class);
-        RequestResponseInterface stubbing = doReturn(returned).when(mockRequestResponseInterface);
+        RequestResponseInterface stubbing = doMethod.apply(returned).when(mockRequestResponseInterface);
 
         Object[] args = new Object[methodParameterTypes.length];
         for (int i = 0; i < args.length; i++)
             args[i] = anyFor(methodParameterTypes[i]);
         method.invoke(stubbing, args);
 
-        C context = TestFixtures.simulationContextWithEnvironment(
-                simulationContextClass,
-                config,
-                environment
-        );
+        C context;
 
-        setContextsRequestResponseInterfaceField(context, mockRequestResponseInterface);
+        if (contextClass.equals(AgentSimulationContext.class)) {
+            context = TestFixtures.simulationContextWithEnvironment(
+                    contextClass,
+                    config,
+                    (Environment) thisEntity
+            );
+        }
+        else if (contextClass.equals(EnvironmentSimulationContext.class)) {
+            // Need to differentiate based on if doMethod is doReturn or doThrow
+            Agent agent = (Agent) thisEntity;
+            AgentSet agentSet = TestFixtures.agentSetOfSize(config.populationSize());
+            agentSet.add(agent);
+            context = (C) TestFixtures.agentSimulationContextWithAgent(
+                    config,
+                    agent,
+                    agentSet
+            );
+        }
+        else {
+            throw new IllegalArgumentException("'" + contextClass.getName() + "' is not supported");
+        }
+
+        Field requestResponseInterfaceField = SimulationContext.class.getDeclaredField(
+                "requestResponseInterface"
+        );
+        requestResponseInterfaceField.setAccessible(true);
+        requestResponseInterfaceField.set(context, mockRequestResponseInterface);
 
         return context;
     }
 
-    public static <C extends SimulationContext, E extends Throwable> C generateContextWhereRequestResponseInterfaceMethodThrows(
-            Class<C> simulationContextClass,
-            Class<E> exceptionClass,
+    static <C extends SimulationContext, T, E extends Entity<?,?,?,?>> C generateContextWhereRequestResponseInterfaceMethodReturns(
+            Class<C> contextClass,
+            T returned,
             String methodName,
             Class<?>[] methodParameterTypes,
             Config config,
-            Environment environment
-    ) throws IllegalAccessException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException {
-        Method method = RequestResponseInterface.class.getDeclaredMethod(methodName, methodParameterTypes);
-        RequestResponseInterface mockRequestResponseInterface = mock(RequestResponseInterface.class);
-        RequestResponseInterface stubbing = doThrow(mock(exceptionClass)).when(mockRequestResponseInterface);
-
-        Object[] args = new Object[methodParameterTypes.length];
-        for (int i = 0; i < args.length; i++)
-            args[i] = anyFor(methodParameterTypes[i]);
-        method.invoke(stubbing, args);
-
-        C context = TestFixtures.simulationContextWithEnvironment(
-                simulationContextClass,
+            E thisEntity
+    ) throws NoSuchFieldException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
+        return generateContextWithMockRequestResponseInterface(
+                contextClass,
+                returned,
+                methodName,
+                methodParameterTypes,
                 config,
-                environment
+                thisEntity,
+                Mockito::doReturn
         );
+    }
 
-        setContextsRequestResponseInterfaceField(context, mockRequestResponseInterface);
-
-        return context;
+    static <C extends SimulationContext, T extends Throwable, E extends Entity<?,?,?,?>> C generateContextWhereRequestResponseInterfaceMethodThrows(
+            Class<C> contextClass,
+            Class<T> exceptionClass,
+            String methodName,
+            Class<?>[] methodParameterTypes,
+            Config config,
+            E thisEntity
+    ) throws IllegalAccessException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException {
+        return generateContextWithMockRequestResponseInterface(
+                contextClass,
+                exceptionClass,
+                methodName,
+                methodParameterTypes,
+                config,
+                thisEntity,
+                Mockito::doThrow
+        );
     }
 
 

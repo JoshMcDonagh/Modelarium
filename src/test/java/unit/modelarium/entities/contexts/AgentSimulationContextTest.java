@@ -28,6 +28,8 @@ import java.util.SplittableRandom;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static unit.modelarium.entities.contexts.ContextTestHelpers.generateContextWhereRequestResponseInterfaceMethodReturns;
+import static unit.modelarium.entities.contexts.ContextTestHelpers.getMutableFromImmutable;
 
 public class AgentSimulationContextTest {
     @Test
@@ -81,10 +83,7 @@ public class AgentSimulationContextTest {
                 environment
         );
 
-        ImmutableEnvironment returnedImmutableEnvironment = context.getEnvironment();
-        Method getMutableEntityMethod = ImmutableEntity.class.getDeclaredMethod("getMutableEntity");
-        getMutableEntityMethod.setAccessible(true);
-        Environment returnedEnvironment = (Environment) getMutableEntityMethod.invoke(returnedImmutableEnvironment);
+        Environment returnedEnvironment = getMutableFromImmutable(context.getEnvironment());
 
         assertSame(environment, returnedEnvironment);
     }
@@ -101,34 +100,26 @@ public class AgentSimulationContextTest {
                 cache
         );
 
-        ImmutableEnvironment returnedImmutableEnvironment = context.getEnvironment();
-        Method getMutableEntityMethod = ImmutableEntity.class.getDeclaredMethod("getMutableEntity");
-        getMutableEntityMethod.setAccessible(true);
-        Environment returnedEnvironment = (Environment) getMutableEntityMethod.invoke(returnedImmutableEnvironment);
+        Environment returnedEnvironment = getMutableFromImmutable(context.getEnvironment());
 
         assertSame(environment, returnedEnvironment);
     }
 
     @Test
-    public void testGetEnvironmentWithSyncedThreads_IsNotCached() throws InterruptedException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException {
+    public void testGetEnvironmentWithSyncedThreads_IsNotCached() throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException {
         Config config = TestFixtures.syncedConfig(2, 10, 1);
         Environment environment = TestFixtures.emptyEnvironment();
-        RequestResponseInterface mockRequestResponseInterface = mock(RequestResponseInterface.class);
-        doReturn(environment).when(mockRequestResponseInterface).getEnvironmentFromCoordinator(any());
-        AgentSimulationContext context = TestFixtures.emptySimulationContext(
-                AgentSimulationContext.class,
-                config
-        );
-        Field requestResponseInterfaceField = SimulationContext.class.getDeclaredField(
-                "requestResponseInterface"
-        );
-        requestResponseInterfaceField.setAccessible(true);
-        requestResponseInterfaceField.set(context, mockRequestResponseInterface);
 
-        ImmutableEnvironment returnedImmutableEnvironment = context.getEnvironment();
-        Method getMutableEntityMethod = ImmutableEntity.class.getDeclaredMethod("getMutableEntity");
-        getMutableEntityMethod.setAccessible(true);
-        Environment returnedEnvironment = (Environment) getMutableEntityMethod.invoke(returnedImmutableEnvironment);
+        AgentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodReturns(
+                AgentSimulationContext.class,
+                environment,
+                "getEnvironmentFromCoordinator",
+                new Class[]{String.class},
+                config,
+                environment
+        );
+
+        Environment returnedEnvironment = getMutableFromImmutable(context.getEnvironment());
 
         assertSame(environment, returnedEnvironment);
     }
@@ -141,6 +132,8 @@ public class AgentSimulationContextTest {
         Agent thisAgent = TestFixtures.emptyAgent(thisAgentName);
         Agent otherAgent = TestFixtures.emptyAgent("Not_" + thisAgentName);
         AgentSet agentSet = TestFixtures.agentSet(thisAgent, otherAgent);
+
+
 
         RequestResponseInterface mockRequestResponseInterface = mock(RequestResponseInterface.class);
         doThrow(mock(exceptionClass)).when(mockRequestResponseInterface).getEnvironmentFromCoordinator(any());
