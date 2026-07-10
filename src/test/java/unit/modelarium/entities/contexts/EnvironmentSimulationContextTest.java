@@ -10,28 +10,20 @@ import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.EnvironmentAttributeSet;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
-import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.environments.Environment;
-import modelarium.entities.immutable.ImmutableAgent;
 import modelarium.entities.immutable.ImmutableAgentSet;
-import modelarium.entities.immutable.ImmutableEntity;
 import modelarium.exceptions.AgentNotFoundException;
 import modelarium.exceptions.CoordinatorErrorException;
 import modelarium.exceptions.CoordinatorTimeoutException;
 import modelarium.exceptions.SimulationInterruptedException;
-import modelarium.multithreading.requestresponse.RequestResponseInterface;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.SplittableRandom;
 import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static unit.modelarium.entities.contexts.ContextTestHelpers.*;
 
 public class EnvironmentSimulationContextTest {
     @Test
@@ -71,27 +63,6 @@ public class EnvironmentSimulationContextTest {
         );
 
         assertSame(attribute, context.getThisAttribute());
-    }
-
-    private <E extends Throwable, C extends Throwable> void assertCorrectExceptionThrown(
-            Class<E> expectedException,
-            Executable executableToCheck,
-            String expectedMessage,
-            Class<C> causingException
-    ) {
-        E exception = assertThrows(expectedException, executableToCheck);
-        assertEquals(expectedMessage, exception.getMessage());
-
-        if (causingException != null)
-            assertInstanceOf(causingException, exception.getCause());
-    }
-
-    private <E extends Throwable> void assertCorrectExceptionThrown(
-            Class<E> expectedException,
-            Executable executableToCheck,
-            String expectedMessage
-    ) {
-        assertCorrectExceptionThrown(expectedException, executableToCheck, expectedMessage, null);
     }
 
     @Test
@@ -169,12 +140,6 @@ public class EnvironmentSimulationContextTest {
         assertSame(randomGenerator, context.getRandom());
     }
 
-    private Agent getMutableAgentFromImmutable(ImmutableAgent immutableAgent) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        Method getMutableEntityMethod = ImmutableEntity.class.getDeclaredMethod("getMutableEntity");
-        getMutableEntityMethod.setAccessible(true);
-        return (Agent) getMutableEntityMethod.invoke(immutableAgent);
-    }
-
     @Test
     public void testGetAgent_ExistsInThisCore() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         int populationSize = 20;
@@ -229,53 +194,13 @@ public class EnvironmentSimulationContextTest {
         );
     }
 
-    private void setContextsRequestResponseInterfaceField(
-            EnvironmentSimulationContext context,
-            RequestResponseInterface requestResponseInterface
-    ) throws NoSuchFieldException, IllegalAccessException {
-        Field requestResponseInterfaceField = SimulationContext.class.getDeclaredField(
-                "requestResponseInterface"
-        );
-        requestResponseInterfaceField.setAccessible(true);
-        requestResponseInterfaceField.set(context, requestResponseInterface);
-    }
-
-    private <T> EnvironmentSimulationContext generateContextWhereRequestResponseInterfaceMethodReturns(
-            T returned,
-            String methodName,
-            Class<?>[] methodParameterTypes,
-            Config config,
-            Environment environment
-    ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchFieldException {
-        Method method = RequestResponseInterface.class.getDeclaredMethod(
-                methodName,
-                methodParameterTypes
-        );
-        RequestResponseInterface mockRequestResponseInterface = mock(RequestResponseInterface.class);
-        RequestResponseInterface stubbing = doReturn(returned).when(mockRequestResponseInterface);
-
-        Object[] args = new Object[methodParameterTypes.length];
-        for (int i = 0; i < args.length; i++)
-            args[i] = anyFor(methodParameterTypes[i]);
-        method.invoke(stubbing, args);
-
-        EnvironmentSimulationContext context = TestFixtures.simulationContextWithEnvironment(
-                EnvironmentSimulationContext.class,
-                config,
-                environment
-        );
-
-        setContextsRequestResponseInterfaceField(context, mockRequestResponseInterface);
-
-        return context;
-    }
-
     @Test
     public void testGetAgent_ThreadsSynced() throws InterruptedException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         Config config = TestFixtures.syncedConfig(20, 10, 1);
         Agent agent = TestFixtures.emptyAgent("Carol");
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodReturns(
+                EnvironmentSimulationContext.class,
                 agent,
                 "getAgentFromCoordinator",
                 new Class[]{String.class, String.class},
@@ -288,58 +213,6 @@ public class EnvironmentSimulationContextTest {
         assertSame(agent, returnedAgent);
     }
 
-    private Object anyFor(Class<?> parameterType) {
-        if (!parameterType.isPrimitive())
-            return any();
-        if (parameterType == int.class)
-            return anyInt();
-        if (parameterType == long.class)
-            return anyLong();
-        if (parameterType == double.class)
-            return anyDouble();
-        if (parameterType == float.class)
-            return anyFloat();
-        if (parameterType == boolean.class)
-            return anyBoolean();
-        if (parameterType == byte.class)
-            return anyByte();
-        if (parameterType == short.class)
-            return anyShort();
-        if (parameterType == char.class)
-            return anyChar();
-        throw new IllegalArgumentException("Unhandled primitive parameter type: " + parameterType);
-    }
-
-    private <E extends Throwable> EnvironmentSimulationContext generateContextWhereRequestResponseInterfaceMethodThrows(
-            Class<E> exceptionClass,
-            String methodName,
-            Class<?>[] methodParameterTypes,
-            Config config,
-            Environment environment
-    ) throws IllegalAccessException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException {
-        Method method = RequestResponseInterface.class.getDeclaredMethod(
-                methodName,
-                methodParameterTypes
-        );
-        RequestResponseInterface mockRequestResponseInterface = mock(RequestResponseInterface.class);
-        RequestResponseInterface stubbing = doThrow(mock(exceptionClass)).when(mockRequestResponseInterface);
-
-        Object[] args = new Object[methodParameterTypes.length];
-        for (int i = 0; i < args.length; i++)
-            args[i] = anyFor(methodParameterTypes[i]);
-        method.invoke(stubbing, args);
-
-        EnvironmentSimulationContext context = TestFixtures.simulationContextWithEnvironment(
-                EnvironmentSimulationContext.class,
-                config,
-                environment
-        );
-
-        setContextsRequestResponseInterfaceField(context, mockRequestResponseInterface);
-
-        return context;
-    }
-
     @Test
     public void testGetAgent_ThreadsSynced_SimulationInterruptedException() throws NoSuchFieldException, InterruptedException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         String requestedAgentName = "John";
@@ -347,6 +220,7 @@ public class EnvironmentSimulationContextTest {
         Environment environment = TestFixtures.emptyEnvironment();
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
+                EnvironmentSimulationContext.class,
                 InterruptedException.class,
                 "getAgentFromCoordinator",
                 new Class<?>[]{String.class, String.class},
@@ -369,6 +243,7 @@ public class EnvironmentSimulationContextTest {
         Environment environment = TestFixtures.emptyEnvironment();
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
+                EnvironmentSimulationContext.class,
                 CoordinatorTimeoutException.class,
                 "getAgentFromCoordinator",
                 new Class<?>[]{String.class, String.class},
@@ -391,6 +266,7 @@ public class EnvironmentSimulationContextTest {
         Environment environment = TestFixtures.emptyEnvironment();
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
+                EnvironmentSimulationContext.class,
                 CoordinatorErrorException.class,
                 "getAgentFromCoordinator",
                 new Class<?>[]{String.class, String.class},
@@ -404,12 +280,6 @@ public class EnvironmentSimulationContextTest {
                 "Agent '" + requestedAgentName + "' requested by '" + environment.name() + "' not found",
                 CoordinatorErrorException.class
         );
-    }
-
-    private AgentSet getMutableAgentSetFromImmutable(ImmutableAgentSet immutableAgentSet) throws NoSuchFieldException, IllegalAccessException {
-        Field agentSetField = ImmutableAgentSet.class.getDeclaredField("agentSet");
-        agentSetField.setAccessible(true);
-        return (AgentSet) agentSetField.get(immutableAgentSet);
     }
 
     @Test
@@ -439,6 +309,7 @@ public class EnvironmentSimulationContextTest {
         Predicate<Agent> filter = a -> true;
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodReturns(
+                EnvironmentSimulationContext.class,
                 agentSet,
                 "getFilteredAgentsFromCoordinator",
                 new Class[]{String.class, Predicate.class},
@@ -456,6 +327,7 @@ public class EnvironmentSimulationContextTest {
         Predicate<Agent> filter = a -> true;
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
+                EnvironmentSimulationContext.class,
                 InterruptedException.class,
                 "getFilteredAgentsFromCoordinator",
                 new Class<?>[]{String.class, Predicate.class},
@@ -478,6 +350,7 @@ public class EnvironmentSimulationContextTest {
         Predicate<Agent> filter = a -> true;
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
+                EnvironmentSimulationContext.class,
                 CoordinatorTimeoutException.class,
                 "getFilteredAgentsFromCoordinator",
                 new Class<?>[]{String.class, Predicate.class},
@@ -500,6 +373,7 @@ public class EnvironmentSimulationContextTest {
         Predicate<Agent> filter = a -> true;
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
+                EnvironmentSimulationContext.class,
                 CoordinatorErrorException.class,
                 "getFilteredAgentsFromCoordinator",
                 new Class<?>[]{String.class, Predicate.class},
