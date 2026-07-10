@@ -188,5 +188,9 @@ class ContextTestHelpers {
         );
     }
 
-
+    static void assertSetsContainSameAgents(AgentSet expected, ImmutableAgentSet actual) {
+        assertEquals(expected.size(), actual.size());
+        for (int i = 0; i < expected.size(); i++)
+            assertEquals(expected.get(i).name(), actual.get(i).name());
+    }
 }

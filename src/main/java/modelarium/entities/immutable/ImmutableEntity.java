@@ -19,7 +19,7 @@ public sealed abstract class ImmutableEntity<SC extends SimulationContext, C ext
         return entity;
     }
 
-    public String getName() {
+    public String name() {
         return entity.name();
     }
 

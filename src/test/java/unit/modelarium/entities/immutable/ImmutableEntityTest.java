@@ -31,7 +31,7 @@ public class ImmutableEntityTest {
         Agent agent = TestFixtures.agentWithCounter("Alice");
         ImmutableAgent immutable = new ImmutableAgent(agent);
 
-        assertEquals("Alice", immutable.getName());
+        assertEquals("Alice", immutable.name());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class ImmutableEntityTest {
         Environment env = TestFixtures.environmentWithTickCounter();
         ImmutableEnvironment immutable = new ImmutableEnvironment(env);
 
-        assertEquals("env", immutable.getName());
+        assertEquals("env", immutable.name());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class ImmutableEntityTest {
         ImmutableAgentSet immutable = set.getAsImmutable();
 
         ImmutableAgent result = immutable.get("A");
-        assertEquals("A", result.getName());
+        assertEquals("A", result.name());
     }
 
     @Test
@@ -105,8 +105,8 @@ public class ImmutableEntityTest {
         AgentSet set = new AgentSet(List.of(a, b));
         ImmutableAgentSet immutable = set.getAsImmutable();
 
-        assertEquals("A", immutable.get(0).getName());
-        assertEquals("B", immutable.get(1).getName());
+        assertEquals("A", immutable.get(0).name());
+        assertEquals("B", immutable.get(1).name());
     }
 
     @Test

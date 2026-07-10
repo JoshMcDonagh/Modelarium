@@ -388,4 +388,20 @@ public class EnvironmentSimulationContextTest {
                 CoordinatorErrorException.class
         );
     }
+
+    @Test
+    public void testGetFilteredAgents_Threads_Unsynced() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+        int populationSize = 20;
+        Config config = TestFixtures.unsyncedConfig(populationSize, 10, 1);
+        AgentSet agentSet = TestFixtures.agentSetOfSize(populationSize);
+        Predicate<Agent> filter = a -> true;
+
+        EnvironmentSimulationContext context = TestFixtures.simulationContextWithAgentSet(
+                EnvironmentSimulationContext.class,
+                config,
+                agentSet
+        );
+
+        assertSetsContainSameAgents(agentSet, context.getFilteredAgents(filter));
+    }
 }

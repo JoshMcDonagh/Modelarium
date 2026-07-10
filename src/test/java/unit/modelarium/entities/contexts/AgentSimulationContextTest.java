@@ -282,7 +282,7 @@ public class AgentSimulationContextTest {
     }
 
     @Test
-    public void testGetAgent_ThreadsNotSynced_AgentNotFound() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public void testGetAgent_ThreadsNotSynced_AgentNotFound() {
         int populationSize = 20;
         Config config = TestFixtures.unsyncedConfig(populationSize, 10, 1);
         Agent thisAgent = TestFixtures.emptyAgent("Greg");
@@ -499,5 +499,21 @@ public class AgentSimulationContextTest {
                 "Failed to retrieve filtered agents requested by '" + thisAgent.name() + "' from the coordinator",
                 CoordinatorErrorException.class
         );
+    }
+
+    @Test
+    public void testGetFilteredAgents_Threads_Unsynced() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+        int populationSize = 20;
+        Config config = TestFixtures.unsyncedConfig(populationSize, 10, 1);
+        AgentSet agentSet = TestFixtures.agentSetOfSize(populationSize);
+        Predicate<Agent> filter = a -> true;
+
+        AgentSimulationContext context = TestFixtures.simulationContextWithAgentSet(
+                AgentSimulationContext.class,
+                config,
+                agentSet
+        );
+
+        assertSetsContainSameAgents(agentSet, context.getFilteredAgents(filter));
     }
 }
