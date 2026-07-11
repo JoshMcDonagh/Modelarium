@@ -97,9 +97,6 @@ class ContextTestHelpers {
         throw new IllegalArgumentException("Unhandled primitive parameter type: " + parameterType);
     }
 
-    private static final Function<Object, Stubber> DO_RETURN = Mockito::doReturn;
-    private static final Function<Object, Stubber> DO_THROW = v -> Mockito.doThrow(mock((Class<Throwable>) v));
-
     private static <C extends SimulationContext, T, E extends Entity<?,?,?,?>> C generateContextWithMockRequestResponseInterface(
             Class<C> contextClass,
             T returned,
@@ -165,7 +162,7 @@ class ContextTestHelpers {
                 methodParameterTypes,
                 config,
                 thisEntity,
-                DO_RETURN
+                Mockito::doReturn
         );
     }
 
@@ -184,7 +181,7 @@ class ContextTestHelpers {
                 methodParameterTypes,
                 config,
                 thisEntity,
-                DO_THROW
+                v -> Mockito.doThrow(mock((Class<Throwable>) v))
         );
     }
 
