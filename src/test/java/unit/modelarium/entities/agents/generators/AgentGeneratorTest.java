@@ -1,4 +1,4 @@
-package unit.modelarium.entities.agents;
+package unit.modelarium.entities.agents.generators;
 
 import helpers.TestFixtures;
 import modelarium.Config;
