@@ -1,6 +1,6 @@
 package integration.agentEnvironmentInteraction;
 
-import helpers.TestFixtures;
+import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.Model;
 import modelarium.entities.agents.Agent;
@@ -42,7 +42,10 @@ public class AgentEnvironmentInteractionIntegrationTest {
 
     @BeforeAll
     static void openForCloning() {
-        TestFixtures.openToCloningModule("helpers", "integration.agentEnvironmentInteraction");
+        AgentEnvironmentInteractionIntegrationTest.class.getModule().addOpens(
+                "integration.agentEnvironmentInteraction",
+                Cloner.class.getModule()
+        );
     }
 
     // ---- Environment property: temperature increases each tick ----

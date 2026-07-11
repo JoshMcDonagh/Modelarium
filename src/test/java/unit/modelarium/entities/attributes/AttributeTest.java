@@ -9,136 +9,125 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Unit tests for attribute types and their functional implementations.
- *
- * <p>Since Property/Event/Routine are context-dependent, these tests exercise
- * the structural aspects (name, isLogged, accessLevel, type) and verify that
- * functional variants throw appropriately when lambdas are missing.
- */
 public class AttributeTest {
-
-    // ---- FunctionalAgentProperty ----
-
     @Test
-    void property_nameIsAssigned() {
-        FunctionalAgentProperty<Integer> prop = new FunctionalAgentProperty<>(
+    public void testPropertyName() {
+        FunctionalAgentProperty<Integer> property = new FunctionalAgentProperty<>(
                 "hp", true, AttributeAccessLevel.PUBLIC, Integer.class,
-                (ctx, val) -> val,
-                (ctx, old, incoming) -> incoming,
-                (ctx, val) -> val
+                (context, value) -> value,
+                (context, oldValue, incomingValue) -> incomingValue,
+                (context, value) -> value
         );
 
-        assertEquals("hp", prop.name());
+        assertEquals("hp", property.name());
     }
 
     @Test
-    void property_isLoggedFlag() {
-        FunctionalAgentProperty<Integer> logged = new FunctionalAgentProperty<>(
+    public void testPropertyIsLoggedTrue() {
+        FunctionalAgentProperty<Integer> property = new FunctionalAgentProperty<>(
                 "a", true, AttributeAccessLevel.PUBLIC, Integer.class, null, null, null);
-        FunctionalAgentProperty<Integer> unlogged = new FunctionalAgentProperty<>(
-                "b", false, AttributeAccessLevel.PUBLIC, Integer.class, null, null, null);
 
-        assertTrue(logged.isLogged());
-        assertFalse(unlogged.isLogged());
+        assertTrue(property.isLogged());
     }
 
     @Test
-    void property_typeIsRecorded() {
-        FunctionalAgentProperty<Double> prop = new FunctionalAgentProperty<>(
+    public void testPropertyIsLoggedFalse() {
+        FunctionalAgentProperty<Integer> property = new FunctionalAgentProperty<>(
+                "a", false, AttributeAccessLevel.PUBLIC, Integer.class, null, null, null);
+
+        assertFalse(property.isLogged());
+    }
+
+    @Test
+    public void testPropertyType() {
+        FunctionalAgentProperty<Double> property = new FunctionalAgentProperty<>(
                 "x", true, AttributeAccessLevel.PUBLIC, Double.class, null, null, null);
 
-        assertEquals(Double.class, prop.type());
+        assertEquals(Double.class, property.type());
     }
 
     @Test
-    void property_accessLevelIsRecorded() {
-        FunctionalAgentProperty<Integer> pub = new FunctionalAgentProperty<>(
+    public void testPropertyAccessLevel() {
+        FunctionalAgentProperty<Integer> publicProperty = new FunctionalAgentProperty<>(
                 "x", false, AttributeAccessLevel.PUBLIC, Integer.class, null, null, null);
-        FunctionalAgentProperty<Integer> priv = new FunctionalAgentProperty<>(
+        FunctionalAgentProperty<Integer> privateProperty = new FunctionalAgentProperty<>(
                 "y", false, AttributeAccessLevel.PRIVATE, Integer.class, null, null, null);
 
-        assertEquals(AttributeAccessLevel.PUBLIC, pub.accessLevel());
-        assertEquals(AttributeAccessLevel.PRIVATE, priv.accessLevel());
+        assertEquals(AttributeAccessLevel.PUBLIC, publicProperty.accessLevel());
+        assertEquals(AttributeAccessLevel.PRIVATE, privateProperty.accessLevel());
     }
 
     @Test
-    void property_throwsWhenGetterMissing() {
-        FunctionalAgentProperty<Integer> prop = new FunctionalAgentProperty<>(
+    public void testPropertyGet_MissingGetterFunction_MissingAttributeFunctionException() {
+        FunctionalAgentProperty<Integer> property = new FunctionalAgentProperty<>(
+                "x", false, AttributeAccessLevel.PUBLIC, Integer.class, null, null, null);
+
+        assertThrows(MissingAttributeFunctionException.class, property::get);
+    }
+
+    @Test
+    public void testPropertySet_MissingSetterFunction_MissingAttributeFunctionException() {
+        FunctionalAgentProperty<Integer> property = new FunctionalAgentProperty<>(
+                "x", false, AttributeAccessLevel.PUBLIC, Integer.class, null, null, null);
+
+        assertThrows(MissingAttributeFunctionException.class, () -> property.set(42));
+    }
+
+    @Test
+    public void testPropertyRun_MissingRunFunction() {
+        FunctionalAgentProperty<Integer> property = new FunctionalAgentProperty<>(
                 "x", false, AttributeAccessLevel.PUBLIC, Integer.class,
-                null, null, null);
+                (context, value) -> value,
+                (context, oldValue, incomingValue) -> incomingValue,
+                null
+        );
 
-        // get() calls get(context), which needs the getter lambda — should throw
-        assertThrows(MissingAttributeFunctionException.class, prop::get);
+        assertDoesNotThrow(() -> property.run());
     }
 
     @Test
-    void property_throwsWhenSetterMissing() {
-        FunctionalAgentProperty<Integer> prop = new FunctionalAgentProperty<>(
-                "x", false, AttributeAccessLevel.PUBLIC, Integer.class,
-                null, null, null);
-
-        assertThrows(MissingAttributeFunctionException.class, () -> prop.set(42));
-    }
-
-    @Test
-    void property_runIsNoOpWhenRunLogicIsNull() {
-        FunctionalAgentProperty<Integer> prop = new FunctionalAgentProperty<>(
-                "x", false, AttributeAccessLevel.PUBLIC, Integer.class,
-                (ctx, val) -> val, (ctx, old, incoming) -> incoming, null);
-
-        // Should not throw — null runLogic is treated as no-op
-        assertDoesNotThrow(() -> prop.run());
-    }
-
-    // ---- FunctionalAgentEvent ----
-
-    @Test
-    void event_nameIsAssigned() {
+    public void testEventName() {
         FunctionalAgentEvent event = new FunctionalAgentEvent(
                 "onHungry", true, AttributeAccessLevel.PUBLIC,
-                ctx -> {}, ctx -> true);
+                context -> {}, context -> true);
 
         assertEquals("onHungry", event.name());
     }
 
     @Test
-    void event_throwsWhenTriggerLogicMissing() {
+    public void testEventIsTriggered_MissingIsTriggeredFunction_MissingAttributeFunctionException() {
         FunctionalAgentEvent event = new FunctionalAgentEvent(
-                "e", false, AttributeAccessLevel.PUBLIC, ctx -> {}, null);
+                "e", false, AttributeAccessLevel.PUBLIC, context -> {}, null);
 
         assertThrows(MissingAttributeFunctionException.class, event::isTriggered);
     }
 
     @Test
-    void event_throwsWhenRunLogicMissing() {
+    public void testEventRun_MissingRunFunction_MissingAttributeFunctionException() {
         FunctionalAgentEvent event = new FunctionalAgentEvent(
-                "e", false, AttributeAccessLevel.PUBLIC, null, ctx -> true);
+                "e", false, AttributeAccessLevel.PUBLIC, null, context -> true);
 
         assertThrows(MissingAttributeFunctionException.class, event::run);
     }
 
-    // ---- FunctionalAgentRoutine ----
-
     @Test
-    void routine_nameIsAssigned() {
+    public void testRoutineName() {
         FunctionalAgentRoutine routine = new FunctionalAgentRoutine(
-                "daily", AttributeAccessLevel.PUBLIC, ctx -> {});
+                "daily", AttributeAccessLevel.PUBLIC, context -> {});
 
         assertEquals("daily", routine.name());
     }
 
     @Test
-    void routine_isNeverLogged() {
-        // Routines are constructed with isLogged=false (hardcoded in Routine)
+    public void testRoutineIsLoggedFalse() {
         FunctionalAgentRoutine routine = new FunctionalAgentRoutine(
-                "r", AttributeAccessLevel.PUBLIC, ctx -> {});
+                "r", AttributeAccessLevel.PUBLIC, context -> {});
 
-        assertFalse(routine.isLogged(), "Routines should never be logged.");
+        assertFalse(routine.isLogged());
     }
 
     @Test
-    void routine_throwsWhenRunLogicMissing() {
+    public void testRoutineRun_MissingRunFunction_MissingAttributeFunctionException() {
         FunctionalAgentRoutine routine = new FunctionalAgentRoutine(
                 "r", AttributeAccessLevel.PUBLIC, null);
 

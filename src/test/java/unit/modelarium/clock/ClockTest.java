@@ -6,92 +6,95 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Unit tests for {@link MutableClock} and {@link ImmutableClock}.
- */
 public class ClockTest {
-
     @Test
-    void newClock_startsAtTickZero() {
+    public void testCurrentTick_StartsAtZero() {
         MutableClock clock = new MutableClock(10);
+
         assertEquals(0, clock.currentTick());
     }
 
     @Test
-    void totalTickCount_matchesConstructorArgument() {
+    public void testTotalTickCount() {
         MutableClock clock = new MutableClock(42);
+
         assertEquals(42, clock.totalTickCount());
     }
 
     @Test
-    void triggerTick_incrementsTickByOne() {
+    public void testTriggerTick() {
         MutableClock clock = new MutableClock(5);
+
         clock.triggerTick();
+
         assertEquals(1, clock.currentTick());
     }
 
     @Test
-    void triggerTick_progressesCorrectlyToCompletion() {
-        int total = 5;
-        MutableClock clock = new MutableClock(total);
+    public void testTriggerTick_RunsToCompletion() {
+        int totalTickCount = 5;
+        MutableClock clock = new MutableClock(totalTickCount);
 
-        for (int i = 0; i < total; i++) {
-            assertFalse(clock.isFinished(), "Should not be finished at tick " + clock.currentTick());
+        for (int i = 0; i < totalTickCount; i++) {
+            assertFalse(clock.isFinished());
             clock.triggerTick();
         }
 
-        assertTrue(clock.isFinished(), "Should be finished after all ticks");
-        assertEquals(total, clock.currentTick());
+        assertTrue(clock.isFinished());
+        assertEquals(totalTickCount, clock.currentTick());
     }
 
     @Test
-    void triggerTick_doesNotAdvancePastTotal() {
+    public void testTriggerTick_DoesNotAdvancePastTotalTickCount() {
         MutableClock clock = new MutableClock(3);
 
-        // Run past the end
         for (int i = 0; i < 10; i++)
             clock.triggerTick();
 
-        assertEquals(3, clock.currentTick(), "Tick should saturate at totalTickCount");
+        assertEquals(3, clock.currentTick());
     }
 
     @Test
-    void isFinished_falseWhenClockHasRemainingTicks() {
+    public void testIsFinishedFalse() {
         MutableClock clock = new MutableClock(2);
+
         assertFalse(clock.isFinished());
+
         clock.triggerTick();
+
         assertFalse(clock.isFinished());
     }
 
     @Test
-    void isFinished_trueOnceAllTicksElapsed() {
+    public void testIsFinishedTrue() {
         MutableClock clock = new MutableClock(1);
+
         clock.triggerTick();
+
         assertTrue(clock.isFinished());
     }
 
-    // ---- ImmutableClock delegation ----
-
     @Test
-    void immutableClock_reflectsMutableState() {
-        MutableClock mutable = new MutableClock(5);
-        ImmutableClock immutable = new ImmutableClock(mutable);
+    public void testImmutableClock_ReflectsMutableClock() {
+        MutableClock mutableClock = new MutableClock(5);
+        ImmutableClock immutableClock = new ImmutableClock(mutableClock);
 
-        assertEquals(0, immutable.currentTick());
-        assertEquals(5, immutable.totalTickCount());
-        assertFalse(immutable.isFinished());
+        assertEquals(0, immutableClock.currentTick());
+        assertEquals(5, immutableClock.totalTickCount());
+        assertFalse(immutableClock.isFinished());
 
-        mutable.triggerTick();
+        mutableClock.triggerTick();
 
-        assertEquals(1, immutable.currentTick(), "Immutable should see the updated tick");
+        assertEquals(1, immutableClock.currentTick());
     }
 
     @Test
-    void immutableClock_seesFinishedStateFromMutable() {
-        MutableClock mutable = new MutableClock(1);
-        ImmutableClock immutable = new ImmutableClock(mutable);
+    public void testImmutableClock_IsFinished() {
+        MutableClock mutableClock = new MutableClock(1);
+        ImmutableClock immutableClock = new ImmutableClock(mutableClock);
 
-        mutable.triggerTick();
-        assertTrue(immutable.isFinished());
+        mutableClock.triggerTick();
+
+        assertTrue(immutableClock.isFinished());
     }
 }

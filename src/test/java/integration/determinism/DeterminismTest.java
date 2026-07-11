@@ -1,6 +1,6 @@
 package integration.determinism;
 
-import helpers.TestFixtures;
+import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.Model;
 import modelarium.entities.agents.Agent;
@@ -32,7 +32,10 @@ public class DeterminismTest {
 
     @BeforeAll
     static void openForCloning() {
-        TestFixtures.openToCloningModule("integration.determinism");
+        DeterminismTest.class.getModule().addOpens(
+                "integration.determinism",
+                Cloner.class.getModule()
+        );
     }
 
     // ---- Agent property: a seeded random walk ----

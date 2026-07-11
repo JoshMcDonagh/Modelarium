@@ -1,6 +1,5 @@
 package unit.modelarium.entities.agents.generators;
 
-import helpers.TestFixtures;
 import modelarium.Config;
 import modelarium.entities.agents.AgentSet;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
@@ -10,66 +9,64 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static unit.modelarium.entities.agents.generators.AgentGeneratorTestHelpers.*;
 
-/**
- * Unit tests for {@link DefaultAgentGenerator} and {@link FunctionalDefaultAgentGenerator}.
- */
 public class AgentGeneratorTest {
-
     @Test
-    public void testDefaultGenerator_producesCorrectPopulationSize() {
-        Config config = TestFixtures.syncedConfig(10, 5, 2);
-        DefaultAgentGenerator gen = TestFixtures.counterAgentGenerator();
+    public void testGenerateAgents() {
+        Config config = syncedConfig(10, 5, 2);
+        DefaultAgentGenerator generator = agentGenerator();
 
-        AgentSet agents = gen.generateAgents(config);
-        assertEquals(10, agents.size(), "Should generate exactly populationSize agents.");
+        AgentSet agentSet = generator.generateAgents(config);
+
+        assertEquals(10, agentSet.size());
     }
 
     @Test
-    public void testDefaultGenerator_distributesAcrossCoresEvenly() {
-        Config config = TestFixtures.syncedConfig(9, 5, 3);
-        DefaultAgentGenerator gen = TestFixtures.counterAgentGenerator();
+    public void testGetAgentsForEachCore_EvenDistribution() {
+        Config config = syncedConfig(9, 5, 3);
+        DefaultAgentGenerator generator = agentGenerator();
 
-        List<AgentSet> perCore = gen.getAgentsForEachCore(config);
+        List<AgentSet> agentSetsForEachCore = generator.getAgentsForEachCore(config);
 
-        assertEquals(3, perCore.size(), "Should produce one set per core.");
-        assertEquals(3, perCore.get(0).size());
-        assertEquals(3, perCore.get(1).size());
-        assertEquals(3, perCore.get(2).size());
+        assertEquals(3, agentSetsForEachCore.size());
+        assertEquals(3, agentSetsForEachCore.get(0).size());
+        assertEquals(3, agentSetsForEachCore.get(1).size());
+        assertEquals(3, agentSetsForEachCore.get(2).size());
     }
 
     @Test
-    public void testDefaultGenerator_handlesUnevenDistribution() {
-        // 10 agents across 3 cores: 4+3+3 (round-robin)
-        Config config = TestFixtures.syncedConfig(10, 5, 3);
-        DefaultAgentGenerator gen = TestFixtures.counterAgentGenerator();
+    public void testGetAgentsForEachCore_UnevenDistribution() {
+        Config config = syncedConfig(10, 5, 3);
+        DefaultAgentGenerator generator = agentGenerator();
 
-        List<AgentSet> perCore = gen.getAgentsForEachCore(config);
-        int total = perCore.stream().mapToInt(AgentSet::size).sum();
+        List<AgentSet> agentSetsForEachCore = generator.getAgentsForEachCore(config);
 
-        assertEquals(10, total, "All agents should be distributed.");
+        int totalAgentCount = agentSetsForEachCore.stream().mapToInt(AgentSet::size).sum();
+
+        assertEquals(10, totalAgentCount);
     }
 
     @Test
-    public void testDefaultGenerator_singleCoreGetsAll() {
-        Config config = TestFixtures.syncedConfig(5, 5, 1);
-        DefaultAgentGenerator gen = TestFixtures.counterAgentGenerator();
+    public void testGetAgentsForEachCore_SingleCore() {
+        Config config = syncedConfig(5, 5, 1);
+        DefaultAgentGenerator generator = agentGenerator();
 
-        List<AgentSet> perCore = gen.getAgentsForEachCore(config);
+        List<AgentSet> agentSetsForEachCore = generator.getAgentsForEachCore(config);
 
-        assertEquals(1, perCore.size());
-        assertEquals(5, perCore.get(0).size());
+        assertEquals(1, agentSetsForEachCore.size());
+        assertEquals(5, agentSetsForEachCore.get(0).size());
     }
 
     @Test
-    public void testFunctionalGenerator_delegatesToFunction() {
-        FunctionalDefaultAgentGenerator gen = new FunctionalDefaultAgentGenerator(
-                config -> TestFixtures.uniqueAgent()
+    public void testFunctionalDefaultAgentGenerator_DelegatesToFunction() {
+        FunctionalDefaultAgentGenerator generator = new FunctionalDefaultAgentGenerator(
+                config -> uniqueAgent()
         );
+        Config config = syncedConfig(3, 5, 1);
 
-        Config config = TestFixtures.syncedConfig(3, 5, 1);
-        AgentSet agents = gen.generateAgents(config);
+        AgentSet agentSet = generator.generateAgents(config);
 
-        assertEquals(3, agents.size());
+        assertEquals(3, agentSet.size());
     }
 }

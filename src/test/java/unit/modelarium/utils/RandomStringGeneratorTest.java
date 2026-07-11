@@ -9,56 +9,54 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Unit tests for {@link RandomStringGenerator}.
- */
 public class RandomStringGeneratorTest {
-
     @AfterEach
-    void cleanUp() {
+    public void tearDown() {
         RandomStringGenerator.clearGeneratedForTests();
     }
 
     @Test
-    void testGenerateRandomString_correctLength() {
-        String s = RandomStringGenerator.generateRandomString(20);
-        assertEquals(20, s.length());
+    public void testGenerateRandomString() {
+        String generatedString = RandomStringGenerator.generateRandomString(20);
+
+        assertEquals(20, generatedString.length());
     }
 
     @Test
-    void testGenerateRandomString_zeroLength() {
-        String s = RandomStringGenerator.generateRandomString(0);
-        assertEquals("", s);
+    public void testGenerateRandomString_ZeroLength() {
+        String generatedString = RandomStringGenerator.generateRandomString(0);
+
+        assertEquals("", generatedString);
     }
 
     @Test
-    void testGenerateRandomString_negativeLengthThrows() {
-        assertThrows(IllegalArgumentException.class,
-                () -> RandomStringGenerator.generateRandomString(-1));
+    public void testGenerateRandomString_NegativeLength_IllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> RandomStringGenerator.generateRandomString(-1));
     }
 
     @Test
-    void testGenerateRandomString_isAlphanumeric() {
-        String s = RandomStringGenerator.generateRandomString(100);
-        assertTrue(s.matches("[A-Za-z0-9]+"), "Should contain only alphanumeric characters.");
+    public void testGenerateRandomString_Alphanumeric() {
+        String generatedString = RandomStringGenerator.generateRandomString(100);
+
+        assertTrue(generatedString.matches("[A-Za-z0-9]+"));
     }
 
     @Test
-    void testGenerateUniqueRandomString_noDuplicates() {
-        int n = 50;
-        Set<String> seen = new HashSet<>();
+    public void testGenerateUniqueRandomString() {
+        Set<String> generatedStrings = new HashSet<>();
 
-        for (int i = 0; i < n; i++) {
-            String s = RandomStringGenerator.generateUniqueRandomString(10);
-            assertTrue(seen.add(s), "Generated string should be unique.");
+        for (int i = 0; i < 50; i++) {
+            String generatedString = RandomStringGenerator.generateUniqueRandomString(10);
+            assertTrue(generatedStrings.add(generatedString));
         }
     }
 
     @Test
-    void testClearGeneratedForTests() {
+    public void testClearGeneratedForTests() {
         RandomStringGenerator.generateUniqueRandomString(10);
+
         RandomStringGenerator.clearGeneratedForTests();
-        // Should not throw even if we try the same generator state
+
         assertDoesNotThrow(() -> RandomStringGenerator.generateUniqueRandomString(10));
     }
 }

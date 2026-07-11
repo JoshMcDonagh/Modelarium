@@ -1,6 +1,5 @@
 package unit.modelarium.entities.contexts;
 
-import helpers.TestFixtures;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.AgentSet;
 import modelarium.entities.contexts.ContextCache;
@@ -12,6 +11,7 @@ import java.util.IdentityHashMap;
 import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static unit.modelarium.entities.contexts.ContextTestHelpers.*;
 
 public class ContextCacheTest {
     private ContextCache createContextCache(
@@ -56,11 +56,11 @@ public class ContextCacheTest {
 
     @Test
     public void testClear() throws NoSuchFieldException, IllegalAccessException {
-        AgentSet individualAgentCache = TestFixtures.agentSetOfSize(20);
+        AgentSet individualAgentCache = agentSetOfSize(20);
         IdentityHashMap<Predicate<Agent>, AgentSet> filteredAgentsCache = new IdentityHashMap<>();
         filteredAgentsCache.put(a -> true, individualAgentCache);
-        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, TestFixtures.agentSetOfSize(5));
-        Environment environment = TestFixtures.emptyEnvironment();
+        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, agentSetOfSize(5));
+        Environment environment = emptyEnvironment();
 
         ContextCache cache = createContextCache(
                 individualAgentCache,
@@ -80,13 +80,13 @@ public class ContextCacheTest {
         Predicate<Agent> filter = a -> a.attributeSetCount() > 4;
 
         IdentityHashMap<Predicate<Agent>, AgentSet> filteredAgentsCache = new IdentityHashMap<>();
-        filteredAgentsCache.put(filter, TestFixtures.agentSetOfSize(5));
-        filteredAgentsCache.put(a -> true, TestFixtures.agentSetOfSize(20));
+        filteredAgentsCache.put(filter, agentSetOfSize(5));
+        filteredAgentsCache.put(a -> true, agentSetOfSize(20));
 
         ContextCache cache = createContextCache(
-                TestFixtures.agentSetOfSize(20),
+                agentSetOfSize(20),
                 filteredAgentsCache,
-                TestFixtures.emptyEnvironment()
+                emptyEnvironment()
         );
 
         assertTrue(cache.doesAgentFilterExist(filter));
@@ -97,12 +97,12 @@ public class ContextCacheTest {
         Predicate<Agent> filter = a -> a.attributeSetCount() > 4;
 
         IdentityHashMap<Predicate<Agent>, AgentSet> filteredAgentsCache = new IdentityHashMap<>();
-        filteredAgentsCache.put(a -> true, TestFixtures.agentSetOfSize(20));
+        filteredAgentsCache.put(a -> true, agentSetOfSize(20));
 
         ContextCache cache = createContextCache(
-                TestFixtures.agentSetOfSize(20),
+                agentSetOfSize(20),
                 filteredAgentsCache,
-                TestFixtures.emptyEnvironment()
+                emptyEnvironment()
         );
 
         assertFalse(cache.doesAgentFilterExist(filter));
@@ -111,15 +111,15 @@ public class ContextCacheTest {
     @Test
     public void testAddFilteredAgents() throws NoSuchFieldException, IllegalAccessException {
         Predicate<Agent> filter = a -> a.attributeSetCount() > 4;
-        AgentSet results = TestFixtures.agentSetOfSize(5);
+        AgentSet results = agentSetOfSize(5);
 
         IdentityHashMap<Predicate<Agent>, AgentSet> filteredAgentsCache = new IdentityHashMap<>();
-        filteredAgentsCache.put(a -> true, TestFixtures.agentSetOfSize(20));
+        filteredAgentsCache.put(a -> true, agentSetOfSize(20));
 
         ContextCache cache = createContextCache(
-                TestFixtures.agentSetOfSize(20),
+                agentSetOfSize(20),
                 filteredAgentsCache,
-                TestFixtures.emptyEnvironment()
+                emptyEnvironment()
         );
 
         cache.addFilteredAgents(filter, results);
@@ -134,16 +134,16 @@ public class ContextCacheTest {
     @Test
     public void testGetFilteredAgents() throws NoSuchFieldException, IllegalAccessException {
         Predicate<Agent> filter = a -> a.attributeSetCount() > 4;
-        AgentSet results = TestFixtures.agentSetOfSize(5);
+        AgentSet results = agentSetOfSize(5);
 
         IdentityHashMap<Predicate<Agent>, AgentSet> filteredAgentsCache = new IdentityHashMap<>();
         filteredAgentsCache.put(filter, results);
-        filteredAgentsCache.put(a -> true, TestFixtures.agentSetOfSize(20));
+        filteredAgentsCache.put(a -> true, agentSetOfSize(20));
 
         ContextCache cache = createContextCache(
-                TestFixtures.agentSetOfSize(20),
+                agentSetOfSize(20),
                 filteredAgentsCache,
-                TestFixtures.emptyEnvironment()
+                emptyEnvironment()
         );
 
         AgentSet returnedAgents = cache.getFilteredAgents(filter);
@@ -155,12 +155,12 @@ public class ContextCacheTest {
     public void testDoesAgentExistTrue() throws NoSuchFieldException, IllegalAccessException {
         String agentName = "Steve";
 
-        AgentSet individualAgentCache = TestFixtures.agentSetOfSize(20);
-        individualAgentCache.add(TestFixtures.emptyAgent(agentName));
+        AgentSet individualAgentCache = agentSetOfSize(20);
+        individualAgentCache.add(emptyAgent(agentName));
         IdentityHashMap<Predicate<Agent>, AgentSet> filteredAgentsCache = new IdentityHashMap<>();
         filteredAgentsCache.put(a -> true, individualAgentCache);
-        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, TestFixtures.agentSetOfSize(5));
-        Environment environment = TestFixtures.emptyEnvironment();
+        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, agentSetOfSize(5));
+        Environment environment = emptyEnvironment();
 
         ContextCache cache = createContextCache(
                 individualAgentCache,
@@ -175,11 +175,11 @@ public class ContextCacheTest {
     public void testDoesAgentExistFalse() throws NoSuchFieldException, IllegalAccessException {
         String agentName = "Steve";
 
-        AgentSet individualAgentCache = TestFixtures.agentSetOfSize(20);
+        AgentSet individualAgentCache = agentSetOfSize(20);
         IdentityHashMap<Predicate<Agent>, AgentSet> filteredAgentsCache = new IdentityHashMap<>();
         filteredAgentsCache.put(a -> true, individualAgentCache);
-        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, TestFixtures.agentSetOfSize(5));
-        Environment environment = TestFixtures.emptyEnvironment();
+        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, agentSetOfSize(5));
+        Environment environment = emptyEnvironment();
 
         ContextCache cache = createContextCache(
                 individualAgentCache,
@@ -194,13 +194,13 @@ public class ContextCacheTest {
     public void testGetAgent() throws NoSuchFieldException, IllegalAccessException {
         String agentName = "Steve";
 
-        AgentSet individualAgentCache = TestFixtures.agentSetOfSize(20);
-        Agent agent = TestFixtures.emptyAgent(agentName);
+        AgentSet individualAgentCache = agentSetOfSize(20);
+        Agent agent = emptyAgent(agentName);
         individualAgentCache.add(agent);
         IdentityHashMap<Predicate<Agent>, AgentSet> filteredAgentsCache = new IdentityHashMap<>();
         filteredAgentsCache.put(a -> true, individualAgentCache);
-        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, TestFixtures.agentSetOfSize(5));
-        Environment environment = TestFixtures.emptyEnvironment();
+        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, agentSetOfSize(5));
+        Environment environment = emptyEnvironment();
 
         ContextCache cache = createContextCache(
                 individualAgentCache,
@@ -214,11 +214,11 @@ public class ContextCacheTest {
     @Test
     public void testAddAgent() throws NoSuchFieldException, IllegalAccessException {
         int populationSize = 20;
-        AgentSet individualAgentCache = TestFixtures.agentSetOfSize(populationSize);
+        AgentSet individualAgentCache = agentSetOfSize(populationSize);
         IdentityHashMap<Predicate<Agent>, AgentSet> filteredAgentsCache = new IdentityHashMap<>();
         filteredAgentsCache.put(a -> true, individualAgentCache);
-        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, TestFixtures.agentSetOfSize(5));
-        Environment environment = TestFixtures.emptyEnvironment();
+        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, agentSetOfSize(5));
+        Environment environment = emptyEnvironment();
 
         ContextCache cache = createContextCache(
                 individualAgentCache,
@@ -227,7 +227,7 @@ public class ContextCacheTest {
         );
 
         String agentName = "Mary";
-        Agent agent = TestFixtures.emptyAgent(agentName);
+        Agent agent = emptyAgent(agentName);
 
         cache.addAgent(agent);
 
@@ -241,11 +241,11 @@ public class ContextCacheTest {
     @Test
     public void testAddAgents() throws NoSuchFieldException, IllegalAccessException {
         int originalPopulationSize = 20;
-        AgentSet individualAgentCache = TestFixtures.agentSetOfSize(originalPopulationSize);
+        AgentSet individualAgentCache = agentSetOfSize(originalPopulationSize);
         IdentityHashMap<Predicate<Agent>, AgentSet> filteredAgentsCache = new IdentityHashMap<>();
         filteredAgentsCache.put(a -> true, individualAgentCache);
-        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, TestFixtures.agentSetOfSize(5));
-        Environment environment = TestFixtures.emptyEnvironment();
+        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, agentSetOfSize(5));
+        Environment environment = emptyEnvironment();
 
         ContextCache cache = createContextCache(
                 individualAgentCache,
@@ -254,7 +254,7 @@ public class ContextCacheTest {
         );
 
         int additionalPopulationSize = 12;
-        AgentSet additionalIndividualAgentCache = TestFixtures.agentSetOfSize(additionalPopulationSize);
+        AgentSet additionalIndividualAgentCache = agentSetOfSize(additionalPopulationSize);
 
         cache.addAgents(additionalIndividualAgentCache);
 
@@ -270,11 +270,11 @@ public class ContextCacheTest {
 
     @Test
     public void testDoesEnvironmentExistTrue() throws NoSuchFieldException, IllegalAccessException {
-        AgentSet individualAgentCache = TestFixtures.agentSetOfSize(20);
+        AgentSet individualAgentCache = agentSetOfSize(20);
         IdentityHashMap<Predicate<Agent>, AgentSet> filteredAgentsCache = new IdentityHashMap<>();
         filteredAgentsCache.put(a -> true, individualAgentCache);
-        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, TestFixtures.agentSetOfSize(5));
-        Environment environment = TestFixtures.emptyEnvironment();
+        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, agentSetOfSize(5));
+        Environment environment = emptyEnvironment();
 
         ContextCache cache = createContextCache(
                 individualAgentCache,
@@ -287,10 +287,10 @@ public class ContextCacheTest {
 
     @Test
     public void testDoesEnvironmentExistFalse() throws NoSuchFieldException, IllegalAccessException {
-        AgentSet individualAgentCache = TestFixtures.agentSetOfSize(20);
+        AgentSet individualAgentCache = agentSetOfSize(20);
         IdentityHashMap<Predicate<Agent>, AgentSet> filteredAgentsCache = new IdentityHashMap<>();
         filteredAgentsCache.put(a -> true, individualAgentCache);
-        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, TestFixtures.agentSetOfSize(5));
+        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, agentSetOfSize(5));
 
         ContextCache cache = createContextCache(
                 individualAgentCache,
@@ -303,11 +303,11 @@ public class ContextCacheTest {
 
     @Test
     public void testGetEnvironment() throws NoSuchFieldException, IllegalAccessException {
-        AgentSet individualAgentCache = TestFixtures.agentSetOfSize(20);
+        AgentSet individualAgentCache = agentSetOfSize(20);
         IdentityHashMap<Predicate<Agent>, AgentSet> filteredAgentsCache = new IdentityHashMap<>();
         filteredAgentsCache.put(a -> true, individualAgentCache);
-        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, TestFixtures.agentSetOfSize(5));
-        Environment environment = TestFixtures.emptyEnvironment();
+        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, agentSetOfSize(5));
+        Environment environment = emptyEnvironment();
 
         ContextCache cache = createContextCache(
                 individualAgentCache,
@@ -320,10 +320,10 @@ public class ContextCacheTest {
 
     @Test
     public void testAddEnvironment() throws NoSuchFieldException, IllegalAccessException {
-        AgentSet individualAgentCache = TestFixtures.agentSetOfSize(20);
+        AgentSet individualAgentCache = agentSetOfSize(20);
         IdentityHashMap<Predicate<Agent>, AgentSet> filteredAgentsCache = new IdentityHashMap<>();
         filteredAgentsCache.put(a -> true, individualAgentCache);
-        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, TestFixtures.agentSetOfSize(5));
+        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, agentSetOfSize(5));
 
         ContextCache cache = createContextCache(
                 individualAgentCache,
@@ -331,7 +331,7 @@ public class ContextCacheTest {
                 null
         );
 
-        Environment environment = TestFixtures.emptyEnvironment();
+        Environment environment = emptyEnvironment();
 
         cache.addEnvironment(environment);
 

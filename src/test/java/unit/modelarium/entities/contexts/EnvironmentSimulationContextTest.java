@@ -1,7 +1,5 @@
 package unit.modelarium.entities.contexts;
 
-import helpers.TestAttributes;
-import helpers.TestFixtures;
 import modelarium.Config;
 import modelarium.clock.MutableClock;
 import modelarium.entities.agents.Agent;
@@ -28,9 +26,9 @@ import static unit.modelarium.entities.contexts.ContextTestHelpers.*;
 public class EnvironmentSimulationContextTest {
     @Test
     public void testGetThisEntity() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        Environment environment = TestFixtures.emptyEnvironment();
-        Config config = TestFixtures.syncedConfig(2, 10, 1);
-        EnvironmentSimulationContext context = TestFixtures.simulationContextWithEnvironment(
+        Environment environment = emptyEnvironment();
+        Config config = syncedConfig(2, 10, 1);
+        EnvironmentSimulationContext context = simulationContextWithEnvironment(
                 EnvironmentSimulationContext.class,
                 config,
                 environment
@@ -41,9 +39,9 @@ public class EnvironmentSimulationContextTest {
 
     @Test
     public void testGetThisAttributeSet() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        Config config = TestFixtures.syncedConfig(2, 10, 1);
-        EnvironmentAttributeSet set = TestAttributes.singlePropertyEnvironmentSet("owner", "time", "ticks");
-        EnvironmentSimulationContext context = TestFixtures.simulationContextWithAttributeSet(
+        Config config = syncedConfig(2, 10, 1);
+        EnvironmentAttributeSet set = singlePropertyEnvironmentSet("owner", "time", "ticks");
+        EnvironmentSimulationContext context = simulationContextWithAttributeSet(
                 EnvironmentSimulationContext.class,
                 config,
                 set
@@ -54,9 +52,9 @@ public class EnvironmentSimulationContextTest {
 
     @Test
     public void testGetThisAttribute() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        Config config = TestFixtures.syncedConfig(2, 10, 1);
-        Attribute<?> attribute = new TestAttributes.EnvironmentTickProperty("ticker");
-        EnvironmentSimulationContext context = TestFixtures.simulationContextWithAttribute(
+        Config config = syncedConfig(2, 10, 1);
+        Attribute<?> attribute = new EnvironmentTickProperty("ticker");
+        EnvironmentSimulationContext context = simulationContextWithAttribute(
                 EnvironmentSimulationContext.class,
                 config,
                 attribute
@@ -66,9 +64,9 @@ public class EnvironmentSimulationContextTest {
     }
 
     @Test
-    public void testGetEnvironment() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        Config config = TestFixtures.syncedConfig(2, 10, 1);
-        EnvironmentSimulationContext context = TestFixtures.emptySimulationContext(
+    public void testGetEnvironment_UnsupportedOperationException() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        Config config = syncedConfig(2, 10, 1);
+        EnvironmentSimulationContext context = emptySimulationContext(
                 EnvironmentSimulationContext.class,
                 config
         );
@@ -82,9 +80,9 @@ public class EnvironmentSimulationContextTest {
 
     @Test
     public void testGetClock() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        Config config = TestFixtures.syncedConfig(2, 10, 1);
-        MutableClock clock = TestFixtures.mutableClockFromConfig(config);
-        EnvironmentSimulationContext context = TestFixtures.simulationContextWithClock(
+        Config config = syncedConfig(2, 10, 1);
+        MutableClock clock = mutableClockFromConfig(config);
+        EnvironmentSimulationContext context = simulationContextWithClock(
                 EnvironmentSimulationContext.class,
                 config,
                 clock
@@ -97,9 +95,9 @@ public class EnvironmentSimulationContextTest {
     public void testDoesAgentExistInThisCoreTrue() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         int populationSize = 20;
 
-        Config config = TestFixtures.syncedConfig(populationSize, 10, 1);
-        AgentSet agentSet = TestFixtures.agentSetOfSize(populationSize);
-        EnvironmentSimulationContext context = TestFixtures.simulationContextWithAgentSet(
+        Config config = syncedConfig(populationSize, 10, 1);
+        AgentSet agentSet = agentSetOfSize(populationSize);
+        EnvironmentSimulationContext context = simulationContextWithAgentSet(
                 EnvironmentSimulationContext.class,
                 config,
                 agentSet
@@ -114,9 +112,9 @@ public class EnvironmentSimulationContextTest {
     public void testDoesAgentExistInThisCoreFalse() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         int populationSize = 20;
 
-        Config config = TestFixtures.syncedConfig(populationSize, 10, 1);
-        AgentSet agentSet = TestFixtures.agentSetOfSize(populationSize);
-        EnvironmentSimulationContext context = TestFixtures.simulationContextWithAgentSet(
+        Config config = syncedConfig(populationSize, 10, 1);
+        AgentSet agentSet = agentSetOfSize(populationSize);
+        EnvironmentSimulationContext context = simulationContextWithAgentSet(
                 EnvironmentSimulationContext.class,
                 config,
                 agentSet
@@ -129,9 +127,9 @@ public class EnvironmentSimulationContextTest {
 
     @Test
     public void testGetRandom() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        Config config  = TestFixtures.syncedConfig(2, 10, 1);
+        Config config = syncedConfig(2, 10, 1);
         SplittableRandom randomGenerator = new SplittableRandom();
-        EnvironmentSimulationContext context = TestFixtures.simulationContextWithRandomGenerator(
+        EnvironmentSimulationContext context = simulationContextWithRandomGenerator(
                 EnvironmentSimulationContext.class,
                 config,
                 randomGenerator
@@ -144,9 +142,9 @@ public class EnvironmentSimulationContextTest {
     public void testGetAgent_ExistsInThisCore() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         int populationSize = 20;
         int agentIndex = 8;
-        Config config = TestFixtures.syncedConfig(populationSize, 10, 1);
-        AgentSet agentSet = TestFixtures.agentSetOfSize(populationSize);
-        EnvironmentSimulationContext context = TestFixtures.simulationContextWithAgentSet(
+        Config config = syncedConfig(populationSize, 10, 1);
+        AgentSet agentSet = agentSetOfSize(populationSize);
+        EnvironmentSimulationContext context = simulationContextWithAgentSet(
                 EnvironmentSimulationContext.class,
                 config,
                 agentSet
@@ -160,11 +158,11 @@ public class EnvironmentSimulationContextTest {
 
     @Test
     public void testGetAgent_IsCached() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        Config config = TestFixtures.syncedConfig(20, 10, 1);
-        ContextCache cache = TestFixtures.contextCache();
-        Agent agent = TestFixtures.emptyAgent("Carol");
+        Config config = syncedConfig(20, 10, 1);
+        ContextCache cache = contextCache();
+        Agent agent = emptyAgent("Carol");
         cache.addAgent(agent);
-        EnvironmentSimulationContext context = TestFixtures.simulationContextWithCache(
+        EnvironmentSimulationContext context = simulationContextWithCache(
                 EnvironmentSimulationContext.class,
                 config,
                 cache
@@ -176,10 +174,10 @@ public class EnvironmentSimulationContextTest {
     }
 
     @Test
-    public void testGetAgent_ThreadsNotSynced_AgentNotFound() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        Config config = TestFixtures.unsyncedConfig(20, 10, 1);
-        Environment environment = TestFixtures.emptyEnvironment();
-        EnvironmentSimulationContext context = TestFixtures.simulationContextWithEnvironment(
+    public void testGetAgent_ThreadsUnsynced_AgentNotFoundException() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        Config config = unsyncedConfig(20, 10, 1);
+        Environment environment = emptyEnvironment();
+        EnvironmentSimulationContext context = simulationContextWithEnvironment(
                 EnvironmentSimulationContext.class,
                 config,
                 environment
@@ -196,16 +194,16 @@ public class EnvironmentSimulationContextTest {
 
     @Test
     public void testGetAgent_ThreadsSynced() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
-        Config config = TestFixtures.syncedConfig(20, 10, 1);
-        Agent agent = TestFixtures.emptyAgent("Carol");
+        Config config = syncedConfig(20, 10, 1);
+        Agent agent = emptyAgent("Carol");
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodReturns(
                 EnvironmentSimulationContext.class,
                 agent,
                 "getAgentFromCoordinator",
-                new Class[]{String.class, String.class},
+                new Class<?>[]{String.class, String.class},
                 config,
-                TestFixtures.emptyEnvironment()
+                emptyEnvironment()
         );
 
         Agent returnedAgent = getMutableFromImmutable(context.getAgent(agent.name()));
@@ -216,8 +214,8 @@ public class EnvironmentSimulationContextTest {
     @Test
     public void testGetAgent_ThreadsSynced_SimulationInterruptedException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         String requestedAgentName = "John";
-        Config config = TestFixtures.syncedConfig(2, 10, 1);
-        Environment environment = TestFixtures.emptyEnvironment();
+        Config config = syncedConfig(2, 10, 1);
+        Environment environment = emptyEnvironment();
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
                 EnvironmentSimulationContext.class,
@@ -239,8 +237,8 @@ public class EnvironmentSimulationContextTest {
     @Test
     public void testGetAgent_ThreadsSynced_AgentNotFoundException_CoordinatorTimeoutException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         String requestedAgentName = "John";
-        Config config = TestFixtures.syncedConfig(2, 10, 1);
-        Environment environment = TestFixtures.emptyEnvironment();
+        Config config = syncedConfig(2, 10, 1);
+        Environment environment = emptyEnvironment();
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
                 EnvironmentSimulationContext.class,
@@ -262,8 +260,8 @@ public class EnvironmentSimulationContextTest {
     @Test
     public void testGetAgent_ThreadsSynced_AgentNotFoundException_CoordinatorErrorException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         String requestedAgentName = "John";
-        Config config = TestFixtures.syncedConfig(2, 10, 1);
-        Environment environment = TestFixtures.emptyEnvironment();
+        Config config = syncedConfig(2, 10, 1);
+        Environment environment = emptyEnvironment();
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
                 EnvironmentSimulationContext.class,
@@ -283,14 +281,14 @@ public class EnvironmentSimulationContextTest {
     }
 
     @Test
-    public void testGetFilteredAgents_isCached() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+    public void testGetFilteredAgents_IsCached() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         int populationSize = 7;
-        Config config = TestFixtures.syncedConfig(populationSize, 10, 1);
-        AgentSet agentSet = TestFixtures.agentSetOfSize(populationSize);
-        ContextCache cache = TestFixtures.contextCache();
+        Config config = syncedConfig(populationSize, 10, 1);
+        AgentSet agentSet = agentSetOfSize(populationSize);
+        ContextCache cache = contextCache();
         Predicate<Agent> filter = a -> true;
         cache.addFilteredAgents(filter, agentSet);
-        EnvironmentSimulationContext context = TestFixtures.simulationContextWithCache(
+        EnvironmentSimulationContext context = simulationContextWithCache(
                 EnvironmentSimulationContext.class,
                 config,
                 cache
@@ -304,17 +302,17 @@ public class EnvironmentSimulationContextTest {
     @Test
     public void testGetFilteredAgents_ThreadsSynced() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         int populationSize = 7;
-        Config config = TestFixtures.syncedConfig(populationSize, 10, 1);
-        AgentSet agentSet = TestFixtures.agentSetOfSize(populationSize);
+        Config config = syncedConfig(populationSize, 10, 1);
+        AgentSet agentSet = agentSetOfSize(populationSize);
         Predicate<Agent> filter = a -> true;
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodReturns(
                 EnvironmentSimulationContext.class,
                 agentSet,
                 "getFilteredAgentsFromCoordinator",
-                new Class[]{String.class, Predicate.class},
+                new Class<?>[]{String.class, Predicate.class},
                 config,
-                TestFixtures.emptyEnvironment()
+                emptyEnvironment()
         );
 
         assertSame(agentSet, getMutableFromImmutable(context.getFilteredAgents(filter)));
@@ -322,8 +320,8 @@ public class EnvironmentSimulationContextTest {
 
     @Test
     public void testGetFilteredAgents_ThreadsSynced_SimulationInterruptedException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
-        Config config = TestFixtures.syncedConfig(2, 10, 1);
-        Environment environment = TestFixtures.emptyEnvironment();
+        Config config = syncedConfig(2, 10, 1);
+        Environment environment = emptyEnvironment();
         Predicate<Agent> filter = a -> true;
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
@@ -345,8 +343,8 @@ public class EnvironmentSimulationContextTest {
 
     @Test
     public void testGetFilteredAgents_ThreadsSynced_AgentNotFoundException_CoordinatorTimeoutException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
-        Config config = TestFixtures.syncedConfig(2, 10, 1);
-        Environment environment = TestFixtures.emptyEnvironment();
+        Config config = syncedConfig(2, 10, 1);
+        Environment environment = emptyEnvironment();
         Predicate<Agent> filter = a -> true;
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
@@ -368,8 +366,8 @@ public class EnvironmentSimulationContextTest {
 
     @Test
     public void testGetFilteredAgents_ThreadsSynced_AgentNotFoundException_CoordinatorErrorException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
-        Config config = TestFixtures.syncedConfig(2, 10, 1);
-        Environment environment = TestFixtures.emptyEnvironment();
+        Config config = syncedConfig(2, 10, 1);
+        Environment environment = emptyEnvironment();
         Predicate<Agent> filter = a -> true;
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
@@ -390,13 +388,13 @@ public class EnvironmentSimulationContextTest {
     }
 
     @Test
-    public void testGetFilteredAgents_Threads_Unsynced() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+    public void testGetFilteredAgents_ThreadsUnsynced() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         int populationSize = 20;
-        Config config = TestFixtures.unsyncedConfig(populationSize, 10, 1);
-        AgentSet agentSet = TestFixtures.agentSetOfSize(populationSize);
+        Config config = unsyncedConfig(populationSize, 10, 1);
+        AgentSet agentSet = agentSetOfSize(populationSize);
         Predicate<Agent> filter = a -> true;
 
-        EnvironmentSimulationContext context = TestFixtures.simulationContextWithAgentSet(
+        EnvironmentSimulationContext context = simulationContextWithAgentSet(
                 EnvironmentSimulationContext.class,
                 config,
                 agentSet

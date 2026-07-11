@@ -1,7 +1,5 @@
 package unit.modelarium.entities.agents;
 
-import helpers.TestAttributes;
-import helpers.TestFixtures;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.attributes.AgentAttributeSet;
 import org.junit.jupiter.api.Test;
@@ -10,58 +8,61 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static unit.modelarium.entities.agents.AgentTestHelpers.*;
 
-/**
- * Unit tests for the {@link Agent} class.
- */
 public class AgentTest {
-
     @Test
-    public void testAgentNameIsAssigned() {
-        Agent agent = TestFixtures.emptyAgent("Alice");
+    public void testName() {
+        Agent agent = emptyAgent("Alice");
+
         assertEquals("Alice", agent.name());
     }
 
     @Test
-    public void testAgentWithNoAttributeSets() {
-        Agent agent = TestFixtures.emptyAgent("empty");
+    public void testAttributeSetCount_NoAttributeSets() {
+        Agent agent = emptyAgent("empty");
+
         assertEquals(0, agent.attributeSetCount());
+    }
+
+    @Test
+    public void testAttributeCount_NoAttributeSets() {
+        Agent agent = emptyAgent("empty");
+
         assertEquals(0, agent.attributeCount());
     }
 
     @Test
-    public void testAgentAttributeSetCountMatchesInput() {
-        AgentAttributeSet setA = TestAttributes.singlePropertyAgentSet("agent", "food", "hunger");
-        AgentAttributeSet setB = TestAttributes.singlePropertyAgentSet("agent", "health", "hp");
-        Agent agent = new Agent("agent", List.of(setA, setB));
+    public void testAttributeSetCount() {
+        AgentAttributeSet firstAttributeSet = singlePropertyAgentSet("agent", "food", "hunger");
+        AgentAttributeSet secondAttributeSet = singlePropertyAgentSet("agent", "health", "hp");
+        Agent agent = new Agent("agent", List.of(firstAttributeSet, secondAttributeSet));
 
         assertEquals(2, agent.attributeSetCount());
     }
 
     @Test
     public void testGetAttributeSetByIndex() {
-        AgentAttributeSet set = TestAttributes.singlePropertyAgentSet("agent", "food", "hunger");
-        Agent agent = new Agent("agent", List.of(set));
+        AgentAttributeSet attributeSet = singlePropertyAgentSet("agent", "food", "hunger");
+        Agent agent = new Agent("agent", List.of(attributeSet));
 
-        assertSame(set, agent.getAttributeSet(0));
+        assertSame(attributeSet, agent.getAttributeSet(0));
     }
 
     @Test
     public void testGetAttributeSetByName() {
-        AgentAttributeSet set = TestAttributes.singlePropertyAgentSet("agent", "food", "hunger");
-        Agent agent = new Agent("agent", List.of(set));
+        AgentAttributeSet attributeSet = singlePropertyAgentSet("agent", "food", "hunger");
+        Agent agent = new Agent("agent", List.of(attributeSet));
 
-        assertSame(set, agent.getAttributeSet("food"));
+        assertSame(attributeSet, agent.getAttributeSet("food"));
     }
 
     @Test
-    public void testTotalAttributeCountAcrossSets() {
-        TestAttributes.AgentCounterProperty p1 = new TestAttributes.AgentCounterProperty("a");
-        TestAttributes.AgentCounterProperty p2 = new TestAttributes.AgentCounterProperty("b");
-        AgentAttributeSet setA = TestAttributes.agentAttributeSet("agent", "s1", p1);
-        AgentAttributeSet setB = TestAttributes.agentAttributeSet("agent", "s2", p2);
-        Agent agent = new Agent("agent", List.of(setA, setB));
+    public void testAttributeCount() {
+        AgentAttributeSet firstAttributeSet = agentAttributeSet("agent", "s1", new AgentCounterProperty("a"));
+        AgentAttributeSet secondAttributeSet = agentAttributeSet("agent", "s2", new AgentCounterProperty("b"));
+        Agent agent = new Agent("agent", List.of(firstAttributeSet, secondAttributeSet));
 
-        assertEquals(2, agent.attributeCount(), "Total attributes across both sets.");
+        assertEquals(2, agent.attributeCount());
     }
 }

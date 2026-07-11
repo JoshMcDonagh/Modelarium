@@ -1,10 +1,7 @@
 package unit.modelarium.scheduler;
 
-import modelarium.clock.ImmutableClock;
-import modelarium.clock.MutableClock;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.AgentSet;
-import modelarium.entities.immutable.ImmutableEnvironment;
 import modelarium.scheduler.functional.FunctionalScheduler;
 import org.junit.jupiter.api.Test;
 
@@ -17,42 +14,36 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static unit.modelarium.scheduler.SchedulerTestHelpers.immutableClock;
+import static unit.modelarium.scheduler.SchedulerTestHelpers.immutableEnvironment;
 
 public class FunctionalSchedulerTest {
-
-    private ImmutableClock dummyClock() {
-        return new ImmutableClock(new MutableClock(10));
-    }
-
-    private ImmutableEnvironment dummyEnvironment() {
-        return mock(ImmutableEnvironment.class);
-    }
-
     @Test
-    void delegatesToProvidedConsumer() {
+    public void testRunTick_DelegatesToFunction() {
         AtomicInteger callCount = new AtomicInteger(0);
         FunctionalScheduler scheduler = new FunctionalScheduler(
-                (threadName, clock, env, agents, rng)
-                        -> callCount.incrementAndGet());
+                (threadName, clock, environment, agents, randomGenerator) -> callCount.incrementAndGet()
+        );
+        AgentSet agentSet = new AgentSet();
 
-        AgentSet set = new AgentSet();
-        scheduler.runTick("0", dummyClock(), dummyEnvironment(), set, new SplittableRandom(42));
+        scheduler.runTick("0", immutableClock(), immutableEnvironment(), agentSet, new SplittableRandom(42));
 
-        assertEquals(1, callCount.get(), "Consumer should have been called exactly once.");
+        assertEquals(1, callCount.get());
     }
 
     @Test
-    void receivesCorrectAgentSet() {
-        Agent a = mock(Agent.class);
-        when(a.name()).thenReturn("a");
-        AgentSet set = new AgentSet(List.of(a));
+    public void testRunTick_PassesAgentSetToFunction() {
+        Agent agent = mock(Agent.class);
+        when(agent.name()).thenReturn("a");
+        AgentSet agentSet = new AgentSet(List.of(agent));
 
-        List<AgentSet> captured = new ArrayList<>();
+        List<AgentSet> capturedAgentSets = new ArrayList<>();
         FunctionalScheduler scheduler = new FunctionalScheduler(
-                (threadName, clock, env, agents, rng)
-                        -> captured.add(agents));
-        scheduler.runTick("0", dummyClock(), dummyEnvironment(), set, new SplittableRandom(42));
+                (threadName, clock, environment, agents, randomGenerator) -> capturedAgentSets.add(agents)
+        );
 
-        assertSame(set, captured.get(0), "Consumer should receive the original agent set.");
+        scheduler.runTick("0", immutableClock(), immutableEnvironment(), agentSet, new SplittableRandom(42));
+
+        assertSame(agentSet, capturedAgentSets.get(0));
     }
 }

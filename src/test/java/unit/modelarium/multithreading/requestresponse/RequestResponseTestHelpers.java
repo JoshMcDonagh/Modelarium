@@ -1,0 +1,49 @@
+package unit.modelarium.multithreading.requestresponse;
+
+import modelarium.Config;
+import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.generators.DefaultAgentGenerator;
+import modelarium.entities.environments.Environment;
+import modelarium.entities.environments.EnvironmentGenerator;
+import modelarium.multithreading.requestresponse.RequestResponseController;
+
+import java.util.List;
+
+class RequestResponseTestHelpers {
+    private RequestResponseTestHelpers() {}
+
+    private static DefaultAgentGenerator agentGenerator() {
+        return new DefaultAgentGenerator() {
+            private int index = 0;
+
+            @Override
+            protected Agent generateAgent(Config config) {
+                return new Agent("agent_" + index++, List.of());
+            }
+        };
+    }
+
+    private static EnvironmentGenerator environmentGenerator() {
+        return new EnvironmentGenerator() {
+            @Override
+            public Environment generateEnvironment(Config config) {
+                return new Environment("env", List.of());
+            }
+        };
+    }
+
+    static Config syncedConfig(int populationSize, int tickCount, int threadCount) {
+        return Config.builder()
+                .populationSize(populationSize)
+                .tickCount(tickCount)
+                .threadCount(threadCount)
+                .areThreadsSynced(true)
+                .agentGenerator(agentGenerator())
+                .environmentGenerator(environmentGenerator())
+                .build();
+    }
+
+    static RequestResponseController requestResponseController() {
+        return new RequestResponseController(syncedConfig(2, 5, 2));
+    }
+}

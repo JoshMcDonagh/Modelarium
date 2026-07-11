@@ -1,6 +1,6 @@
 package integration.syncedModel;
 
-import helpers.TestFixtures;
+import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.Model;
 import modelarium.entities.agents.Agent;
@@ -40,7 +40,10 @@ public class SyncedModelIntegrationTest {
 
     @BeforeAll
     static void openForCloning() {
-        TestFixtures.openToCloningModule("helpers", "integration.syncedModel");
+        SyncedModelIntegrationTest.class.getModule().addOpens(
+                "integration.syncedModel",
+                Cloner.class.getModule()
+        );
     }
 
     // ---- Attribute implementations local to this test ----

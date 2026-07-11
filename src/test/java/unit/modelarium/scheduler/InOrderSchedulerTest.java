@@ -1,47 +1,37 @@
 package unit.modelarium.scheduler;
 
-import modelarium.clock.ImmutableClock;
-import modelarium.clock.MutableClock;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.AgentSet;
-import modelarium.entities.immutable.ImmutableEnvironment;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
 
 import java.util.SplittableRandom;
 
 import static org.mockito.Mockito.*;
+import static unit.modelarium.scheduler.SchedulerTestHelpers.immutableClock;
+import static unit.modelarium.scheduler.SchedulerTestHelpers.immutableEnvironment;
 
 public class InOrderSchedulerTest {
-
-    private ImmutableClock dummyClock() {
-        return new ImmutableClock(new MutableClock(10));
-    }
-
-    private ImmutableEnvironment dummyEnvironment() {
-        return mock(ImmutableEnvironment.class);
-    }
-
     @Test
-    void callsRunOnEachAgentSequentially() {
-        Agent a1 = mock(Agent.class);
-        Agent a2 = mock(Agent.class);
-        Agent a3 = mock(Agent.class);
+    public void testRunTick_RunsAgentsInOrder() {
+        Agent firstAgent = mock(Agent.class);
+        Agent secondAgent = mock(Agent.class);
+        Agent thirdAgent = mock(Agent.class);
+        when(firstAgent.name()).thenReturn("a1");
+        when(secondAgent.name()).thenReturn("a2");
+        when(thirdAgent.name()).thenReturn("a3");
 
-        when(a1.name()).thenReturn("a1");
-        when(a2.name()).thenReturn("a2");
-        when(a3.name()).thenReturn("a3");
+        AgentSet agentSet = new AgentSet();
+        agentSet.add(firstAgent);
+        agentSet.add(secondAgent);
+        agentSet.add(thirdAgent);
 
-        AgentSet set = new AgentSet();
-        set.add(a1);
-        set.add(a2);
-        set.add(a3);
+        new InOrderScheduler().runTick("0", immutableClock(), immutableEnvironment(), agentSet, new SplittableRandom(42));
 
-        new InOrderScheduler().runTick("0", dummyClock(), dummyEnvironment(), set, new SplittableRandom(42));
-
-        org.mockito.InOrder inOrder = inOrder(a1, a2, a3);
-        inOrder.verify(a1).run();
-        inOrder.verify(a2).run();
-        inOrder.verify(a3).run();
+        InOrder inOrder = inOrder(firstAgent, secondAgent, thirdAgent);
+        inOrder.verify(firstAgent).run();
+        inOrder.verify(secondAgent).run();
+        inOrder.verify(thirdAgent).run();
     }
 }

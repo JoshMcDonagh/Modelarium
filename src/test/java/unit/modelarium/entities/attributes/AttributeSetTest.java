@@ -1,115 +1,98 @@
 package unit.modelarium.entities.attributes;
 
-import helpers.TestAttributes;
 import modelarium.entities.attributes.AgentAttributeSet;
-import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.EnvironmentAttributeSet;
-import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.exceptions.AttributeAccessException;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
+import static unit.modelarium.entities.attributes.AttributeTestHelpers.*;
 
-/**
- * Unit tests for {@link AgentAttributeSet} and {@link EnvironmentAttributeSet}.
- *
- * <p>Covers construction, naming, size queries, and access-level enforcement.
- * Run-time behaviour (execution of attributes within the tick loop) is tested
- * via integration tests, since it requires a live context.
- */
 public class AttributeSetTest {
-
-    // ---- Construction and metadata ----
-
     @Test
-    void testNameIsAssigned() {
-        AgentAttributeSet set = TestAttributes.singlePropertyAgentSet("owner", "food", "hunger");
-        assertEquals("food", set.name());
+    public void testName() {
+        AgentAttributeSet attributeSet = singlePropertyAgentSet("owner", "food", "hunger");
+
+        assertEquals("food", attributeSet.name());
     }
 
     @Test
-    void testSizeReflectsAttributeCount() {
-        TestAttributes.AgentCounterProperty p1 = new TestAttributes.AgentCounterProperty("a");
-        TestAttributes.AgentCounterProperty p2 = new TestAttributes.AgentCounterProperty("b");
-        AgentAttributeSet set = TestAttributes.agentAttributeSet("owner", "s", p1, p2);
+    public void testSize() {
+        AgentAttributeSet attributeSet = agentAttributeSet(
+                "owner",
+                "s",
+                new AgentCounterProperty("a"),
+                new AgentCounterProperty("b")
+        );
 
-        assertEquals(2, set.size());
+        assertEquals(2, attributeSet.size());
     }
 
     @Test
-    void testEmptySetHasZeroSize() {
-        @SuppressWarnings("unchecked")
-        AgentAttributeSet set = new AgentAttributeSet("owner", "empty",
-                (List<Attribute<AgentSimulationContext>>) (List<?>) List.of());
+    public void testSize_Empty() {
+        AgentAttributeSet attributeSet = agentAttributeSet("owner", "empty");
 
-        assertEquals(0, set.size());
-    }
-
-    // ---- Access control ----
-
-    @Test
-    void testPublicPropertyIsAccessible() {
-        TestAttributes.AgentCounterProperty prop = new TestAttributes.AgentCounterProperty("counter");
-        AgentAttributeSet set = TestAttributes.agentAttributeSet("owner", "s", prop);
-
-        // getProperty is package-private on AttributeSet but public on AgentAttributeSet
-        assertDoesNotThrow(() -> set.getProperty("counter"));
+        assertEquals(0, attributeSet.size());
     }
 
     @Test
-    void testPrivatePropertyThrowsOnAccess() {
-        TestAttributes.PrivateCounterProperty prop = new TestAttributes.PrivateCounterProperty("secret", 0.0);
+    public void testGetProperty_PublicAccessLevel() {
+        AgentAttributeSet attributeSet = agentAttributeSet("owner", "s", new AgentCounterProperty("counter"));
 
-        @SuppressWarnings("unchecked")
-        AgentAttributeSet set = new AgentAttributeSet("owner", "s",
-                (List<Attribute<AgentSimulationContext>>) (List<?>) List.of(prop));
-
-        assertThrows(AttributeAccessException.class, () -> set.getProperty("secret"),
-                "Accessing a PRIVATE attribute should throw.");
-    }
-
-    // ---- Type-specific retrieval ----
-
-    @Test
-    void testGetEventByName() {
-        TestAttributes.ThresholdEvent event = new TestAttributes.ThresholdEvent("eatFood", 0.5);
-        AgentAttributeSet set = TestAttributes.agentAttributeSetFromEvents("owner", "food", event);
-
-        assertDoesNotThrow(() -> set.getEvent("eatFood"));
+        assertDoesNotThrow(() -> attributeSet.getProperty("counter"));
     }
 
     @Test
-    void testGetRoutineByName() {
-        TestAttributes.InvocationCountingRoutine routine = new TestAttributes.InvocationCountingRoutine("tick");
-        AgentAttributeSet set = TestAttributes.agentAttributeSetFromRoutines("owner", "sim", routine);
+    public void testGetProperty_PrivateAccessLevel_AttributeAccessException() {
+        AgentAttributeSet attributeSet = agentAttributeSet("owner", "s", new PrivateCounterProperty("secret"));
 
-        assertDoesNotThrow(() -> set.getRoutine("tick"));
+        assertThrows(AttributeAccessException.class, () -> attributeSet.getProperty("secret"));
     }
 
     @Test
-    void testGetEventThrowsWhenGivenAProperty() {
-        TestAttributes.AgentCounterProperty prop = new TestAttributes.AgentCounterProperty("hp");
-        AgentAttributeSet set = TestAttributes.agentAttributeSet("owner", "s", prop);
+    public void testGetEvent() {
+        AgentAttributeSet attributeSet = agentAttributeSetFromEvents(
+                "owner",
+                "food",
+                new AlwaysTriggeredAgentEvent("eatFood")
+        );
 
-        assertThrows(AttributeAccessException.class, () -> set.getEvent("hp"),
-                "Requesting an event by a property name should throw.");
-    }
-
-    // ---- Environment attribute sets ----
-
-    @Test
-    void testEnvironmentSetNameIsAssigned() {
-        EnvironmentAttributeSet set = TestAttributes.emptyEnvironmentAttributeSet("env", "weather");
-        assertEquals("weather", set.name());
+        assertDoesNotThrow(() -> attributeSet.getEvent("eatFood"));
     }
 
     @Test
-    void testEnvironmentSetWithProperty() {
-        TestAttributes.EnvironmentTickProperty prop = new TestAttributes.EnvironmentTickProperty("tick");
-        EnvironmentAttributeSet set = TestAttributes.environmentAttributeSet("env", "timing", prop);
+    public void testGetEvent_GivenPropertyName_AttributeAccessException() {
+        AgentAttributeSet attributeSet = agentAttributeSet("owner", "s", new AgentCounterProperty("hp"));
 
-        assertEquals(1, set.size());
+        assertThrows(AttributeAccessException.class, () -> attributeSet.getEvent("hp"));
+    }
+
+    @Test
+    public void testGetRoutine() {
+        AgentAttributeSet attributeSet = agentAttributeSetFromRoutines(
+                "owner",
+                "sim",
+                new EmptyAgentRoutine("tick")
+        );
+
+        assertDoesNotThrow(() -> attributeSet.getRoutine("tick"));
+    }
+
+    @Test
+    public void testEnvironmentAttributeSetName() {
+        EnvironmentAttributeSet attributeSet = emptyEnvironmentAttributeSet("env", "weather");
+
+        assertEquals("weather", attributeSet.name());
+    }
+
+    @Test
+    public void testEnvironmentAttributeSetSize() {
+        EnvironmentAttributeSet attributeSet = environmentAttributeSet(
+                "env",
+                "timing",
+                new EnvironmentTickProperty("tick")
+        );
+
+        assertEquals(1, attributeSet.size());
     }
 }

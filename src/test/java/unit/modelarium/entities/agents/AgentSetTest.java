@@ -1,163 +1,170 @@
 package unit.modelarium.entities.agents;
 
-import helpers.TestFixtures;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.AgentSet;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.SplittableRandom;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static unit.modelarium.entities.agents.AgentTestHelpers.emptyAgent;
 
-/**
- * Unit tests for {@link AgentSet}.
- * Covers add, retrieve, filter, iterate, duplicate, and update operations.
- */
 public class AgentSetTest {
+    @Test
+    public void testAdd() {
+        Agent agent = emptyAgent("A");
+        AgentSet agentSet = new AgentSet();
 
-    private Agent agentA;
-    private Agent agentB;
-    private Agent agentC;
+        agentSet.add(agent);
 
-    @BeforeEach
-    public void setUp() {
-        agentA = TestFixtures.emptyAgent("A");
-        agentB = TestFixtures.emptyAgent("B");
-        agentC = TestFixtures.emptyAgent("C");
+        assertEquals(1, agentSet.size());
+        assertSame(agent, agentSet.get("A"));
     }
 
     @Test
-    public void testAddAndRetrieveAgentByName() {
-        AgentSet set = new AgentSet();
-        set.add(agentA);
+    public void testAdd_ReplacesExistingAgent() {
+        Agent agent = emptyAgent("A");
+        Agent replacementAgent = emptyAgent("A");
+        AgentSet agentSet = new AgentSet();
+        agentSet.add(agent);
 
-        assertEquals(1, set.size(), "Set should contain one agent.");
-        assertSame(agentA, set.get("A"), "Retrieved agent should be the same instance.");
+        agentSet.add(replacementAgent);
+
+        assertEquals(1, agentSet.size());
+        assertSame(replacementAgent, agentSet.get("A"));
     }
 
     @Test
-    public void testAddAndRetrieveAgentByIndex() {
-        AgentSet set = new AgentSet();
-        set.add(agentA);
-        set.add(agentB);
+    public void testAddList() {
+        AgentSet agentSet = new AgentSet();
 
-        assertSame(agentA, set.get(0));
-        assertSame(agentB, set.get(1));
-    }
+        agentSet.add(List.of(emptyAgent("A"), emptyAgent("B")));
 
-    @Test
-    public void testAddListOfAgents() {
-        AgentSet set = new AgentSet();
-        set.add(Arrays.asList(agentA, agentB));
-
-        assertEquals(2, set.size(), "Set should contain two agents.");
-        assertTrue(set.doesAgentExist("A"));
-        assertTrue(set.doesAgentExist("B"));
-    }
-
-    @Test
-    public void testConstructFromList() {
-        AgentSet set = new AgentSet(Arrays.asList(agentA, agentB, agentC));
-        assertEquals(3, set.size());
+        assertEquals(2, agentSet.size());
+        assertTrue(agentSet.doesAgentExist("A"));
+        assertTrue(agentSet.doesAgentExist("B"));
     }
 
     @Test
     public void testAddAgentSet() {
-        AgentSet source = new AgentSet(Arrays.asList(agentA, agentB));
-        AgentSet target = new AgentSet();
-        target.add(source);
+        AgentSet sourceAgentSet = new AgentSet(List.of(emptyAgent("A"), emptyAgent("B")));
+        AgentSet targetAgentSet = new AgentSet();
 
-        assertEquals(2, target.size(), "Target set should contain agents from source.");
+        targetAgentSet.add(sourceAgentSet);
+
+        assertEquals(2, targetAgentSet.size());
     }
 
     @Test
-    public void testReplaceExistingAgent() {
-        AgentSet set = new AgentSet();
-        set.add(agentA);
+    public void testConstructorFromList() {
+        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A"), emptyAgent("B"), emptyAgent("C")));
 
-        Agent replacement = TestFixtures.emptyAgent("A");
-        set.add(replacement);
-
-        assertEquals(1, set.size(), "Duplicate name should replace, not grow.");
-        assertSame(replacement, set.get("A"), "Should be the replacement instance.");
+        assertEquals(3, agentSet.size());
     }
 
     @Test
-    public void testDoesAgentExist() {
-        AgentSet set = new AgentSet();
-        set.add(agentA);
+    public void testGetByIndex() {
+        Agent firstAgent = emptyAgent("A");
+        Agent secondAgent = emptyAgent("B");
+        AgentSet agentSet = new AgentSet();
+        agentSet.add(firstAgent);
+        agentSet.add(secondAgent);
 
-        assertTrue(set.doesAgentExist("A"));
-        assertFalse(set.doesAgentExist("Z"));
+        assertSame(firstAgent, agentSet.get(0));
+        assertSame(secondAgent, agentSet.get(1));
+    }
+
+    @Test
+    public void testDoesAgentExistTrue() {
+        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A")));
+
+        assertTrue(agentSet.doesAgentExist("A"));
+    }
+
+    @Test
+    public void testDoesAgentExistFalse() {
+        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A")));
+
+        assertFalse(agentSet.doesAgentExist("Z"));
     }
 
     @Test
     public void testGetFilteredAgents() {
-        AgentSet set = new AgentSet(Arrays.asList(agentA, agentB, agentC));
-        AgentSet filtered = set.getFilteredAgents(a -> a.name().equals("B"));
+        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A"), emptyAgent("B"), emptyAgent("C")));
 
-        assertEquals(1, filtered.size(), "Only one agent should match.");
-        assertEquals("B", filtered.get(0).name());
+        AgentSet filteredAgentSet = agentSet.getFilteredAgents(agent -> agent.name().equals("B"));
+
+        assertEquals(1, filteredAgentSet.size());
+        assertEquals("B", filteredAgentSet.get(0).name());
     }
 
     @Test
-    public void testFilterReturnsEmptySetWhenNothingMatches() {
-        AgentSet set = new AgentSet(List.of(agentA));
-        AgentSet filtered = set.getFilteredAgents(a -> false);
+    public void testGetFilteredAgents_NoMatches() {
+        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A")));
 
-        assertEquals(0, filtered.size());
+        AgentSet filteredAgentSet = agentSet.getFilteredAgents(agent -> false);
+
+        assertEquals(0, filteredAgentSet.size());
     }
 
     @Test
-    public void testGetRandomIteratorCoversAllAgents() {
-        AgentSet set = new AgentSet(Arrays.asList(agentA, agentB, agentC));
-        Set<String> names = new HashSet<>();
-        Iterator<Agent> it = set.getRandomIterator(new SplittableRandom(42));
+    public void testGetRandomIterator() {
+        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A"), emptyAgent("B"), emptyAgent("C")));
+        Set<String> agentNames = new HashSet<>();
 
-        while (it.hasNext())
-            names.add(it.next().name());
+        Iterator<Agent> randomIterator = agentSet.getRandomIterator(new SplittableRandom(42));
+        while (randomIterator.hasNext())
+            agentNames.add(randomIterator.next().name());
 
-        assertEquals(3, names.size(), "Random iterator should visit all agents.");
-        assertTrue(names.containsAll(Arrays.asList("A", "B", "C")));
+        assertEquals(3, agentNames.size());
+        assertTrue(agentNames.containsAll(List.of("A", "B", "C")));
     }
 
     @Test
     public void testGetAsList() {
-        AgentSet set = new AgentSet(Arrays.asList(agentA, agentB));
-        List<Agent> list = set.getAsList();
+        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A"), emptyAgent("B")));
 
-        assertEquals(2, list.size());
+        List<Agent> agentList = agentSet.getAsList();
+
+        assertEquals(2, agentList.size());
     }
 
     @Test
     public void testDuplicate() {
-        AgentSet set = new AgentSet(Arrays.asList(agentA, agentB));
-        AgentSet dup = set.duplicate();
+        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A"), emptyAgent("B")));
 
-        assertEquals(2, dup.size(), "Duplicate should have the same number of agents.");
+        AgentSet duplicateAgentSet = agentSet.duplicate();
+
+        assertEquals(2, duplicateAgentSet.size());
     }
 
     @Test
     public void testIterator() {
-        AgentSet set = new AgentSet(Arrays.asList(agentA, agentB));
-        List<String> names = new ArrayList<>();
+        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A"), emptyAgent("B")));
+        List<String> agentNames = new ArrayList<>();
 
-        for (Agent agent : set)
-            names.add(agent.name());
+        for (Agent agent : agentSet)
+            agentNames.add(agent.name());
 
-        assertEquals(Arrays.asList("A", "B"), names);
+        assertEquals(List.of("A", "B"), agentNames);
     }
 
     @Test
-    public void testSizeOfEmptySet() {
-        AgentSet set = new AgentSet();
-        assertEquals(0, set.size());
+    public void testSize_Empty() {
+        AgentSet agentSet = new AgentSet();
+
+        assertEquals(0, agentSet.size());
     }
 
     @Test
-    public void testGetImmutable() {
-        AgentSet set = new AgentSet(List.of(agentA));
-        assertNotNull(set.getAsImmutable(), "Should produce a non-null immutable view.");
+    public void testGetAsImmutable() {
+        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A")));
+
+        assertNotNull(agentSet.getAsImmutable());
     }
 }

@@ -1,7 +1,5 @@
 package unit.modelarium.entities.environments;
 
-import helpers.TestAttributes;
-import helpers.TestFixtures;
 import modelarium.entities.attributes.EnvironmentAttributeSet;
 import modelarium.entities.environments.Environment;
 import org.junit.jupiter.api.Test;
@@ -10,38 +8,40 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static unit.modelarium.entities.environments.EnvironmentTestHelpers.*;
 
-/**
- * Unit tests for the {@link Environment} class.
- */
 public class EnvironmentTest {
-
     @Test
-    public void testEnvironmentNameIsAssigned() {
-        Environment env = TestFixtures.emptyEnvironment();
-        assertEquals("env", env.name());
+    public void testName() {
+        Environment environment = emptyEnvironment();
+
+        assertEquals("env", environment.name());
     }
 
     @Test
-    public void testEnvironmentWithNoAttributeSets() {
-        Environment env = TestFixtures.emptyEnvironment();
-        assertEquals(0, env.attributeSetCount());
+    public void testAttributeSetCount_NoAttributeSets() {
+        Environment environment = emptyEnvironment();
+
+        assertEquals(0, environment.attributeSetCount());
     }
 
     @Test
-    public void testEnvironmentAttributeSetAccessByName() {
-        EnvironmentAttributeSet set = TestAttributes.environmentAttributeSet(
-                "env", "timing", new TestAttributes.EnvironmentTickProperty("tick"));
-        Environment env = new Environment("env", List.of(set));
+    public void testGetAttributeSetByName() {
+        EnvironmentAttributeSet attributeSet = environmentAttributeSet(
+                "env",
+                "timing",
+                new EnvironmentTickProperty("tick")
+        );
+        Environment environment = new Environment("env", List.of(attributeSet));
 
-        assertSame(set, env.getAttributeSet("timing"));
+        assertSame(attributeSet, environment.getAttributeSet("timing"));
     }
 
     @Test
-    public void testEnvironmentAttributeSetAccessByIndex() {
-        EnvironmentAttributeSet set = TestAttributes.emptyEnvironmentAttributeSet("env", "timing");
-        Environment env = new Environment("env", List.of(set));
+    public void testGetAttributeSetByIndex() {
+        EnvironmentAttributeSet attributeSet = emptyEnvironmentAttributeSet("env", "timing");
+        Environment environment = new Environment("env", List.of(attributeSet));
 
-        assertSame(set, env.getAttributeSet(0));
+        assertSame(attributeSet, environment.getAttributeSet(0));
     }
 }
