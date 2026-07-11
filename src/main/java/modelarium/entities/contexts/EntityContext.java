@@ -1,12 +1,4 @@
 package modelarium.entities.contexts;
 
-import modelarium.clock.Clock;
-import modelarium.entities.agents.Agent;
-import modelarium.entities.immutable.ImmutableAgent;
-import modelarium.entities.immutable.ImmutableAgentSet;
-
-import java.util.function.Predicate;
-import java.util.random.RandomGenerator;
-
 public sealed interface EntityContext extends Context permits AgentContext, EnvironmentContext {
 }

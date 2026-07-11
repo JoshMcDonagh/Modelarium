@@ -10,7 +10,6 @@ import modelarium.entities.attributes.AgentAttributeSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.ContextCache;
-import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.immutable.ImmutableAgentSet;
 import modelarium.exceptions.*;

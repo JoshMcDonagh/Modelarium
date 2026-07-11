@@ -137,14 +137,18 @@ public final class TestFixtures {
                 .build();
     }
 
+    private static int agentCount = 0;
+
     /**
      * An agent set aof set size.
      */
     public static AgentSet agentSetOfSize(int size) {
         AgentSet agentSet = new AgentSet();
 
-        for (int i = 0; i < size; i++)
-            agentSet.add(emptyAgent(String.valueOf(i)));
+        for (int i = 0; i < size; i++) {
+            agentSet.add(emptyAgent(String.valueOf(agentCount)));
+            agentCount++;
+        }
 
         return agentSet;
     }

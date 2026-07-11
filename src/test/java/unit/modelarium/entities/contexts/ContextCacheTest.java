@@ -6,11 +6,9 @@ import modelarium.entities.agents.AgentSet;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
 import org.junit.jupiter.api.Test;
-import org.mockito.stubbing.Stubber;
 
 import java.lang.reflect.Field;
 import java.util.IdentityHashMap;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -268,5 +266,75 @@ public class ContextCacheTest {
             assertTrue(resultingIndividualAgentCache.doesAgentExist(agent.name()));
             assertSame(agent, resultingIndividualAgentCache.get(agent.name()));
         }
+    }
+
+    @Test
+    public void testDoesEnvironmentExistTrue() throws NoSuchFieldException, IllegalAccessException {
+        AgentSet individualAgentCache = TestFixtures.agentSetOfSize(20);
+        IdentityHashMap<Predicate<Agent>, AgentSet> filteredAgentsCache = new IdentityHashMap<>();
+        filteredAgentsCache.put(a -> true, individualAgentCache);
+        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, TestFixtures.agentSetOfSize(5));
+        Environment environment = TestFixtures.emptyEnvironment();
+
+        ContextCache cache = createContextCache(
+                individualAgentCache,
+                filteredAgentsCache,
+                environment
+        );
+
+        assertTrue(cache.doesEnvironmentExist());
+    }
+
+    @Test
+    public void testDoesEnvironmentExistFalse() throws NoSuchFieldException, IllegalAccessException {
+        AgentSet individualAgentCache = TestFixtures.agentSetOfSize(20);
+        IdentityHashMap<Predicate<Agent>, AgentSet> filteredAgentsCache = new IdentityHashMap<>();
+        filteredAgentsCache.put(a -> true, individualAgentCache);
+        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, TestFixtures.agentSetOfSize(5));
+
+        ContextCache cache = createContextCache(
+                individualAgentCache,
+                filteredAgentsCache,
+                null
+        );
+
+        assertFalse(cache.doesEnvironmentExist());
+    }
+
+    @Test
+    public void testGetEnvironment() throws NoSuchFieldException, IllegalAccessException {
+        AgentSet individualAgentCache = TestFixtures.agentSetOfSize(20);
+        IdentityHashMap<Predicate<Agent>, AgentSet> filteredAgentsCache = new IdentityHashMap<>();
+        filteredAgentsCache.put(a -> true, individualAgentCache);
+        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, TestFixtures.agentSetOfSize(5));
+        Environment environment = TestFixtures.emptyEnvironment();
+
+        ContextCache cache = createContextCache(
+                individualAgentCache,
+                filteredAgentsCache,
+                environment
+        );
+
+        assertSame(environment, cache.getEnvironment());
+    }
+
+    @Test
+    public void testAddEnvironment() throws NoSuchFieldException, IllegalAccessException {
+        AgentSet individualAgentCache = TestFixtures.agentSetOfSize(20);
+        IdentityHashMap<Predicate<Agent>, AgentSet> filteredAgentsCache = new IdentityHashMap<>();
+        filteredAgentsCache.put(a -> true, individualAgentCache);
+        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, TestFixtures.agentSetOfSize(5));
+
+        ContextCache cache = createContextCache(
+                individualAgentCache,
+                filteredAgentsCache,
+                null
+        );
+
+        Environment environment = TestFixtures.emptyEnvironment();
+
+        cache.addEnvironment(environment);
+
+        assertSame(environment, getEnvironment(cache));
     }
 }
