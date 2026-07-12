@@ -21,6 +21,10 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
     private final List<AttributeBase<SC>> attributeList = new ArrayList<>();
     private final Map<String, Integer> attributeIndexMap = new HashMap<>();
 
+    private final List<Integer> eventIndexList = new ArrayList<>();
+    private final List<Integer> propertyIndexList = new ArrayList<>();
+    private final List<Integer> routineIndexList = new ArrayList<>();
+
     private AttributeSetLog<SC> log = null;
 
     private SC context = null;
@@ -34,6 +38,15 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
             AttributeBase<SC> attribute = (AttributeBase<SC>) attributeList.get(i);
             this.attributeList.add(attribute);
             this.attributeIndexMap.put(attribute.name(), i);
+
+            if (attribute instanceof Event)
+                this.eventIndexList.add(i);
+            else if (attribute instanceof Property)
+                this.propertyIndexList.add(i);
+            else if (attribute instanceof Routine)
+                this.routineIndexList.add(i);
+            else
+                throw new IllegalArgumentException("'" + attribute.name() + "' is not a valid attribute type");
         }
     }
 
@@ -81,14 +94,14 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
     }
 
     Attribute get(int index) {
-        return (Attribute) getAttribute(index);
+        return getAttribute(index);
     }
 
     Attribute get(String attributeName) {
-        return (Attribute) getAttribute(attributeIndexMap.get(attributeName));
+        return getAttribute(attributeName);
     }
 
-    Event<C> getEvent(int eventIndex) {
+    private Event<C> getEventAttribute(int eventIndex) {
         AttributeBase<C> attribute = getAttribute(eventIndex);
 
         if (attribute instanceof Event<C> event)
@@ -97,24 +110,32 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
         throw new AttributeAccessException("Expected an Event, but got: " + attribute.getClass().getName());
     }
 
-    Event<C> getEvent(String eventName) {
-        return getEvent(attributeIndexMap.get(eventName));
+    Event<C> getEvent(int eventIndex) {
+        return getEventAttribute(eventIndexList.get(eventIndex));
     }
 
-    Routine<C> getRoutine(int routineIndex) {
+    Event<C> getEvent(String eventName) {
+        return getEventAttribute(attributeIndexMap.get(eventName));
+    }
+
+    private Routine<C> getRoutineAttribute(int routineIndex) {
         AttributeBase<C> attribute = getAttribute(routineIndex);
 
         if (attribute instanceof Routine<C> routine)
             return routine;
 
-        throw new AttributeAccessException("Expected a Routine, but got: " + attribute.getClass().getName());
+        throw new AttributeAccessException("Expected an Routine, but got: " + attribute.getClass().getName());
+    }
+
+    Routine<C> getRoutine(int routineIndex) {
+        return getRoutineAttribute(routineIndexList.get(routineIndex));
     }
 
     Routine<C> getRoutine(String routineName) {
-        return getRoutine(attributeIndexMap.get(routineName));
+        return getRoutineAttribute(attributeIndexMap.get(routineName));
     }
 
-    Property<?,C> getProperty(int propertyIndex) {
+    private Property<?,C> getPropertyAttribute(int propertyIndex) {
         AttributeBase<C> attribute = getAttribute(propertyIndex);
 
         if (attribute instanceof Property<?, C> property)
@@ -123,8 +144,12 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
         throw new AttributeAccessException("Expected a Property, but got: " + attribute.getClass().getName());
     }
 
+    Property<?,C> getProperty(int propertyIndex) {
+        return getPropertyAttribute(propertyIndexList.get(propertyIndex));
+    }
+
     Property<?,C> getProperty(String propertyName) {
-        return getProperty(attributeIndexMap.get(propertyName));
+        return getPropertyAttribute(attributeIndexMap.get(propertyName));
     }
 
     public AttributeSetLog<SC> getLog() {

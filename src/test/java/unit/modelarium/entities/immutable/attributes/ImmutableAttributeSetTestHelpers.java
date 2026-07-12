@@ -15,10 +15,14 @@ import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.immutable.attributes.ImmutableAgentAttributeSet;
 import modelarium.entities.immutable.attributes.ImmutableAttributeSet;
 import modelarium.entities.immutable.attributes.ImmutableEnvironmentAttributeSet;
+import org.junit.jupiter.api.function.Executable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class ImmutableAttributeSetTestHelpers {
     private ImmutableAttributeSetTestHelpers() {}
@@ -81,6 +85,48 @@ class ImmutableAttributeSetTestHelpers {
             ImmutableEnvironmentAttributeSet immutableAttributeSet
     ) throws NoSuchFieldException, IllegalAccessException {
         return (EnvironmentAttributeSet) getMutableAttributeSetFromImmutableAttributeSet(immutableAttributeSet);
+    }
+
+    static <A,T,P> T runGetClonedAttribute(
+            ImmutableAttributeSet<?,?> immutableAttributeSet,
+            Class<A> attributeSetClass,
+            Class<T> attributeReturnClass,
+            String getterMethodName,
+            Class<P> attributeIdClass,
+            P attributeId
+    ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method getClonedAttributeMethod = ImmutableAttributeSet.class.getDeclaredMethod(
+                "getClonedAttribute",
+                Class.class,
+                Class.class,
+                String.class,
+                Class.class,
+                Object.class
+        );
+
+        getClonedAttributeMethod.setAccessible(true);
+
+        return (T) getClonedAttributeMethod.invoke(
+                immutableAttributeSet,
+                attributeSetClass,
+                attributeReturnClass,
+                getterMethodName,
+                attributeIdClass,
+                attributeId
+        );
+    };
+
+    static <E extends Throwable, C extends Throwable> void assertCorrectExceptionThrown(
+            Class<E> expectedException,
+            Executable executableToCheck,
+            String expectedMessage,
+            Class<C> causingException
+    ) {
+        E exception = assertThrows(expectedException, executableToCheck);
+        assertEquals(expectedMessage, exception.getMessage());
+
+        if (causingException != null)
+            assertInstanceOf(causingException, exception.getCause());
     }
 
     private static AgentEventRunFunction makeEmptyAgentEventRunFunction() {
