@@ -1,6 +1,10 @@
 package unit.modelarium.entities.immutable.attributes;
 
 import modelarium.entities.attributes.AgentAttributeSet;
+import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.events.functional.FunctionalAgentEvent;
+import modelarium.entities.attributes.properties.functional.FunctionalAgentProperty;
+import modelarium.entities.attributes.routines.functional.FunctionalAgentRoutine;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.immutable.attributes.ImmutableAgentAttributeSet;
 import modelarium.entities.immutable.attributes.ImmutableAttributeSet;
@@ -10,11 +14,11 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static unit.modelarium.entities.immutable.attributes.ImmutableAttributeSetTestHelpers.makeAttributeSet;
-import static unit.modelarium.entities.immutable.attributes.ImmutableAttributeSetTestHelpers.makeImmutableAttributeSet;
+import static unit.modelarium.entities.immutable.attributes.ImmutableAttributeSetTestHelpers.*;
 
 public class ImmutableAgentAttributeSetTest {
     @Test
@@ -44,6 +48,28 @@ public class ImmutableAgentAttributeSetTest {
         );
 
         assertEquals(attributeSetName, immutableAttributeSet.name());
+    }
+
+    @Test
+    public void testSize() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        List<Attribute<?>> attributeList = new ArrayList<>();
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Event_1"));
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Event_2"));
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Event_3"));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalAgentProperty.class, "Property_1"));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalAgentProperty.class, "Property_2"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_1"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_2"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_3"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_4"));
+
+        ImmutableAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ImmutableAgentAttributeSet.class,
+                "testAttributeSetName",
+                attributeList
+        );
+
+        assertEquals(attributeList.size(), immutableAttributeSet.size());
     }
 
     @Test
