@@ -5,7 +5,7 @@ import modelarium.clock.MutableClock;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.AgentSet;
 import modelarium.entities.attributes.AgentAttributeSet;
-import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.immutable.ImmutableEnvironment;
 import modelarium.exceptions.CoordinatorErrorException;
@@ -44,9 +44,9 @@ public final class AgentSimulationContext extends SimulationContext implements A
     }
 
     @Override
-    public Attribute<AgentSimulationContext> getThisAttribute() {
+    public AttributeBase<AgentSimulationContext> getThisAttribute() {
         // noinspection unchecked
-        return (Attribute<AgentSimulationContext>) attribute();
+        return (AttributeBase<AgentSimulationContext>) attribute();
     }
 
     @Override

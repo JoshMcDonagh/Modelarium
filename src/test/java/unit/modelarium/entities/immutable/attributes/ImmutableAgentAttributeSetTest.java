@@ -1,5 +1,6 @@
 package unit.modelarium.entities.immutable.attributes;
 
+import modelarium.entities.attributes.AgentAttribute;
 import modelarium.entities.attributes.AgentAttributeSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.events.AgentEvent;
@@ -33,16 +34,16 @@ public class ImmutableAgentAttributeSetTest {
 
     @Test
     public void testSize() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        List<Attribute<?>> attributeList = new ArrayList<>();
+        List<Attribute> attributeList = new ArrayList<>();
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Event_0"));
         attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Event_1"));
         attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Event_2"));
-        attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Event_3"));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalAgentProperty.class, "Property_0"));
         attributeList.add(makeEmptyFunctionalProperty(FunctionalAgentProperty.class, "Property_1"));
-        attributeList.add(makeEmptyFunctionalProperty(FunctionalAgentProperty.class, "Property_2"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_0"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_1"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_2"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_3"));
-        attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_4"));
 
         ImmutableAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
                 ImmutableAgentAttributeSet.class,
@@ -69,20 +70,69 @@ public class ImmutableAgentAttributeSetTest {
     }
 
     @Test
+    public void testGet_WithIndex() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        int index = 7;
+        AgentAttribute attribute = makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Attribute_7");
+
+        List<Attribute> attributeList = new ArrayList<>();
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Attribute_0"));
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Attribute_1"));
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Attribute_2"));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalAgentProperty.class, "Attribute_3"));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalAgentProperty.class, "Attribute_4"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Attribute_5"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Attribute_6"));
+        attributeList.add(attribute);
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Attribute_8"));
+
+        ImmutableAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ImmutableAgentAttributeSet.class,
+                "testAttributeSetName",
+                attributeList
+        );
+
+        assertEquals(attribute.name(), immutableAttributeSet.get(index).name());
+    }
+
+    @Test
+    public void testGet_WithName() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        String name = "testAttribute";
+
+        List<Attribute> attributeList = new ArrayList<>();
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Attribute_0"));
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Attribute_1"));
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Attribute_2"));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalAgentProperty.class, "Attribute_3"));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalAgentProperty.class, "Attribute_4"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Attribute_5"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Attribute_6"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, name));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Attribute_8"));
+
+        ImmutableAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ImmutableAgentAttributeSet.class,
+                "testAttributeSetName",
+                attributeList
+        );
+
+        assertEquals(name, immutableAttributeSet.get(name).name());
+    }
+
+    @Test
     public void testGetEvent_WithIndex() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         int index = 1;
-        AgentEvent event = makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Event_2");
+        AgentEvent event = makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Event_1");
 
-        List<Attribute<?>> attributeList = new ArrayList<>();
-        attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Event_1"));
+        List<Attribute> attributeList = new ArrayList<>();
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Event_0"));
         attributeList.add(event);
-        attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Event_3"));
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Event_2"));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalAgentProperty.class, "Property_0"));
         attributeList.add(makeEmptyFunctionalProperty(FunctionalAgentProperty.class, "Property_1"));
-        attributeList.add(makeEmptyFunctionalProperty(FunctionalAgentProperty.class, "Property_2"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_0"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_1"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_2"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_3"));
-        attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_4"));
 
         ImmutableAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
                 ImmutableAgentAttributeSet.class,
@@ -95,18 +145,18 @@ public class ImmutableAgentAttributeSetTest {
 
     @Test
     public void testGetEvent_WithName() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        String eventName = "testEventName";
+        String name = "testEventName";
 
-        List<Attribute<?>> attributeList = new ArrayList<>();
+        List<Attribute> attributeList = new ArrayList<>();
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Event_0"));
         attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Event_1"));
-        attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Event_2"));
-        attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,eventName));
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,name));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalAgentProperty.class, "Property_0"));
         attributeList.add(makeEmptyFunctionalProperty(FunctionalAgentProperty.class, "Property_1"));
-        attributeList.add(makeEmptyFunctionalProperty(FunctionalAgentProperty.class, "Property_2"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_0"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_1"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_2"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_3"));
-        attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_4"));
 
         ImmutableAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
                 ImmutableAgentAttributeSet.class,
@@ -114,7 +164,7 @@ public class ImmutableAgentAttributeSetTest {
                 attributeList
         );
 
-        assertEquals(eventName, immutableAttributeSet.getEvent(eventName).name());
+        assertEquals(name, immutableAttributeSet.getEvent(name).name());
     }
 
     @Test

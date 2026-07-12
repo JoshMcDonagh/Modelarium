@@ -9,7 +9,7 @@ import modelarium.entities.contexts.EnvironmentSimulationContext;
 import java.util.List;
 
 public final class EnvironmentAttributeSet extends AttributeSet<EnvironmentSimulationContext, EnvironmentContext> {
-    public EnvironmentAttributeSet(String ownerName, String attributeSetName, List<Attribute<EnvironmentSimulationContext>> attributes) {
+    public EnvironmentAttributeSet(String ownerName, String attributeSetName, List<Attribute> attributes) {
         super(ownerName, attributeSetName, attributes);
     }
 

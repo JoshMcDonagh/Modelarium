@@ -7,6 +7,7 @@ import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
 import modelarium.entities.attributes.AgentAttributeSet;
 import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.contexts.AgentContext;
@@ -72,7 +73,7 @@ public class DeterminismTest {
             protected Agent generateAgent(Config config) {
                 String name = String.format("agent_%02d", idx++);
                 AgentAttributeSet set = new AgentAttributeSet(name, "state",
-                        (List<Attribute<AgentSimulationContext>>) (List<?>) List.of(new RandomWalk()));
+                        (List<Attribute>) (List<?>) List.of(new RandomWalk()));
                 return new Agent(name, List.of(set));
             }
         };

@@ -6,6 +6,7 @@ import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
 import modelarium.entities.attributes.AgentAttributeSet;
 import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.contexts.AgentContext;
@@ -69,7 +70,7 @@ public class MultiCoreEquivalenceIntegrationTest {
                 String name = "agent_" + idx++;
                 DeterministicCounter counter = new DeterministicCounter();
                 AgentAttributeSet set = new AgentAttributeSet(name, "stats",
-                        (List<Attribute<AgentSimulationContext>>) (List<?>) List.of(counter));
+                        (List<Attribute>) (List<?>) List.of(counter));
                 return new Agent(name, List.of(set));
             }
         };

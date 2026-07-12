@@ -26,7 +26,7 @@ class ImmutableAttributeSetTestHelpers {
     static <T extends AttributeSet<?,?>> T makeAttributeSet(
             Class<T> attributeSetClass,
             String attributeSetName,
-            List<Attribute<?>> attributes
+            List<Attribute> attributes
     ) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         return attributeSetClass.getConstructor(
                 String.class,
@@ -42,7 +42,7 @@ class ImmutableAttributeSetTestHelpers {
     static <T extends ImmutableAttributeSet<?,?>> T makeImmutableAttributeSet(
             Class<T> attributeSetClass,
             String attributeSetName,
-            List<Attribute<?>> attributes
+            List<Attribute> attributes
     ) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         if (attributeSetClass.equals(ImmutableAgentAttributeSet.class)) {
             return (T) new ImmutableAgentAttributeSet(makeAttributeSet(

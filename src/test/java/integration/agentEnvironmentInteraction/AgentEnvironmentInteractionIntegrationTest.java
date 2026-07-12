@@ -5,10 +5,7 @@ import modelarium.Config;
 import modelarium.Model;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
-import modelarium.entities.attributes.AgentAttributeSet;
-import modelarium.entities.attributes.Attribute;
-import modelarium.entities.attributes.AttributeAccessLevel;
-import modelarium.entities.attributes.EnvironmentAttributeSet;
+import modelarium.entities.attributes.*;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.contexts.AgentContext;
@@ -124,7 +121,7 @@ public class AgentEnvironmentInteractionIntegrationTest {
                 String name = "agent_" + idx++;
                 ObservedTemperature obs = new ObservedTemperature();
                 AgentAttributeSet set = new AgentAttributeSet(name, "sensors",
-                        (List<Attribute<AgentSimulationContext>>) (List<?>) List.of(obs));
+                        (List<Attribute>) (List<?>) List.of(obs));
                 return new Agent(name, List.of(set));
             }
         };
@@ -134,7 +131,7 @@ public class AgentEnvironmentInteractionIntegrationTest {
             public Environment generateEnvironment(Config config) {
                 Temperature temp = new Temperature();
                 EnvironmentAttributeSet weatherSet = new EnvironmentAttributeSet("env", "weather",
-                        (List<Attribute<EnvironmentSimulationContext>>) (List<?>) List.of(temp));
+                        (List<Attribute>) (List<?>) List.of(temp));
                 return new Environment("env", List.of(weatherSet));
             }
         };

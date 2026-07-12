@@ -1,10 +1,10 @@
 package modelarium.entities.attributes.properties;
 
-import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.contexts.Context;
 
-public sealed abstract class Property<T,C extends Context> extends Attribute<C>
+public sealed abstract class Property<T,C extends Context> extends AttributeBase<C>
         permits AgentProperty, EnvironmentProperty {
     private final Class<T> type;
 

@@ -1,6 +1,6 @@
 package modelarium.entities.logging;
 
-import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.AttributeSet;
 import modelarium.entities.attributes.properties.Property;
 import modelarium.entities.contexts.SimulationContext;
@@ -40,7 +40,7 @@ public class AttributeSetLog<C extends SimulationContext> {
             String ownerName,
             String attributeSetName,
             AttributeSetLogDatabaseFactory databaseFactory,
-            List<Attribute<C>> attributeList
+            List<AttributeBase<C>> attributeList
     ) {
         this.ownerName = ownerName;
         this.attributeSetName = attributeSetName;
@@ -49,7 +49,7 @@ public class AttributeSetLog<C extends SimulationContext> {
         database.connect();
 
         // Register attributes marked for logging
-        for (Attribute<C> attribute : attributeList) {
+        for (AttributeBase<C> attribute : attributeList) {
             if (!attribute.isLogged())
                 continue;
 

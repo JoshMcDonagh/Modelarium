@@ -1,8 +1,7 @@
 package modelarium.entities.immutable.attributes;
 
-import modelarium.entities.attributes.AgentAttributeSet;
 import modelarium.entities.attributes.AttributeSet;
-import modelarium.entities.attributes.EntityAttribute;
+import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.events.Event;
 import modelarium.entities.attributes.properties.Property;
 import modelarium.entities.attributes.routines.Routine;
@@ -58,9 +57,9 @@ public sealed abstract class ImmutableAttributeSet<SC extends SimulationContext,
         return attributeSet.getLog();
     }
 
-    public abstract EntityAttribute get(int index);
+    public abstract Attribute get(int index);
 
-    public abstract EntityAttribute get(String attributeName);
+    public abstract Attribute get(String attributeName);
 
     public abstract Event<C> getEvent(int eventIndex);
 

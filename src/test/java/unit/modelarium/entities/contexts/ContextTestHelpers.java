@@ -6,11 +6,7 @@ import modelarium.entities.Entity;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.AgentSet;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
-import modelarium.entities.attributes.AgentAttributeSet;
-import modelarium.entities.attributes.Attribute;
-import modelarium.entities.attributes.AttributeAccessLevel;
-import modelarium.entities.attributes.AttributeSet;
-import modelarium.entities.attributes.EnvironmentAttributeSet;
+import modelarium.entities.attributes.*;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.contexts.AgentContext;
@@ -176,7 +172,7 @@ class ContextTestHelpers {
         return new AgentAttributeSet(
                 ownerName,
                 attributeSetName,
-                (List<Attribute<AgentSimulationContext>>) (List<?>) List.of(new AgentCounterProperty(propertyName))
+                (List<Attribute>) (List<?>) List.of(new AgentCounterProperty(propertyName))
         );
     }
 
@@ -185,7 +181,7 @@ class ContextTestHelpers {
         return new EnvironmentAttributeSet(
                 ownerName,
                 attributeSetName,
-                (List<Attribute<EnvironmentSimulationContext>>) (List<?>) List.of(new EnvironmentTickProperty(propertyName))
+                (List<Attribute>) (List<?>) List.of(new EnvironmentTickProperty(propertyName))
         );
     }
 
@@ -361,7 +357,7 @@ class ContextTestHelpers {
     static <C extends SimulationContext> C simulationContextWithAttribute(
             Class<C> contextClass,
             Config config,
-            Attribute<?> attribute
+            AttributeBase<?> attribute
     ) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         C context = simulationContext(
                 contextClass,

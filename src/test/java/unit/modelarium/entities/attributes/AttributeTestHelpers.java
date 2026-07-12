@@ -1,9 +1,6 @@
 package unit.modelarium.entities.attributes;
 
-import modelarium.entities.attributes.AgentAttributeSet;
-import modelarium.entities.attributes.Attribute;
-import modelarium.entities.attributes.AttributeAccessLevel;
-import modelarium.entities.attributes.EnvironmentAttributeSet;
+import modelarium.entities.attributes.*;
 import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
@@ -115,7 +112,7 @@ class AttributeTestHelpers {
         return new AgentAttributeSet(
                 ownerName,
                 attributeSetName,
-                (List<Attribute<AgentSimulationContext>>) (List<?>) List.of(properties)
+                (List<Attribute>) (List<?>) List.of(properties)
         );
     }
 
@@ -124,7 +121,7 @@ class AttributeTestHelpers {
         return new AgentAttributeSet(
                 ownerName,
                 attributeSetName,
-                (List<Attribute<AgentSimulationContext>>) (List<?>) List.of(events)
+                (List<Attribute>) (List<?>) List.of(events)
         );
     }
 
@@ -133,7 +130,7 @@ class AttributeTestHelpers {
         return new AgentAttributeSet(
                 ownerName,
                 attributeSetName,
-                (List<Attribute<AgentSimulationContext>>) (List<?>) List.of(routines)
+                (List<Attribute>) (List<?>) List.of(routines)
         );
     }
 
@@ -146,7 +143,7 @@ class AttributeTestHelpers {
         return new EnvironmentAttributeSet(
                 ownerName,
                 attributeSetName,
-                (List<Attribute<EnvironmentSimulationContext>>) (List<?>) List.of(properties)
+                (List<Attribute>) (List<?>) List.of(properties)
         );
     }
 

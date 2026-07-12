@@ -3,6 +3,7 @@ package unit.modelarium.entities.agents;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.attributes.AgentAttributeSet;
 import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.contexts.AgentContext;
@@ -45,7 +46,7 @@ class AgentTestHelpers {
         return new AgentAttributeSet(
                 ownerName,
                 attributeSetName,
-                (List<Attribute<AgentSimulationContext>>) (List<?>) List.of(properties)
+                (List<Attribute>) (List<?>) List.of(properties)
         );
     }
 

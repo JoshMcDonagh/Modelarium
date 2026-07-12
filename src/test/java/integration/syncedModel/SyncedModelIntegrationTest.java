@@ -5,10 +5,7 @@ import modelarium.Config;
 import modelarium.Model;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
-import modelarium.entities.attributes.AgentAttributeSet;
-import modelarium.entities.attributes.Attribute;
-import modelarium.entities.attributes.AttributeAccessLevel;
-import modelarium.entities.attributes.EnvironmentAttributeSet;
+import modelarium.entities.attributes.*;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.contexts.AgentContext;
@@ -111,7 +108,7 @@ public class SyncedModelIntegrationTest {
                 String name = "agent_" + index++;
                 Hunger hunger = new Hunger();
                 AgentAttributeSet foodSet = new AgentAttributeSet(name, "food",
-                        (List<Attribute<AgentSimulationContext>>) (List<?>) List.of(hunger));
+                        (List<Attribute>) (List<?>) List.of(hunger));
                 return new Agent(name, List.of(foodSet));
             }
         };
@@ -121,7 +118,7 @@ public class SyncedModelIntegrationTest {
             public Environment generateEnvironment(Config config) {
                 EnvTick envTick = new EnvTick();
                 EnvironmentAttributeSet timingSet = new EnvironmentAttributeSet("env", "timing",
-                        (List<Attribute<EnvironmentSimulationContext>>) (List<?>) List.of(envTick));
+                        (List<Attribute>) (List<?>) List.of(envTick));
                 return new Environment("env", List.of(timingSet));
             }
         };

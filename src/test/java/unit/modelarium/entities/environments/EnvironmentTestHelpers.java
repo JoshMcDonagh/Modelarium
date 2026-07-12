@@ -4,6 +4,7 @@ import modelarium.Config;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
 import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.EnvironmentAttributeSet;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
@@ -49,7 +50,7 @@ class EnvironmentTestHelpers {
         return new EnvironmentAttributeSet(
                 ownerName,
                 attributeSetName,
-                (List<Attribute<EnvironmentSimulationContext>>) (List<?>) List.of(properties)
+                (List<Attribute>) (List<?>) List.of(properties)
         );
     }
 

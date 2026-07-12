@@ -3,7 +3,7 @@ package modelarium.entities.contexts;
 import modelarium.Config;
 import modelarium.clock.MutableClock;
 import modelarium.entities.agents.AgentSet;
-import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.EnvironmentAttributeSet;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.immutable.ImmutableEnvironment;
@@ -36,8 +36,8 @@ public final class EnvironmentSimulationContext extends SimulationContext implem
     }
 
     @Override
-    public Attribute<EnvironmentSimulationContext> getThisAttribute() {
-        return (Attribute<EnvironmentSimulationContext>) attribute();
+    public AttributeBase<EnvironmentSimulationContext> getThisAttribute() {
+        return (AttributeBase<EnvironmentSimulationContext>) attribute();
     }
 
     @Override

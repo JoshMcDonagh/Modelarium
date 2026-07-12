@@ -6,7 +6,7 @@ import modelarium.clock.MutableClock;
 import modelarium.entities.Entity;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.AgentSet;
-import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.AttributeSet;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.immutable.ImmutableAgent;
@@ -50,7 +50,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     private final RandomGenerator randomGenerator;
 
     private AttributeSet<?,?> attributeSet = null;
-    private Attribute<?> attribute = null;
+    private AttributeBase<?> attribute = null;
 
     @Internal
     public SimulationContext(
@@ -92,7 +92,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     }
 
     @Internal
-    public void setCurrentAttribute(Attribute<?> attribute) {
+    public void setCurrentAttribute(AttributeBase<?> attribute) {
         this.attribute = attribute;
     }
 
@@ -104,7 +104,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
         return attributeSet;
     }
 
-    protected Attribute<?> attribute() {
+    protected AttributeBase<?> attribute() {
         return attribute;
     }
 
@@ -124,7 +124,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
 
     public abstract AttributeSet<?,?> getThisAttributeSet();
 
-    public abstract Attribute<?> getThisAttribute();
+    public abstract AttributeBase<?> getThisAttribute();
 
     public abstract ImmutableEnvironment getEnvironment();
 

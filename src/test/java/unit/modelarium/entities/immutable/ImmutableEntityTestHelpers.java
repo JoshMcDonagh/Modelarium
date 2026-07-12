@@ -1,10 +1,7 @@
 package unit.modelarium.entities.immutable;
 
 import modelarium.entities.agents.Agent;
-import modelarium.entities.attributes.AgentAttributeSet;
-import modelarium.entities.attributes.Attribute;
-import modelarium.entities.attributes.AttributeAccessLevel;
-import modelarium.entities.attributes.EnvironmentAttributeSet;
+import modelarium.entities.attributes.*;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.contexts.AgentContext;
@@ -73,7 +70,7 @@ class ImmutableEntityTestHelpers {
         return new AgentAttributeSet(
                 ownerName,
                 attributeSetName,
-                (List<Attribute<AgentSimulationContext>>) (List<?>) List.of(new AgentCounterProperty(propertyName))
+                (List<Attribute>) (List<?>) List.of(new AgentCounterProperty(propertyName))
         );
     }
 
@@ -86,7 +83,7 @@ class ImmutableEntityTestHelpers {
         EnvironmentAttributeSet attributeSet = new EnvironmentAttributeSet(
                 "env",
                 "timing",
-                (List<Attribute<EnvironmentSimulationContext>>) (List<?>) List.of(new EnvironmentTickProperty("envTick"))
+                (List<Attribute>) (List<?>) List.of(new EnvironmentTickProperty("envTick"))
         );
         return new Environment("env", List.of(attributeSet));
     }

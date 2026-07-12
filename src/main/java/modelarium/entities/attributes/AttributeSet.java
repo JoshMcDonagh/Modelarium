@@ -10,6 +10,7 @@ import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFa
 import modelarium.exceptions.AttributeAccessException;
 import modelarium.internal.Internal;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,19 +18,21 @@ import java.util.Map;
 public sealed abstract class AttributeSet<SC extends SimulationContext, C extends Context> permits AgentAttributeSet, EnvironmentAttributeSet {
     private final String ownerName;
     private final String name;
-    private final List<Attribute<SC>> attributeList;
+    private final List<AttributeBase<SC>> attributeList = new ArrayList<>();
     private final Map<String, Integer> attributeIndexMap = new HashMap<>();
 
     private AttributeSetLog<SC> log = null;
 
     private SC context = null;
 
-    AttributeSet(String ownerName, String attributeSetName, List<Attribute<SC>> attributeList) {
+    @SuppressWarnings("unchecked")
+    AttributeSet(String ownerName, String attributeSetName, List<Attribute> attributeList) {
         this.ownerName = ownerName;
         this.name = attributeSetName;
-        this.attributeList = attributeList;
-        for (int i = 0; i < this.attributeList.size(); i++) {
-            Attribute<?> attribute = this.attributeList.get(i);
+
+        for (int i = 0; i < attributeList.size(); i++) {
+            AttributeBase<SC> attribute = (AttributeBase<SC>) attributeList.get(i);
+            this.attributeList.add(attribute);
             this.attributeIndexMap.put(attribute.name(), i);
         }
     }
@@ -55,38 +58,38 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
         if (this.context != null)
             return;
 
-        for (Attribute<SC> attribute : attributeList)
+        for (AttributeBase<SC> attribute : attributeList)
             attribute.setContext(context);
 
         this.context = context;
     }
 
-    private Attribute<C> getAttribute(int attributeIndex) {
+    private AttributeBase<C> getAttribute(int attributeIndex) {
         // noinspection unchecked
-        Attribute<C> attribute = (Attribute<C>) attributeList.get(attributeIndex);
+        AttributeBase<C> attribute = (AttributeBase<C>) attributeList.get(attributeIndex);
         if (attribute.accessLevel() == AttributeAccessLevel.PUBLIC)
             return attribute;
         throw new AttributeAccessException(attribute.name() + " is a PRIVATE attribute and cannot be returned.");
     }
 
-    private Attribute<C> getAttribute(String attributeName) {
+    private AttributeBase<C> getAttribute(String attributeName) {
         // noinspection unchecked
-        Attribute<C> attribute = (Attribute<C>) attributeList.get(attributeIndexMap.get(attributeName));
+        AttributeBase<C> attribute = (AttributeBase<C>) attributeList.get(attributeIndexMap.get(attributeName));
         if (attribute.accessLevel() == AttributeAccessLevel.PUBLIC)
             return attribute;
         throw new AttributeAccessException(attribute.name() + " is a PRIVATE attribute and cannot be returned.");
     }
 
-    EntityAttribute get(int index) {
-        return (EntityAttribute) getAttribute(index);
+    Attribute get(int index) {
+        return (Attribute) getAttribute(index);
     }
 
-    EntityAttribute get(String attributeName) {
-        return (EntityAttribute) getAttribute(attributeIndexMap.get(attributeName));
+    Attribute get(String attributeName) {
+        return (Attribute) getAttribute(attributeIndexMap.get(attributeName));
     }
 
     Event<C> getEvent(int eventIndex) {
-        Attribute<C> attribute = getAttribute(eventIndex);
+        AttributeBase<C> attribute = getAttribute(eventIndex);
 
         if (attribute instanceof Event<C> event)
             return event;
@@ -99,7 +102,7 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
     }
 
     Routine<C> getRoutine(int routineIndex) {
-        Attribute<C> attribute = getAttribute(routineIndex);
+        AttributeBase<C> attribute = getAttribute(routineIndex);
 
         if (attribute instanceof Routine<C> routine)
             return routine;
@@ -112,7 +115,7 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
     }
 
     Property<?,C> getProperty(int propertyIndex) {
-        Attribute<C> attribute = getAttribute(propertyIndex);
+        AttributeBase<C> attribute = getAttribute(propertyIndex);
 
         if (attribute instanceof Property<?, C> property)
             return property;
@@ -130,7 +133,7 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
 
     public void run() {
         context.setCurrentAttributeSet(this);
-        for (Attribute<SC> attribute : attributeList) {
+        for (AttributeBase<SC> attribute : attributeList) {
             context.setCurrentAttribute(attribute);
             Object valueToLog = null;
 

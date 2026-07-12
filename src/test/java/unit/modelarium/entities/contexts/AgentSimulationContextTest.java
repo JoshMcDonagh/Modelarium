@@ -5,7 +5,7 @@ import modelarium.clock.MutableClock;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.AgentSet;
 import modelarium.entities.attributes.AgentAttributeSet;
-import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
@@ -52,7 +52,7 @@ public class AgentSimulationContextTest {
     @Test
     public void testGetThisAttribute() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Config config = syncedConfig(2, 10, 1);
-        Attribute<?> attribute = new AgentCounterProperty("a");
+        AttributeBase<?> attribute = new AgentCounterProperty("a");
         AgentSimulationContext context = simulationContextWithAttribute(
                 AgentSimulationContext.class,
                 config,
