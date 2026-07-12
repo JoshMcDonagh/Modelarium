@@ -23,7 +23,7 @@ import static unit.modelarium.entities.immutable.attributes.ImmutableAttributeSe
 
 public class ImmutableAgentAttributeSetTest {
     @Test
-    public void testGetClonedAttribute() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public void testGetClonedAttribute() throws Throwable {
         int index = 7;
         AgentAttribute attribute = makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Attribute_7");
 
@@ -57,7 +57,7 @@ public class ImmutableAgentAttributeSetTest {
     }
 
     @Test
-    public void testSetClonedAttribute_IllegalArgumentException() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public <T> void testSetClonedAttribute_IllegalArgumentException() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         List<Attribute> attributeList = new ArrayList<>();
         attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Attribute_0"));
         attributeList.add(makeEmptyFunctionalEvent(FunctionalAgentEvent.class,"Attribute_1"));
@@ -76,6 +76,8 @@ public class ImmutableAgentAttributeSetTest {
         );
 
         String getterMethodName = "wrongGetterName";
+        Class<T> attributeIdClass = (Class<T>) String.class;
+        Object attributeId = "attributeId";
 
         assertCorrectExceptionThrown(
                 IllegalArgumentException.class,
@@ -84,10 +86,10 @@ public class ImmutableAgentAttributeSetTest {
                         AgentAttributeSet.class,
                         AgentAttribute.class,
                         getterMethodName,
-                        String.class,
-                        "4"
+                        attributeIdClass,
+                        attributeIdClass.cast(attributeId)
                 ),
-                "Method '" + getterMethodName + "' taking a '" + int.class.getName() + "' not found",
+                "Method '" + getterMethodName + "' taking a '" + attributeIdClass.getName() + "' not found",
                 NoSuchMethodException.class
         );
     }

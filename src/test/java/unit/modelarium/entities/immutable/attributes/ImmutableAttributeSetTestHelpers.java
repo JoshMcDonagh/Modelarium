@@ -94,7 +94,7 @@ class ImmutableAttributeSetTestHelpers {
             String getterMethodName,
             Class<P> attributeIdClass,
             P attributeId
-    ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    ) throws Throwable {
         Method getClonedAttributeMethod = ImmutableAttributeSet.class.getDeclaredMethod(
                 "getClonedAttribute",
                 Class.class,
@@ -106,14 +106,18 @@ class ImmutableAttributeSetTestHelpers {
 
         getClonedAttributeMethod.setAccessible(true);
 
-        return (T) getClonedAttributeMethod.invoke(
-                immutableAttributeSet,
-                attributeSetClass,
-                attributeReturnClass,
-                getterMethodName,
-                attributeIdClass,
-                attributeId
-        );
+        try {
+            return (T) getClonedAttributeMethod.invoke(
+                    immutableAttributeSet,
+                    attributeSetClass,
+                    attributeReturnClass,
+                    getterMethodName,
+                    attributeIdClass,
+                    attributeId
+            );
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            throw e.getCause();
+        }
     };
 
     static <E extends Throwable, C extends Throwable> void assertCorrectExceptionThrown(
