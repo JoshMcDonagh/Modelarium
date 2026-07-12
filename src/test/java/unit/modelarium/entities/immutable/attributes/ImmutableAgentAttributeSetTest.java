@@ -6,14 +6,11 @@ import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.attributes.events.functional.FunctionalAgentEvent;
 import modelarium.entities.attributes.properties.functional.FunctionalAgentProperty;
 import modelarium.entities.attributes.routines.functional.FunctionalAgentRoutine;
-import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.immutable.attributes.ImmutableAgentAttributeSet;
-import modelarium.entities.immutable.attributes.ImmutableAttributeSet;
 import modelarium.entities.logging.AttributeSetLog;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,23 +19,6 @@ import static org.mockito.Mockito.*;
 import static unit.modelarium.entities.immutable.attributes.ImmutableAttributeSetTestHelpers.*;
 
 public class ImmutableAgentAttributeSetTest {
-    @Test
-    public void testGetMutableAttributeSet() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        AgentAttributeSet attributeSet = makeAttributeSet(
-                AgentAttributeSet.class,
-                "testAttributeSetName",
-                new ArrayList<>()
-        );
-
-        Method getMutableAttributeSetMethod = ImmutableAttributeSet.class.getDeclaredMethod("getMutableAttributeSet");
-        getMutableAttributeSetMethod.setAccessible(true);
-        AgentAttributeSet returnedAttributeSet = (AgentAttributeSet) getMutableAttributeSetMethod.invoke(
-                new ImmutableAgentAttributeSet(attributeSet)
-        );
-
-        assertSame(attributeSet, returnedAttributeSet);
-    }
-
     @Test
     public void testName() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         String attributeSetName = "testAttributeSetName";

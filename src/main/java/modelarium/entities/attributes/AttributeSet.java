@@ -61,8 +61,7 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
         this.context = context;
     }
 
-
-    private Attribute<C> get(int attributeIndex) {
+    private Attribute<C> getAttribute(int attributeIndex) {
         // noinspection unchecked
         Attribute<C> attribute = (Attribute<C>) attributeList.get(attributeIndex);
         if (attribute.accessLevel() == AttributeAccessLevel.PUBLIC)
@@ -70,7 +69,7 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
         throw new AttributeAccessException(attribute.name() + " is a PRIVATE attribute and cannot be returned.");
     }
 
-    private Attribute<C> get(String attributeName) {
+    private Attribute<C> getAttribute(String attributeName) {
         // noinspection unchecked
         Attribute<C> attribute = (Attribute<C>) attributeList.get(attributeIndexMap.get(attributeName));
         if (attribute.accessLevel() == AttributeAccessLevel.PUBLIC)
@@ -78,8 +77,16 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
         throw new AttributeAccessException(attribute.name() + " is a PRIVATE attribute and cannot be returned.");
     }
 
+    EntityAttribute get(int index) {
+        return (EntityAttribute) getAttribute(index);
+    }
+
+    EntityAttribute get(String attributeName) {
+        return (EntityAttribute) getAttribute(attributeIndexMap.get(attributeName));
+    }
+
     Event<C> getEvent(int eventIndex) {
-        Attribute<C> attribute = get(eventIndex);
+        Attribute<C> attribute = getAttribute(eventIndex);
 
         if (attribute instanceof Event<C> event)
             return event;
@@ -92,7 +99,7 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
     }
 
     Routine<C> getRoutine(int routineIndex) {
-        Attribute<C> attribute = get(routineIndex);
+        Attribute<C> attribute = getAttribute(routineIndex);
 
         if (attribute instanceof Routine<C> routine)
             return routine;
@@ -105,7 +112,7 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
     }
 
     Property<?,C> getProperty(int propertyIndex) {
-        Attribute<C> attribute = get(propertyIndex);
+        Attribute<C> attribute = getAttribute(propertyIndex);
 
         if (attribute instanceof Property<?, C> property)
             return property;

@@ -13,6 +13,14 @@ public final class EnvironmentAttributeSet extends AttributeSet<EnvironmentSimul
         super(ownerName, attributeSetName, attributes);
     }
 
+    public EnvironmentAttribute get(int index) {
+        return (EnvironmentAttribute) super.get(index);
+    }
+
+    public EnvironmentAttribute get(String attributeName) {
+        return (EnvironmentAttribute) super.get(attributeName);
+    }
+
     public EnvironmentEvent getEvent(int eventIndex) {
         return (EnvironmentEvent) super.getEvent(eventIndex);
     }

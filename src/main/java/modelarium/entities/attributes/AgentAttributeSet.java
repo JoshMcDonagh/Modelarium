@@ -13,6 +13,14 @@ public final class AgentAttributeSet extends AttributeSet<AgentSimulationContext
         super(ownerName, attributeSetName, attributes);
     }
 
+    public AgentAttribute get(int index) {
+        return (AgentAttribute) super.get(index);
+    }
+
+    public AgentAttribute get(String attributeName) {
+        return (AgentAttribute) super.get(attributeName);
+    }
+
     public AgentEvent getEvent(int eventIndex) {
         return (AgentEvent) super.getEvent(eventIndex);
     }
