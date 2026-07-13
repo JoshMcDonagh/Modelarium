@@ -42,6 +42,11 @@ public class Model {
         this.config = config;
     }
 
+    /**
+     * Generates sets of agents each thread will use and provides each set with the log's database factory.
+     *
+     * @return a list of {@link AgentSet} objects, one per core
+     */
     private List<AgentSet> generateAgentsForEachCoreAsList() {
         List<AgentSet> agentsForEachCore = config.agentGenerator().getAgentsForEachCore(config);
 
@@ -51,17 +56,32 @@ public class Model {
         return agentsForEachCore;
     }
 
+    /**
+     * Generates the {@link Environment} that the model will use.
+     *
+     * @return a new {@link Environment} instance
+     */
     private Environment generateEnvironment() {
         Environment environment = config.environmentGenerator().generateEnvironment(config);
         environment.setLogDatabaseFactory(config.runLogDatabaseFactory());
         return environment;
     }
 
+    /**
+     * Provides the model's results container with all the agents in the model.
+     *
+     * @param agentsForEachCore the list of agent sets for each core
+     */
     private void setupResultsContainer(List<AgentSet> agentsForEachCore) {
         results.setAgentNames(agentsForEachCore);
         results.setAgentResults(new MutableResultsForAgents(new AgentSet()));
     }
 
+    /**
+     * If the model uses synchronised threads, create a mutable clock to maintain synchronisation.
+     *
+     * @return a new {@link MutableClock} instance
+     */
     private MutableClock makeClockIfSynced() {
         if (config.areThreadsSynced())
             return new MutableClock(config.tickCount());
@@ -69,6 +89,15 @@ public class Model {
         return null;
     }
 
+    /**
+     * Creates a context for the environment to make use of in behaviour and interactions.
+     *
+     * @param environment the environment to create and set the context to
+     * @param requestResponseController the request/response controller the context will need for inter-entity
+     *                                  interaction
+     * @param sharedClock the clock used to synchronise entities in the model
+     * @param randomGenerator the splittable random generator the environment can use
+     */
     private void createAndSetEnvironmentContext(
             Environment environment,
             RequestResponseController requestResponseController,
@@ -90,6 +119,15 @@ public class Model {
         );
     }
 
+    /**
+     * Creates and starts the model's co-ordinator thread using {@link CoordinatorThread}.
+     *
+     * @param environment the environment instance the model will use
+     * @param requestResponseController the request/response controller the co-ordinator will use to handle requests and
+     *                                  responses to/from the worker cores
+     * @param sharedClock the clock used to synchronise the entities and cores in the model
+     * @return a new {@link CoordinatorHandle} instance for the coordinator thread
+     */
     private CoordinatorHandle launchCoordinator(
             Environment environment,
             RequestResponseController requestResponseController,
@@ -109,6 +147,16 @@ public class Model {
         return new CoordinatorHandle(coordinatorThread, coordinator);
     }
 
+    /**
+     * Creates and starts the model's worker threads using {@link WorkerThread}.
+     *
+     * @param agentsForEachCore the agents for each worker core given as a list of agent sets
+     * @param environment the model's environment
+     * @param requestResponseController the request/response controller the workers will use to handle requests and
+     *                                  responses to/from the co-ordinator core
+     * @param sharedClock the clock used to synchronise the entities and cores in the model
+     * @param randomGenerator the splittable random generator agents can use
+     */
     private void launchWorkers(
             List<AgentSet> agentsForEachCore,
             Environment environment,
@@ -167,6 +215,12 @@ public class Model {
         }
     }
 
+    /**
+     * Stops the co-ordinator thread using the given {@link CoordinatorHandle} instance.
+     *
+     * @param coordinatorHandle the coordinator handle instance containing the co-ordinator thread instance and the
+     *                          thread itself
+     */
     private void stopCoordinator(CoordinatorHandle coordinatorHandle) {
         coordinatorHandle.coordinator().shutdown();
         try {
@@ -176,36 +230,57 @@ public class Model {
         }
     }
 
+    /**
+     * Runs the model using the configurations given during construction.
+     */
     public void run() {
+        // Create new results container to store model results
         results = new MutableResults();
 
+        // Generate entities
         List<AgentSet> agentsForEachCore = generateAgentsForEachCoreAsList();
         Environment environment = generateEnvironment();
 
+        // Updates the results container with the agents in the model
         setupResultsContainer(agentsForEachCore);
 
+        // If the model threads are synchronised, make a clock
         MutableClock sharedClock = makeClockIfSynced();
 
+        // Create a request/response controller worker threads can use to make requests/response to/from the coordinator
+        // a vice versa
         RequestResponseController requestResponseController = new RequestResponseController(config);
 
+        // Create a splittable random generator using a seed given by the model's config that entities in the model can
+        // use
         SplittableRandom randomGenerator = new SplittableRandom(config.seed());
 
+        // Create a context the environment can use and set it to the environment
         createAndSetEnvironmentContext(environment, requestResponseController, sharedClock, randomGenerator);
 
+        // If threads are synchronised, create the coordinator thread
         CoordinatorHandle coordinatorHandle = null;
         if (config.areThreadsSynced())
             coordinatorHandle = launchCoordinator(environment, requestResponseController, sharedClock);
 
         try {
+            // Create the worker threads
             launchWorkers(agentsForEachCore, environment, requestResponseController, sharedClock, randomGenerator);
         } finally {
+            // If the threads are synchronised, stop the coordinator thread
             if (coordinatorHandle != null)
                 stopCoordinator(coordinatorHandle);
         }
 
+        // Provide the results container with the environment's results
         results.setEnvironmentResults(new MutableResultsForEnvironment(environment));
     }
 
+    /**
+     * Returns the results of the most recent model run.
+     *
+     * @return a new {@link ImmutableResults} instance
+     */
     public ImmutableResults getResults() {
         if (results == null)
             throw new IllegalStateException("Results cannot be accessed before a model run has been completed");
