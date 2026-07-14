@@ -17,6 +17,11 @@ import static unit.modelarium.entities.immutable.attributes.ImmutableAttributeSe
 import static unit.modelarium.entities.immutable.attributes.ImmutableAttributeSetTestHelpers.makeEmptyFunctionalRoutine;
 import static unit.modelarium.entities.immutable.attributes.ImmutableAttributeSetTestHelpers.makeImmutableAttributeSet;
 import static unit.modelarium.entities.immutable.attributes.ImmutableAttributeSetTestHelpers.runGetClonedAttribute;
+import modelarium.entities.attributes.events.EnvironmentEvent;
+import modelarium.entities.attributes.properties.EnvironmentProperty;
+import modelarium.entities.attributes.routines.EnvironmentRoutine;
+import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class ImmutableEnvironmentAttributeSetTest {
     @Test
@@ -101,5 +106,207 @@ public class ImmutableEnvironmentAttributeSetTest {
         );
 
         assertEquals(attributeSetName, immutableAttributeSet.name());
+    }
+
+
+    @Test
+    public void testSize() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        List<Attribute> attributeList = new ArrayList<>();
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalEnvironmentEvent.class,"Event_0"));
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalEnvironmentEvent.class,"Event_1"));
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalEnvironmentEvent.class,"Event_2"));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalEnvironmentProperty.class, "Property_0"));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalEnvironmentProperty.class, "Property_1"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Routine_0"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Routine_1"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Routine_2"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Routine_3"));
+
+        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ImmutableEnvironmentAttributeSet.class,
+                "testAttributeSetName",
+                attributeList
+        );
+
+        assertEquals(attributeList.size(), immutableAttributeSet.size());
+    }
+
+    @Test
+    public void testGetLog() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        EnvironmentAttributeSet attributeSet = makeAttributeSet(
+                EnvironmentAttributeSet.class,
+                "testAttributeSetName",
+                new ArrayList<>()
+        );
+        attributeSet.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+
+        ImmutableEnvironmentAttributeSet immutableAttributeSet = new ImmutableEnvironmentAttributeSet(attributeSet);
+
+        assertSame(attributeSet.getLog(), immutableAttributeSet.getLog());
+    }
+
+    @Test
+    public void testGet_WithIndex() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        int index = 7;
+        EnvironmentAttribute attribute = makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Attribute_7");
+
+        List<Attribute> attributeList = new ArrayList<>();
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalEnvironmentEvent.class,"Attribute_0"));
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalEnvironmentEvent.class,"Attribute_1"));
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalEnvironmentEvent.class,"Attribute_2"));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalEnvironmentProperty.class, "Attribute_3"));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalEnvironmentProperty.class, "Attribute_4"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Attribute_5"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Attribute_6"));
+        attributeList.add(attribute);
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Attribute_8"));
+
+        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ImmutableEnvironmentAttributeSet.class,
+                "testAttributeSetName",
+                attributeList
+        );
+
+        assertEquals(attribute.name(), immutableAttributeSet.get(index).name());
+    }
+
+    @Test
+    public void testGet_WithName() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        String name = "testAttribute";
+
+        List<Attribute> attributeList = new ArrayList<>();
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalEnvironmentEvent.class,"Attribute_0"));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalEnvironmentProperty.class, "Attribute_1"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, name));
+
+        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ImmutableEnvironmentAttributeSet.class,
+                "testAttributeSetName",
+                attributeList
+        );
+
+        assertEquals(name, immutableAttributeSet.get(name).name());
+    }
+
+    @Test
+    public void testGetEvent_WithIndex() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        int index = 1;
+        EnvironmentEvent event = makeEmptyFunctionalEvent(FunctionalEnvironmentEvent.class,"Event_1");
+
+        List<Attribute> attributeList = new ArrayList<>();
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalEnvironmentEvent.class,"Event_0"));
+        attributeList.add(event);
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalEnvironmentEvent.class,"Event_2"));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalEnvironmentProperty.class, "Property_0"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Routine_0"));
+
+        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ImmutableEnvironmentAttributeSet.class,
+                "testAttributeSetName",
+                attributeList
+        );
+
+        assertEquals(event.name(), immutableAttributeSet.getEvent(index).name());
+    }
+
+    @Test
+    public void testGetEvent_WithName() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        String name = "testEventName";
+
+        List<Attribute> attributeList = new ArrayList<>();
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalEnvironmentEvent.class,"Event_0"));
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalEnvironmentEvent.class,name));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalEnvironmentProperty.class, "Property_0"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Routine_0"));
+
+        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ImmutableEnvironmentAttributeSet.class,
+                "testAttributeSetName",
+                attributeList
+        );
+
+        assertEquals(name, immutableAttributeSet.getEvent(name).name());
+    }
+
+    @Test
+    public void testGetRoutine_WithIndex() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        int index = 2;
+        EnvironmentRoutine routine = makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class,"Routine_2");
+
+        List<Attribute> attributeList = new ArrayList<>();
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalEnvironmentEvent.class,"Event_0"));
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalEnvironmentEvent.class,"Event_1"));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalEnvironmentProperty.class, "Property_0"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Routine_0"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Routine_1"));
+        attributeList.add(routine);
+
+        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ImmutableEnvironmentAttributeSet.class,
+                "testAttributeSetName",
+                attributeList
+        );
+
+        assertEquals(routine.name(), immutableAttributeSet.getRoutine(index).name());
+    }
+
+    @Test
+    public void testGetRoutine_WithName() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        String name = "testRoutineName";
+
+        List<Attribute> attributeList = new ArrayList<>();
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalEnvironmentEvent.class,"Event_0"));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalEnvironmentProperty.class, "Property_0"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Routine_0"));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, name));
+
+        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ImmutableEnvironmentAttributeSet.class,
+                "testAttributeSetName",
+                attributeList
+        );
+
+        assertEquals(name, immutableAttributeSet.getRoutine(name).name());
+    }
+
+    @Test
+    public void testGetProperty_WithIndex() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        int index = 1;
+        EnvironmentProperty<?> property = makeEmptyFunctionalProperty(FunctionalEnvironmentProperty.class,"Property_1");
+
+        List<Attribute> attributeList = new ArrayList<>();
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalEnvironmentEvent.class,"Event_0"));
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalEnvironmentEvent.class,"Event_1"));
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalEnvironmentEvent.class,"Event_2"));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalEnvironmentProperty.class, "Property_0"));
+        attributeList.add(property);
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Routine_0"));
+
+        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ImmutableEnvironmentAttributeSet.class,
+                "testAttributeSetName",
+                attributeList
+        );
+
+        assertEquals(property.name(), immutableAttributeSet.getProperty(index).name());
+    }
+
+    @Test
+    public void testGetProperty_WithName() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        String name = "testPropertyName";
+
+        List<Attribute> attributeList = new ArrayList<>();
+        attributeList.add(makeEmptyFunctionalEvent(FunctionalEnvironmentEvent.class,"Event_0"));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalEnvironmentProperty.class,"Property_0"));
+        attributeList.add(makeEmptyFunctionalProperty(FunctionalEnvironmentProperty.class,name));
+        attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Routine_0"));
+
+        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ImmutableEnvironmentAttributeSet.class,
+                "testAttributeSetName",
+                attributeList
+        );
+
+        assertEquals(name, immutableAttributeSet.getProperty(name).name());
     }
 }

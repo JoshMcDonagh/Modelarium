@@ -11,6 +11,16 @@ import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
 
 import java.util.List;
+import modelarium.Config;
+import modelarium.clock.MutableClock;
+import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.AgentSet;
+import modelarium.entities.agents.generators.DefaultAgentGenerator;
+import modelarium.entities.contexts.ContextCache;
+import modelarium.entities.environments.Environment;
+import modelarium.entities.environments.EnvironmentGenerator;
+import modelarium.multithreading.requestresponse.RequestResponseController;
+import java.util.SplittableRandom;
 
 class AttributeTestHelpers {
     private AttributeTestHelpers() {}
@@ -149,5 +159,123 @@ class AttributeTestHelpers {
 
     static EnvironmentAttributeSet emptyEnvironmentAttributeSet(String ownerName, String attributeSetName) {
         return new EnvironmentAttributeSet(ownerName, attributeSetName, List.of());
+    }
+
+
+    static class UnloggedAgentCounterProperty extends AgentProperty<Double> {
+        private double value = 0.0;
+
+        UnloggedAgentCounterProperty(String name) {
+            super(name, false, AttributeAccessLevel.PUBLIC, Double.class);
+        }
+
+        @Override
+        protected void run(AgentContext context) {
+            value += 1.0;
+        }
+
+        @Override
+        protected void set(AgentContext context, Double value) {
+            this.value = value;
+        }
+
+        @Override
+        protected Double get(AgentContext context) {
+            return value;
+        }
+    }
+
+    static class ToggleableAgentEvent extends AgentEvent {
+        private final boolean triggered;
+        private int runCount = 0;
+
+        ToggleableAgentEvent(String name, boolean triggered) {
+            super(name, true, AttributeAccessLevel.PUBLIC);
+            this.triggered = triggered;
+        }
+
+        @Override
+        protected boolean isTriggered(AgentContext context) {
+            return triggered;
+        }
+
+        @Override
+        protected void run(AgentContext context) {
+            runCount++;
+        }
+
+        int runCount() {
+            return runCount;
+        }
+    }
+
+    static class CountingAgentRoutine extends AgentRoutine {
+        private int runCount = 0;
+
+        CountingAgentRoutine(String name) {
+            super(name, AttributeAccessLevel.PUBLIC);
+        }
+
+        @Override
+        protected void run(AgentContext context) {
+            runCount++;
+        }
+
+        int runCount() {
+            return runCount;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    static AgentAttributeSet agentAttributeSetFromAttributes(String ownerName, String attributeSetName, Attribute... attributes) {
+        return new AgentAttributeSet(
+                ownerName,
+                attributeSetName,
+                (List<Attribute>) (List<?>) List.of(attributes)
+        );
+    }
+
+    private static DefaultAgentGenerator agentGenerator() {
+        return new DefaultAgentGenerator() {
+            private int index = 0;
+
+            @Override
+            protected Agent generateAgent(Config config) {
+                return new Agent("agent_" + index++, List.of());
+            }
+        };
+    }
+
+    private static EnvironmentGenerator environmentGenerator() {
+        return new EnvironmentGenerator() {
+            @Override
+            public Environment generateEnvironment(Config config) {
+                return new Environment("env", List.of());
+            }
+        };
+    }
+
+    static AgentSimulationContext agentSimulationContext(AgentAttributeSet attributeSet) {
+        Config config = Config.builder()
+                .populationSize(1)
+                .tickCount(1)
+                .threadCount(1)
+                .areThreadsSynced(true)
+                .agentGenerator(agentGenerator())
+                .environmentGenerator(environmentGenerator())
+                .build();
+
+        Agent agent = new Agent("TestOwner", List.of(attributeSet));
+
+        return new AgentSimulationContext(
+                agent,
+                new AgentSet(List.of(agent)),
+                config,
+                new ContextCache(),
+                new MutableClock(config.tickCount()),
+                new RequestResponseController(config),
+                new Environment("env", List.of()),
+                new SplittableRandom()
+        );
     }
 }

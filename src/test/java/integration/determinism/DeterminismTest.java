@@ -64,8 +64,12 @@ public class DeterminismTest {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private Map<String, List<Long>> runModel(long seed) {
+        return runModel(seed, false);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, List<Long>> runModel(long seed, boolean areThreadsSynced) {
         DefaultAgentGenerator agentGen = new DefaultAgentGenerator() {
             private int idx = 0;
 
@@ -82,7 +86,7 @@ public class DeterminismTest {
                 .populationSize(POPULATION)
                 .tickCount(TICKS)
                 .threadCount(THREADS)
-                .areThreadsSynced(false)
+                .areThreadsSynced(areThreadsSynced)
                 .agentGenerator(agentGen)
                 .environmentGenerator(new FunctionalEnvironmentGenerator(c -> new Environment("env", List.of())))
                 .scheduler(new RandomOrderScheduler())
@@ -128,5 +132,15 @@ public class DeterminismTest {
         assertNotEquals(first, third,
                 "Runs with different seeds should diverge; if they match, "
                         + "Config.seed() is not being consumed.");
+    }
+
+    @Test
+    public void sameSeedSyncedProducesIdenticalLogs() {
+        Map<String, List<Long>> first = runModel(42L, true);
+        Map<String, List<Long>> second = runModel(42L, true);
+
+        assertEquals(first, second,
+                "Two synchronised runs with the same seed and thread count must "
+                        + "produce identical full attribute logs.");
     }
 }

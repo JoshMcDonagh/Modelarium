@@ -29,9 +29,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * coordinator. Verifies that the tick loop executes, properties are logged,
  * and results are retrievable at the end.
  *
- * <p>Model: each agent has a "hunger" property that increments by 0.1 per tick
- * and an "eat" event that fires when hunger exceeds 0.7, reducing it by 0.5.
- * The environment has a tick counter.
+ * <p>Model: each agent has a "hunger" property that increments by 0.1 per tick,
+ * saturating at 1.0. The environment has a tick counter.
  */
 public class SyncedModelIntegrationTest {
 

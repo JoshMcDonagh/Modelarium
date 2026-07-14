@@ -14,6 +14,13 @@ import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.EnvironmentGenerator;
 
 import java.util.List;
+import modelarium.clock.MutableClock;
+import modelarium.entities.agents.AgentSet;
+import modelarium.entities.attributes.events.EnvironmentEvent;
+import modelarium.entities.attributes.routines.EnvironmentRoutine;
+import modelarium.entities.contexts.ContextCache;
+import modelarium.multithreading.requestresponse.RequestResponseController;
+import java.util.SplittableRandom;
 
 class EnvironmentTestHelpers {
     private EnvironmentTestHelpers() {}
@@ -87,5 +94,59 @@ class EnvironmentTestHelpers {
                 .agentGenerator(agentGenerator())
                 .environmentGenerator(environmentGenerator())
                 .build();
+    }
+
+
+    static class AlwaysTriggeredEnvironmentEvent extends EnvironmentEvent {
+        private int runCount = 0;
+
+        AlwaysTriggeredEnvironmentEvent(String name) {
+            super(name, true, AttributeAccessLevel.PUBLIC);
+        }
+
+        @Override
+        protected boolean isTriggered(EnvironmentContext context) {
+            return true;
+        }
+
+        @Override
+        protected void run(EnvironmentContext context) {
+            runCount++;
+        }
+
+        int runCount() {
+            return runCount;
+        }
+    }
+
+    static class EmptyEnvironmentRoutine extends EnvironmentRoutine {
+        EmptyEnvironmentRoutine(String name) {
+            super(name, AttributeAccessLevel.PUBLIC);
+        }
+
+        @Override
+        protected void run(EnvironmentContext context) {}
+    }
+
+    @SuppressWarnings("unchecked")
+    static EnvironmentAttributeSet environmentAttributeSetFromAttributes(String ownerName, String attributeSetName, Attribute... attributes) {
+        return new EnvironmentAttributeSet(
+                ownerName,
+                attributeSetName,
+                (List<Attribute>) (List<?>) List.of(attributes)
+        );
+    }
+
+    static void createContextFor(Environment environment) {
+        Config config = syncedConfig(1, 1, 1);
+        environment.createContext(
+                new AgentSet(),
+                config,
+                new ContextCache(),
+                new MutableClock(config.tickCount()),
+                new RequestResponseController(config),
+                environment,
+                new SplittableRandom()
+        );
     }
 }

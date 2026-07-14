@@ -1,5 +1,6 @@
 package unit.modelarium.entities.contexts;
 
+import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.clock.MutableClock;
 import modelarium.entities.agents.Agent;
@@ -11,6 +12,7 @@ import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.immutable.ImmutableAgentSet;
 import modelarium.exceptions.*;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -19,8 +21,17 @@ import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static unit.modelarium.entities.contexts.ContextTestHelpers.*;
+import java.util.List;
 
 public class AgentSimulationContextTest {
+    @BeforeAll
+    static void openForCloning() {
+        AgentSimulationContextTest.class.getModule().addOpens(
+                "unit.modelarium.entities.contexts",
+                Cloner.class.getModule()
+        );
+    }
+
     @Test
     public void testGetThisEntity() {
         Agent agent = emptyAgent("Alice");
@@ -512,5 +523,102 @@ public class AgentSimulationContextTest {
         );
 
         assertSetsContainSameAgents(agentSet, context.getFilteredAgents(filter));
+    }
+
+
+    @Test
+    public void testAddAgent() throws ReflectiveOperationException {
+        Config config = unsyncedConfig(1, 1, 1);
+        AgentSet agentSet = agentSet(emptyAgent("agent_0"));
+
+        AgentSimulationContext context = simulationContextWithAgentSet(
+                AgentSimulationContext.class,
+                config,
+                agentSet
+        );
+        Agent newAgent = emptyAgent("agent_1");
+
+        context.addAgent(newAgent);
+
+        assertTrue(context.doesAgentExistInThisCore("agent_1"));
+        assertSame(newAgent, getMutableFromImmutable(context.getAgent("agent_1")));
+    }
+
+    @Test
+    public void testAddAgents_WithList() throws ReflectiveOperationException {
+        Config config = unsyncedConfig(1, 1, 1);
+        AgentSet agentSet = agentSet(emptyAgent("agent_0"));
+
+        AgentSimulationContext context = simulationContextWithAgentSet(
+                AgentSimulationContext.class,
+                config,
+                agentSet
+        );
+
+        context.addAgents(List.of(emptyAgent("agent_1"), emptyAgent("agent_2")));
+
+        assertTrue(context.doesAgentExistInThisCore("agent_1"));
+        assertTrue(context.doesAgentExistInThisCore("agent_2"));
+    }
+
+    @Test
+    public void testAddAgents_WithAgentSet() throws ReflectiveOperationException {
+        Config config = unsyncedConfig(1, 1, 1);
+        AgentSet agentSet = agentSet(emptyAgent("agent_0"));
+
+        AgentSimulationContext context = simulationContextWithAgentSet(
+                AgentSimulationContext.class,
+                config,
+                agentSet
+        );
+
+        context.addAgents(agentSet(emptyAgent("agent_1"), emptyAgent("agent_2")));
+
+        assertTrue(context.doesAgentExistInThisCore("agent_1"));
+        assertTrue(context.doesAgentExistInThisCore("agent_2"));
+    }
+
+    @Test
+    public void testAddAgentDeepCopy() throws ReflectiveOperationException {
+        Config config = unsyncedConfig(1, 1, 1);
+        AgentSet agentSet = agentSet(emptyAgent("agent_0"));
+
+        AgentSimulationContext context = simulationContextWithAgentSet(
+                AgentSimulationContext.class,
+                config,
+                agentSet
+        );
+
+        Agent newAgent = new Agent("agent_1", List.of(singlePropertyAgentSet("agent_1", "food", "hunger")));
+        context.addAgentDeepCopy(newAgent);
+
+        assertTrue(context.doesAgentExistInThisCore("agent_1"));
+        Agent stored = getMutableFromImmutable(context.getAgent("agent_1"));
+        assertNotSame(newAgent, stored);
+        assertEquals("agent_1", stored.name());
+    }
+
+    @Test
+    public void testAddAgentsDeepCopy_WithList() throws ReflectiveOperationException {
+        AgentSimulationContext context = simulationContextWithAgentSet(
+                AgentSimulationContext.class, unsyncedConfig(1, 1, 1), agentSet(emptyAgent("agent_0")));
+        Agent newAgent = emptyAgent("agent_1");
+
+        context.addAgentsDeepCopy(List.of(newAgent));
+
+        assertTrue(context.doesAgentExistInThisCore("agent_1"));
+        assertNotSame(newAgent, getMutableFromImmutable(context.getAgent("agent_1")));
+    }
+
+    @Test
+    public void testAddAgentsDeepCopy_WithAgentSet() throws ReflectiveOperationException {
+        AgentSimulationContext context = simulationContextWithAgentSet(
+                AgentSimulationContext.class, unsyncedConfig(1, 1, 1), agentSet(emptyAgent("agent_0")));
+        Agent newAgent = emptyAgent("agent_1");
+
+        context.addAgentsDeepCopy(agentSet(newAgent));
+
+        assertTrue(context.doesAgentExistInThisCore("agent_1"));
+        assertNotSame(newAgent, getMutableFromImmutable(context.getAgent("agent_1")));
     }
 }

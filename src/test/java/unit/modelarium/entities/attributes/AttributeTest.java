@@ -8,6 +8,9 @@ import modelarium.exceptions.MissingAttributeFunctionException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import modelarium.entities.attributes.events.functional.FunctionalEnvironmentEvent;
+import modelarium.entities.attributes.properties.functional.FunctionalEnvironmentProperty;
+import modelarium.entities.attributes.routines.functional.FunctionalEnvironmentRoutine;
 
 public class AttributeTest {
     @Test
@@ -130,6 +133,151 @@ public class AttributeTest {
     public void testRoutineRun_MissingRunFunction_MissingAttributeFunctionException() {
         FunctionalAgentRoutine routine = new FunctionalAgentRoutine(
                 "r", AttributeAccessLevel.PUBLIC, null);
+
+        assertThrows(MissingAttributeFunctionException.class, routine::run);
+    }
+
+
+    @Test
+    public void testPropertySetAndGet() {
+        FunctionalAgentProperty<Integer> property = new FunctionalAgentProperty<>(
+                "x", false, AttributeAccessLevel.PUBLIC, Integer.class,
+                (context, value) -> value,
+                (context, oldValue, incomingValue) -> incomingValue,
+                null
+        );
+
+        property.set(41);
+
+        assertEquals(41, property.get());
+    }
+
+    @Test
+    public void testEventIsTriggeredAndRun() {
+        int[] runCount = {0};
+
+        FunctionalAgentEvent event = new FunctionalAgentEvent(
+                "x", false, AttributeAccessLevel.PUBLIC,
+                (context) -> runCount[0]++,
+                (context) -> true
+        );
+
+        assertTrue(event.isTriggered());
+
+        event.run();
+
+        assertEquals(1, runCount[0]);
+    }
+
+    @Test
+    public void testRoutineRun() {
+        int[] runCount = {0};
+
+        FunctionalAgentRoutine routine = new FunctionalAgentRoutine(
+                "x", AttributeAccessLevel.PUBLIC,
+                (context) -> runCount[0]++
+        );
+
+        routine.run();
+
+        assertEquals(1, runCount[0]);
+    }
+
+    @Test
+    public void testEnvironmentPropertySetAndGet() {
+        FunctionalEnvironmentProperty<Integer> property = new FunctionalEnvironmentProperty<>(
+                "x", false, AttributeAccessLevel.PUBLIC, Integer.class,
+                (context, value) -> value,
+                (context, oldValue, incomingValue) -> incomingValue,
+                null
+        );
+
+        property.set(41);
+
+        assertEquals(41, property.get());
+    }
+
+    @Test
+    public void testEnvironmentPropertyRun() {
+        FunctionalEnvironmentProperty<Integer> property = new FunctionalEnvironmentProperty<>(
+                "x", false, AttributeAccessLevel.PUBLIC, Integer.class,
+                (context, value) -> value,
+                (context, oldValue, incomingValue) -> incomingValue,
+                (context, value) -> value == null ? 1 : value + 1
+        );
+
+        property.run();
+
+        assertEquals(1, property.get());
+    }
+
+    @Test
+    public void testEnvironmentPropertyGet_MissingGetterFunction_MissingAttributeFunctionException() {
+        FunctionalEnvironmentProperty<Integer> property = new FunctionalEnvironmentProperty<>(
+                "x", false, AttributeAccessLevel.PUBLIC, Integer.class, null, null, null);
+
+        assertThrows(MissingAttributeFunctionException.class, property::get);
+    }
+
+    @Test
+    public void testEnvironmentPropertySet_MissingSetterFunction_MissingAttributeFunctionException() {
+        FunctionalEnvironmentProperty<Integer> property = new FunctionalEnvironmentProperty<>(
+                "x", false, AttributeAccessLevel.PUBLIC, Integer.class, null, null, null);
+
+        assertThrows(MissingAttributeFunctionException.class, () -> property.set(42));
+    }
+
+    @Test
+    public void testEnvironmentEventIsTriggeredAndRun() {
+        int[] runCount = {0};
+
+        FunctionalEnvironmentEvent event = new FunctionalEnvironmentEvent(
+                "x", false, AttributeAccessLevel.PUBLIC,
+                (context) -> runCount[0]++,
+                (context) -> true
+        );
+
+        assertTrue(event.isTriggered());
+
+        event.run();
+
+        assertEquals(1, runCount[0]);
+    }
+
+    @Test
+    public void testEnvironmentEventIsTriggered_MissingIsTriggeredFunction_MissingAttributeFunctionException() {
+        FunctionalEnvironmentEvent event = new FunctionalEnvironmentEvent(
+                "x", false, AttributeAccessLevel.PUBLIC, null, null);
+
+        assertThrows(MissingAttributeFunctionException.class, event::isTriggered);
+    }
+
+    @Test
+    public void testEnvironmentEventRun_MissingRunFunction_MissingAttributeFunctionException() {
+        FunctionalEnvironmentEvent event = new FunctionalEnvironmentEvent(
+                "x", false, AttributeAccessLevel.PUBLIC, null, null);
+
+        assertThrows(MissingAttributeFunctionException.class, event::run);
+    }
+
+    @Test
+    public void testEnvironmentRoutineRun() {
+        int[] runCount = {0};
+
+        FunctionalEnvironmentRoutine routine = new FunctionalEnvironmentRoutine(
+                "x", AttributeAccessLevel.PUBLIC,
+                (context) -> runCount[0]++
+        );
+
+        routine.run();
+
+        assertEquals(1, runCount[0]);
+    }
+
+    @Test
+    public void testEnvironmentRoutineRun_MissingRunFunction_MissingAttributeFunctionException() {
+        FunctionalEnvironmentRoutine routine = new FunctionalEnvironmentRoutine(
+                "x", AttributeAccessLevel.PUBLIC, null);
 
         assertThrows(MissingAttributeFunctionException.class, routine::run);
     }

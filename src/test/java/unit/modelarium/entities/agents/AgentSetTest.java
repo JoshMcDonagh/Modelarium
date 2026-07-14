@@ -1,7 +1,9 @@
 package unit.modelarium.entities.agents;
 
+import com.rits.cloning.Cloner;
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.AgentSet;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -13,8 +15,22 @@ import java.util.SplittableRandom;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static unit.modelarium.entities.agents.AgentTestHelpers.emptyAgent;
+import modelarium.entities.attributes.AgentAttributeSet;
+import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
+
+import static unit.modelarium.entities.agents.AgentTestHelpers.singlePropertyAgentSet;
+import static unit.modelarium.entities.agents.AgentTestHelpers.agentAttributeSet;
+import static unit.modelarium.entities.agents.AgentTestHelpers.AgentCounterProperty;
 
 public class AgentSetTest {
+    @BeforeAll
+    static void openForCloning() {
+        AgentSetTest.class.getModule().addOpens(
+                "unit.modelarium.entities.agents",
+                Cloner.class.getModule()
+        );
+    }
+
     @Test
     public void testAdd() {
         Agent agent = emptyAgent("A");
@@ -166,5 +182,125 @@ public class AgentSetTest {
         AgentSet agentSet = new AgentSet(List.of(emptyAgent("A")));
 
         assertNotNull(agentSet.getAsImmutable());
+    }
+
+
+    @Test
+    public void testAddDeepCopy_NewAgent() {
+        AgentAttributeSet attributeSet = singlePropertyAgentSet("A", "food", "hunger");
+        Agent original = new Agent("A", List.of(attributeSet));
+        AgentSet agentSet = new AgentSet();
+
+        agentSet.addDeepCopy(original);
+
+        Agent stored = agentSet.get("A");
+        assertNotSame(original, stored);
+        assertEquals("A", stored.name());
+        assertNotSame(original.getAttributeSet(0), stored.getAttributeSet(0));
+    }
+
+    @Test
+    public void testAddDeepCopy_ReplacesExistingAgent() {
+        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A")));
+        Agent replacement = new Agent("A", List.of(singlePropertyAgentSet("A", "food", "hunger")));
+
+        agentSet.addDeepCopy(replacement);
+
+        assertEquals(1, agentSet.size());
+        assertEquals(1, agentSet.get("A").attributeSetCount());
+    }
+
+    @Test
+    public void testAddDeepCopy_StoredCopyIsIndependentOfOriginal() {
+        AgentCounterProperty property = new AgentCounterProperty("hunger");
+        property.set(5.0);
+        Agent original = new Agent("A", List.of(agentAttributeSet("A", "food", property)));
+        AgentSet agentSet = new AgentSet();
+        agentSet.addDeepCopy(original);
+
+        property.set(9.0);
+
+        assertEquals(5.0, agentSet.get("A").getProperty("food", "hunger").get());
+    }
+
+    @Test
+    public void testAddDeepCopyList() {
+        AgentSet agentSet = new AgentSet();
+
+        agentSet.addDeepCopy(List.of(emptyAgent("A"), emptyAgent("B")));
+
+        assertEquals(2, agentSet.size());
+        assertEquals("A", agentSet.get("A").name());
+        assertEquals("B", agentSet.get("B").name());
+    }
+
+    @Test
+    public void testAddDeepCopyAgentSet_SkipsExisting() {
+        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A")));
+        AgentSet other = new AgentSet(List.of(
+                new Agent("A", List.of(singlePropertyAgentSet("A", "food", "hunger"))),
+                emptyAgent("B")
+        ));
+
+        agentSet.addDeepCopy(other);
+
+        assertEquals(2, agentSet.size());
+        assertEquals(0, agentSet.get("A").attributeSetCount());
+        assertNotSame(other.get("B"), agentSet.get("B"));
+    }
+
+    @Test
+    public void testAddAgentSet_Null_IllegalArgumentException() {
+        AgentSet agentSet = new AgentSet();
+
+        assertThrows(IllegalArgumentException.class, () -> agentSet.add((AgentSet) null));
+    }
+
+    @Test
+    public void testAddDeepCopyAgentSet_Null_IllegalArgumentException() {
+        AgentSet agentSet = new AgentSet();
+
+        assertThrows(IllegalArgumentException.class, () -> agentSet.addDeepCopy((AgentSet) null));
+    }
+
+    @Test
+    public void testUpdate_ShallowSharesInstances() {
+        AgentSet agentSet = new AgentSet();
+        Agent agent = emptyAgent("A");
+        AgentSet other = new AgentSet(List.of(agent));
+
+        agentSet.update(other, false);
+
+        assertSame(agent, agentSet.get("A"));
+    }
+
+    @Test
+    public void testUpdate_DeepCopied() {
+        AgentSet agentSet = new AgentSet();
+        Agent agent = new Agent("A", List.of(singlePropertyAgentSet("A", "food", "hunger")));
+        AgentSet other = new AgentSet(List.of(agent));
+
+        agentSet.update(other, true);
+
+        assertNotSame(agent, agentSet.get("A"));
+        assertEquals("A", agentSet.get("A").name());
+    }
+
+    @Test
+    public void testUpdate_Null_IllegalArgumentException() {
+        AgentSet agentSet = new AgentSet();
+
+        assertThrows(IllegalArgumentException.class, () -> agentSet.update(null, false));
+    }
+
+    @Test
+    public void testSetLogDatabaseFactory_PropagatesToAgents() {
+        AgentSet agentSet = new AgentSet(List.of(
+                new Agent("A", List.of(singlePropertyAgentSet("A", "food", "hunger")))
+        ));
+
+        agentSet.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+
+        assertNotNull(agentSet.get("A").getAttributeSet("food").getLog());
     }
 }
