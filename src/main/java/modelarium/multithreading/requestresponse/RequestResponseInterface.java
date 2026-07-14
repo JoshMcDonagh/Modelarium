@@ -124,7 +124,7 @@ public class RequestResponseInterface {
      * @return the {@link Agent} instance returned by the coordinator
      */
     public Agent getAgentFromCoordinator(String requesterAgentName, String targetAgentName) throws InterruptedException {
-        Request request = new Request(requesterAgentName, targetAgentName, RequestType.AGENT_ACCESS, null);
+        Request request = new Request(requesterAgentName, null, RequestType.AGENT_ACCESS, targetAgentName);
         return (Agent) sendAndAwait(request, ResponseType.AGENT_ACCESS);
     }
 
