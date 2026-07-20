@@ -27,5 +27,5 @@ replay_pid*
 target/
 
 # IntelliJ IDEA project files
-modelarium/.idea/
+.idea/
 *.iml
