@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="881c177e-ffaf-4574-857c-18714382e81c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/pages-javadoc.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/pages-javadoc.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/publish-central.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/publish-central.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/Model.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/clock/Clock.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/clock/Clock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/clock/ImmutableClock.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/clock/ImmutableClock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/clock/MutableClock.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/clock/MutableClock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/Entity.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/Entity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/agents/Agent.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/agents/Agent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/agents/AgentSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/agents/AgentSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/agents/generators/AgentGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/agents/generators/AgentGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/agents/generators/DefaultAgentGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/agents/generators/DefaultAgentGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/agents/generators/FunctionalDefaultAgentGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/agents/generators/FunctionalDefaultAgentGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/AgentAttribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/AgentAttribute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/AgentAttributeSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/AgentAttributeSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/Attribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/Attribute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/AttributeAccessLevel.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/AttributeAccessLevel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/AttributeBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/AttributeBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/AttributeSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/AttributeSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/EnvironmentAttribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/EnvironmentAttribute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/EnvironmentAttributeSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/EnvironmentAttributeSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/events/AgentEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/events/AgentEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/events/EnvironmentEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/events/EnvironmentEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/events/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/events/Event.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/events/functional/AgentEventIsTriggeredFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/events/functional/AgentEventIsTriggeredFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/events/functional/AgentEventRunFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/events/functional/AgentEventRunFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/events/functional/EnvironmentEventIsTriggeredFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/events/functional/EnvironmentEventIsTriggeredFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/events/functional/EnvironmentEventRunFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/events/functional/EnvironmentEventRunFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/events/functional/FunctionalAgentEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/events/functional/FunctionalAgentEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/events/functional/FunctionalEnvironmentEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/events/functional/FunctionalEnvironmentEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/properties/AgentProperty.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/properties/AgentProperty.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/properties/EnvironmentProperty.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/properties/EnvironmentProperty.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/properties/Property.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/properties/Property.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/properties/functional/AgentPropertyGetterFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/properties/functional/AgentPropertyGetterFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/properties/functional/AgentPropertyRunFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/properties/functional/AgentPropertyRunFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/properties/functional/AgentPropertySetterFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/properties/functional/AgentPropertySetterFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/properties/functional/EnvironmentPropertyGetterFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/properties/functional/EnvironmentPropertyGetterFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/properties/functional/EnvironmentPropertyRunFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/properties/functional/EnvironmentPropertyRunFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/properties/functional/EnvironmentPropertySetterFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/properties/functional/EnvironmentPropertySetterFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/properties/functional/FunctionalAgentProperty.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/properties/functional/FunctionalAgentProperty.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/properties/functional/FunctionalEnvironmentProperty.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/properties/functional/FunctionalEnvironmentProperty.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/routines/AgentRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/routines/AgentRoutine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/routines/EnvironmentRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/routines/EnvironmentRoutine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/routines/Routine.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/routines/Routine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/routines/functional/AgentRoutineRunFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/routines/functional/AgentRoutineRunFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/routines/functional/EnvironmentRoutineRunFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/routines/functional/EnvironmentRoutineRunFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/routines/functional/FunctionalAgentRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/routines/functional/FunctionalAgentRoutine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/attributes/routines/functional/FunctionalEnvironmentRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/attributes/routines/functional/FunctionalEnvironmentRoutine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/contexts/AgentContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/contexts/AgentContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/contexts/AgentSimulationContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/contexts/AgentSimulationContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/contexts/Context.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/contexts/Context.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/contexts/ContextCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/contexts/ContextCache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/contexts/EntityContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/contexts/EntityContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/contexts/EnvironmentContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/contexts/EnvironmentContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/contexts/EnvironmentSimulationContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/contexts/EnvironmentSimulationContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/contexts/SimulationContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/contexts/SimulationContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/environments/Environment.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/environments/Environment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/environments/EnvironmentGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/environments/EnvironmentGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/environments/FunctionalEnvironmentGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/environments/FunctionalEnvironmentGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/immutable/ImmutableAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/immutable/ImmutableAgent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/immutable/ImmutableAgentSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/immutable/ImmutableAgentSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/immutable/ImmutableEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/immutable/ImmutableEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/immutable/ImmutableEnvironment.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/immutable/ImmutableEnvironment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/immutable/attributes/ImmutableAgentAttributeSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/immutable/attributes/ImmutableAgentAttributeSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/immutable/attributes/ImmutableAttributeSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/immutable/attributes/ImmutableAttributeSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/immutable/attributes/ImmutableEnvironmentAttributeSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/immutable/attributes/ImmutableEnvironmentAttributeSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/logging/AttributeSetLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/logging/AttributeSetLog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/logging/EntityLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/logging/EntityLog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/logging/databases/AttributeSetLogDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/logging/databases/AttributeSetLogDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/logging/databases/DiskBasedAttributeSetLogDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/logging/databases/DiskBasedAttributeSetLogDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/logging/databases/MemoryBasedAttributeSetLogDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/logging/databases/MemoryBasedAttributeSetLogDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/logging/databases/factories/AttributeSetLogDatabaseFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/logging/databases/factories/AttributeSetLogDatabaseFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/logging/databases/factories/DiskBasedAttributeSetLogDatabaseFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/logging/databases/factories/DiskBasedAttributeSetLogDatabaseFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/entities/logging/databases/factories/MemoryBasedAttributeSetLogDatabaseFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/entities/logging/databases/factories/MemoryBasedAttributeSetLogDatabaseFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/exceptions/AgentNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/exceptions/AgentNotFoundException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/exceptions/AttributeAccessException.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/exceptions/AttributeAccessException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/exceptions/CoordinatorErrorException.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/exceptions/CoordinatorErrorException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/exceptions/CoordinatorTimeoutException.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/exceptions/CoordinatorTimeoutException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/exceptions/EnvironmentNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/exceptions/EnvironmentNotFoundException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/exceptions/MissingAttributeFunctionException.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/exceptions/MissingAttributeFunctionException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/exceptions/ModelRunException.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/exceptions/ModelRunException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/exceptions/SimulationInterruptedException.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/exceptions/SimulationInterruptedException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/internal/Internal.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/internal/Internal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/multithreading/CoordinatorHandle.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/multithreading/CoordinatorHandle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/multithreading/CoordinatorThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/multithreading/CoordinatorThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/multithreading/WorkerThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/multithreading/WorkerThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/multithreading/requestresponse/CoordinatorRequestHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/multithreading/requestresponse/CoordinatorRequestHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/multithreading/requestresponse/Request.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/multithreading/requestresponse/Request.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/multithreading/requestresponse/RequestResponseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/multithreading/requestresponse/RequestResponseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/multithreading/requestresponse/RequestResponseInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/multithreading/requestresponse/RequestResponseInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/multithreading/requestresponse/RequestType.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/multithreading/requestresponse/RequestType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/multithreading/requestresponse/Response.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/multithreading/requestresponse/Response.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/multithreading/requestresponse/ResponseType.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/multithreading/requestresponse/ResponseType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/results/Results.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/results/Results.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/results/ResultsForAgents.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/results/ResultsForAgents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/results/ResultsForEntities.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/results/ResultsForEntities.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/results/ResultsForEnvironment.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/results/ResultsForEnvironment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/results/immutable/ImmutableResults.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/results/immutable/ImmutableResults.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/results/immutable/ImmutableResultsForAgents.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/results/immutable/ImmutableResultsForAgents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/results/immutable/ImmutableResultsForEnvironment.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/results/immutable/ImmutableResultsForEnvironment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/results/mutable/MutableResults.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/results/mutable/MutableResults.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/results/mutable/MutableResultsForAgents.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/results/mutable/MutableResultsForAgents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/results/mutable/MutableResultsForEntities.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/results/mutable/MutableResultsForEntities.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/results/mutable/MutableResultsForEnvironment.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/results/mutable/MutableResultsForEnvironment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/scheduler/InOrderScheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/scheduler/InOrderScheduler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/scheduler/RandomOrderScheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/scheduler/RandomOrderScheduler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/scheduler/Scheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/scheduler/Scheduler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/scheduler/functional/FunctionalScheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/scheduler/functional/FunctionalScheduler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/scheduler/functional/TickFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/scheduler/functional/TickFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/utils/Cloners.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/utils/Cloners.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/utils/QuadFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/utils/QuadFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelarium/utils/RandomStringGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/modelarium/utils/RandomStringGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/integration/agentEnvironmentInteraction/AgentEnvironmentInteractionIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/integration/agentEnvironmentInteraction/AgentEnvironmentInteractionIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/integration/agentInteraction/AgentInteractionIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/integration/agentInteraction/AgentInteractionIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/integration/determinism/DeterminismTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/integration/determinism/DeterminismTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/integration/diskResults/DiskResultsIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/integration/diskResults/DiskResultsIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/integration/eventsAndRoutines/EventsAndRoutinesIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/integration/eventsAndRoutines/EventsAndRoutinesIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/integration/multiCoreEquivalence/MultiCoreEquivalenceIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/integration/multiCoreEquivalence/MultiCoreEquivalenceIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/integration/syncedModel/SyncedModelIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/integration/syncedModel/SyncedModelIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/integration/unsyncedModel/UnsyncedModelIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/integration/unsyncedModel/UnsyncedModelIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/integration/workerFailure/WorkerFailureIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/integration/workerFailure/WorkerFailureIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/ConfigTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/ConfigTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/ConfigTestHelpers.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/ConfigTestHelpers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/ModelTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/ModelTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/clock/ClockTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/clock/ClockTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/agents/AgentSetTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/entities/agents/AgentSetTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/agents/AgentTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/entities/agents/AgentTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/agents/AgentTestHelpers.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/entities/agents/AgentTestHelpers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/agents/generators/AgentGeneratorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/entities/agents/generators/AgentGeneratorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/agents/generators/AgentGeneratorTestHelpers.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/entities/agents/generators/AgentGeneratorTestHelpers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/attributes/AttributeSetTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/entities/attributes/AttributeSetTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/attributes/AttributeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/entities/attributes/AttributeTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/attributes/AttributeTestHelpers.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/contexts/AgentSimulationContextTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/entities/contexts/AgentSimulationContextTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/contexts/ContextCacheTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/entities/contexts/ContextCacheTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/contexts/ContextTestHelpers.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/entities/contexts/ContextTestHelpers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/contexts/EnvironmentSimulationContextTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/entities/contexts/EnvironmentSimulationContextTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/environments/EnvironmentTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/entities/environments/EnvironmentTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/environments/EnvironmentTestHelpers.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/entities/environments/EnvironmentTestHelpers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/environments/FunctionalEnvironmentGeneratorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/entities/environments/FunctionalEnvironmentGeneratorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/immutable/ImmutableAgentSetTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/immutable/ImmutableAgentTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/immutable/ImmutableEntityTestHelpers.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/immutable/ImmutableEnvironmentTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/immutable/attributes/ImmutableAgentAttributeSetTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/immutable/attributes/ImmutableAttributeSetTestHelpers.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/immutable/attributes/ImmutableEnvironmentAttributeSetTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/logging/AttributeSetLogTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/logging/EntityLogTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/logging/LoggingTestHelpers.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/logging/databases/DiskBasedLogDatabaseTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/entities/logging/databases/DiskBasedLogDatabaseTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/logging/databases/MemoryBasedLogDatabaseTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/entities/logging/databases/MemoryBasedLogDatabaseTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/logging/databases/factories/DiskBasedLogDatabaseFactoryTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/entities/logging/databases/factories/MemoryBasedLogDatabaseFactoryTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/multithreading/requestresponse/RequestResponseControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/multithreading/requestresponse/RequestResponseControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/multithreading/requestresponse/RequestResponseTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/multithreading/requestresponse/RequestResponseTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/multithreading/requestresponse/RequestResponseTestHelpers.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/multithreading/requestresponse/RequestResponseTestHelpers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/results/ImmutableResultsForAgentsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/results/ImmutableResultsForAgentsTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/results/ImmutableResultsForEnvironmentTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/results/ImmutableResultsForEnvironmentTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/results/ImmutableResultsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/results/ImmutableResultsTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/results/MutableResultsForAgentsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/results/MutableResultsForAgentsTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/results/MutableResultsForEnvironmentTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/results/MutableResultsForEnvironmentTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/results/MutableResultsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/results/MutableResultsTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/results/ResultsTestHelpers.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/results/ResultsTestHelpers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/scheduler/FunctionalSchedulerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/scheduler/InOrderSchedulerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/scheduler/RandomOrderSchedulerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/scheduler/SchedulerTestHelpers.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/utils/ClonersTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/utils/ClonersTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/unit/modelarium/utils/RandomStringGeneratorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/modelarium/src/test/java/unit/modelarium/utils/RandomStringGeneratorTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="package-info" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="38TkjUFMFSEm2QQJqHiQHhy6cu7" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;JUnit.AgentGeneratorTest.testFunctionalGenerator_delegatesToFunction.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.All in Agentarium-for-Java (1).executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.All in Agentarium-for-Java (2).executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.All in Agentarium-for-Java (3).executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.All in Agentarium-for-Java (4).executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.All in Agentarium-for-Java (5).executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.All in Agentarium-for-Java.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AttributeTest.property_runIsNoOpWhenRunLogicIsNull.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ModelClockTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ModelElementTest.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.modelarium [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.modelarium [package].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.modelarium [site].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/v48305jm/Local Files/PhD Work/Modelarium/Modelarium&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\v48305jm\Local Files\PhD Work\Modelarium\Modelarium\modelarium" />
+      <recent name="C:\Users\v48305jm\Local Files\PhD Work\Modelarium\Modelarium\src\test\java\integration\unsyncedModel" />
+      <recent name="C:\Users\v48305jm\Local Files\PhD Work\Modelarium\Modelarium\src\test\java\integration\syncedModel" />
+      <recent name="C:\Users\v48305jm\Local Files\PhD Work\Modelarium\Modelarium\src\test\java\integration\multiCoreEquivalence" />
+      <recent name="C:\Users\v48305jm\Local Files\PhD Work\Modelarium\Modelarium\src\test\java\integration\agentEnvironmentInteraction" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.All in Agentarium-for-Java (5)">
+    <configuration name="All in Agentarium-for-Java (2)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Agentarium-for-Java" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All in Agentarium-for-Java (3)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Agentarium-for-Java" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All in Agentarium-for-Java (4)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Agentarium-for-Java" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All in Agentarium-for-Java (5)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Agentarium-for-Java" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All in Agentarium-for-Java" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Agentarium-for-Java" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.All in Agentarium-for-Java (5)" />
+        <item itemvalue="JUnit.All in Agentarium-for-Java" />
+        <item itemvalue="JUnit.All in Agentarium-for-Java (4)" />
+        <item itemvalue="JUnit.All in Agentarium-for-Java (3)" />
+        <item itemvalue="JUnit.All in Agentarium-for-Java (2)" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.27397.103" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-IU-252.27397.103" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="881c177e-ffaf-4574-857c-18714382e81c" name="Changes" comment="" />
+      <created>1768831084271</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1768831084271</updated>
+      <workItem from="1768831085975" duration="1129000" />
+      <workItem from="1768923672731" duration="2651000" />
+      <workItem from="1768926543605" duration="1177000" />
+      <workItem from="1769014014979" duration="19000" />
+      <workItem from="1769776609949" duration="2391000" />
+      <workItem from="1769785070604" duration="2154000" />
+      <workItem from="1769790032739" duration="833000" />
+      <workItem from="1769791097264" duration="487000" />
+      <workItem from="1772456482355" duration="48000" />
+      <workItem from="1774623807482" duration="5558000" />
+      <workItem from="1776087457375" duration="17000" />
+      <workItem from="1776087493664" duration="3435000" />
+      <workItem from="1779192939614" duration="3233000" />
+      <workItem from="1779197865090" duration="1920000" />
+      <workItem from="1779285445320" duration="66000" />
+      <workItem from="1779285797276" duration="339000" />
+      <workItem from="1782134416626" duration="1718000" />
+      <workItem from="1782136334748" duration="1722000" />
+      <workItem from="1784296633934" duration="20000" />
+      <workItem from="1784549590993" duration="2095000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
