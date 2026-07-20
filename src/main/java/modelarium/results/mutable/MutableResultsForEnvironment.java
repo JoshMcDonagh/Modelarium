@@ -33,21 +33,48 @@ public final class MutableResultsForEnvironment extends MutableResultsForEntitie
         this.environmentName = environment.name();
     }
 
+    /**
+     * Returns the number of attribute set logs recorded for the environment.
+     *
+     * @return the environment's attribute set log count
+     */
     @Override
     public int attributeSetLogCount() {
         return entityAttributeSetLogCount(environmentName);
     }
 
+    /**
+     * Returns the number of attribute logs recorded in the environment's named attribute set.
+     *
+     * @param attributeSetName the name of the attribute set whose logs to count
+     * @return the attribute set's attribute log count
+     */
     @Override
     public int attributeLogCount(String attributeSetName) {
         return entityAttributeSetAttributeLogCount(environmentName, attributeSetName);
     }
 
+    /**
+     * Retrieves the values logged for a single attribute of the environment.
+     *
+     * @param attributeSetName the name of the attribute set the attribute belongs to
+     * @param attributeName the name of the attribute whose values to retrieve
+     * @return the attribute's logged values, one per tick
+     */
     @Override
     public List<Object> attributeLogs(String attributeSetName, String attributeName) {
         return getLogsForEntityAttribute(environmentName, attributeSetName, attributeName);
     }
 
+    /**
+     * Retrieves the values logged for a single attribute of the environment, cast to the given type.
+     *
+     * @param attributeSetName the name of the attribute set the attribute belongs to
+     * @param attributeName the name of the attribute whose values to retrieve
+     * @param type the class to cast each logged value to
+     * @param <T> the type the logged values are returned as
+     * @return the attribute's logged values, one per tick
+     */
     @Override
     public <T> List<T> attributeLogs(String attributeSetName, String attributeName, Class<T> type) {
         List<Object> raw = getLogsForEntityAttribute(environmentName, attributeSetName, attributeName);
@@ -57,16 +84,32 @@ public final class MutableResultsForEnvironment extends MutableResultsForEntitie
         return typed;
     }
 
+    /**
+     * Retrieves the values logged for every attribute in one of the environment's attribute sets.
+     *
+     * @param attributeSetName the name of the attribute set whose logs to retrieve
+     * @return a map from attribute name to that attribute's logged values
+     */
     @Override
     public Map<String, List<Object>> attributeSetLogs(String attributeSetName) {
         return getLogsForEntityAttributeSetAsMap(environmentName, attributeSetName);
     }
 
+    /**
+     * Retrieves the values logged for every attribute of the environment.
+     *
+     * @return a map from attribute set name to a map from attribute name to that attribute's logged values
+     */
     @Override
     public Map<String, Map<String, List<Object>>> environmentLogs() {
         return getLogsForEntityAsMap(environmentName);
     }
 
+    /**
+     * Returns a read-only view of these environment results.
+     *
+     * @return a new {@link ImmutableResultsForEnvironment} instance wrapping these results
+     */
     public ImmutableResultsForEnvironment getAsImmutable() {
         return new ImmutableResultsForEnvironment(this);
     }

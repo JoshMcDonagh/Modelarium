@@ -19,8 +19,13 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class RequestResponseController {
 
+    /** The shared model config new interfaces are constructed with */
     private final Config config;
+
+    /** The single queue all requests to the co-ordinator are placed on */
     private final BlockingQueue<Request> requestQueue = new LinkedBlockingQueue<>();
+
+    /** Maps each thread or model element's name to its own queue of responses from the co-ordinator */
     private final ConcurrentMap<String, BlockingQueue<Response>> responseQueues = new ConcurrentHashMap<>();
 
     /**

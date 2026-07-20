@@ -30,11 +30,13 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
     private static final List<DiskBasedAttributeSetLogDatabase> activeDatabases =
             Collections.synchronizedList(new ArrayList<>());
 
+    /** Whether the JVM shutdown hook that disconnects active databases has been registered */
     private static volatile boolean shutdownHookRegistered = false;
 
     /** Shared mapper; ObjectMapper is thread-safe after configuration. */
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+    /** The name of the table attribute series are stored in */
     private static final String ATTRIBUTES_TABLE_NAME = "attributes_table";
 
     /**
@@ -47,8 +49,15 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
     /** Guards connection lifecycle and all database operations for this instance. */
     private final Object dbLock = new Object();
 
+    /** The SQLite connection this database uses, or null while disconnected */
     private Connection connection;
 
+    /**
+     * Returns the class of the first non-null value in a list.
+     *
+     * @param values the values to inspect
+     * @return the class of the first non-null value, or null if there is none
+     */
     private static Class<?> firstNonNullClass(List<?> values) {
         if (values == null)
             return null;
@@ -61,13 +70,23 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
         return null;
     }
 
+    /**
+     * Creates a unique path for the database's backing file inside the system's temporary directory.
+     *
+     * @return a new database file path within a uniquely named temporary folder
+     */
     private static String createTempDatabasePath() {
         String folderName = "temp_" + RandomStringGenerator.generateUniqueRandomString(20);
         Path tempDir = Paths.get(System.getProperty("java.io.tmpdir"), folderName);
         return tempDir.resolve(RandomStringGenerator.generateUniqueRandomString(20) + ".db").toString();
     }
 
-    /** Registers this instance for automatic disconnect on JVM shutdown. */
+    /**
+     * Constructs a new disk-based attribute set log database backed by a file in the system's temporary directory.
+     *
+     * <p>The instance is registered for automatic disconnect on JVM shutdown, with the shutdown hook created the
+     * first time any instance is constructed.
+     */
     public DiskBasedAttributeSetLogDatabase() {
         super(createTempDatabasePath());
 
@@ -149,6 +168,14 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
 
     // === Attribute Value Recording (Per-Tick) ===
 
+    /**
+     * Appends a value to the named attribute's stored series, remembering the value's class for later
+     * deserialisation.
+     *
+     * @param attributeName the name of the attribute the value belongs to
+     * @param attributeValue the value to append
+     * @param <T> the type of the value being appended
+     */
     @Override
     public <T> void addAttributeValue(String attributeName, T attributeValue) {
         Objects.requireNonNull(attributeName, "attributeName must not be null");
@@ -158,6 +185,13 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
 
     // === Bulk Column Replacement ===
 
+    /**
+     * Replaces the named attribute's stored series with the given values, inferring the attribute's value type from
+     * the first non-null value.
+     *
+     * @param attributeName the name of the attribute the values belong to
+     * @param attributeValues the values to store as the attribute's series
+     */
     @Override
     public void setAttributeColumn(String attributeName, List<Object> attributeValues) {
         Objects.requireNonNull(attributeName, "attributeName must not be null");
@@ -173,6 +207,12 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
 
     // === Column Retrieval ===
 
+    /**
+     * Retrieves the named attribute's stored series, deserialising each value to the attribute's remembered class.
+     *
+     * @param attributeName the name of the attribute whose series to retrieve
+     * @return the attribute's stored values in insertion order
+     */
     @Override
     public List<Object> getAttributeColumnAsList(String attributeName) {
         Objects.requireNonNull(attributeName, "attributeName must not be null");
@@ -181,6 +221,11 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
 
     // === Database/Table Management ===
 
+    /**
+     * Applies the SQLite pragmas this database uses for safe and performant access.
+     *
+     * @param connection the newly opened connection to configure
+     */
     private void configureConnection(Connection connection) throws SQLException {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute("PRAGMA foreign_keys = ON;");
@@ -191,17 +236,21 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
         }
     }
 
+    /**
+     * Creates the table attribute series are stored in, if it does not already exist.
+     */
     private void createAttributeTable() {
         createSeriesTable(ATTRIBUTES_TABLE_NAME);
     }
 
     /**
-     * Stable schema:
-     * - series_name: attribute name
-     * - position_index: preserves order within that series
-     * - value_json: serialised value
+     * Creates a series table with the database's stable schema, if it does not already exist.
      *
-     * Composite primary key ensures one value per position in a given series.
+     * <p>The schema stores each logical attribute "column" as a named ordered series of rows: series_name (the
+     * attribute's name), position_index (preserving order within that series) and value_json (the serialised
+     * value). The composite primary key ensures one value per position in a given series.
+     *
+     * @param tableName the name of the table to create
      */
     private void createSeriesTable(String tableName) {
         String createTableSql =
@@ -230,6 +279,14 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
 
     // === Internal Write Operations ===
 
+    /**
+     * Appends a serialised value to the named series at the next position index.
+     *
+     * @param tableName the name of the table the series is stored in
+     * @param seriesName the name of the series the value belongs to
+     * @param value the value to serialise and append
+     * @param <T> the type of the value being appended
+     */
     private <T> void addSeriesValue(String tableName, String seriesName, T value) {
         synchronized (dbLock) {
             ensureConnected();
@@ -251,6 +308,14 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
         }
     }
 
+    /**
+     * Replaces the named series with the given values inside a single transaction, rolling back if any insert
+     * fails.
+     *
+     * @param tableName the name of the table the series is stored in
+     * @param seriesName the name of the series to replace
+     * @param values the values to serialise and store as the series
+     */
     private void replaceSeries(String tableName, String seriesName, List<Object> values) {
         synchronized (dbLock) {
             ensureConnected();
@@ -293,6 +358,13 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
         }
     }
 
+    /**
+     * Returns the next free position index for the named series.
+     *
+     * @param tableName the name of the table the series is stored in
+     * @param seriesName the name of the series to find the next position for
+     * @return one greater than the series' highest stored position index, or 0 for a new series
+     */
     private int getNextPositionIndex(String tableName, String seriesName) throws SQLException {
         String sql = "SELECT COALESCE(MAX(position_index), -1) + 1 FROM " + tableName + " WHERE series_name = ?;";
 
@@ -311,6 +383,14 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
 
     // === Internal Read Operations ===
 
+    /**
+     * Retrieves the named series in position order, deserialising each value to the given class.
+     *
+     * @param tableName the name of the table the series is stored in
+     * @param seriesName the name of the series to retrieve
+     * @param type the class to deserialise each value to, or null to return the raw serialised strings
+     * @return the series' values in position order
+     */
     private List<Object> retrieveSeries(String tableName, String seriesName, Class<?> type) {
         synchronized (dbLock) {
             ensureConnected();
@@ -347,16 +427,30 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
 
     // === Utility ===
 
+    /**
+     * Records the class of a value against its series name for later deserialisation, if the value is non-null.
+     *
+     * @param typeMap the map of series names to value classes to record into
+     * @param name the name of the series the value belongs to
+     * @param value the value whose class to record
+     */
     private void rememberType(Map<String, Class<?>> typeMap, String name, Object value) {
         if (value != null)
             typeMap.put(name, value.getClass());
     }
 
+    /**
+     * Checks that the database connection has been established, failing fast if it has not.
+     */
     private void ensureConnected() {
         if (connection == null)
             throw new IllegalStateException("Database connection has not been established. Call connect() first.");
     }
 
+    /**
+     * Deletes the database's backing file, and deletes its parent directory too if that directory lives inside the
+     * system's temporary directory.
+     */
     private void deleteDatabaseFileAndMaybeParentDirectory() {
         String databasePathString = getDatabasePath();
         if (databasePathString == null || databasePathString.isBlank())
@@ -398,6 +492,12 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
 
     // === JSON (De)serialisation Utilities ===
 
+    /**
+     * Serialises a value to its JSON representation.
+     *
+     * @param value the value to serialise
+     * @return the value's JSON string, or null if the value is null
+     */
     private static String serialiseValue(Object value) {
         if (value == null)
             return null;
@@ -409,6 +509,13 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
         }
     }
 
+    /**
+     * Deserialises a JSON string back to a value of the given class.
+     *
+     * @param value the JSON string to deserialise
+     * @param type the class to deserialise the value to
+     * @return the deserialised value, or null if the string is null
+     */
     private Object deserialiseValue(String value, Class<?> type) {
         if (value == null)
             return null;

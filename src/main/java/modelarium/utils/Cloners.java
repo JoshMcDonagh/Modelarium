@@ -18,15 +18,34 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Utility class for providing a shared, pre-configured {@link Cloner} instance for deep cloning model elements.
+ *
+ * <p>This class configures the cloner so that entity contexts and attribute logs are nulled rather than cloned,
+ * functional attribute lambdas are shared rather than cloned, and the JDK's immutable collections are cloned via
+ * registered fast cloners.
+ */
 public final class Cloners {
+
+    /** The shared cloner instance used throughout the framework */
     private static final Cloner INSTANCE = configure();
 
     private Cloners() {}
 
+    /**
+     * Returns the shared, pre-configured cloner instance.
+     *
+     * @return the framework's standard {@link Cloner} instance
+     */
     public static Cloner standard() {
         return INSTANCE;
     }
 
+    /**
+     * Creates and configures the cloner instance the framework will share.
+     *
+     * @return a new {@link Cloner} instance configured for cloning model elements
+     */
     private static Cloner configure() {
         Cloner cloner = new Cloner();
 
@@ -66,6 +85,13 @@ public final class Cloners {
         return cloner;
     }
 
+    /**
+     * Registers a fast cloner for the named class if that class is present in the running JDK.
+     *
+     * @param cloner the cloner to register the fast cloner with
+     * @param className the fully qualified name of the class the fast cloner handles
+     * @param fastCloner the fast cloner to register
+     */
     private static void registerIfPresent(Cloner cloner, String className, IFastCloner fastCloner) {
         try {
             cloner.registerFastCloner(Class.forName(className), fastCloner);

@@ -6,30 +6,31 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Utility class for generating random alphanumeric strings.
- * Includes functionality to generate both general and unique strings.
  *
- * Note: Uniqueness is maintained in-memory for the life of the JVM.
+ * <p>This class provides functionality for generating both general and unique random strings. Uniqueness is
+ * maintained in memory for the life of the JVM.
  */
 public final class RandomStringGenerator {
 
     private RandomStringGenerator() {}
 
+    /** The set of characters random strings are built from */
     private static final String CHARACTERS =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    // SecureRandom is thread-safe; fine for multi-threaded use.
+    /** The random generator used to select characters, which is thread-safe for multithreaded use */
     private static final SecureRandom RNG = new SecureRandom();
 
-    // Tracks previously generated unique strings
+    /** Tracks previously generated unique strings */
     private static final Set<String> GENERATED = ConcurrentHashMap.newKeySet();
 
     /**
      * Generates a random alphanumeric string of the specified length.
-     * Pure function: no global side effects.
      *
-     * @param length non-negative length
-     * @return random string
-     * @throws IllegalArgumentException if length is negative
+     * <p>The length must not be negative. This method has no global side effects.
+     *
+     * @param length the number of characters the generated string will contain
+     * @return a new random alphanumeric string
      */
     public static String generateRandomString(int length) {
         if (length < 0)
@@ -45,7 +46,11 @@ public final class RandomStringGenerator {
 
     /**
      * Generates a unique random alphanumeric string of the specified length.
-     * Retries until a value is inserted into the concurrent set.
+     *
+     * <p>This method retries until a string not previously generated during the life of the JVM is produced.
+     *
+     * @param length the number of characters the generated string will contain
+     * @return a new unique random alphanumeric string
      */
     public static String generateUniqueRandomString(int length) {
         String s;
@@ -56,8 +61,9 @@ public final class RandomStringGenerator {
     }
 
     /**
-     * Test helper: clears the uniqueness set.
-     * Only use from tests to avoid unbounded growth across suites.
+     * Clears the set of previously generated unique strings.
+     *
+     * <p>This method should only be used from tests, to avoid unbounded growth of the uniqueness set across suites.
      */
     public static void clearGeneratedForTests() {
         GENERATED.clear();

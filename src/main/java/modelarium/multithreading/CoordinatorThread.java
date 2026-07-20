@@ -31,11 +31,13 @@ public class CoordinatorThread implements Runnable {
     /** Controller that manages the request and response queues for inter-thread communication */
     private final RequestResponseController requestResponseController;
 
+    /** The clock shared with the workers to synchronise the passing of ticks */
     private final MutableClock sharedClock;
 
     /** Global agent set of the model */
     private final AgentSet predefinedGlobalAgentSet;
 
+    /** Maps each request type to the handler responsible for processing it */
     private final Map<RequestType, CoordinatorRequestHandler> requestHandlerMap = new HashMap<>();
 
     /** Flag to control the running state of the thread */
@@ -91,6 +93,12 @@ public class CoordinatorThread implements Runnable {
         requestResponseController.getRequestQueue().offer(new Request("SYSTEM", threadName, RequestType.SHUTDOWN, null));
     }
 
+    /**
+     * Creates and registers a {@link CoordinatorRequestHandler} for each request type this co-ordinator can handle.
+     *
+     * <p>All handlers share the same global agent set, which is either the predefined set given during construction
+     * or a newly created empty set.
+     */
     private void initialiseHandlers() {
         AgentSet globalAgentSet;
 
@@ -110,6 +118,13 @@ public class CoordinatorThread implements Runnable {
                 new CoordinatorRequestHandler.EnvironmentAttributesAccess(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
     }
 
+    /**
+     * Sends an error response carrying the given cause back to the requester, so that the requester does not block
+     * forever waiting for a reply.
+     *
+     * @param request the request whose handling failed
+     * @param cause the failure to report back to the requester
+     */
     private void notifyRequesterOfError(Request request, Throwable cause) {
         String requester = request.getRequester();
         if (requester == null || "SYSTEM".equals(requester))

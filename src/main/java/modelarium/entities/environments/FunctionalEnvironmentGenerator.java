@@ -5,14 +5,14 @@ import modelarium.Config;
 import java.util.function.Function;
 
 /**
- * A functional implementation of {@link EnvironmentGenerator} that delegates
- * environment creation to a user-provided function.
+ * Class for generating the environment by delegating creation logic to a user-provided function.
  *
- * <p>Useful when working across languages (e.g. from Python), or when
- * modular configuration is required without subclassing.</p>
+ * <p>This implementation of {@link EnvironmentGenerator} is useful when working across languages (e.g. from
+ * Python), or when modular configuration is required without subclassing.
  */
 public class FunctionalEnvironmentGenerator extends EnvironmentGenerator {
 
+    /** The function used to generate the environment */
     private final Function<Config, Environment> generatorFunction;
 
     /**
@@ -24,6 +24,12 @@ public class FunctionalEnvironmentGenerator extends EnvironmentGenerator {
         this.generatorFunction = generatorFunction;
     }
 
+    /**
+     * Generates the environment by applying the user-provided generator function.
+     *
+     * @param config the global model settings used to configure the environment
+     * @return a new {@link Environment} instance
+     */
     @Override
     public Environment generateEnvironment(Config config) {
         return generatorFunction.apply(config);

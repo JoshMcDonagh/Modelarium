@@ -40,12 +40,23 @@ public final class AgentSet implements Iterable<Agent> {
     /** Constructs an empty agent set without deep copying. */
     public AgentSet() {}
 
+    /**
+     * Provides each agent in this set with the factory used to create its log databases.
+     *
+     * @param databaseFactory the factory the agents' attribute sets will use to create their log databases
+     */
     @Internal
     public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory databaseFactory) {
         for (Agent agent : agentList)
             agent.setLogDatabaseFactory(databaseFactory);
     }
 
+    /**
+     * Replaces the agent already stored under the given agent's name.
+     *
+     * @param agent the agent to store in place of the existing one
+     * @param isDeepCopied whether the agent should be deep cloned before being stored
+     */
     private void addExistingAgent(Agent agent, boolean isDeepCopied) {
         int index = agentIndexMap.get(agent.name());
         if (isDeepCopied)
@@ -54,6 +65,12 @@ public final class AgentSet implements Iterable<Agent> {
             agentList.set(index, agent);
     }
 
+    /**
+     * Appends an agent not previously present in the set.
+     *
+     * @param agent the agent to add to the set
+     * @param isDeepCopied whether the agent should be deep cloned before being stored
+     */
     private void addNewAgent(Agent agent, boolean isDeepCopied) {
         int index = agentList.size();
         agentIndexMap.put(agent.name(), index);
@@ -101,6 +118,11 @@ public final class AgentSet implements Iterable<Agent> {
         }
     }
 
+    /**
+     * Adds a deep copy of an agent to the set. If the agent already exists, it will be replaced.
+     *
+     * @param agent the agent to deep clone and add
+     */
     public void addDeepCopy(Agent agent) {
         if (doesAgentExist(agent.name()))
             addExistingAgent(agent, true);
@@ -108,11 +130,22 @@ public final class AgentSet implements Iterable<Agent> {
             addNewAgent(agent, true);
     }
 
+    /**
+     * Adds a deep copy of each agent in a list to the set.
+     *
+     * @param agents list of agents to deep clone and add
+     */
     public void addDeepCopy(List<Agent> agents) {
         for (Agent agent : agents)
             addDeepCopy(agent);
     }
 
+    /**
+     * Adds a deep copy of each agent from another {@link AgentSet} that does not already exist in this set.
+     * Existing agents (by name) are not modified or replaced.
+     *
+     * @param agentSet the agent set to deep clone and add from
+     */
     public void addDeepCopy(AgentSet agentSet) {
         if (agentSet == null)
             throw new IllegalArgumentException("agentSet cannot be null");
@@ -166,6 +199,11 @@ public final class AgentSet implements Iterable<Agent> {
         return agentList.size();
     }
 
+    /**
+     * Returns whether the set contains no agents.
+     *
+     * @return true if the set is empty, false otherwise
+     */
     public boolean isEmpty() {
         return agentList.isEmpty();
     }
@@ -193,6 +231,7 @@ public final class AgentSet implements Iterable<Agent> {
      * Existing agents are replaced if names match.
      *
      * @param otherAgentSet the other agent set to pull from
+     * @param areDeepCopied whether the agents should be deep cloned before being stored
      */
     public void update(AgentSet otherAgentSet, boolean areDeepCopied) {
         if (otherAgentSet == null)
@@ -227,6 +266,7 @@ public final class AgentSet implements Iterable<Agent> {
     /**
      * Returns a randomised iterator over the agents in this set.
      *
+     * @param randomGenerator the random generator used to shuffle the agents
      * @return an iterator that yields agents in random order
      */
     public Iterator<Agent> getRandomIterator(RandomGenerator randomGenerator) {
@@ -235,6 +275,11 @@ public final class AgentSet implements Iterable<Agent> {
         return shuffledAgents.iterator();
     }
 
+    /**
+     * Returns a read-only view of this agent set.
+     *
+     * @return a new {@link ImmutableAgentSet} instance wrapping this set
+     */
     public ImmutableAgentSet getAsImmutable() {
         return new ImmutableAgentSet(this);
     }

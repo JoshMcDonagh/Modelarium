@@ -28,6 +28,7 @@ public class RequestResponseInterface {
     /** Whether the simulation is running in synchronised (coordinated) mode */
     private final boolean areProcessesSynced;
 
+    /** The maximum duration to wait for a response from the co-ordinator before timing out */
     private final Duration coordinatorTimeout;
 
     /** Shared queue for outgoing requests */
@@ -51,6 +52,14 @@ public class RequestResponseInterface {
         this.responseQueue = requestResponseController.getResponseQueue(name);
     }
 
+    /**
+     * Creates a {@link CoordinatorTimeoutException} describing the request and expected response that timed out.
+     *
+     * @param requestType the type of the request that was sent
+     * @param expectedType the type of the response that was expected
+     * @param requester the name of the requester that was waiting for the response
+     * @return a new {@link CoordinatorTimeoutException} instance
+     */
     private static CoordinatorTimeoutException makeCoordinatorTimeoutException(
             RequestType requestType,
             ResponseType expectedType,
@@ -60,6 +69,17 @@ public class RequestResponseInterface {
                 + " request from '" + requester + "'");
     }
 
+    /**
+     * Sends a request to the co-ordinator and waits for a response of the expected type addressed to the requester.
+     *
+     * <p>Responses addressed to other destinations or of unrelated types are defensively requeued. If the
+     * co-ordinator reports an error, it is rethrown as a {@link CoordinatorErrorException}; if no matching response
+     * arrives within the model's thread timeout duration, a {@link CoordinatorTimeoutException} is thrown.
+     *
+     * @param request the request to send to the co-ordinator
+     * @param expectedType the type of the response to wait for
+     * @return the payload of the matching response
+     */
     private Object sendAndAwait(Request request, ResponseType expectedType) throws InterruptedException {
         requestQueue.put(request);
 
@@ -95,6 +115,15 @@ public class RequestResponseInterface {
         }
     }
 
+    /**
+     * Notifies the co-ordinator that this thread has reached a synchronisation barrier and waits until the
+     * co-ordinator releases it.
+     *
+     * <p>If the model's threads are not synchronised, this method returns immediately.
+     *
+     * @param requestType the type of the barrier request to send
+     * @param responseType the type of the barrier response to wait for
+     */
     private void awaitBarrier(RequestType requestType, ResponseType responseType) throws InterruptedException {
         if (!areProcessesSynced)
             return;

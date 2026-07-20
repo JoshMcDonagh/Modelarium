@@ -37,22 +37,38 @@ public class Response {
         this.payload = payload;
     }
 
-    /** @return the name of the requester */
+    /**
+     * Returns the name of the requester who initiated the original request.
+     *
+     * @return the requester's name
+     */
     public String getRequester() {
         return requester;
     }
 
-    /** @return the name of the destination recipient */
+    /**
+     * Returns the intended recipient of the response.
+     *
+     * @return the destination's name
+     */
     public String getDestination() {
         return destination;
     }
 
-    /** @return the type of response being returned */
+    /**
+     * Returns the type of response being returned.
+     *
+     * @return the response's {@link ResponseType}
+     */
     public ResponseType getResponseType() {
         return responseType;
     }
 
-    /** @return the payload attached to this response, or null if not applicable */
+    /**
+     * Returns the data accompanying this response.
+     *
+     * @return the payload attached to this response, or null if not applicable
+     */
     public Object getPayload() {
         return payload;
     }

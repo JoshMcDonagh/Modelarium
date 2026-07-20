@@ -33,5 +33,9 @@ public enum ResponseType {
      */
     ENVIRONMENT_ATTRIBUTES_ACCESS,
 
+    /**
+     * Signals that the coordinator failed to handle a request, with the failure
+     * attached as the response's payload.
+     */
     ERROR
 }

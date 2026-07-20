@@ -48,22 +48,38 @@ public class Request {
         this.payload = payload;
     }
 
-    /** @return the name of the requester who sent this request */
+    /**
+     * Returns the name of the requester who sent this request.
+     *
+     * @return the requester's name
+     */
     public String getRequester() {
         return requester;
     }
 
-    /** @return the intended recipient of the request */
+    /**
+     * Returns the intended recipient of the request.
+     *
+     * @return the destination's name
+     */
     public String getDestination() {
         return destination;
     }
 
-    /** @return the type of request being made */
+    /**
+     * Returns the type of request being made.
+     *
+     * @return the request's {@link RequestType}
+     */
     public RequestType getRequestType() {
         return requestType;
     }
 
-    /** @return the request payload, or null if not required */
+    /**
+     * Returns the data accompanying this request.
+     *
+     * @return the request payload, or null if not required
+     */
     public Object getPayload() {
         return payload;
     }

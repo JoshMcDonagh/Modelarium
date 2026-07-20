@@ -8,15 +8,33 @@ import modelarium.results.immutable.ImmutableResults;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class for building up the results of a model run as it progresses.
+ *
+ * <p>This class is responsible for collecting the agent-level and environment-level results the model and its
+ * workers produce, merging per-worker agent results together, and providing a read-only view of the results once
+ * the run has completed.
+ */
 public final class MutableResults implements Results {
+
+    /** The agent-level results of the model run */
     private MutableResultsForAgents agentsResults;
+
+    /** The environment-level results of the model run */
     private MutableResultsForEnvironment environmentResults;
 
+    /** The names of all agents in the model */
     private final List<String> agentNames = new ArrayList<>();
 
+    /** Whether the agent results' underlying databases are currently connected */
     private boolean isAgentAttributeSetDataConnected = false;
+
+    /** Whether the environment results' underlying databases are currently connected */
     private boolean isEnvironmentAttributeSetDataConnected = false;
 
+    /**
+     * Constructs a new, empty results container.
+     */
     public MutableResults() {}
 
     /**
@@ -70,10 +88,20 @@ public final class MutableResults implements Results {
             isEnvironmentAttributeSetDataConnected = true;
     }
 
+    /**
+     * Returns the agent-level results of the model run.
+     *
+     * @return the run's {@link MutableResultsForAgents} instance
+     */
     public MutableResultsForAgents agents() {
         return agentsResults;
     }
 
+    /**
+     * Returns the environment-level results of the model run.
+     *
+     * @return the run's {@link MutableResultsForEnvironment} instance
+     */
     public MutableResultsForEnvironment environment() {
         return environmentResults;
     }
@@ -101,6 +129,11 @@ public final class MutableResults implements Results {
         agentsResults.mergeWith(other.agentsResults);
     }
 
+    /**
+     * Returns a read-only view of these results.
+     *
+     * @return a new {@link ImmutableResults} instance wrapping these results
+     */
     public ImmutableResults getAsImmutable() {
         return new ImmutableResults(this);
     }

@@ -37,16 +37,19 @@ public class WorkerThread implements Callable<MutableResults> {
     /** Interface to coordinate requests and responses across workers (if sync enabled) */
     private final RequestResponseController requestResponseController;
 
+    /** The model's environment, which this worker clones locally when threads are synchronised */
     private final Environment environment;
 
     /** The original set of agents this worker is responsible for simulating */
     private final AgentSet agentsInThread;
 
+    /** The clock shared with the co-ordinator and other workers, or null if threads are not synchronised */
     private final MutableClock sharedClock;
 
     /** A duplicate of the agent set to allow for safe merging during synchronisation */
     private final AgentSet updatedAgents;
 
+    /** The splittable random generator this worker and its agents can use */
     private final RandomGenerator randomGenerator;
 
     /**
@@ -55,7 +58,10 @@ public class WorkerThread implements Callable<MutableResults> {
      * @param threadName the thread's name (typically its numeric ID as a string)
      * @param config the simulation settings
      * @param requestResponseController the controller for cross-thread coordination
+     * @param environment the model's environment
      * @param agentsInThread the agents assigned to this thread
+     * @param sharedClock the clock used to synchronise the entities and cores in the model
+     * @param randomGenerator the splittable random generator this worker and its agents can use
      */
     public WorkerThread(String threadName,
                         Config config,

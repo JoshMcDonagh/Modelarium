@@ -11,16 +11,46 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.function.Predicate;
 
+/**
+ * Abstract class for handling a single type of request sent to the co-ordinator by worker threads.
+ *
+ * <p>This class provides its subclasses with access to the shared simulation state the co-ordinator manages (the
+ * global agent set, the environment, and the shared clock) along with the response queues used to reply to workers.
+ * Each subclass implements the handling of one {@link RequestType}.
+ */
 public abstract class CoordinatorRequestHandler {
+
+    /** The name of the co-ordinator thread this handler belongs to */
     private final String threadName;
+
+    /** Global simulation configuration */
     private final Config config;
+
+    /** Controller that manages the request and response queues for inter-thread communication */
     private final RequestResponseController requestResponseController;
+
+    /** The global set of all agents in the model */
     private final AgentSet globalAgentSet;
+
+    /** The environment shared across all workers */
     private final Environment environment;
+
+    /** The clock shared with the workers to synchronise the passing of ticks */
     private final MutableClock sharedClock;
 
+    /** The names of the workers currently waiting at this handler's synchronisation barrier */
     private List<String> workersWaiting = new ArrayList<>();
 
+    /**
+     * Constructs a new request handler with the shared simulation state it needs to handle requests.
+     *
+     * @param threadName the name of the co-ordinator thread this handler belongs to
+     * @param config global model settings
+     * @param requestResponseController the controller managing request/response queues
+     * @param globalAgentSet the global set of all agents in the model
+     * @param environment the environment shared across all workers
+     * @param sharedClock the clock used to synchronise the entities and cores in the model
+     */
     public CoordinatorRequestHandler(String threadName,
                                      Config config,
                                      RequestResponseController requestResponseController,
@@ -36,41 +66,75 @@ public abstract class CoordinatorRequestHandler {
         this.sharedClock = sharedClock;
     }
 
-    /** @return the coordinator thread name */
+    /**
+     * Returns the name of the co-ordinator thread this handler belongs to.
+     *
+     * @return the coordinator thread name
+     */
     protected String getThreadName() {
         return threadName;
     }
 
-    /** @return the global model settings */
+    /**
+     * Returns the model's configuration settings.
+     *
+     * @return the global model settings
+     */
     protected Config getConfig() {
         return config;
     }
 
-    /** @return the queue to which coordinator responses are written */
+    /**
+     * Returns the response queue for the named destination.
+     *
+     * @param destinationName the name of the thread or model element the responses are for
+     * @return the queue to which coordinator responses are written
+     */
     protected BlockingQueue<Response> getResponseQueue(String destinationName) {
         return requestResponseController.getResponseQueue(destinationName);
     }
 
-    /** @return the current global set of all agents */
+    /**
+     * Returns the global agent set the co-ordinator manages.
+     *
+     * @return the current global set of all agents
+     */
     protected AgentSet getGlobalAgentSet() {
         return globalAgentSet;
     }
 
-    /** @return the global environment */
+    /**
+     * Returns the environment shared across all workers.
+     *
+     * @return the global environment
+     */
     protected Environment getEnvironment() {
         return environment;
     }
 
+    /**
+     * Returns the clock shared between the co-ordinator and the workers.
+     *
+     * @return the shared {@link MutableClock} instance
+     */
     protected MutableClock getSharedClock() {
         return sharedClock;
     }
 
-    /** @return the list of workers currently waiting for a synchronisation barrier */
+    /**
+     * Returns the workers currently waiting at this handler's synchronisation barrier.
+     *
+     * @return the list of workers currently waiting for a synchronisation barrier
+     */
     protected List<String> getWorkersWaiting() {
         return workersWaiting;
     }
 
-    /** Replaces the list of waiting workers (typically to reset it) */
+    /**
+     * Replaces the list of waiting workers (typically to reset it).
+     *
+     * @param workersWaiting the new list of waiting workers
+     */
     protected void setWorkersWaiting(List<String> workersWaiting) {
         this.workersWaiting = workersWaiting;
     }
@@ -88,10 +152,27 @@ public abstract class CoordinatorRequestHandler {
      * Handles synchronisation for when all workers finish a tick.
      */
     public static class AllWorkersFinishTick extends CoordinatorRequestHandler {
+
+        /**
+         * Constructs a new handler for the {@link RequestType#ALL_WORKERS_FINISH_TICK} request type.
+         *
+         * @param threadName the name of the co-ordinator thread this handler belongs to
+         * @param settings global model settings
+         * @param requestResponseController the controller managing request/response queues
+         * @param globalAgentSet the global set of all agents in the model
+         * @param environment the environment shared across all workers
+         * @param sharedClock the clock used to synchronise the entities and cores in the model
+         */
         public AllWorkersFinishTick(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
+        /**
+         * Records the requesting worker as waiting at the end-of-tick barrier, and once every worker has arrived,
+         * triggers the passing of the shared clock's tick and releases all waiting workers.
+         *
+         * @param request the request to handle
+         */
         @Override
         public void handleRequest(Request request) throws InterruptedException {
             getWorkersWaiting().add(request.getRequester());
@@ -110,10 +191,27 @@ public abstract class CoordinatorRequestHandler {
      * Handles synchronisation for when all workers have updated the coordinator.
      */
     public static class AllWorkersUpdateCoordinator extends CoordinatorRequestHandler {
+
+        /**
+         * Constructs a new handler for the {@link RequestType#ALL_WORKERS_UPDATE_COORDINATOR} request type.
+         *
+         * @param threadName the name of the co-ordinator thread this handler belongs to
+         * @param settings global model settings
+         * @param requestResponseController the controller managing request/response queues
+         * @param globalAgentSet the global set of all agents in the model
+         * @param environment the environment shared across all workers
+         * @param sharedClock the clock used to synchronise the entities and cores in the model
+         */
         public AllWorkersUpdateCoordinator(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
+        /**
+         * Records the requesting worker as waiting at the post-update barrier, and once every worker has arrived,
+         * runs the environment for the tick and releases all waiting workers.
+         *
+         * @param request the request to handle
+         */
         @Override
         public void handleRequest(Request request) throws InterruptedException {
             getWorkersWaiting().add(request.getRequester());
@@ -133,10 +231,27 @@ public abstract class CoordinatorRequestHandler {
      * Provides access to an individual agent by name.
      */
     public static class AgentAccess extends CoordinatorRequestHandler {
+
+        /**
+         * Constructs a new handler for the {@link RequestType#AGENT_ACCESS} request type.
+         *
+         * @param threadName the name of the co-ordinator thread this handler belongs to
+         * @param settings global model settings
+         * @param requestResponseController the controller managing request/response queues
+         * @param globalAgentSet the global set of all agents in the model
+         * @param environment the environment shared across all workers
+         * @param sharedClock the clock used to synchronise the entities and cores in the model
+         */
         public AgentAccess(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
+        /**
+         * Retrieves the agent named by the request's payload from the global agent set and sends it back to the
+         * requester.
+         *
+         * @param request the request to handle
+         */
         @Override
         public void handleRequest(Request request) throws InterruptedException {
             Object payload = request.getPayload();
@@ -157,10 +272,26 @@ public abstract class CoordinatorRequestHandler {
      * Updates the global agent set with new agent states received from workers.
      */
     public static class UpdateCoordinatorAgents extends CoordinatorRequestHandler {
+
+        /**
+         * Constructs a new handler for the {@link RequestType#UPDATE_COORDINATOR_AGENTS} request type.
+         *
+         * @param threadName the name of the co-ordinator thread this handler belongs to
+         * @param settings global model settings
+         * @param requestResponseController the controller managing request/response queues
+         * @param globalAgentSet the global set of all agents in the model
+         * @param environment the environment shared across all workers
+         * @param sharedClock the clock used to synchronise the entities and cores in the model
+         */
         public UpdateCoordinatorAgents(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
+        /**
+         * Merges the agent set carried by the request's payload into the global agent set.
+         *
+         * @param request the request to handle
+         */
         @Override
         public void handleRequest(Request request) {
             Object payload = request.getPayload();
@@ -178,10 +309,27 @@ public abstract class CoordinatorRequestHandler {
      * Provides access to a filtered subset of the global agent set.
      */
     public static class FilteredAgentsAccess extends CoordinatorRequestHandler {
+
+        /**
+         * Constructs a new handler for the {@link RequestType#FILTERED_AGENTS_ACCESS} request type.
+         *
+         * @param threadName the name of the co-ordinator thread this handler belongs to
+         * @param settings global model settings
+         * @param requestResponseController the controller managing request/response queues
+         * @param globalAgentSet the global set of all agents in the model
+         * @param environment the environment shared across all workers
+         * @param sharedClock the clock used to synchronise the entities and cores in the model
+         */
         public FilteredAgentsAccess(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
+        /**
+         * Applies the predicate carried by the request's payload to the global agent set and sends the matching
+         * agents back to the requester.
+         *
+         * @param request the request to handle
+         */
         @SuppressWarnings("unchecked")
         @Override
         public void handleRequest(Request request) throws InterruptedException {
@@ -205,10 +353,26 @@ public abstract class CoordinatorRequestHandler {
      * Provides access to the current environment state.
      */
     public static class EnvironmentAttributesAccess extends CoordinatorRequestHandler {
+
+        /**
+         * Constructs a new handler for the {@link RequestType#ENVIRONMENT_ATTRIBUTES_ACCESS} request type.
+         *
+         * @param threadName the name of the co-ordinator thread this handler belongs to
+         * @param settings global model settings
+         * @param requestResponseController the controller managing request/response queues
+         * @param globalAgentSet the global set of all agents in the model
+         * @param environment the environment shared across all workers
+         * @param sharedClock the clock used to synchronise the entities and cores in the model
+         */
         public EnvironmentAttributesAccess(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
+        /**
+         * Sends the current environment back to the requester.
+         *
+         * @param request the request to handle
+         */
         @Override
         public void handleRequest(Request request) throws InterruptedException {
             getResponseQueue(request.getRequester()).put(new Response(
