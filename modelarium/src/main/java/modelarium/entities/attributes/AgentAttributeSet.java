@@ -19,12 +19,11 @@ public final class AgentAttributeSet extends AttributeSet<AgentSimulationContext
     /**
      * Constructs a new agent attribute set with the specified owner, name and attributes.
      *
-     * @param ownerName the name of the agent that owns the attribute set
-     * @param attributeSetName the name of the attribute set, used to identify it within its owning agent
+     * @param name the name of the attribute set, used to identify it within its owning agent
      * @param attributes the attributes the set will contain, in the order they will be run
      */
-    public AgentAttributeSet(String ownerName, String attributeSetName, List<Attribute> attributes) {
-        super(ownerName, attributeSetName, attributes);
+    public AgentAttributeSet(String name, List<Attribute> attributes) {
+        super(name, attributes);
     }
 
     /**

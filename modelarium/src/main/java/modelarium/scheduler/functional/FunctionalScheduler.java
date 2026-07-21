@@ -38,7 +38,7 @@ public class FunctionalScheduler implements Scheduler {
      * @param clock the model's clock, giving the current tick
      * @param environment a read-only view of the worker's environment
      * @param agentSet the set of agents to act upon during this tick
-     * @param randomGenerator the random generator the tick logic can use
+     * @param random the random generator the tick logic can use
      */
     @Override
     public void runTick(
@@ -46,8 +46,8 @@ public class FunctionalScheduler implements Scheduler {
             ImmutableClock clock,
             ImmutableEnvironment environment,
             AgentSet agentSet,
-            RandomGenerator randomGenerator
+            RandomGenerator random
     ) {
-        tickFunction.runTick(threadName, clock, environment, agentSet, randomGenerator);
+        tickFunction.runTick(threadName, clock, environment, agentSet, random);
     }
 }

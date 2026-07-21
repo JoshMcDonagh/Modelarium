@@ -78,7 +78,6 @@ class LoggingTestHelpers {
             Attribute... attributes
     ) {
         AgentAttributeSet attributeSet = new AgentAttributeSet(
-                ownerName,
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(attributes)
         );

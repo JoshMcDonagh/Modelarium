@@ -21,6 +21,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.random.RandomGenerator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -103,10 +104,10 @@ public class SyncedModelIntegrationTest {
             private int index = 0;
 
             @Override
-            protected Agent generateAgent(Config config) {
+            protected Agent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + index++;
                 Hunger hunger = new Hunger();
-                AgentAttributeSet foodSet = new AgentAttributeSet(name, "food",
+                AgentAttributeSet foodSet = new AgentAttributeSet("food",
                         (List<Attribute>) (List<?>) List.of(hunger));
                 return new Agent(name, List.of(foodSet));
             }
@@ -114,11 +115,11 @@ public class SyncedModelIntegrationTest {
 
         EnvironmentGenerator envGen = new EnvironmentGenerator() {
             @Override
-            public Environment generateEnvironment(Config config) {
+            public Environment generateEnvironment(Config config, RandomGenerator random) {
                 EnvTick envTick = new EnvTick();
-                EnvironmentAttributeSet timingSet = new EnvironmentAttributeSet("env", "timing",
+                EnvironmentAttributeSet timingSet = new EnvironmentAttributeSet("timing",
                         (List<Attribute>) (List<?>) List.of(envTick));
-                return new Environment("env", List.of(timingSet));
+                return new Environment(List.of(timingSet));
             }
         };
 
@@ -172,11 +173,11 @@ public class SyncedModelIntegrationTest {
                 .threadCount(1)
                 .agentGenerator(new DefaultAgentGenerator() {
                     @Override
-                    protected Agent generateAgent(Config c) {
+                    protected Agent generateAgent(Config c, RandomGenerator random) {
                         return new Agent("a", List.of());
                     }
                 })
-                .environmentGenerator(new FunctionalEnvironmentGenerator(c -> new Environment("e", List.of())))
+                .environmentGenerator(new FunctionalEnvironmentGenerator((c, random) -> new Environment(List.of())))
                 .build();
 
         Model model = new Model(config);

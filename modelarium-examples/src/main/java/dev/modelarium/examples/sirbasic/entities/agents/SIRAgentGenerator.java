@@ -1,0 +1,63 @@
+package dev.modelarium.examples.sirbasic.entities.agents;
+
+import dev.modelarium.examples.sirbasic.config.SettingsLoader;
+import dev.modelarium.examples.sirbasic.config.SIRSettings;
+import dev.modelarium.examples.sirbasic.entities.agents.attributes.location.Coordinates;
+import dev.modelarium.examples.sirbasic.entities.agents.attributes.location.LocationProperty;
+import dev.modelarium.examples.sirbasic.entities.agents.attributes.sir.SIRState;
+import dev.modelarium.examples.sirbasic.entities.agents.attributes.sir.SIRStateProperty;
+import modelarium.Config;
+import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.generators.DefaultAgentGenerator;
+import modelarium.entities.attributes.AgentAttributeSet;
+import modelarium.entities.attributes.Attribute;
+
+import java.util.ArrayList;
+import java.util.random.RandomGenerator;
+
+public class SIRAgentGenerator extends DefaultAgentGenerator {
+    private static int agentCount = 0;
+    private static int susceptibleAgentCount = 0;
+    private static int infectiousAgentCount = 0;
+    private static int recoveredAgentCount = 0;
+
+    private final SIRSettings sirSettings;
+
+    public SIRAgentGenerator() {
+        sirSettings = SettingsLoader.loadSIRConfig("sir-config.json");
+    }
+
+    @Override
+    protected Agent generateAgent(Config config, RandomGenerator random) {
+        ArrayList<AgentAttributeSet> agentAttributeSets = new ArrayList<>();
+
+        LocationProperty locationProperty = new LocationProperty();
+        ArrayList<Attribute> agentLocationAttributes = new ArrayList<>();
+        agentLocationAttributes.add(locationProperty);
+        int x = random.nextInt(0, sirSettings.environment().area().width());
+        int y = random.nextInt(0, sirSettings.environment().area().height());
+        locationProperty.set(new Coordinates(x, y));
+        agentAttributeSets.add(new AgentAttributeSet("location", agentLocationAttributes));
+
+        SIRStateProperty sirStateProperty = new SIRStateProperty();
+        ArrayList<Attribute> agentSIRAttributes = new ArrayList<>();
+        agentSIRAttributes.add(sirStateProperty);
+        if (susceptibleAgentCount < sirSettings.initialStates().S()) {
+            sirStateProperty.set(SIRState.SUSCEPTIBLE);
+            susceptibleAgentCount++;
+        } else if (infectiousAgentCount < sirSettings.initialStates().I()) {
+            sirStateProperty.set(SIRState.INFECTIOUS);
+            infectiousAgentCount++;
+        } else if (recoveredAgentCount < sirSettings.initialStates().R()) {
+            sirStateProperty.set(SIRState.RECOVERED);
+            recoveredAgentCount++;
+        } else {
+            throw new IllegalStateException("Agent cannot be generated - all initial SIR states have already been assigned.");
+        }
+        agentAttributeSets.add(new AgentAttributeSet("sir", agentSIRAttributes));
+
+        Agent newAgent = new Agent("agent_" + agentCount, agentAttributeSets);
+        agentCount++;
+        return newAgent;
+    }
+}

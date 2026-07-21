@@ -21,6 +21,7 @@ import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.EnvironmentGenerator;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import java.util.SplittableRandom;
+import java.util.random.RandomGenerator;
 
 class AgentTestHelpers {
     private AgentTestHelpers() {}
@@ -55,7 +56,6 @@ class AgentTestHelpers {
     @SuppressWarnings("unchecked")
     static AgentAttributeSet agentAttributeSet(String ownerName, String attributeSetName, AgentProperty<?>... properties) {
         return new AgentAttributeSet(
-                ownerName,
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(properties)
         );
@@ -100,7 +100,6 @@ class AgentTestHelpers {
     @SuppressWarnings("unchecked")
     static AgentAttributeSet agentAttributeSetFromAttributes(String ownerName, String attributeSetName, Attribute... attributes) {
         return new AgentAttributeSet(
-                ownerName,
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(attributes)
         );
@@ -111,7 +110,7 @@ class AgentTestHelpers {
             private int index = 0;
 
             @Override
-            protected Agent generateAgent(Config config) {
+            protected Agent generateAgent(Config config, RandomGenerator random) {
                 return new Agent("agent_" + index++, List.of());
             }
         };
@@ -120,7 +119,7 @@ class AgentTestHelpers {
     private static EnvironmentGenerator environmentGenerator() {
         return new EnvironmentGenerator() {
             @Override
-            public Environment generateEnvironment(Config config) {
+            public Environment generateEnvironment(Config config, RandomGenerator random) {
                 return new Environment("env", List.of());
             }
         };

@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.random.RandomGenerator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -69,9 +70,9 @@ public class WorkerFailureIntegrationTest {
             private int index = 0;
 
             @Override
-            protected Agent generateAgent(Config config) {
+            protected Agent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + index++;
-                AgentAttributeSet set = new AgentAttributeSet(name, "danger",
+                AgentAttributeSet set = new AgentAttributeSet("danger",
                         (List<Attribute>) (List<?>) List.of(new Bomb()));
                 return new Agent(name, List.of(set));
             }
@@ -83,7 +84,7 @@ public class WorkerFailureIntegrationTest {
                 .threadCount(threads)
                 .areThreadsSynced(synced)
                 .agentGenerator(agentGenerator)
-                .environmentGenerator(new FunctionalEnvironmentGenerator(c -> new Environment("env", List.of())))
+                .environmentGenerator(new FunctionalEnvironmentGenerator((c, random) -> new Environment("env", List.of())))
                 .scheduler(new InOrderScheduler())
                 .threadTimeout(Duration.ofSeconds(5))
                 .build();

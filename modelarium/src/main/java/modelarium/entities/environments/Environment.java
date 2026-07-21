@@ -36,6 +36,15 @@ public final class Environment extends Entity<EnvironmentSimulationContext, Envi
     }
 
     /**
+     * Constructs a new environment with an attribute sets.
+     *
+     * @param attributeSets the attribute sets the environment will own
+     */
+    public Environment(List<EnvironmentAttributeSet> attributeSets) {
+        super("environment", attributeSets);
+    }
+
+    /**
      * Creates the {@link EnvironmentSimulationContext} instance this environment will use.
      *
      * @param agentSet the local agent set the context will provide access to

@@ -72,12 +72,12 @@ public final class CrossCoreInteractionExample {
                 .tickCount(tickCount)
                 .threadCount(2)
                 .areThreadsSynced(true)
-                .agentGenerator(new FunctionalDefaultAgentGenerator(cfg -> {
+                .agentGenerator(new FunctionalDefaultAgentGenerator((cfg, random) -> {
                     int index = nextAgentIndex.getAndIncrement();
                     String partnerName = "agent_" + ((index + 1) % cfg.populationSize());
                     return makeAgent("agent_" + index, index, partnerName);
                 }))
-                .environmentGenerator(new FunctionalEnvironmentGenerator(cfg -> makeEnvironment()))
+                .environmentGenerator(new FunctionalEnvironmentGenerator((cfg, random) -> makeEnvironment()))
                 .scheduler(new InOrderScheduler())
                 .seed(seed)
                 .build();

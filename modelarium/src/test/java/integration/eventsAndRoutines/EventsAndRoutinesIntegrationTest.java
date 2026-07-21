@@ -22,6 +22,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.random.RandomGenerator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -223,11 +224,11 @@ public class EventsAndRoutinesIntegrationTest {
             private int index = 0;
 
             @Override
-            protected Agent generateAgent(Config config) {
+            protected Agent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + index++;
                 StepCount stepCount = new StepCount();
                 Energy energy = new Energy();
-                AgentAttributeSet activity = new AgentAttributeSet(name, "activity",
+                AgentAttributeSet activity = new AgentAttributeSet("activity",
                         (List<Attribute>) (List<?>) List.of(
                                 stepCount,
                                 new PulseEvent(stepCount),
@@ -239,16 +240,16 @@ public class EventsAndRoutinesIntegrationTest {
 
         EnvironmentGenerator environmentGenerator = new EnvironmentGenerator() {
             @Override
-            public Environment generateEnvironment(Config config) {
+            public Environment generateEnvironment(Config config, RandomGenerator random) {
                 Temperature temperature = new Temperature();
                 Airflow airflow = new Airflow();
-                EnvironmentAttributeSet climate = new EnvironmentAttributeSet("env", "climate",
+                EnvironmentAttributeSet climate = new EnvironmentAttributeSet("climate",
                         (List<Attribute>) (List<?>) List.of(
                                 temperature,
                                 new HeatAlarm(temperature),
                                 new VentilateRoutine(airflow),
                                 airflow));
-                return new Environment("env", List.of(climate));
+                return new Environment(List.of(climate));
             }
         };
 

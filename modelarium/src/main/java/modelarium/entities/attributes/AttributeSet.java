@@ -28,7 +28,7 @@ import java.util.Map;
 public sealed abstract class AttributeSet<SC extends SimulationContext, C extends Context> permits AgentAttributeSet, EnvironmentAttributeSet {
 
     /** The name of the entity that owns this attribute set */
-    private final String ownerName;
+    private String ownerName = null;
 
     /** The name of this attribute set, used to identify it within its owning entity */
     private final String name;
@@ -57,14 +57,12 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
     /**
      * Constructs a new attribute set with the specified owner, name and attributes.
      *
-     * @param ownerName the name of the entity that owns the attribute set
-     * @param attributeSetName the name of the attribute set, used to identify it within its owning entity
+     * @param name the name of the attribute set, used to identify it within its owning entity
      * @param attributeList the attributes the set will contain, in the order they will be run
      */
     @SuppressWarnings("unchecked")
-    AttributeSet(String ownerName, String attributeSetName, List<Attribute> attributeList) {
-        this.ownerName = ownerName;
-        this.name = attributeSetName;
+    AttributeSet(String name, List<Attribute> attributeList) {
+        this.name = name;
 
         for (int i = 0; i < attributeList.size(); i++) {
             AttributeBase<SC> attribute = (AttributeBase<SC>) attributeList.get(i);
@@ -80,6 +78,13 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
             else
                 throw new IllegalArgumentException("'" + attribute.name() + "' is not a valid attribute type");
         }
+    }
+
+    @Internal
+    public void setOwnerName(String ownerName) {
+        if (ownerName == null)
+            return;
+        this.ownerName = ownerName;
     }
 
     /**

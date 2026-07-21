@@ -73,14 +73,14 @@ class ResultsTestHelpers {
         List<Attribute> properties = Arrays.stream(propertyNames)
                 .map(propertyName -> (Attribute) new AgentCounterProperty(propertyName))
                 .toList();
-        return new AgentAttributeSet(ownerName, attributeSetName, properties);
+        return new AgentAttributeSet(attributeSetName, properties);
     }
 
     static EnvironmentAttributeSet environmentAttributeSet(String ownerName, String attributeSetName, String... propertyNames) {
         List<Attribute> properties = Arrays.stream(propertyNames)
                 .map(propertyName -> (Attribute) new EnvironmentTickProperty(propertyName))
                 .toList();
-        return new EnvironmentAttributeSet(ownerName, attributeSetName, properties);
+        return new EnvironmentAttributeSet(attributeSetName, properties);
     }
 
     static Agent agentWithMemoryLogs(String agentName, AgentAttributeSet... attributeSets) {

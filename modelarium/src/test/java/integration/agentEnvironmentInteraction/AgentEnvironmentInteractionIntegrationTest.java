@@ -22,6 +22,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.random.RandomGenerator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -117,10 +118,10 @@ public class AgentEnvironmentInteractionIntegrationTest {
             private int idx = 0;
 
             @Override
-            protected Agent generateAgent(Config config) {
+            protected Agent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + idx++;
                 ObservedTemperature obs = new ObservedTemperature();
-                AgentAttributeSet set = new AgentAttributeSet(name, "sensors",
+                AgentAttributeSet set = new AgentAttributeSet("sensors",
                         (List<Attribute>) (List<?>) List.of(obs));
                 return new Agent(name, List.of(set));
             }
@@ -128,11 +129,11 @@ public class AgentEnvironmentInteractionIntegrationTest {
 
         EnvironmentGenerator envGen = new EnvironmentGenerator() {
             @Override
-            public Environment generateEnvironment(Config config) {
+            public Environment generateEnvironment(Config config, RandomGenerator random) {
                 Temperature temp = new Temperature();
-                EnvironmentAttributeSet weatherSet = new EnvironmentAttributeSet("env", "weather",
+                EnvironmentAttributeSet weatherSet = new EnvironmentAttributeSet("weather",
                         (List<Attribute>) (List<?>) List.of(temp));
-                return new Environment("env", List.of(weatherSet));
+                return new Environment(List.of(weatherSet));
             }
         };
 

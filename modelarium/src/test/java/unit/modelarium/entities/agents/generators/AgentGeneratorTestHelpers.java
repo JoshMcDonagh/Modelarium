@@ -8,6 +8,7 @@ import modelarium.entities.environments.EnvironmentGenerator;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.random.RandomGenerator;
 
 class AgentGeneratorTestHelpers {
     private AgentGeneratorTestHelpers() {}
@@ -21,7 +22,7 @@ class AgentGeneratorTestHelpers {
     static DefaultAgentGenerator agentGenerator() {
         return new DefaultAgentGenerator() {
             @Override
-            protected Agent generateAgent(Config config) {
+            protected Agent generateAgent(Config config, RandomGenerator random) {
                 return uniqueAgent();
             }
         };
@@ -30,7 +31,7 @@ class AgentGeneratorTestHelpers {
     static EnvironmentGenerator environmentGenerator() {
         return new EnvironmentGenerator() {
             @Override
-            public Environment generateEnvironment(Config config) {
+            public Environment generateEnvironment(Config config, RandomGenerator random) {
                 return new Environment("env", List.of());
             }
         };

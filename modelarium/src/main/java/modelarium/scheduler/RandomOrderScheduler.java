@@ -23,7 +23,7 @@ public class RandomOrderScheduler implements Scheduler {
      * @param clock the model's clock, giving the current tick
      * @param environment a read-only view of the worker's environment
      * @param agentSet the set of agents to run for this tick
-     * @param randomGenerator the random generator used to shuffle the agents
+     * @param random the random generator used to shuffle the agents
      */
     @Override
     public void runTick(
@@ -31,9 +31,9 @@ public class RandomOrderScheduler implements Scheduler {
             ImmutableClock clock,
             ImmutableEnvironment environment,
             AgentSet agentSet,
-            RandomGenerator randomGenerator
+            RandomGenerator random
     ) {
-        Iterator<Agent> randomIterator = agentSet.getRandomIterator(randomGenerator);
+        Iterator<Agent> randomIterator = agentSet.getRandomIterator(random);
         while (randomIterator.hasNext())
             randomIterator.next().run();
     }

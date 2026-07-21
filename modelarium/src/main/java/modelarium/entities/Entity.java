@@ -59,6 +59,7 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
         for (int i = 0; i < this.attributeSetList.size(); i++) {
             AS attributeSet = this.attributeSetList.get(i);
             this.attributeSetIndexMap.put(attributeSet.name(), i);
+            attributeSet.setOwnerName(name);
         }
     }
 

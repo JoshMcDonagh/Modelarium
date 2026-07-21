@@ -13,7 +13,7 @@ public class ImmutableEnvironmentTest {
         Environment environment = environmentWithTickCounter();
         ImmutableEnvironment immutableEnvironment = new ImmutableEnvironment(environment);
 
-        assertEquals("env", immutableEnvironment.name());
+        assertEquals("environment", immutableEnvironment.name());
     }
 
     @Test

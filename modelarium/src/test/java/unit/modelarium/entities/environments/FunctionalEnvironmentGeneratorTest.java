@@ -6,6 +6,7 @@ import modelarium.entities.environments.FunctionalEnvironmentGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.SplittableRandom;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -15,15 +16,15 @@ public class FunctionalEnvironmentGeneratorTest {
     @Test
     public void testGenerateEnvironment() {
         Environment environment = new Environment("testEnv", List.of());
-        FunctionalEnvironmentGenerator generator = new FunctionalEnvironmentGenerator(config -> environment);
+        FunctionalEnvironmentGenerator generator = new FunctionalEnvironmentGenerator((config, random) -> environment);
         Config config = syncedConfig(1, 1, 1);
 
-        assertSame(environment, generator.generateEnvironment(config));
+        assertSame(environment, generator.generateEnvironment(config, new SplittableRandom()));
     }
 
     @Test
     public void testGenerateEnvironment_PassesConfigToFunction() {
-        FunctionalEnvironmentGenerator generator = new FunctionalEnvironmentGenerator(config -> {
+        FunctionalEnvironmentGenerator generator = new FunctionalEnvironmentGenerator((config, random) -> {
             assertEquals(42, config.populationSize());
             return emptyEnvironment();
         });
@@ -36,6 +37,6 @@ public class FunctionalEnvironmentGeneratorTest {
                 .environmentGenerator(environmentGenerator())
                 .build();
 
-        generator.generateEnvironment(config);
+        generator.generateEnvironment(config, new SplittableRandom());
     }
 }

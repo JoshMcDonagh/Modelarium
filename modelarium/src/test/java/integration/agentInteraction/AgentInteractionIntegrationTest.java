@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.random.RandomGenerator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -158,7 +159,7 @@ public class AgentInteractionIntegrationTest {
             private int index = 0;
 
             @Override
-            protected Agent generateAgent(Config config) {
+            protected Agent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + index++;
                 return new Agent(name, factory.attributeSetsFor(name));
             }
@@ -170,7 +171,7 @@ public class AgentInteractionIntegrationTest {
                 .threadCount(threads)
                 .areThreadsSynced(synced)
                 .agentGenerator(agentGenerator)
-                .environmentGenerator(new FunctionalEnvironmentGenerator(c -> new Environment("env", List.of())))
+                .environmentGenerator(new FunctionalEnvironmentGenerator((c, random) -> new Environment(List.of())))
                 .scheduler(new InOrderScheduler())
                 .build();
     }
@@ -183,9 +184,9 @@ public class AgentInteractionIntegrationTest {
     @SuppressWarnings("unchecked")
     public void testSyncedAgentReadsAnotherCoresAgentProperty() {
         Config config = config(2, 2, true, name -> List.of(
-                new AgentAttributeSet(name, "value",
+                new AgentAttributeSet("value",
                         (List<Attribute>) (List<?>) List.of(new ConstantValue())),
-                new AgentAttributeSet(name, "observation",
+                new AgentAttributeSet("observation",
                         (List<Attribute>) (List<?>) List.of(new Observer()))
         ));
 
@@ -213,7 +214,7 @@ public class AgentInteractionIntegrationTest {
     public void testSyncedFilteredAgentsSeeWholePopulation() {
         int population = 6;
         Config config = config(population, 3, true, name -> List.of(
-                new AgentAttributeSet(name, "census",
+                new AgentAttributeSet("census",
                         (List<Attribute>) (List<?>) List.of(new PopulationCounter()))
         ));
 
@@ -236,7 +237,7 @@ public class AgentInteractionIntegrationTest {
     @SuppressWarnings("unchecked")
     public void testUnsyncedFilteredAgentsAreLocalOnly() {
         Config config = config(4, 2, false, name -> List.of(
-                new AgentAttributeSet(name, "census",
+                new AgentAttributeSet("census",
                         (List<Attribute>) (List<?>) List.of(new PopulationCounter()))
         ));
 
@@ -257,7 +258,7 @@ public class AgentInteractionIntegrationTest {
     @SuppressWarnings("unchecked")
     public void testUnsyncedMissingAgentFailsRun() {
         Config config = config(2, 2, false, name -> List.of(
-                new AgentAttributeSet(name, "lookup",
+                new AgentAttributeSet("lookup",
                         (List<Attribute>) (List<?>) List.of(new Reader("ghost")))
         ));
 
@@ -280,7 +281,7 @@ public class AgentInteractionIntegrationTest {
         // A single worker keeps this deterministic: the failing worker is the only
         // worker, so nothing is left waiting at the tick barrier.
         Config config = config(1, 1, true, name -> List.of(
-                new AgentAttributeSet(name, "lookup",
+                new AgentAttributeSet("lookup",
                         (List<Attribute>) (List<?>) List.of(new Reader("ghost")))
         ));
 

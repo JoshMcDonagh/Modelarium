@@ -2,6 +2,8 @@ package modelarium.entities.environments;
 
 import modelarium.Config;
 
+import java.util.random.RandomGenerator;
+
 /**
  * Abstract base class responsible for generating the simulation {@link Environment}.
  *
@@ -16,7 +18,8 @@ public abstract class EnvironmentGenerator {
      * Creates and returns a fully initialised {@link Environment} for the simulation.
      *
      * @param config the global model settings used to configure the environment
+     * @param random the random generator the environment generator can use for constructing an environment
      * @return a new {@link Environment} instance
      */
-    public abstract Environment generateEnvironment(Config config);
+    public abstract Environment generateEnvironment(Config config, RandomGenerator random);
 }

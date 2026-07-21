@@ -64,7 +64,7 @@ class ContextTestHelpers {
     }
 
     static Environment emptyEnvironment() {
-        return new Environment("env", List.of());
+        return new Environment(List.of());
     }
 
     static ContextCache contextCache() {
@@ -84,7 +84,7 @@ class ContextTestHelpers {
             private int index = 0;
 
             @Override
-            protected Agent generateAgent(Config config) {
+            protected Agent generateAgent(Config config, RandomGenerator random) {
                 return emptyAgent("agent_" + index++);
             }
         };
@@ -93,7 +93,7 @@ class ContextTestHelpers {
     private static EnvironmentGenerator environmentGenerator() {
         return new EnvironmentGenerator() {
             @Override
-            public Environment generateEnvironment(Config config) {
+            public Environment generateEnvironment(Config config, RandomGenerator random) {
                 return emptyEnvironment();
             }
         };
@@ -170,7 +170,6 @@ class ContextTestHelpers {
     @SuppressWarnings("unchecked")
     static AgentAttributeSet singlePropertyAgentSet(String ownerName, String attributeSetName, String propertyName) {
         return new AgentAttributeSet(
-                ownerName,
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(new AgentCounterProperty(propertyName))
         );
@@ -179,7 +178,6 @@ class ContextTestHelpers {
     @SuppressWarnings("unchecked")
     static EnvironmentAttributeSet singlePropertyEnvironmentSet(String ownerName, String attributeSetName, String propertyName) {
         return new EnvironmentAttributeSet(
-                ownerName,
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(new EnvironmentTickProperty(propertyName))
         );

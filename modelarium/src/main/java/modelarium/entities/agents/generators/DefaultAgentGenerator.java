@@ -6,6 +6,7 @@ import modelarium.entities.agents.AgentSet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.random.RandomGenerator;
 
 /**
  * Abstract base class for generating agent populations in a simulation.
@@ -16,7 +17,7 @@ import java.util.List;
  *     <li>Distribute agents evenly across multiple processing cores</li>
  * </ul>
  *
- * <p>Concrete subclasses must implement the {@link #generateAgent(Config)} method,
+ * <p>Concrete subclasses must implement the {@link #generateAgent(Config, RandomGenerator)} method,
  * which defines how individual agents are constructed.
  */
 public abstract class DefaultAgentGenerator implements AgentGenerator {
@@ -25,14 +26,16 @@ public abstract class DefaultAgentGenerator implements AgentGenerator {
      * Generates a complete {@link AgentSet} based on the number of agents specified in the model settings.
      *
      * @param config the simulation configuration containing the agent count
+     * @param random the random generator the agent generator can use for constructing agents
      * @return an {@link AgentSet} containing all generated agents
      */
-    public AgentSet generateAgents(Config config) {
+    @Override
+    public AgentSet generateAgents(Config config, RandomGenerator random) {
         AgentSet agents = new AgentSet();
         int numOfAgents = config.populationSize();
 
         for (int i = 0; i < numOfAgents; i++)
-            agents.add(generateAgent(config));
+            agents.add(generateAgent(config, random));
 
         return agents;
     }
@@ -42,10 +45,11 @@ public abstract class DefaultAgentGenerator implements AgentGenerator {
      * This ensures an even workload split for multithreaded simulations.
      *
      * @param config the simulation settings containing agent and core counts
+     * @param random the random generator the agent generator can use for constructing agents
      * @return a list of {@link AgentSet} objects, one per core
      */
-    public List<AgentSet> getAgentsForEachCore(Config config) {
-        AgentSet agents = generateAgents(config);
+    public List<AgentSet> getAgentsForEachCore(Config config, RandomGenerator random) {
+        AgentSet agents = generateAgents(config, random);
         int numOfCores = config.threadCount();
 
         // If no cores are defined, return an empty list
@@ -81,5 +85,5 @@ public abstract class DefaultAgentGenerator implements AgentGenerator {
      * @param config the model settings passed to the agent during creation
      * @return a new {@link Agent} instance
      */
-    protected abstract Agent generateAgent(Config config);
+    protected abstract Agent generateAgent(Config config, RandomGenerator random);
 }

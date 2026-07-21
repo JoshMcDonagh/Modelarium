@@ -34,10 +34,8 @@ class ImmutableAttributeSetTestHelpers {
     ) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         return attributeSetClass.getConstructor(
                 String.class,
-                String.class,
                 List.class
         ).newInstance(
-                "TestOwner",
                 attributeSetName,
                 attributes
         );

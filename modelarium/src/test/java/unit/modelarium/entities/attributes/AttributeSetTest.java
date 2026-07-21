@@ -115,7 +115,6 @@ public class AttributeSetTest {
                 "Routine_0", AttributeAccessLevel.PUBLIC, (context) -> {});
 
         return new EnvironmentAttributeSet(
-                "TestOwner",
                 "testAttributeSetName",
                 (List<Attribute>) (List<?>) List.of(event0, event1, property0, routine0)
         );

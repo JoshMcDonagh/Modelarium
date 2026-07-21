@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.random.RandomGenerator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -74,9 +75,9 @@ public class DeterminismTest {
             private int idx = 0;
 
             @Override
-            protected Agent generateAgent(Config config) {
+            protected Agent generateAgent(Config config, RandomGenerator random) {
                 String name = String.format("agent_%02d", idx++);
-                AgentAttributeSet set = new AgentAttributeSet(name, "state",
+                AgentAttributeSet set = new AgentAttributeSet("state",
                         (List<Attribute>) (List<?>) List.of(new RandomWalk()));
                 return new Agent(name, List.of(set));
             }
@@ -88,7 +89,7 @@ public class DeterminismTest {
                 .threadCount(THREADS)
                 .areThreadsSynced(areThreadsSynced)
                 .agentGenerator(agentGen)
-                .environmentGenerator(new FunctionalEnvironmentGenerator(c -> new Environment("env", List.of())))
+                .environmentGenerator(new FunctionalEnvironmentGenerator((c, random) -> new Environment(List.of())))
                 .scheduler(new RandomOrderScheduler())
                 .seed(seed)
                 .build();

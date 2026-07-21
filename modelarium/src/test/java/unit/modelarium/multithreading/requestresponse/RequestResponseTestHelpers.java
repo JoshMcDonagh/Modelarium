@@ -8,6 +8,7 @@ import modelarium.entities.environments.EnvironmentGenerator;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 
 import java.util.List;
+import java.util.random.RandomGenerator;
 
 class RequestResponseTestHelpers {
     private RequestResponseTestHelpers() {}
@@ -17,7 +18,7 @@ class RequestResponseTestHelpers {
             private int index = 0;
 
             @Override
-            protected Agent generateAgent(Config config) {
+            protected Agent generateAgent(Config config, RandomGenerator random) {
                 return new Agent("agent_" + index++, List.of());
             }
         };
@@ -26,7 +27,7 @@ class RequestResponseTestHelpers {
     private static EnvironmentGenerator environmentGenerator() {
         return new EnvironmentGenerator() {
             @Override
-            public Environment generateEnvironment(Config config) {
+            public Environment generateEnvironment(Config config, RandomGenerator random) {
                 return new Environment("env", List.of());
             }
         };

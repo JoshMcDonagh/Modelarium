@@ -7,6 +7,7 @@ import modelarium.entities.agents.generators.FunctionalDefaultAgentGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.SplittableRandom;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static unit.modelarium.entities.agents.generators.AgentGeneratorTestHelpers.*;
@@ -17,7 +18,7 @@ public class AgentGeneratorTest {
         Config config = syncedConfig(10, 5, 2);
         DefaultAgentGenerator generator = agentGenerator();
 
-        AgentSet agentSet = generator.generateAgents(config);
+        AgentSet agentSet = generator.generateAgents(config, new SplittableRandom());
 
         assertEquals(10, agentSet.size());
     }
@@ -27,7 +28,7 @@ public class AgentGeneratorTest {
         Config config = syncedConfig(9, 5, 3);
         DefaultAgentGenerator generator = agentGenerator();
 
-        List<AgentSet> agentSetsForEachCore = generator.getAgentsForEachCore(config);
+        List<AgentSet> agentSetsForEachCore = generator.getAgentsForEachCore(config, new SplittableRandom());
 
         assertEquals(3, agentSetsForEachCore.size());
         assertEquals(3, agentSetsForEachCore.get(0).size());
@@ -40,7 +41,7 @@ public class AgentGeneratorTest {
         Config config = syncedConfig(10, 5, 3);
         DefaultAgentGenerator generator = agentGenerator();
 
-        List<AgentSet> agentSetsForEachCore = generator.getAgentsForEachCore(config);
+        List<AgentSet> agentSetsForEachCore = generator.getAgentsForEachCore(config, new SplittableRandom());
 
         int totalAgentCount = agentSetsForEachCore.stream().mapToInt(AgentSet::size).sum();
 
@@ -52,7 +53,7 @@ public class AgentGeneratorTest {
         Config config = syncedConfig(5, 5, 1);
         DefaultAgentGenerator generator = agentGenerator();
 
-        List<AgentSet> agentSetsForEachCore = generator.getAgentsForEachCore(config);
+        List<AgentSet> agentSetsForEachCore = generator.getAgentsForEachCore(config, new SplittableRandom());
 
         assertEquals(1, agentSetsForEachCore.size());
         assertEquals(5, agentSetsForEachCore.get(0).size());
@@ -61,11 +62,11 @@ public class AgentGeneratorTest {
     @Test
     public void testFunctionalDefaultAgentGenerator_DelegatesToFunction() {
         FunctionalDefaultAgentGenerator generator = new FunctionalDefaultAgentGenerator(
-                config -> uniqueAgent()
+                (config, random) -> uniqueAgent()
         );
         Config config = syncedConfig(3, 5, 1);
 
-        AgentSet agentSet = generator.generateAgents(config);
+        AgentSet agentSet = generator.generateAgents(config, new SplittableRandom());
 
         assertEquals(3, agentSet.size());
     }

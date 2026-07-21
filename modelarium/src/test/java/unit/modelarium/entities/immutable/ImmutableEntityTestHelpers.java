@@ -68,7 +68,6 @@ class ImmutableEntityTestHelpers {
     @SuppressWarnings("unchecked")
     static AgentAttributeSet singlePropertyAgentSet(String ownerName, String attributeSetName, String propertyName) {
         return new AgentAttributeSet(
-                ownerName,
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(new AgentCounterProperty(propertyName))
         );
@@ -81,10 +80,9 @@ class ImmutableEntityTestHelpers {
     @SuppressWarnings("unchecked")
     static Environment environmentWithTickCounter() {
         EnvironmentAttributeSet attributeSet = new EnvironmentAttributeSet(
-                "env",
                 "timing",
                 (List<Attribute>) (List<?>) List.of(new EnvironmentTickProperty("envTick"))
         );
-        return new Environment("env", List.of(attributeSet));
+        return new Environment(List.of(attributeSet));
     }
 }

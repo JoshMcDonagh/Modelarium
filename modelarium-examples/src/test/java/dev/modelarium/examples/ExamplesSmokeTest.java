@@ -2,14 +2,12 @@ package dev.modelarium.examples;
 
 import dev.modelarium.examples.multicore.CrossCoreInteractionExample;
 import dev.modelarium.examples.randomwalk.RandomWalkExample;
-import dev.modelarium.examples.sir.SirExample;
 import modelarium.results.immutable.ImmutableResults;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Smoke tests running each example end to end with tiny parameters.
@@ -35,36 +33,6 @@ class ExamplesSmokeTest {
                     Double.class);
             assertEquals(tickCount, positions.size());
         }
-    }
-
-    @Test
-    void sirKeepsPopulationConsistent() {
-        int populationSize = 6;
-        int initialInfected = 2;
-        int tickCount = 5;
-
-        ImmutableResults results = SirExample.run(populationSize, initialInfected, tickCount, 7L);
-
-        int infectedAtStart = 0;
-        for (int i = 0; i < populationSize; i++) {
-            List<String> states = results.agents().attributeLogs(
-                    "person_" + i,
-                    SirExample.ATTRIBUTE_SET_NAME,
-                    SirExample.STATE_PROPERTY_NAME,
-                    String.class);
-
-            assertEquals(tickCount, states.size());
-
-            // Every logged state must be one of the three SIR states.
-            for (String state : states)
-                assertTrue(state.equals("S") || state.equals("I") || state.equals("R"));
-
-            if (states.get(0).equals("I"))
-                infectedAtStart++;
-        }
-
-        // Initial infections are assigned deterministically by index, before any random transitions occur.
-        assertEquals(initialInfected, infectedAtStart);
     }
 
     @Test

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.SplittableRandom;
 import java.util.concurrent.*;
+import java.util.random.RandomGenerator;
 
 /**
  * Main class for executing an agent-based model using multithreaded execution.
@@ -47,8 +48,8 @@ public class Model {
      *
      * @return a list of {@link AgentSet} objects, one per core
      */
-    private List<AgentSet> generateAgentsForEachCoreAsList() {
-        List<AgentSet> agentsForEachCore = config.agentGenerator().getAgentsForEachCore(config);
+    private List<AgentSet> generateAgentsForEachCoreAsList(RandomGenerator randomGenerator) {
+        List<AgentSet> agentsForEachCore = config.agentGenerator().getAgentsForEachCore(config, randomGenerator);
 
         for (AgentSet agentSet : agentsForEachCore)
             agentSet.setLogDatabaseFactory(config.runLogDatabaseFactory());
@@ -61,8 +62,8 @@ public class Model {
      *
      * @return a new {@link Environment} instance
      */
-    private Environment generateEnvironment() {
-        Environment environment = config.environmentGenerator().generateEnvironment(config);
+    private Environment generateEnvironment(RandomGenerator randomGenerator) {
+        Environment environment = config.environmentGenerator().generateEnvironment(config, randomGenerator);
         environment.setLogDatabaseFactory(config.runLogDatabaseFactory());
         return environment;
     }
@@ -234,12 +235,16 @@ public class Model {
      * Runs the model using the configurations given during construction.
      */
     public void run() {
+        // Create a splittable random generator using a seed given by the model's config that entities in the model can
+        // use
+        SplittableRandom randomGenerator = new SplittableRandom(config.seed());
+
         // Create new results container to store model results
         results = new MutableResults();
 
         // Generate entities
-        List<AgentSet> agentsForEachCore = generateAgentsForEachCoreAsList();
-        Environment environment = generateEnvironment();
+        List<AgentSet> agentsForEachCore = generateAgentsForEachCoreAsList(randomGenerator);
+        Environment environment = generateEnvironment(randomGenerator);
 
         // Updates the results container with the agents in the model
         setupResultsContainer(agentsForEachCore);
@@ -250,10 +255,6 @@ public class Model {
         // Create a request/response controller worker threads can use to make requests/response to/from the coordinator
         // a vice versa
         RequestResponseController requestResponseController = new RequestResponseController(config);
-
-        // Create a splittable random generator using a seed given by the model's config that entities in the model can
-        // use
-        SplittableRandom randomGenerator = new SplittableRandom(config.seed());
 
         // Create a context the environment can use and set it to the environment
         createAndSetEnvironmentContext(environment, requestResponseController, sharedClock, randomGenerator);

@@ -50,9 +50,9 @@ public final class RandomWalkExample {
                 .tickCount(tickCount)
                 .threadCount(1)
                 .areThreadsSynced(false)
-                .agentGenerator(new FunctionalDefaultAgentGenerator(cfg ->
+                .agentGenerator(new FunctionalDefaultAgentGenerator((cfg, random) ->
                         makeWalker("walker_" + nextWalkerIndex.getAndIncrement())))
-                .environmentGenerator(new FunctionalEnvironmentGenerator(cfg ->
+                .environmentGenerator(new FunctionalEnvironmentGenerator((cfg, random) ->
                         new Environment("environment", List.of())))
                 .scheduler(new InOrderScheduler())
                 .seed(seed)

@@ -20,13 +20,13 @@ public interface Scheduler {
      * @param clock the model's clock, giving the current tick
      * @param environment a read-only view of the worker's environment
      * @param agentSet the set of agents to execute for this tick
-     * @param randomGenerator the random generator the scheduler can use for ordering decisions
+     * @param random the random generator the scheduler can use for ordering decisions
      */
     void runTick(
             String threadName,
             ImmutableClock clock,
             ImmutableEnvironment environment,
             AgentSet agentSet,
-            RandomGenerator randomGenerator
+            RandomGenerator random
     );
 }

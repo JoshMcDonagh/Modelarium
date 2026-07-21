@@ -3,7 +3,8 @@ package modelarium.entities.agents.generators;
 import modelarium.Config;
 import modelarium.entities.agents.Agent;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
+import java.util.random.RandomGenerator;
 
 /**
  * Class for generating agents by delegating creation logic to a user-defined function.
@@ -14,14 +15,14 @@ import java.util.function.Function;
 public class FunctionalDefaultAgentGenerator extends DefaultAgentGenerator {
 
     /** The function used to generate each agent */
-    private final Function<Config, Agent> generatorFunction;
+    private final BiFunction<Config, RandomGenerator, Agent> generatorFunction;
 
     /**
      * Constructs a new generator with the specified logic.
      *
      * @param generatorFunction the function used to generate each agent
      */
-    public FunctionalDefaultAgentGenerator(Function<Config, Agent> generatorFunction) {
+    public FunctionalDefaultAgentGenerator(BiFunction<Config, RandomGenerator, Agent> generatorFunction) {
         this.generatorFunction = generatorFunction;
     }
 
@@ -29,10 +30,11 @@ public class FunctionalDefaultAgentGenerator extends DefaultAgentGenerator {
      * Generates a single agent by applying the user-provided generator function.
      *
      * @param config the model settings passed to the agent during creation
+     * @param random the random generator the agent generator can use for constructing agents
      * @return a new {@link Agent} instance
      */
     @Override
-    protected Agent generateAgent(Config config) {
-        return generatorFunction.apply(config);
+    protected Agent generateAgent(Config config, RandomGenerator random) {
+        return generatorFunction.apply(config, random);
     }
 }

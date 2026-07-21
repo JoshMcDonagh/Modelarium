@@ -19,12 +19,11 @@ public final class EnvironmentAttributeSet extends AttributeSet<EnvironmentSimul
     /**
      * Constructs a new environment attribute set with the specified owner, name and attributes.
      *
-     * @param ownerName the name of the environment that owns the attribute set
-     * @param attributeSetName the name of the attribute set, used to identify it within its owning environment
+     * @param name the name of the attribute set, used to identify it within its owning environment
      * @param attributes the attributes the set will contain, in the order they will be run
      */
-    public EnvironmentAttributeSet(String ownerName, String attributeSetName, List<Attribute> attributes) {
-        super(ownerName, attributeSetName, attributes);
+    public EnvironmentAttributeSet(String name, List<Attribute> attributes) {
+        super(name, attributes);
     }
 
     /**

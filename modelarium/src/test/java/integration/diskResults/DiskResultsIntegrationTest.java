@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.random.RandomGenerator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -117,10 +118,10 @@ public class DiskResultsIntegrationTest {
             private int index = 0;
 
             @Override
-            protected Agent generateAgent(Config config) {
+            protected Agent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + index++;
                 StepCounter stepCounter = new StepCounter();
-                AgentAttributeSet movement = new AgentAttributeSet(name, "movement",
+                AgentAttributeSet movement = new AgentAttributeSet("movement",
                         (List<Attribute>) (List<?>) List.of(stepCounter, new Pulse(stepCounter)));
                 return new Agent(name, List.of(movement));
             }
@@ -128,10 +129,10 @@ public class DiskResultsIntegrationTest {
 
         EnvironmentGenerator environmentGenerator = new EnvironmentGenerator() {
             @Override
-            public Environment generateEnvironment(Config config) {
-                EnvironmentAttributeSet climate = new EnvironmentAttributeSet("env", "climate",
+            public Environment generateEnvironment(Config config, RandomGenerator random) {
+                EnvironmentAttributeSet climate = new EnvironmentAttributeSet("climate",
                         (List<Attribute>) (List<?>) List.of(new Temperature()));
-                return new Environment("env", List.of(climate));
+                return new Environment(List.of(climate));
             }
         };
 

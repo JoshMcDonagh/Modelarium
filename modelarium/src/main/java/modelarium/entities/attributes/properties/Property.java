@@ -69,11 +69,11 @@ public sealed abstract class Property<T,C extends Context> extends AttributeBase
     }
 
     /**
-     * Runs this property's behaviour. Must be implemented by subclasses.
+     * Runs this property's behaviour (does nothing by default). Can be overridden by subclasses.
      *
      * @param context the context the property can use in its behaviour
      */
-    protected abstract void run(C context);
+    protected void run(C context) {}
 
     /**
      * Sets this property's value. Must be implemented by subclasses.

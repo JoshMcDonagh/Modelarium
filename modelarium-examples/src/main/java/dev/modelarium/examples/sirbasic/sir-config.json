@@ -1,0 +1,30 @@
+{
+  "modelSettings": {
+    "numOfCores": 6,
+    "numOfTicks": 1000,
+    "numOfWarmUpTicks": 0
+  },
+
+  "initialStates": {
+    "S": 990,
+    "I": 10,
+    "R": 0
+  },
+
+  "environment": {
+    "area": {
+      "width": 10000,
+      "height": 10000
+    }
+  },
+
+  "movement": {
+    "probabilityPerTick": 0.5,
+    "contactDistance": 2.0
+  },
+
+  "disease": {
+    "infectionProbabilityPerContact": 0.5,
+    "recoveryProbabilityPerTick": 0.02
+  }
+}

@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.random.RandomGenerator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -66,10 +67,10 @@ public class MultiCoreEquivalenceIntegrationTest {
             private int idx = 0;
 
             @Override
-            protected Agent generateAgent(Config config) {
+            protected Agent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + idx++;
                 DeterministicCounter counter = new DeterministicCounter();
-                AgentAttributeSet set = new AgentAttributeSet(name, "stats",
+                AgentAttributeSet set = new AgentAttributeSet("stats",
                         (List<Attribute>) (List<?>) List.of(counter));
                 return new Agent(name, List.of(set));
             }
@@ -81,7 +82,7 @@ public class MultiCoreEquivalenceIntegrationTest {
                 .threadCount(threads)
                 .areThreadsSynced(false)
                 .agentGenerator(agentGen)
-                .environmentGenerator(new FunctionalEnvironmentGenerator(c -> new Environment("env", List.of())))
+                .environmentGenerator(new FunctionalEnvironmentGenerator((c, random) -> new Environment(List.of())))
                 .scheduler(new InOrderScheduler())
                 .build();
 
