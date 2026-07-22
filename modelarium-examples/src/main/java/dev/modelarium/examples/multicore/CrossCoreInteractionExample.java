@@ -131,7 +131,7 @@ public final class CrossCoreInteractionExample {
         );
 
         return new Agent(name, List.of(
-                new AgentAttributeSet(name, ATTRIBUTE_SET_NAME, List.<Attribute>of(localValue, partnerSum))
+                new AgentAttributeSet(ATTRIBUTE_SET_NAME, List.<Attribute>of(localValue, partnerSum))
         ));
     }
 
@@ -152,7 +152,7 @@ public final class CrossCoreInteractionExample {
         );
 
         return new Environment("environment", List.of(
-                new EnvironmentAttributeSet("environment", ENVIRONMENT_ATTRIBUTE_SET_NAME,
+                new EnvironmentAttributeSet(ENVIRONMENT_ATTRIBUTE_SET_NAME,
                         List.<Attribute>of(ticksCompleted))
         ));
     }

@@ -81,7 +81,7 @@ public final class RandomWalkExample {
         );
 
         return new Agent(name, List.of(
-                new AgentAttributeSet(name, ATTRIBUTE_SET_NAME, List.<Attribute>of(position))
+                new AgentAttributeSet(ATTRIBUTE_SET_NAME, List.<Attribute>of(position))
         ));
     }
 
