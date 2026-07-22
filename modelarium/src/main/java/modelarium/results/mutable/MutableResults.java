@@ -5,6 +5,12 @@ import modelarium.entities.agents.AgentSet;
 import modelarium.results.Results;
 import modelarium.results.immutable.ImmutableResults;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +37,9 @@ public final class MutableResults implements Results {
 
     /** Whether the environment results' underlying databases are currently connected */
     private boolean isEnvironmentAttributeSetDataConnected = false;
+
+    /** The immutable results version of this mutable results */
+    private ImmutableResults immutableVersion = null;
 
     /**
      * Constructs a new, empty results container.
@@ -93,6 +102,7 @@ public final class MutableResults implements Results {
      *
      * @return the run's {@link MutableResultsForAgents} instance
      */
+    @Override
     public MutableResultsForAgents agents() {
         return agentsResults;
     }
@@ -102,8 +112,36 @@ public final class MutableResults implements Results {
      *
      * @return the run's {@link MutableResultsForEnvironment} instance
      */
+    @Override
     public MutableResultsForEnvironment environment() {
         return environmentResults;
+    }
+
+    /**
+     * Exports the results of the model to a given export directory
+     *
+     * @param exportDir the directory to export the results to
+     */
+    @Override
+    public void export(String exportDir) {
+        String exportFolderName =
+                "modelarium_results_export"
+                + "_-_"
+                + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_-_HH-mm-ss"));
+
+        Path exportPath = Paths.get(exportDir, exportFolderName);
+
+        if (Files.exists(exportPath))
+            throw new IllegalStateException("Export path already exists: " + exportPath);
+
+        try {
+            Files.createDirectories(exportPath);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create path: " + exportPath, e);
+        }
+
+        environmentResults.export(exportPath);
+        agentsResults.export(exportPath);
     }
 
     /**
@@ -135,6 +173,9 @@ public final class MutableResults implements Results {
      * @return a new {@link ImmutableResults} instance wrapping these results
      */
     public ImmutableResults getAsImmutable() {
-        return new ImmutableResults(this);
+        if (immutableVersion == null)
+            immutableVersion = new ImmutableResults(this);
+
+        return immutableVersion;
     }
 }

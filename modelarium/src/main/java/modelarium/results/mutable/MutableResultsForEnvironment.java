@@ -5,10 +5,16 @@ import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.logging.AttributeSetLog;
+import modelarium.entities.logging.EntityLog;
 import modelarium.results.ResultsForEnvironment;
 import modelarium.results.immutable.ImmutableResultsForEnvironment;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +28,9 @@ public final class MutableResultsForEnvironment extends MutableResultsForEntitie
 
     /** The name of the environment used as a key for data access */
     private final String environmentName;
+
+    /** The immutable version of this mutable environment-level results */
+    private ImmutableResultsForEnvironment immutableResultsForEnvironment = null;
 
     /**
      * Constructs a results container for the given environment.
@@ -111,6 +120,34 @@ public final class MutableResultsForEnvironment extends MutableResultsForEntitie
      * @return a new {@link ImmutableResultsForEnvironment} instance wrapping these results
      */
     public ImmutableResultsForEnvironment getAsImmutable() {
-        return new ImmutableResultsForEnvironment(this);
+        if (immutableResultsForEnvironment == null)
+            immutableResultsForEnvironment = new ImmutableResultsForEnvironment(this);
+
+        return immutableResultsForEnvironment;
+    }
+
+    /**
+     * Exports the results of the environment to the given export path
+     *
+     * @param exportPath the path results are to be exported to
+     */
+    @Override
+    void export(Path exportPath) {
+        EntityLog<
+                EnvironmentSimulationContext,
+                EnvironmentContext,
+                EnvironmentAttributeSet,
+                AttributeSetLog<EnvironmentSimulationContext>
+                > environmentLog = getEntityLogList().getFirst();
+
+        Path environmentResultsExportPath = exportPath.resolve("environment");
+
+        try {
+            Files.createDirectories(environmentResultsExportPath);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create path: " + environmentResultsExportPath, e);
+        }
+
+        exportEntityResults(environmentLog, environmentResultsExportPath);
     }
 }

@@ -26,4 +26,11 @@ public sealed interface Results permits MutableResults, ImmutableResults {
      * @return the run's {@link ResultsForEnvironment} instance
      */
     ResultsForEnvironment environment();
+
+    /**
+     * Exports the results of the model to a given export directory
+     *
+     * @param exportDir the directory to export the results to
+     */
+    void export(String exportDir);
 }

@@ -5,9 +5,13 @@ import modelarium.entities.attributes.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
+import modelarium.entities.logging.EntityLog;
 import modelarium.results.ResultsForAgents;
 import modelarium.results.immutable.ImmutableResultsForAgents;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +23,10 @@ import java.util.Map;
  * enabling easy access to recorded properties and events for all agents over time.
  */
 public final class MutableResultsForAgents extends MutableResultsForEntities<AgentSimulationContext, AgentContext, AgentAttributeSet, AttributeSetLog<AgentSimulationContext>> implements ResultsForAgents {
+
+    /** The immutable version of this mutable agent-level results */
+    private ImmutableResultsForAgents immutableResultsForAgents = null;
+
     /**
      * Constructs agent results from a given agent set.
      *
@@ -128,11 +136,56 @@ public final class MutableResultsForAgents extends MutableResultsForEntities<Age
     }
 
     /**
+     * Exports the results of the agents to the given export path
+     *
+     * @param exportPath the path results are to be exported to
+     */
+    @Override
+    void export(Path exportPath) {
+        List<EntityLog<
+                        AgentSimulationContext,
+                        AgentContext,
+                        AgentAttributeSet,
+                        AttributeSetLog<AgentSimulationContext>
+                        >>
+                agentLogList = getEntityLogList();
+
+        Path agentsResultsExportPath = exportPath.resolve("agent");
+
+        try {
+            Files.createDirectories(agentsResultsExportPath);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create path: " + agentsResultsExportPath, e);
+        }
+
+        for (EntityLog<
+                AgentSimulationContext,
+                AgentContext,
+                AgentAttributeSet,
+                AttributeSetLog<AgentSimulationContext>
+                > agentLog : agentLogList) {
+            String agentName = agentLog.getEntityName();
+            Path agentResultsExportPath = agentsResultsExportPath.resolve(agentName);
+
+            try {
+                Files.createDirectories(agentResultsExportPath);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to create path: " + agentResultsExportPath, e);
+            }
+
+            exportEntityResults(agentLog, agentResultsExportPath);
+        }
+    }
+
+    /**
      * Returns a read-only view of these agent results.
      *
      * @return a new {@link ImmutableResultsForAgents} instance wrapping these results
      */
     public ImmutableResultsForAgents getAsImmutable() {
-        return new ImmutableResultsForAgents(this);
+        if (immutableResultsForAgents == null)
+            immutableResultsForAgents = new ImmutableResultsForAgents(this);
+
+        return immutableResultsForAgents;
     }
 }

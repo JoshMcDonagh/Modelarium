@@ -6,12 +6,11 @@ import dev.modelarium.examples.sirbasic.entities.agents.SIRAgentGenerator;
 import dev.modelarium.examples.sirbasic.entities.environment.SIREnvironmentGenerator;
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.results.Results;
 import modelarium.scheduler.RandomOrderScheduler;
 
 public class SIRBasicExample {
     public static void main(String[] args) {
-        SIRSettings sirSettings = SettingsLoader.loadSIRConfig("sir-config.json");
+        SIRSettings sirSettings = SettingsLoader.loadSIRConfig("dev/modelarium/examples/sirbasic/sir-config.json");
 
         Config config = Config
                 .builder()
@@ -30,6 +29,6 @@ public class SIRBasicExample {
 
         model.run();
 
-        Results results = model.getResults();
+        model.getResults().export("output");
     }
 }

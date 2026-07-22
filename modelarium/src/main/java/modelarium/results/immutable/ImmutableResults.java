@@ -12,12 +12,8 @@ import modelarium.results.mutable.MutableResults;
  * environment-level logs can be inspected without being modifiable.
  */
 public final class ImmutableResults implements Results {
-
-    /** The read-only view of the run's agent-level results */
-    private final ImmutableResultsForAgents resultsForAgents;
-
-    /** The read-only view of the run's environment-level results */
-    private final ImmutableResultsForEnvironment resultsForEnvironment;
+    /** The mutable results associated with this immutable results */
+    private final MutableResults mutableVersion;
 
     /**
      * Constructs a new immutable results view of the specified mutable results.
@@ -25,8 +21,7 @@ public final class ImmutableResults implements Results {
      * @param results the mutable results to provide a read-only view of
      */
     public ImmutableResults(MutableResults results) {
-        resultsForAgents = results.agents().getAsImmutable();
-        resultsForEnvironment = results.environment().getAsImmutable();
+        mutableVersion = results;
     }
 
     /**
@@ -36,7 +31,7 @@ public final class ImmutableResults implements Results {
      */
     @Override
     public ResultsForAgents agents() {
-        return resultsForAgents;
+        return mutableVersion.agents().getAsImmutable();
     }
 
     /**
@@ -46,6 +41,16 @@ public final class ImmutableResults implements Results {
      */
     @Override
     public ResultsForEnvironment environment() {
-        return resultsForEnvironment;
+        return mutableVersion.environment().getAsImmutable();
+    }
+
+    /**
+     * Exports the results of the model to a given export directory
+     *
+     * @param exportDir the directory to export the results to
+     */
+    @Override
+    public void export(String exportDir) {
+        mutableVersion.export(exportDir);
     }
 }

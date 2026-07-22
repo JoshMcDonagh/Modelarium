@@ -7,10 +7,11 @@ import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 
 /**
  * Abstract class for collecting and querying the logs of a group of entities.
@@ -54,6 +55,15 @@ public sealed abstract class MutableResultsForEntities<SC extends SimulationCont
     MutableResultsForEntities(Entity<SC,C,AS,ASL> entity) {
         entityLogList.add(entity.getLog());
         entityLogIndexMap.put(entity.name(), 0);
+    }
+
+    /**
+     * Returns the entity logs as a list.
+     *
+     * @return the list of {@link EntityLog} instances
+     */
+    List<EntityLog<SC,C,AS,ASL>> getEntityLogList() {
+        return entityLogList;
     }
 
     /**
@@ -175,6 +185,63 @@ public sealed abstract class MutableResultsForEntities<SC extends SimulationCont
         }
         return allLogs;
     }
+
+    /**
+     * Exports the results of the model for the given entity log to a csv file.
+     *
+     * @param entityLog the entity log containing results to be exported
+     * @param entityResultsExportPath the path to export to
+     */
+    void exportEntityResults(EntityLog<SC, C, AS, ASL> entityLog, Path entityResultsExportPath) {
+        for (int i = 0; i < entityLog.attributeSetLogCount(); i++) {
+            AttributeSetLog<SC> attributeSetLog = entityLog.get(i);
+            List<String> attributeNamesList = attributeSetLog.getAttributeNamesList();
+
+            List<String> csvRows = new ArrayList<>(Collections.nCopies(
+                    attributeSetLog.attributeLogCount(),
+                    null
+            ));
+
+            for (int j = 0; j < attributeSetLog.attributeLogCount(); j++) {
+                String attributeName = attributeNamesList.get(j);
+
+                if (csvRows.getFirst() == null)
+                    csvRows.set(0, attributeName);
+                else
+                    csvRows.set(0, csvRows.getFirst() + "," + attributeName);
+
+                List<Object> attributeValues = attributeSetLog.getValues(attributeName);
+                for (int k = 1; k <= attributeValues.size(); k++) {
+                    Object value = attributeValues.get(k);
+
+                    if (csvRows.get(k) == null)
+                        csvRows.set(k, value.toString());
+                    else
+                        csvRows.set(k, csvRows.get(k) + "," + value.toString());
+                }
+            }
+
+            Path attributeSetCsvPath = entityResultsExportPath.resolve(
+                    attributeSetLog.getAttributeSetName() + ".csv"
+            );
+
+            try (BufferedWriter writer = Files.newBufferedWriter(attributeSetCsvPath)) {
+                for (String csvRow : csvRows) {
+                    writer.write(csvRow);
+                    writer.newLine();
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to create CSV file: " + attributeSetCsvPath, e);
+            }
+        }
+    }
+
+    /**
+     * Exports the results of the entities to the given export path
+     *
+     * @param exportPath the path results are to be exported to
+     */
+    abstract void export(Path exportPath);
 
     /**
      * Disconnects the databases of every collected entity log and clears the log collection.
