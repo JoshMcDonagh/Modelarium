@@ -129,7 +129,7 @@ public final class MutableResults implements Results {
                 + "_-_"
                 + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_-_HH-mm-ss"));
 
-        Path exportPath = Paths.get(exportDir, exportFolderName);
+        Path exportPath = Paths.get(exportDir, exportFolderName).toAbsolutePath();
 
         if (Files.exists(exportPath))
             throw new IllegalStateException("Export path already exists: " + exportPath);
