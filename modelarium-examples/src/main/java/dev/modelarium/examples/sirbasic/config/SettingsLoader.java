@@ -11,7 +11,7 @@ public final class SettingsLoader {
     private SettingsLoader() {}
 
     public static SIRSettings loadSIRConfig(String resourcePath) {
-        try (InputStream is = SettingsLoader.class.getClassLoader().getResourceAsStream(resourcePath)) {
+        try (InputStream is = SettingsLoader.class.getResourceAsStream("/" + resourcePath)) {
             if (is == null)
                 throw new IllegalArgumentException("Config resource not found: " + resourcePath);
             return MAPPER.readValue(is, SIRSettings.class);
