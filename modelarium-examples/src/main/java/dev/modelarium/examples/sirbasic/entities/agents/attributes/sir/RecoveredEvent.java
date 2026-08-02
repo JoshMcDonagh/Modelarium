@@ -13,7 +13,7 @@ public class RecoveredEvent extends AgentEvent {
     public RecoveredEvent() {
         super("recovered", false, AttributeAccessLevel.PRIVATE);
         recoveryProbabilityPerTick = SettingsLoader
-                .loadSIRConfig("sir-config.json")
+                .loadSIRConfig("dev/modelarium/examples/sirbasic/sir-config.json")
                 .disease()
                 .recoveryProbabilityPerTick();
     }

@@ -7,6 +7,4 @@
 module modelarium.examples {
     requires modelarium;
     requires com.fasterxml.jackson.databind;
-
-    opens dev.modelarium.examples.sirbasic;
 }

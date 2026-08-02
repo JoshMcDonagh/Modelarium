@@ -17,7 +17,7 @@ public class SIREnvironmentGenerator extends EnvironmentGenerator {
     private final SIRSettings sirSettings;
 
     public SIREnvironmentGenerator() {
-        sirSettings = SettingsLoader.loadSIRConfig("sir-config.json");
+        sirSettings = SettingsLoader.loadSIRConfig("dev/modelarium/examples/sirbasic/sir-config.json");
     }
 
     @Override
