@@ -198,7 +198,7 @@ public sealed abstract class MutableResultsForEntities<SC extends SimulationCont
             List<String> attributeNamesList = attributeSetLog.getAttributeNamesList();
 
             List<String> csvRows = new ArrayList<>(Collections.nCopies(
-                    attributeSetLog.attributeLogCount(),
+                    attributeSetLog.attributeLogEntryCount() + 1,
                     null
             ));
 
@@ -212,12 +212,12 @@ public sealed abstract class MutableResultsForEntities<SC extends SimulationCont
 
                 List<Object> attributeValues = attributeSetLog.getValues(attributeName);
                 for (int k = 1; k <= attributeValues.size(); k++) {
-                    Object value = attributeValues.get(k);
+                    Object value = attributeValues.get(k - 1);
 
                     if (csvRows.get(k) == null)
-                        csvRows.set(k, value.toString());
+                        csvRows.set(k, value == null ? "" : value.toString());
                     else
-                        csvRows.set(k, csvRows.get(k) + "," + value.toString());
+                        csvRows.set(k, csvRows.get(k) + "," + (value == null ? "" : value.toString()));
                 }
             }
 
@@ -227,7 +227,7 @@ public sealed abstract class MutableResultsForEntities<SC extends SimulationCont
 
             try (BufferedWriter writer = Files.newBufferedWriter(attributeSetCsvPath)) {
                 for (String csvRow : csvRows) {
-                    writer.write(csvRow);
+                    writer.write(csvRow == null ? "" : csvRow);
                     writer.newLine();
                 }
             } catch (IOException e) {

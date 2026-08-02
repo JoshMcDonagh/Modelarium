@@ -117,6 +117,18 @@ public class AttributeSetLog<C extends SimulationContext> {
     }
 
     /**
+     * Returns the number of entries logged for an attribute so far.
+     *
+     * @return the attribute log's number of entries so far
+     */
+    public int attributeLogEntryCount() {
+        if (attributeNamesList.isEmpty())
+            return 0;
+
+        return database.getAttributeColumnAsList(attributeNamesList.getFirst()).size();
+    }
+
+    /**
      * Records a value for the named attribute at the current tick.
      *
      * @param attributeName the name of the attribute the value belongs to
