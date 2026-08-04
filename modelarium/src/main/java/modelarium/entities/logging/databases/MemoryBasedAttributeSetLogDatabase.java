@@ -1,5 +1,7 @@
 package modelarium.entities.logging.databases;
 
+import modelarium.utils.Cloners;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,11 +64,11 @@ public class MemoryBasedAttributeSetLogDatabase extends AttributeSetLogDatabase 
     @Override
     public <T> void addAttributeValue(String attributeName, T attributeValue) {
         attributesMap.computeIfAbsent(attributeName, k -> new ArrayList<>());
-        if (attributeValue != null && !attributeClassesMap.containsKey(attributeName)) {
+        if (attributeValue != null && !attributeClassesMap.containsKey(attributeName))
             attributeClassesMap.put(attributeName, attributeValue.getClass());
-        }
+
         if (attributeValue == null || attributeClassesMap.get(attributeName).isInstance(attributeValue)) {
-            attributesMap.get(attributeName).add(attributeValue);
+            attributesMap.get(attributeName).add(Cloners.standard().deepClone(attributeValue));
         } else {
             Class<?> expectedType = attributeClassesMap.get(attributeName);
             throw new IllegalArgumentException("Attribute '" + attributeName + "' is not an instance of "
@@ -84,12 +86,11 @@ public class MemoryBasedAttributeSetLogDatabase extends AttributeSetLogDatabase 
     @Override
     public void setAttributeColumn(String attributeName, List<Object> attributeValues) {
         attributesMap.computeIfAbsent(attributeName, k -> new ArrayList<>());
-        attributesMap.put(attributeName, attributeValues == null ? new ArrayList<>() : new ArrayList<>(attributeValues));
+        attributesMap.put(attributeName, attributeValues == null ? new ArrayList<>() : Cloners.standard().deepClone(attributeValues));
 
         Class<?> inferred = firstNonNullClass(attributeValues);
-        if (inferred != null) {
+        if (inferred != null)
             attributeClassesMap.put(attributeName, inferred);
-        }
     }
 
     /**

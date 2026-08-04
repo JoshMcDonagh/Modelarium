@@ -2,6 +2,7 @@ package modelarium.entities.logging.databases;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import modelarium.utils.Cloners;
 import modelarium.utils.RandomStringGenerator;
 
 import java.io.IOException;
@@ -180,7 +181,7 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
     public <T> void addAttributeValue(String attributeName, T attributeValue) {
         Objects.requireNonNull(attributeName, "attributeName must not be null");
         rememberType(attributeClassesMap, attributeName, attributeValue);
-        addSeriesValue(ATTRIBUTES_TABLE_NAME, attributeName, attributeValue);
+        addSeriesValue(ATTRIBUTES_TABLE_NAME, attributeName, Cloners.standard().deepClone(attributeValue));
     }
 
     // === Bulk Column Replacement ===
@@ -202,7 +203,7 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
         }
 
         replaceSeries(ATTRIBUTES_TABLE_NAME, attributeName,
-                attributeValues == null ? Collections.emptyList() : attributeValues);
+                attributeValues == null ? Collections.emptyList() : Cloners.standard().deepClone(attributeValues));
     }
 
     // === Column Retrieval ===
