@@ -104,6 +104,21 @@ public class AttributeSetLogTest {
     }
 
     @Test
+    public void testAttributeLogEntryCount() {
+        AttributeSetLog<AgentSimulationContext> log = attributeSetLog(
+                "testOwner",
+                "testAttributeSetName",
+                loggedProperty("Property_0")
+        );
+
+        log.record("Property_0", 1.0);
+        log.record("Property_0", 2.0);
+        log.record("Property_0", 3.0);
+
+        assertEquals(3, log.attributeLogEntryCount());
+    }
+
+    @Test
     public void testRecordAndGetValues_PreservesOrder() {
         AttributeSetLog<AgentSimulationContext> log = attributeSetLog(
                 "testOwner",
