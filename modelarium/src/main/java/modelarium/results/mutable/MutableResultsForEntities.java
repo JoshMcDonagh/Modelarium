@@ -186,6 +186,27 @@ public sealed abstract class MutableResultsForEntities<SC extends SimulationCont
         return allLogs;
     }
 
+    private String escapeCsvValue(Object value) {
+        if (value == null)
+            return "";
+
+        String stringValue = value.toString();
+
+        // A field must be quoted if it contains a comma, quote, or newline.
+        if (stringValue.contains(",")
+                || stringValue.contains("\"")
+                || stringValue.contains("\n")
+                || stringValue.contains("\r")) {
+
+            // Escape double quotes by doubling them.
+            stringValue = stringValue.replace("\"", "\"\"");
+
+            return "\"" + stringValue + "\"";
+        }
+
+        return stringValue;
+    }
+
     /**
      * Exports the results of the model for the given entity log to a csv file.
      *
@@ -206,18 +227,18 @@ public sealed abstract class MutableResultsForEntities<SC extends SimulationCont
                 String attributeName = attributeNamesList.get(j);
 
                 if (csvRows.getFirst() == null)
-                    csvRows.set(0, attributeName);
+                    csvRows.set(0, escapeCsvValue(attributeName));
                 else
-                    csvRows.set(0, csvRows.getFirst() + "," + attributeName);
+                    csvRows.set(0, csvRows.getFirst() + "," + escapeCsvValue(attributeName));
 
                 List<Object> attributeValues = attributeSetLog.getValues(attributeName);
                 for (int k = 1; k <= attributeValues.size(); k++) {
                     Object value = attributeValues.get(k - 1);
 
                     if (csvRows.get(k) == null)
-                        csvRows.set(k, value == null ? "" : value.toString());
+                        csvRows.set(k, value == null ? "" : escapeCsvValue(value));
                     else
-                        csvRows.set(k, csvRows.get(k) + "," + (value == null ? "" : value.toString()));
+                        csvRows.set(k, csvRows.get(k) + "," + (value == null ? "" : escapeCsvValue(value)));
                 }
             }
 
