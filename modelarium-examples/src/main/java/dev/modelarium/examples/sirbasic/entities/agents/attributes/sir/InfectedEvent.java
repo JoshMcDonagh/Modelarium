@@ -51,9 +51,8 @@ public class InfectedEvent extends AgentEvent {
             if (euclideanDistance(coordinates, otherCoordinates) > contactDistance)
                 return false;
 
-            SIRState otherSirState = (SIRState) context
-                    .getThisEntity()
-                    .getProperty("sir", "location")
+            SIRState otherSirState = (SIRState) agent
+                    .getProperty("sir", "sir_state")
                     .get();
 
             return otherSirState == SIRState.INFECTIOUS;

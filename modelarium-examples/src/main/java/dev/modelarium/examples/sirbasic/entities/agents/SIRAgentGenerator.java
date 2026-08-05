@@ -4,6 +4,8 @@ import dev.modelarium.examples.sirbasic.config.SettingsLoader;
 import dev.modelarium.examples.sirbasic.config.SIRSettings;
 import dev.modelarium.examples.sirbasic.entities.agents.attributes.location.Coordinates;
 import dev.modelarium.examples.sirbasic.entities.agents.attributes.location.LocationProperty;
+import dev.modelarium.examples.sirbasic.entities.agents.attributes.sir.InfectedEvent;
+import dev.modelarium.examples.sirbasic.entities.agents.attributes.sir.RecoveredEvent;
 import dev.modelarium.examples.sirbasic.entities.agents.attributes.sir.SIRState;
 import dev.modelarium.examples.sirbasic.entities.agents.attributes.sir.SIRStateProperty;
 import modelarium.Config;
@@ -42,6 +44,8 @@ public class SIRAgentGenerator extends DefaultAgentGenerator {
         SIRStateProperty sirStateProperty = new SIRStateProperty();
         ArrayList<Attribute> agentSIRAttributes = new ArrayList<>();
         agentSIRAttributes.add(sirStateProperty);
+        agentSIRAttributes.add(new RecoveredEvent());
+        agentSIRAttributes.add(new InfectedEvent());
         if (susceptibleAgentCount < sirSettings.initialStates().S()) {
             sirStateProperty.set(SIRState.SUSCEPTIBLE);
             susceptibleAgentCount++;
