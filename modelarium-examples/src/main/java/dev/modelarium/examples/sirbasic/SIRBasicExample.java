@@ -29,6 +29,6 @@ public class SIRBasicExample {
 
         model.run();
 
-        model.getResults().export("output");
+        model.getResults().export("modelarium-examples/output");
     }
 }
