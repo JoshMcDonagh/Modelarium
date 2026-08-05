@@ -24,6 +24,7 @@ import java.util.random.RandomGenerator;
  * {@link AgentSimulationContext} for its behaviour and interactions.
  */
 public final class Agent extends Entity<AgentSimulationContext, AgentContext, AgentAttributeSet, AttributeSetLog<AgentSimulationContext>> {
+    private boolean isDead = false;
 
     /**
      * Constructs a new agent with the specified name and attribute sets.
@@ -101,5 +102,32 @@ public final class Agent extends Entity<AgentSimulationContext, AgentContext, Ag
      */
     public AgentProperty<?> getProperty(String attributeSetName, String propertyName) {
         return getAttributeSet(attributeSetName).getProperty(propertyName);
+    }
+
+    /**
+     * Sets the agent to the removed state (killed) so that it no longer functions or contributes to the simulation.
+     */
+    void kill() {
+        isDead = true;
+    }
+
+    /**
+     * Returns whether the agent is dead or not.
+     *
+     * @return the boolean value of whether the agent is dead (true) or not (false)
+     */
+    public boolean isDead() {
+        return isDead;
+    }
+
+    /**
+     * Runs each of this agent's attribute sets for the current tick unless it is dead.
+     */
+    @Override
+    public void run() {
+        if (isDead)
+            return;
+
+        super.run();
     }
 }

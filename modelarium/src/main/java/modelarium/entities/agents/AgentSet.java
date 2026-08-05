@@ -256,7 +256,7 @@ public final class AgentSet implements Iterable<Agent> {
         List<Agent> filteredAgents = new ArrayList<>();
 
         for (Agent agent : agentList) {
-            if (agentFilter.test(agent))
+            if (agentFilter.test(agent) && !agent.isDead())
                 filteredAgents.add(agent);
         }
 

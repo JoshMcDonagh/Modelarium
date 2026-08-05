@@ -12,10 +12,7 @@ import modelarium.entities.environments.Environment;
 import modelarium.entities.immutable.ImmutableAgent;
 import modelarium.entities.immutable.ImmutableAgentSet;
 import modelarium.entities.immutable.ImmutableEnvironment;
-import modelarium.exceptions.AgentNotFoundException;
-import modelarium.exceptions.CoordinatorErrorException;
-import modelarium.exceptions.CoordinatorTimeoutException;
-import modelarium.exceptions.SimulationInterruptedException;
+import modelarium.exceptions.*;
 import modelarium.internal.Internal;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
@@ -359,6 +356,9 @@ public sealed abstract class SimulationContext implements Context permits AgentS
         // Request from coordinator
         try {
             Agent requestedAgent = requestResponseInterface.getAgentFromCoordinator(entity.name(), targetAgentName);
+            if (requestedAgent.isDead())
+                throw new AgentIsDeadException("Agent '" + targetAgentName + "' requested by '" + entity.name()
+                        + "' is dead and not accssible");
             cache.addAgent(requestedAgent);
             return new ImmutableAgent(requestedAgent);
         } catch (InterruptedException e) {

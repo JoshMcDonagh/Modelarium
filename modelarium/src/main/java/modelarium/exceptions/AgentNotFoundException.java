@@ -7,7 +7,6 @@ package modelarium.exceptions;
  * thread's local agent set, the context cache, or the co-ordinator's global agent set.
  */
 public class AgentNotFoundException extends RuntimeException {
-
     /**
      * Constructs a new agent not found exception with the specified detail message and cause.
      *

@@ -78,4 +78,32 @@ public sealed interface Context permits SimulationContext, EntityContext {
      * @param agentList the agents to add
      */
     void addAgents(List<Agent> agentList);
+
+    /**
+     * Kills the agent with the given name.
+     *
+     * @param agentName the agent's name as a string
+     */
+    void killAgent(String agentName);
+
+    /**
+     * Kills the agent of the given {@link ImmutableAgent} instance.
+     *
+     * @param agent the immutable agent to kill
+     */
+    void killAgent(ImmutableAgent agent);
+
+    /**
+     * Kills all the agents in a given {@link ImmutableAgentSet} instance.
+     *
+     * @param agentSet the immutable agent set of agents to kill
+     */
+    void killAgents(ImmutableAgentSet agentSet);
+
+    /**
+     * Kills all the agent in a given {@link List<ImmutableAgent>}.
+     *
+     * @param agentList the list of immutable agents to kill
+     */
+    void killAgents(List<ImmutableAgent> agentList);
 }
