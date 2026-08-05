@@ -1,20 +1,20 @@
 {
   "modelSettings": {
     "numOfCores": 6,
-    "numOfTicks": 1000,
+    "numOfTicks": 100000,
     "numOfWarmUpTicks": 0
   },
 
   "initialStates": {
-    "S": 990,
-    "I": 10,
+    "S": 99000,
+    "I": 1000,
     "R": 0
   },
 
   "environment": {
     "area": {
-      "width": 10000,
-      "height": 10000
+      "width": 3540,
+      "height": 3540
     }
   },
 

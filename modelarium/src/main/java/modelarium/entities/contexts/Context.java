@@ -2,9 +2,11 @@ package modelarium.entities.contexts;
 
 import modelarium.clock.Clock;
 import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.AgentSet;
 import modelarium.entities.immutable.ImmutableAgent;
 import modelarium.entities.immutable.ImmutableAgentSet;
 
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.random.RandomGenerator;
 
@@ -54,4 +56,26 @@ public sealed interface Context permits SimulationContext, EntityContext {
      * @return the element's {@link RandomGenerator} instance
      */
     RandomGenerator getRandom();
+
+    /**
+     * Adds an agent to the current core's local agent set, creating the context the agent needs to run.
+     *
+     * @param agent the agent to add
+     */
+    void addAgent(Agent agent);
+
+    /**
+     * Adds each agent in an agent set to the current core's local agent set, creating the contexts the agents need
+     * to run.
+     *
+     * @param agentSet the agents to add
+     */
+    void addAgents(AgentSet agentSet);
+
+    /**
+     * Adds each agent in a list to the current core's local agent set, creating the contexts the agents need to run.
+     *
+     * @param agentList the agents to add
+     */
+    void addAgents(List<Agent> agentList);
 }
