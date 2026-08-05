@@ -121,27 +121,41 @@ public final class MutableResults implements Results {
      * Exports the results of the model to a given export directory
      *
      * @param exportDir the directory to export the results to
+     * @return the {@link Path} directory containing the exported results
      */
     @Override
-    public void export(String exportDir) {
+    public Path export(String exportDir) {
+        return export(Paths.get(exportDir).toAbsolutePath());
+    }
+
+    /**
+     * Exports the results of the model to a given export directory given as a {@link Path}
+     *
+     * @param exportPath the path directory to export the results to
+     * @return the {@link Path} directory containing the exported results
+     */
+    @Override
+    public Path export(Path exportPath) {
         String exportFolderName =
                 "modelarium_results_export"
-                + "_-_"
-                + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_-_HH-mm-ss"));
+                        + "_-_"
+                        + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_-_HH-mm-ss"));
 
-        Path exportPath = Paths.get(exportDir, exportFolderName).toAbsolutePath();
+        Path exportedResultsPath = exportPath.resolve(exportFolderName);
 
-        if (Files.exists(exportPath))
-            throw new IllegalStateException("Export path already exists: " + exportPath);
+        if (Files.exists(exportedResultsPath))
+            throw new IllegalStateException("Export path already exists: " + exportedResultsPath);
 
         try {
-            Files.createDirectories(exportPath);
+            Files.createDirectories(exportedResultsPath);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to create path: " + exportPath, e);
+            throw new RuntimeException("Failed to create path: " + exportedResultsPath, e);
         }
 
-        environmentResults.export(exportPath);
-        agentsResults.export(exportPath);
+        environmentResults.export(exportedResultsPath);
+        agentsResults.export(exportedResultsPath);
+
+        return exportedResultsPath;
     }
 
     /**

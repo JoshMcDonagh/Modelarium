@@ -5,6 +5,8 @@ import modelarium.results.ResultsForAgents;
 import modelarium.results.ResultsForEnvironment;
 import modelarium.results.mutable.MutableResults;
 
+import java.nio.file.Path;
+
 /**
  * Class for providing a read-only view of the results of a model run.
  *
@@ -48,9 +50,20 @@ public final class ImmutableResults implements Results {
      * Exports the results of the model to a given export directory
      *
      * @param exportDir the directory to export the results to
+     * @return the {@link Path} directory containing the exported results
      */
     @Override
-    public void export(String exportDir) {
-        mutableVersion.export(exportDir);
+    public Path export(String exportDir) {
+        return mutableVersion.export(exportDir);
+    }
+
+    /**
+     * Exports the results of the model to a given export directory given as a {@link Path}
+     *
+     * @param exportPath the path directory to export the results to
+     * @return the {@link Path} directory containing the exported results
+     */
+    public Path export(Path exportPath) {
+        return mutableVersion.export(exportPath);
     }
 }

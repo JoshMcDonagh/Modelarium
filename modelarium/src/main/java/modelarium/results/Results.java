@@ -4,6 +4,8 @@ package modelarium.results;
 import modelarium.results.immutable.ImmutableResults;
 import modelarium.results.mutable.MutableResults;
 
+import java.nio.file.Path;
+
 /**
  * Interface for providing access to the results of a model run.
  *
@@ -28,9 +30,18 @@ public sealed interface Results permits MutableResults, ImmutableResults {
     ResultsForEnvironment environment();
 
     /**
-     * Exports the results of the model to a given export directory
+     * Exports the results of the model to a given export directory given as a {@link String}
      *
      * @param exportDir the directory to export the results to
+     * @return the {@link Path} directory containing the exported results
      */
-    void export(String exportDir);
+    Path export(String exportDir);
+
+    /**
+     * Exports the results of the model to a given export directory given as a {@link Path}
+     *
+     * @param exportPath the path directory to export the results to
+     * @return the {@link Path} directory containing the exported results
+     */
+    Path export(Path exportPath);
 }
