@@ -19,6 +19,7 @@ import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 import modelarium.utils.Cloners;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.random.RandomGenerator;
@@ -443,22 +444,43 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     }
 
     /**
+     * Kills all the agents with names in a given {@link List<String>} instance.
+     *
+     * @param agentNames the list of names of agents to kill
+     */
+    public void killAgents(List<String> agentNames) {
+        if (!config.areThreadsSynced()) {
+            for (String agentName : agentNames) {
+                if (!doesAgentExistInThisCore(agentName))
+                    throw new AgentNotFoundException("Agent '" + agentName + "' requested by '" + entity.name()
+                            + "' not found in this thread (threads are not synced)");
+            }
+
+            for (String agentName : agentNames)
+                localAgentSet.get(agentName).kill();
+            return;
+        }
+
+        try {
+            requestResponseInterface.killCoordinatorAgents(agentNames);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new SimulationInterruptedException("Interrupted while killing agents requested by '"
+                    + entity.name() + "'", e);
+        } catch (CoordinatorTimeoutException | CoordinatorErrorException e) {
+            throw new AgentNotFoundException("Failed to kill agents  requested by '" + entity.name() + "'", e);
+        }
+    }
+
+    /**
      * Kills all the agents in a given {@link ImmutableAgentSet} instance.
      *
      * @param agentSet the immutable agent set of agents to kill
      */
     public void killAgents(ImmutableAgentSet agentSet) {
-        // TODO: Implement kill agents context method
-        throw new RuntimeException("Not yet implemented");
-    }
-
-    /**
-     * Kills all the agent in a given {@link List<ImmutableAgent>}.
-     *
-     * @param agentList the list of immutable agents to kill
-     */
-    public void killAgents(List<ImmutableAgent> agentList) {
-        // TODO: Implement kill agents context method
-        throw new RuntimeException("Not yet implemented");
+        ArrayList<String> agentNames = new ArrayList<>();
+        for (ImmutableAgent agent : agentSet)
+            agentNames.add(agent.name());
+        killAgents(agentNames);
     }
 }
