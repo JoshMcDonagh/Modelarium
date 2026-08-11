@@ -107,7 +107,7 @@ public final class Agent extends Entity<AgentSimulationContext, AgentContext, Ag
     /**
      * Sets the agent to the removed state (killed) so that it no longer functions or contributes to the simulation.
      */
-    void kill() {
+    public void kill() {
         isDead = true;
     }
 

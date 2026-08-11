@@ -41,5 +41,15 @@ public enum RequestType {
     /**
      * Request to shut the model down.
      */
-    SHUTDOWN
+    SHUTDOWN,
+
+    /**
+     * Request to set an agent to a removed state.
+     */
+    KILL_AGENT,
+
+    /**
+     * Request to set multiple agents to a removed state.
+     */
+    KILL_AGENTS
 }

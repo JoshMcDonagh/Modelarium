@@ -8,6 +8,7 @@ import modelarium.entities.environments.Environment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.function.Predicate;
 
@@ -380,6 +381,68 @@ public abstract class CoordinatorRequestHandler {
                     request.getRequester(),
                     ResponseType.ENVIRONMENT_ATTRIBUTES_ACCESS,
                     getEnvironment()));
+        }
+    }
+
+    public static class KillAgent extends CoordinatorRequestHandler {
+
+        /**
+         * Constructs a new request handler with the shared simulation state it needs to handle requests.
+         *
+         * @param threadName                the name of the co-ordinator thread this handler belongs to
+         * @param config                    global model settings
+         * @param requestResponseController the controller managing request/response queues
+         * @param globalAgentSet            the global set of all agents in the model
+         * @param environment               the environment shared across all workers
+         * @param sharedClock               the clock used to synchronise the entities and cores in the model
+         */
+        public KillAgent(String threadName, Config config, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
+            super(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock);
+        }
+
+        @Override
+        public void handleRequest(Request request) throws InterruptedException {
+            Object payload = request.getPayload();
+            if (!(payload instanceof String)) {
+                throw new IllegalArgumentException("KILL_AGENT payload must be a String (got: "
+                        + (payload == null ? "null" : payload.getClass().getName())
+                        + ") from requester: " + request.getRequester()
+                );
+            }
+
+            getGlobalAgentSet().get((String) payload).kill();
+        }
+    }
+
+    public static class KillAgents extends CoordinatorRequestHandler {
+
+        /**
+         * Constructs a new request handler with the shared simulation state it needs to handle requests.
+         *
+         * @param threadName                the name of the co-ordinator thread this handler belongs to
+         * @param config                    global model settings
+         * @param requestResponseController the controller managing request/response queues
+         * @param globalAgentSet            the global set of all agents in the model
+         * @param environment               the environment shared across all workers
+         * @param sharedClock               the clock used to synchronise the entities and cores in the model
+         */
+        public KillAgents(String threadName, Config config, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
+            super(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public void handleRequest(Request request) throws InterruptedException {
+            Object payload = request.getPayload();
+            if (!(payload instanceof List<?> list && list.stream().allMatch(String.class::isInstance))) {
+                throw new IllegalArgumentException("KILL_AGENT payload must be a List of Strings (got: "
+                        + (payload == null ? "null" : payload.getClass().getName())
+                        + ") from requester: " + request.getRequester()
+                );
+            }
+
+            for (String agentName : (List<String>) payload)
+                getGlobalAgentSet().get(agentName).kill();
         }
     }
 }

@@ -57,12 +57,17 @@ public final class AgentSet implements Iterable<Agent> {
      * @param agent the agent to store in place of the existing one
      * @param isDeepCopied whether the agent should be deep cloned before being stored
      */
-    private void addExistingAgent(Agent agent, boolean isDeepCopied) {
+    private void replaceExistingAgent(Agent agent, boolean isDeepCopied) {
         int index = agentIndexMap.get(agent.name());
+
+        if (agentList.get(index).isDead() && !agent.isDead())
+            agent.kill();
+
         if (isDeepCopied)
             agentList.set(index, Cloners.standard().deepClone(agent));
         else
             agentList.set(index, agent);
+
     }
 
     /**
@@ -87,7 +92,7 @@ public final class AgentSet implements Iterable<Agent> {
      */
     public void add(Agent agent) {
         if (doesAgentExist(agent.name()))
-            addExistingAgent(agent, false);
+            replaceExistingAgent(agent, false);
         else
             addNewAgent(agent, false);
     }
@@ -103,19 +108,13 @@ public final class AgentSet implements Iterable<Agent> {
     }
 
     /**
-     * Adds all agents from another {@link AgentSet} that do not already exist in this set.
-     * Existing agents (by name) are not modified or replaced.
+     * Adds all agents from another {@link AgentSet}.
      *
      * @param agentSet the agent set to add from
      */
     public void add(AgentSet agentSet) {
-        if (agentSet == null)
-            throw new IllegalArgumentException("agentSet cannot be null");
-
-        for (Agent agent : agentSet) {
-            if (!doesAgentExist(agent.name()))
-                add(agent);
-        }
+        for (Agent agent : agentSet)
+            add(agent);
     }
 
     /**
@@ -125,7 +124,7 @@ public final class AgentSet implements Iterable<Agent> {
      */
     public void addDeepCopy(Agent agent) {
         if (doesAgentExist(agent.name()))
-            addExistingAgent(agent, true);
+            replaceExistingAgent(agent, true);
         else
             addNewAgent(agent, true);
     }
@@ -141,19 +140,13 @@ public final class AgentSet implements Iterable<Agent> {
     }
 
     /**
-     * Adds a deep copy of each agent from another {@link AgentSet} that does not already exist in this set.
-     * Existing agents (by name) are not modified or replaced.
+     * Adds a deep copy of each agent from another {@link AgentSet}.
      *
      * @param agentSet the agent set to deep clone and add from
      */
     public void addDeepCopy(AgentSet agentSet) {
-        if (agentSet == null)
-            throw new IllegalArgumentException("agentSet cannot be null");
-
-        for (Agent agent : agentSet) {
-            if (!doesAgentExist(agent.name()))
-                addDeepCopy(agent);
-        }
+        for (Agent agent : agentSet)
+            addDeepCopy(agent);
     }
 
     /**

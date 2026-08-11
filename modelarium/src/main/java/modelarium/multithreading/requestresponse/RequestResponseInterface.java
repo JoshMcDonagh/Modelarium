@@ -8,6 +8,7 @@ import modelarium.exceptions.CoordinatorErrorException;
 import modelarium.exceptions.CoordinatorTimeoutException;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -188,5 +189,23 @@ public class RequestResponseInterface {
     public void updateCoordinatorAgents(AgentSet agentSet) throws InterruptedException {
         Objects.requireNonNull(agentSet, "agentSet");
         requestQueue.put(new Request(name, null, RequestType.UPDATE_COORDINATOR_AGENTS, agentSet));
+    }
+
+    /**
+     * Requests to set a specific agent in the coordinator as dead.
+     *
+     * @param agentName the name of the agent to kill
+     */
+    public void killCoordinatorAgent(String agentName)  throws InterruptedException {
+        requestQueue.put(new Request(name, null, RequestType.KILL_AGENT, agentName));
+    }
+
+    /**
+     * Requests to set a specific set of agents in the coordinator as dead.
+     *
+     * @param agentNames the list of names of agents to kill
+     */
+    public void killCoordinatorAgents(List<String> agentNames) throws InterruptedException {
+        requestQueue.put(new Request(name, null, RequestType.KILL_AGENTS, agentNames));
     }
 }

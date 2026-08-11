@@ -1,5 +1,6 @@
 package modelarium.entities.contexts;
 
+import jdk.jshell.spi.ExecutionControl;
 import modelarium.Config;
 import modelarium.clock.Clock;
 import modelarium.clock.MutableClock;
@@ -407,5 +408,45 @@ public sealed abstract class SimulationContext implements Context permits AgentS
         cache.addFilteredAgents(filter, filteredAgentSet);
 
         return filteredAgentSet.getAsImmutable();
+    }
+
+    /**
+     * Kills the agent with the given name.
+     *
+     * @param agentName the agent's name as a string
+     */
+    public void killAgent(String agentName) {
+        // TODO: Implement kill agent context method
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    /**
+     * Kills the agent of the given {@link ImmutableAgent} instance.
+     *
+     * @param agent the immutable agent to kill
+     */
+    public void killAgent(ImmutableAgent agent) {
+        // TODO: Implement kill agent context method
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    /**
+     * Kills all the agents in a given {@link ImmutableAgentSet} instance.
+     *
+     * @param agentSet the immutable agent set of agents to kill
+     */
+    public void killAgents(ImmutableAgentSet agentSet) {
+        // TODO: Implement kill agents context method
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    /**
+     * Kills all the agent in a given {@link List<ImmutableAgent>}.
+     *
+     * @param agentList the list of immutable agents to kill
+     */
+    public void killAgents(List<ImmutableAgent> agentList) {
+        // TODO: Implement kill agents context method
+        throw new RuntimeException("Not yet implemented");
     }
 }

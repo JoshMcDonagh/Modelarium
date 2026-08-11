@@ -37,6 +37,9 @@ public class CoordinatorThread implements Runnable {
     /** Global agent set of the model */
     private final AgentSet predefinedGlobalAgentSet;
 
+    /** Map indexed by agent names containing the thread names containing the corresponding agent **/
+    private final Map<String, String> agentThreadMap;
+
     /** Maps each request type to the handler responsible for processing it */
     private final Map<RequestType, CoordinatorRequestHandler> requestHandlerMap = new HashMap<>();
 
@@ -58,7 +61,7 @@ public class CoordinatorThread implements Runnable {
                              RequestResponseController requestResponseController,
                              MutableClock sharedClock
     ) {
-        this(name, config, environment, requestResponseController, sharedClock, null);
+        this(name, config, environment, requestResponseController, sharedClock, null, null);
     }
 
     /**
@@ -75,7 +78,8 @@ public class CoordinatorThread implements Runnable {
                              Environment environment,
                              RequestResponseController requestResponseController,
                              MutableClock sharedClock,
-                             AgentSet globalAgentSet
+                             AgentSet globalAgentSet,
+                             Map<String, String> agentThreadMap
     ) {
         this.threadName = name;
         this.config = config;
@@ -83,6 +87,7 @@ public class CoordinatorThread implements Runnable {
         this.requestResponseController = requestResponseController;
         this.sharedClock = sharedClock;
         this.predefinedGlobalAgentSet = globalAgentSet;
+        this.agentThreadMap = agentThreadMap;
     }
 
     /**
@@ -116,6 +121,10 @@ public class CoordinatorThread implements Runnable {
                 new CoordinatorRequestHandler.FilteredAgentsAccess(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
         requestHandlerMap.put(RequestType.ENVIRONMENT_ATTRIBUTES_ACCESS,
                 new CoordinatorRequestHandler.EnvironmentAttributesAccess(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
+        requestHandlerMap.put(RequestType.KILL_AGENT,
+                new CoordinatorRequestHandler.KillAgent(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
+        requestHandlerMap.put(RequestType.KILL_AGENTS,
+                new CoordinatorRequestHandler.KillAgents(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
     }
 
     /**
