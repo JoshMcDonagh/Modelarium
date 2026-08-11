@@ -416,8 +416,21 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * @param agentName the agent's name as a string
      */
     public void killAgent(String agentName) {
-        // TODO: Implement kill agent context method
-        throw new RuntimeException("Not yet implemented");
+        if (!config.areThreadsSynced()) {
+            if (!doesAgentExistInThisCore(agentName))
+                throw new AgentNotFoundException("Agent '" + agentName + "' requested by '" + entity.name() + "' not found in this thread (threads are not synced)");
+            localAgentSet.get(agentName).kill();
+            return;
+        }
+
+        try {
+            requestResponseInterface.killCoordinatorAgent(agentName);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new SimulationInterruptedException("Interrupted while killing agent '" + agentName + "'", e);
+        } catch (CoordinatorTimeoutException | CoordinatorErrorException e) {
+            throw new AgentNotFoundException("Failed to kill agent '" + agentName + "'", e);
+        }
     }
 
     /**
@@ -426,8 +439,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * @param agent the immutable agent to kill
      */
     public void killAgent(ImmutableAgent agent) {
-        // TODO: Implement kill agent context method
-        throw new RuntimeException("Not yet implemented");
+        killAgent(agent.name());
     }
 
     /**
