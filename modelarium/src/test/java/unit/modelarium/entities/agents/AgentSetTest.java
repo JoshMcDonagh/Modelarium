@@ -225,17 +225,21 @@ public class AgentSetTest {
 
     @Test
     public void testAddDeepCopyList() {
+        List<Agent> agentList = List.of(emptyAgent("A"), emptyAgent("B"));
         AgentSet agentSet = new AgentSet();
 
-        agentSet.addDeepCopy(List.of(emptyAgent("A"), emptyAgent("B")));
+        agentSet.addDeepCopy(agentList);
 
         assertEquals(2, agentSet.size());
         assertEquals("A", agentSet.get("A").name());
         assertEquals("B", agentSet.get("B").name());
+
+        assertNotSame(agentList.get(0), agentSet.get("A"));
+        assertNotSame(agentList.get(1), agentSet.get("B"));
     }
 
     @Test
-    public void testAddDeepCopyAgentSet_SkipsExisting() {
+    public void testAddDeepCopyAgentSet() {
         AgentSet agentSet = new AgentSet(List.of(emptyAgent("A")));
         AgentSet other = new AgentSet(List.of(
                 new Agent("A", List.of(singlePropertyAgentSet("A", "food", "hunger"))),
@@ -245,8 +249,9 @@ public class AgentSetTest {
         agentSet.addDeepCopy(other);
 
         assertEquals(2, agentSet.size());
-        assertEquals(0, agentSet.get("A").attributeSetCount());
-        assertNotSame(other.get("B"), agentSet.get("B"));
+        assertEquals(1, agentSet.get("A").attributeSetCount());
+        assertNotSame(agentSet.get("A"), other.get("A"));
+        assertNotSame(agentSet.get("B"), other.get("B"));
     }
 
     @Test

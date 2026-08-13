@@ -113,6 +113,9 @@ public final class AgentSet implements Iterable<Agent> {
      * @param agentSet the agent set to add from
      */
     public void add(AgentSet agentSet) {
+        if (agentSet == null)
+            throw new IllegalArgumentException("AgentSet must not be null");
+
         for (Agent agent : agentSet)
             add(agent);
     }
@@ -145,6 +148,9 @@ public final class AgentSet implements Iterable<Agent> {
      * @param agentSet the agent set to deep clone and add from
      */
     public void addDeepCopy(AgentSet agentSet) {
+        if (agentSet == null)
+            throw new IllegalArgumentException("AgentSet must not be null");
+
         for (Agent agent : agentSet)
             addDeepCopy(agent);
     }
