@@ -59,7 +59,7 @@ public class RequestResponseTest {
 
     @Test
     public void testRequestTypeValues() {
-        assertEquals(7, RequestType.values().length);
+        assertEquals(9, RequestType.values().length);
     }
 
     @Test
