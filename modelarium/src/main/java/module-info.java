@@ -14,8 +14,6 @@ module modelarium {
     exports modelarium.entities.attributes.routines.functional;
     exports modelarium.entities.contexts;
     exports modelarium.entities.environments;
-    exports modelarium.entities.immutable;
-    exports modelarium.entities.immutable.attributes;
     exports modelarium.entities.logging;
     exports modelarium.entities.logging.databases;
     exports modelarium.entities.logging.databases.factories;
@@ -36,7 +34,6 @@ module modelarium {
     requires java.sql;
     requires cloning;
     requires jdk.jshell;
-    requires modelarium;
 
     // Reflective deep-clone access for the Rits Cloner (see modelarium.utils.Cloners)
     opens modelarium.entities to cloning;
@@ -54,10 +51,6 @@ module modelarium {
     opens modelarium.entities.agents.mutable to cloning;
     exports modelarium.entities.agents.immutable;
     opens modelarium.entities.agents.immutable to cloning;
-    exports modelarium.entities.environments.mutable;
-    opens modelarium.entities.environments.mutable to cloning;
-    exports modelarium.entities.environments.immutable;
-    opens modelarium.entities.environments.immutable to cloning;
     exports modelarium.entities.environments.generators;
     opens modelarium.entities.environments.generators to cloning;
     exports modelarium.entities.attributes.sets.mutable;

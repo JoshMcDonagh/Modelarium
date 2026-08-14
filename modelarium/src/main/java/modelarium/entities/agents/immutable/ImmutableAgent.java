@@ -46,4 +46,9 @@ public final class ImmutableAgent extends ImmutableEntity<AgentSimulationContext
     public ImmutableAgentAttributeSet getAttributeSet(String attributeSetName) {
         return new ImmutableAgentAttributeSet(getMutableEntity().getAttributeSet(attributeSetName));
     }
+
+    @Override
+    public boolean isDead() {
+        return ((MutableAgent) getMutableEntity()).isDead();
+    }
 }

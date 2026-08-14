@@ -4,6 +4,8 @@ import modelarium.Config;
 import modelarium.clock.Clock;
 import modelarium.clock.MutableClock;
 import modelarium.entities.MutableEntity;
+import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.AgentSet;
 import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.mutable.MutableAgentSet;
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
@@ -347,7 +349,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
 
         // Check cache if enabled
         if (cache.doesAgentExist(targetAgentName))
-            return new ImmutableAgent(cache.getAgent(targetAgentName));
+            return cache.getAgent(targetAgentName);
 
         // If not synchronised, cannot retrieve further
         if (!config.areThreadsSynced())
@@ -356,12 +358,12 @@ public sealed abstract class SimulationContext implements Context permits AgentS
 
         // Request from coordinator
         try {
-            MutableAgent requestedAgent = requestResponseInterface.getAgentFromCoordinator(entity.name(), targetAgentName);
+            ImmutableAgent requestedAgent = requestResponseInterface.getAgentFromCoordinator(entity.name(), targetAgentName);
             if (requestedAgent.isDead())
                 throw new AgentIsDeadException("Agent '" + targetAgentName + "' requested by '" + entity.name()
                         + "' is dead and not accssible");
             cache.addAgent(requestedAgent);
-            return new ImmutableAgent(requestedAgent);
+            return requestedAgent;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new SimulationInterruptedException("Interrupted while fetching agent '" + targetAgentName + "'", e);
@@ -380,12 +382,12 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * @param filter a predicate to apply to each agent
      * @return a read-only view of the matching agents
      */
-    public ImmutableAgentSet getFilteredAgents(Predicate<MutableAgent> filter) {
+    public ImmutableAgentSet getFilteredAgents(Predicate<Agent> filter) {
         // Return cached filtered result if available
         if (cache.doesAgentFilterExist(filter))
-            return cache.getFilteredAgents(filter).getAsImmutable();
+            return cache.getFilteredAgents(filter);
 
-        MutableAgentSet filteredAgentSet;
+        ImmutableAgentSet filteredAgentSet;
 
         if (config.areThreadsSynced()) {
             // Request filtered agents from the coordinator
@@ -401,13 +403,13 @@ public sealed abstract class SimulationContext implements Context permits AgentS
             }
         } else {
             // Use only local agent set
-            filteredAgentSet = localAgentSet.getFilteredAgents(filter);
+            filteredAgentSet = localAgentSet.getFilteredAgents(filter).getAsImmutable();
         }
 
         // Cache the result for future access
         cache.addFilteredAgents(filter, filteredAgentSet);
 
-        return filteredAgentSet.getAsImmutable();
+        return filteredAgentSet;
     }
 
     /**
@@ -434,11 +436,11 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     }
 
     /**
-     * Kills the agent of the given {@link ImmutableAgent} instance.
+     * Kills the agent of the given {@link Agent} instance.
      *
      * @param agent the immutable agent to kill
      */
-    public void killAgent(ImmutableAgent agent) {
+    public void killAgent(Agent agent) {
         killAgent(agent.name());
     }
 
@@ -476,9 +478,9 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      *
      * @param agentSet the immutable agent set of agents to kill
      */
-    public void killAgents(ImmutableAgentSet agentSet) {
+    public <A extends Agent, AS extends AgentSet<A, AS>> void killAgents(AgentSet<A, AS> agentSet) {
         ArrayList<String> agentNames = new ArrayList<>();
-        for (ImmutableAgent agent : agentSet)
+        for (A agent : agentSet)
             agentNames.add(agent.name());
         killAgents(agentNames);
     }

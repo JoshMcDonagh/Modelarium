@@ -2,8 +2,12 @@ package modelarium.multithreading.requestresponse;
 
 import modelarium.Config;
 import modelarium.clock.MutableClock;
+import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.immutable.ImmutableAgent;
+import modelarium.entities.agents.immutable.ImmutableAgentSet;
 import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.mutable.MutableAgentSet;
+import modelarium.entities.environments.ImmutableEnvironment;
 import modelarium.entities.environments.MutableEnvironment;
 
 import java.util.ArrayList;
@@ -263,7 +267,7 @@ public abstract class CoordinatorRequestHandler {
                 );
             }
 
-            MutableAgent agent = getGlobalAgentSet().get((String) payload);
+            ImmutableAgent agent = new ImmutableAgent(getGlobalAgentSet().get((String) payload));
             getResponseQueue(request.getRequester()).put(new Response(getThreadName(), request.getRequester(), ResponseType.AGENT_ACCESS, agent));
         }
     }
@@ -339,8 +343,8 @@ public abstract class CoordinatorRequestHandler {
                         + (payload == null ? "null" : payload.getClass().getName()) + ")"
                 );
             }
-            Predicate<MutableAgent> filter = (Predicate<MutableAgent>) payload;
-            MutableAgentSet filtered = getGlobalAgentSet().getFilteredAgents(filter);
+            Predicate<Agent> filter = (Predicate<Agent>) payload;
+            ImmutableAgentSet filtered = getGlobalAgentSet().getFilteredAgents(filter).getAsImmutable();
             getResponseQueue(request.getRequester()).put(new Response(
                     getThreadName(),
                     request.getRequester(),
@@ -379,7 +383,7 @@ public abstract class CoordinatorRequestHandler {
                     getThreadName(),
                     request.getRequester(),
                     ResponseType.ENVIRONMENT_ATTRIBUTES_ACCESS,
-                    getEnvironment()));
+                    new ImmutableEnvironment(getEnvironment())));
         }
     }
 

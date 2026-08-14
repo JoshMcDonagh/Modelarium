@@ -1,8 +1,12 @@
 package modelarium.multithreading.requestresponse;
 
 import modelarium.Config;
+import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.immutable.ImmutableAgent;
+import modelarium.entities.agents.immutable.ImmutableAgentSet;
 import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.mutable.MutableAgentSet;
+import modelarium.entities.environments.ImmutableEnvironment;
 import modelarium.entities.environments.MutableEnvironment;
 import modelarium.exceptions.CoordinatorErrorException;
 import modelarium.exceptions.CoordinatorTimeoutException;
@@ -151,11 +155,11 @@ public class RequestResponseInterface {
      *
      * @param requesterAgentName the name of the requesting agent
      * @param targetAgentName the name of the agent to retrieve
-     * @return the {@link MutableAgent} instance returned by the coordinator
+     * @return the {@link ImmutableAgent} instance returned by the coordinator
      */
-    public MutableAgent getAgentFromCoordinator(String requesterAgentName, String targetAgentName) throws InterruptedException {
+    public ImmutableAgent getAgentFromCoordinator(String requesterAgentName, String targetAgentName) throws InterruptedException {
         Request request = new Request(requesterAgentName, null, RequestType.AGENT_ACCESS, targetAgentName);
-        return (MutableAgent) sendAndAwait(request, ResponseType.AGENT_ACCESS);
+        return (ImmutableAgent) sendAndAwait(request, ResponseType.AGENT_ACCESS);
     }
 
     /**
@@ -163,22 +167,22 @@ public class RequestResponseInterface {
      *
      * @param requesterAgentName the name of the requester
      * @param agentFilter a predicate to apply to the global agent set
-     * @return an {@link MutableAgentSet} containing matching agents
+     * @return an {@link ImmutableAgentSet} containing matching agents
      */
-    public MutableAgentSet getFilteredAgentsFromCoordinator(String requesterAgentName, Predicate<MutableAgent> agentFilter) throws InterruptedException {
+    public ImmutableAgentSet getFilteredAgentsFromCoordinator(String requesterAgentName, Predicate<Agent> agentFilter) throws InterruptedException {
         Request request = new Request(requesterAgentName, null, RequestType.FILTERED_AGENTS_ACCESS, agentFilter);
-        return (MutableAgentSet) sendAndAwait(request, ResponseType.FILTERED_AGENTS_ACCESS);
+        return (ImmutableAgentSet) sendAndAwait(request, ResponseType.FILTERED_AGENTS_ACCESS);
     }
 
     /**
      * Requests the current environment state from the coordinator.
      *
      * @param requesterAgentName the requesting agent's name
-     * @return the current {@link MutableEnvironment} instance
+     * @return the current {@link ImmutableEnvironment} instance
      */
-    public MutableEnvironment getEnvironmentFromCoordinator(String requesterAgentName) throws InterruptedException {
+    public ImmutableEnvironment getEnvironmentFromCoordinator(String requesterAgentName) throws InterruptedException {
         Request request = new Request(requesterAgentName, null, RequestType.ENVIRONMENT_ATTRIBUTES_ACCESS, null);
-        return (MutableEnvironment) sendAndAwait(request, ResponseType.ENVIRONMENT_ATTRIBUTES_ACCESS);
+        return (ImmutableEnvironment) sendAndAwait(request, ResponseType.ENVIRONMENT_ATTRIBUTES_ACCESS);
     }
 
     /**

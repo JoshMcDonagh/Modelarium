@@ -2,12 +2,15 @@ package unit.modelarium.entities.contexts;
 
 import modelarium.Config;
 import modelarium.clock.MutableClock;
+import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.immutable.ImmutableAgent;
 import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.mutable.MutableAgentSet;
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
 import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
+import modelarium.entities.environments.ImmutableEnvironment;
 import modelarium.entities.environments.MutableEnvironment;
 import modelarium.entities.agents.immutable.ImmutableAgentSet;
 import modelarium.exceptions.AgentNotFoundException;
@@ -160,7 +163,7 @@ public class EnvironmentSimulationContextTest {
     public void testGetAgent_IsCached() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Config config = syncedConfig(20, 10, 1);
         ContextCache cache = contextCache();
-        MutableAgent agent = emptyAgent("Carol");
+        ImmutableAgent agent = new ImmutableAgent(emptyAgent("Carol"));
         cache.addAgent(agent);
         EnvironmentSimulationContext context = simulationContextWithCache(
                 EnvironmentSimulationContext.class,
@@ -168,7 +171,7 @@ public class EnvironmentSimulationContextTest {
                 cache
         );
 
-        MutableAgent returnedAgent = getMutableFromImmutable(context.getAgent(agent.name()));
+        ImmutableAgent returnedAgent = context.getAgent(agent.name());
 
         assertSame(agent, returnedAgent);
     }
@@ -284,9 +287,9 @@ public class EnvironmentSimulationContextTest {
     public void testGetFilteredAgents_IsCached() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         int populationSize = 7;
         Config config = syncedConfig(populationSize, 10, 1);
-        MutableAgentSet agentSet = agentSetOfSize(populationSize);
+        ImmutableAgentSet agentSet = agentSetOfSize(populationSize).getAsImmutable();
         ContextCache cache = contextCache();
-        Predicate<MutableAgent> filter = a -> true;
+        Predicate<Agent> filter = a -> true;
         cache.addFilteredAgents(filter, agentSet);
         EnvironmentSimulationContext context = simulationContextWithCache(
                 EnvironmentSimulationContext.class,
@@ -296,15 +299,15 @@ public class EnvironmentSimulationContextTest {
 
         ImmutableAgentSet filteredAgentSet = context.getFilteredAgents(filter);
 
-        assertSame(agentSet, getMutableFromImmutable(filteredAgentSet));
+        assertSame(agentSet, filteredAgentSet);
     }
 
     @Test
     public void testGetFilteredAgents_ThreadsSynced() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         int populationSize = 7;
         Config config = syncedConfig(populationSize, 10, 1);
-        MutableAgentSet agentSet = agentSetOfSize(populationSize);
-        Predicate<MutableAgent> filter = a -> true;
+        ImmutableAgentSet agentSet = agentSetOfSize(populationSize).getAsImmutable();
+        Predicate<Agent> filter = a -> true;
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodReturns(
                 EnvironmentSimulationContext.class,
@@ -315,14 +318,14 @@ public class EnvironmentSimulationContextTest {
                 emptyEnvironment()
         );
 
-        assertSame(agentSet, getMutableFromImmutable(context.getFilteredAgents(filter)));
+        assertSame(agentSet, context.getFilteredAgents(filter));
     }
 
     @Test
     public void testGetFilteredAgents_ThreadsSynced_SimulationInterruptedException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         Config config = syncedConfig(2, 10, 1);
-        MutableEnvironment environment = emptyEnvironment();
-        Predicate<MutableAgent> filter = a -> true;
+        ImmutableEnvironment environment = new ImmutableEnvironment(emptyEnvironment());
+        Predicate<Agent> filter = a -> true;
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
                 EnvironmentSimulationContext.class,

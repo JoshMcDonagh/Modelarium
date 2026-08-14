@@ -1,11 +1,13 @@
 package modelarium.entities.contexts;
 
-import modelarium.entities.agents.mutable.MutableAgent;
+import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.immutable.ImmutableAgent;
+import modelarium.entities.agents.immutable.ImmutableAgentSet;
 import modelarium.entities.agents.mutable.MutableAgentSet;
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.ImmutableEnvironment;
 import modelarium.internal.Internal;
 
-import java.util.IdentityHashMap;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -17,28 +19,28 @@ import java.util.function.Predicate;
 public class ContextCache {
 
     /** List of previously applied agent filters (for caching filtered sets) */
-    private final IdentityHashMap<Predicate<MutableAgent>, MutableAgentSet> filteredAgentsCache = new IdentityHashMap<>();
+    private final IdentityHashMap<Predicate<Agent>, ImmutableAgentSet> filteredAgentsCache = new IdentityHashMap<>();
 
     /** The individually retrieved agents cached during the current tick */
-    private final MutableAgentSet individualAgentCache;
+    private final List<ImmutableAgent> individualAgentCacheList = new ArrayList<>();;
+    private final Map<String, Integer> individualAgentCacheMap = new HashMap<>();
 
     /** The environment cached during the current tick, or null if it has not been retrieved */
-    private MutableEnvironment environment = null;
+    private ImmutableEnvironment environment = null;
 
     /**
      * Constructs a new worker cache.
      */
     @Internal
-    public ContextCache() {
-        individualAgentCache = new MutableAgentSet();
-    }
+    public ContextCache() { }
 
     /**
      * Clears the entire cache. Should be called at the end of each tick.
      */
     public void clear() {
         filteredAgentsCache.clear();
-        individualAgentCache.clear();
+        individualAgentCacheList.clear();
+        individualAgentCacheMap.clear();
         environment = null;
     }
 
@@ -48,7 +50,7 @@ public class ContextCache {
      * @param agentFilter the filter to check for
      * @return true if a result is cached for the filter, false otherwise
      */
-    public boolean doesAgentFilterExist(Predicate<MutableAgent> agentFilter) {
+    public boolean doesAgentFilterExist(Predicate<Agent> agentFilter) {
         return filteredAgentsCache.containsKey(agentFilter);
     }
 
@@ -58,7 +60,7 @@ public class ContextCache {
      * @param agentFilter the filter the agents were matched against
      * @param results the agents matching the filter
      */
-    public void addFilteredAgents(Predicate<MutableAgent> agentFilter, MutableAgentSet results) {
+    public void addFilteredAgents(Predicate<Agent> agentFilter, ImmutableAgentSet results) {
         filteredAgentsCache.put(agentFilter, results);
     }
 
@@ -68,7 +70,7 @@ public class ContextCache {
      * @param agentFilter the filter the agents were matched against
      * @return the cached {@link MutableAgentSet} for the filter, or null if none is cached
      */
-    public MutableAgentSet getFilteredAgents(Predicate<MutableAgent> agentFilter) {
+    public ImmutableAgentSet getFilteredAgents(Predicate<Agent> agentFilter) {
         return filteredAgentsCache.get(agentFilter);
     }
 
@@ -79,7 +81,7 @@ public class ContextCache {
      * @return true if the agent is cached, false otherwise
      */
     public boolean doesAgentExist(String agentName) {
-        return individualAgentCache.doesAgentExist(agentName);
+        return individualAgentCacheMap.containsKey(agentName);
     }
 
     /**
@@ -88,8 +90,8 @@ public class ContextCache {
      * @param agentName the name of the agent to retrieve
      * @return the cached agent with the specified name
      */
-    public MutableAgent getAgent(String agentName) {
-        return individualAgentCache.get(agentName);
+    public ImmutableAgent getAgent(String agentName) {
+        return individualAgentCacheList.get(individualAgentCacheMap.get(agentName));
     }
 
     /**
@@ -97,17 +99,9 @@ public class ContextCache {
      *
      * @param agent the agent to cache
      */
-    public void addAgent(MutableAgent agent) {
-        individualAgentCache.add(agent);
-    }
-
-    /**
-     * Caches each agent in an agent set.
-     *
-     * @param agentSet the agents to cache
-     */
-    public void addAgents(MutableAgentSet agentSet) {
-        individualAgentCache.add(agentSet);
+    public void addAgent(ImmutableAgent agent) {
+        individualAgentCacheMap.put(agent.name(), individualAgentCacheList.size());
+        individualAgentCacheList.add(agent);
     }
 
     /**
@@ -122,9 +116,9 @@ public class ContextCache {
     /**
      * Retrieves the cached environment.
      *
-     * @return the cached {@link MutableEnvironment} instance, or null if none is cached
+     * @return the cached {@link ImmutableEnvironment} instance, or null if none is cached
      */
-    public MutableEnvironment getEnvironment() {
+    public ImmutableEnvironment getEnvironment() {
         return environment;
     }
 
@@ -133,7 +127,7 @@ public class ContextCache {
      *
      * @param environment the environment to cache
      */
-    public void addEnvironment(MutableEnvironment environment) {
+    public void addEnvironment(ImmutableEnvironment environment) {
         this.environment = environment;
     }
 }

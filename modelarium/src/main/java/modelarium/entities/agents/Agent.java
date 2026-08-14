@@ -62,4 +62,11 @@ public sealed interface Agent extends Entity permits MutableAgent, ImmutableAgen
             MutableAgentAttributeSet,
             AttributeSetLog<AgentSimulationContext>
             > getLog();
+
+    /**
+     * Returns whether the agent is dead or not.
+     *
+     * @return the boolean value of whether the agent is dead (true) or not (false)
+     */
+    boolean isDead();
 }

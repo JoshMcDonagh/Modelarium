@@ -101,10 +101,10 @@ public final class AgentSimulationContext extends SimulationContext implements A
 
         // Return cached environment if available
         if (cache().doesEnvironmentExist())
-            return new ImmutableEnvironment(cache().getEnvironment());
+            return cache().getEnvironment();
 
         // Request environment from coordinator
-        MutableEnvironment requestedEnvironment;
+        ImmutableEnvironment requestedEnvironment;
         try {
             requestedEnvironment = requestResponseInterface().getEnvironmentFromCoordinator(entity().name());
         } catch (InterruptedException e) {
@@ -119,6 +119,6 @@ public final class AgentSimulationContext extends SimulationContext implements A
         // Cache the result
         cache().addEnvironment(requestedEnvironment);
 
-        return new ImmutableEnvironment(requestedEnvironment);
+        return requestedEnvironment;
     }
 }

@@ -41,7 +41,7 @@ public sealed interface Context permits SimulationContext, EntityContext {
      * @param targetAgentName the name of the agent to retrieve
      * @return a read-only view of the requested agent
      */
-    Agent getAgent(String targetAgentName);
+    ImmutableAgent getAgent(String targetAgentName);
 
     /**
      * Retrieves the agents matching a filter, drawn from the whole population in a synchronised model or from this
@@ -91,7 +91,7 @@ public sealed interface Context permits SimulationContext, EntityContext {
     /**
      * Kills the agent of the given {@link Agent} instance.
      *
-     * @param agent the immutable agent to kill
+     * @param agent the agent to kill
      */
     void killAgent(Agent agent);
 
@@ -105,7 +105,7 @@ public sealed interface Context permits SimulationContext, EntityContext {
     /**
      * Kills all the agents in a given {@link ImmutableAgentSet} instance.
      *
-     * @param agentSet the immutable agent set of agents to kill
+     * @param agentSet the agent set of agents to kill
      */
     <A extends Agent, AS extends AgentSet<A, AS>> void killAgents(AgentSet<A, AS> agentSet);
 }
