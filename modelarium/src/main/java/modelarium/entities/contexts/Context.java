@@ -2,6 +2,7 @@ package modelarium.entities.contexts;
 
 import modelarium.clock.Clock;
 import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.AgentSet;
 import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.mutable.MutableAgentSet;
 import modelarium.entities.agents.immutable.ImmutableAgent;
@@ -49,7 +50,7 @@ public sealed interface Context permits SimulationContext, EntityContext {
      * @param filter a predicate to apply to each agent
      * @return a read-only view of the matching agents
      */
-    ImmutableAgentSet getFilteredAgents(Predicate<MutableAgent> filter);
+    ImmutableAgentSet getFilteredAgents(Predicate<Agent> filter);
 
     /**
      * Returns the random generator this model element can use.
@@ -88,11 +89,11 @@ public sealed interface Context permits SimulationContext, EntityContext {
     void killAgent(String agentName);
 
     /**
-     * Kills the agent of the given {@link ImmutableAgent} instance.
+     * Kills the agent of the given {@link Agent} instance.
      *
      * @param agent the immutable agent to kill
      */
-    void killAgent(ImmutableAgent agent);
+    void killAgent(Agent agent);
 
     /**
      * Kills all the agents with names in a given {@link List<String>} instance.
@@ -106,5 +107,5 @@ public sealed interface Context permits SimulationContext, EntityContext {
      *
      * @param agentSet the immutable agent set of agents to kill
      */
-    void killAgents(ImmutableAgentSet agentSet);
+    <A extends Agent, AS extends AgentSet<A, AS>> void killAgents(AgentSet<A, AS> agentSet);
 }
