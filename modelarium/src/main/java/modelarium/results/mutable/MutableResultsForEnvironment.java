@@ -1,20 +1,18 @@
 package modelarium.results.mutable;
 
-import modelarium.entities.attributes.EnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
-import modelarium.entities.environments.Environment;
+import modelarium.entities.environments.MutableEnvironment;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
 import modelarium.results.ResultsForEnvironment;
 import modelarium.results.immutable.ImmutableResultsForEnvironment;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +22,7 @@ import java.util.Map;
  * <p>Extends {@link MutableResultsForEntities} to store and access recorded property
  * and event values specific to the environment, using its name to simplify queries.
  */
-public final class MutableResultsForEnvironment extends MutableResultsForEntities<EnvironmentSimulationContext, EnvironmentContext, EnvironmentAttributeSet, AttributeSetLog<EnvironmentSimulationContext>> implements ResultsForEnvironment {
+public final class MutableResultsForEnvironment extends MutableResultsForEntities<EnvironmentSimulationContext, EnvironmentContext, MutableEnvironmentAttributeSet, AttributeSetLog<EnvironmentSimulationContext>> implements ResultsForEnvironment {
 
     /** The name of the environment used as a key for data access */
     private final String environmentName;
@@ -37,7 +35,7 @@ public final class MutableResultsForEnvironment extends MutableResultsForEntitie
      *
      * @param environment the environment whose results are to be stored
      */
-    public MutableResultsForEnvironment(Environment environment) {
+    public MutableResultsForEnvironment(MutableEnvironment environment) {
         super(environment);
         this.environmentName = environment.name();
     }
@@ -136,7 +134,7 @@ public final class MutableResultsForEnvironment extends MutableResultsForEntitie
         EntityLog<
                 EnvironmentSimulationContext,
                 EnvironmentContext,
-                EnvironmentAttributeSet,
+                MutableEnvironmentAttributeSet,
                 AttributeSetLog<EnvironmentSimulationContext>
                 > environmentLog = getEntityLogList().getFirst();
 

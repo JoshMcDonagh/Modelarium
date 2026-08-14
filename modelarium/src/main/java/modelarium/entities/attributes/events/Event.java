@@ -1,6 +1,6 @@
 package modelarium.entities.attributes.events;
 
-import modelarium.entities.attributes.AttributeBase;
+import modelarium.entities.attributes.sets.mutable.AttributeBase;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.contexts.Context;
 

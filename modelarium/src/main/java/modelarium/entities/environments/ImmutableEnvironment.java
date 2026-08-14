@@ -1,26 +1,26 @@
-package modelarium.entities.immutable;
+package modelarium.entities.environments;
 
-import modelarium.entities.attributes.EnvironmentAttributeSet;
+import modelarium.entities.ImmutableEntity;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.immutable.attributes.ImmutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.immutable.ImmutableEnvironmentAttributeSet;
 import modelarium.entities.logging.AttributeSetLog;
 
 /**
- * Class for providing a read-only view of an {@link Environment}.
+ * Class for providing a read-only view of an {@link MutableEnvironment}.
  *
  * <p>This class wraps the mutable environment so that other model elements can inspect it without being able to
  * modify it.
  */
-public final class ImmutableEnvironment extends ImmutableEntity<EnvironmentSimulationContext, EnvironmentContext, EnvironmentAttributeSet, AttributeSetLog<EnvironmentSimulationContext>> {
+public final class ImmutableEnvironment extends ImmutableEntity<EnvironmentSimulationContext, EnvironmentContext, MutableEnvironmentAttributeSet, AttributeSetLog<EnvironmentSimulationContext>> implements Environment {
 
     /**
      * Constructs a new immutable environment wrapping the specified mutable environment.
      *
      * @param entity the mutable environment to provide a read-only view of
      */
-    public ImmutableEnvironment(Environment entity) {
+    public ImmutableEnvironment(MutableEnvironment entity) {
         super(entity);
     }
 

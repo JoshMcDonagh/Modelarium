@@ -1,8 +1,8 @@
 package unit.modelarium.entities.immutable;
 
-import modelarium.entities.agents.AgentSet;
-import modelarium.entities.immutable.ImmutableAgent;
-import modelarium.entities.immutable.ImmutableAgentSet;
+import modelarium.entities.agents.mutable.MutableAgentSet;
+import modelarium.entities.agents.immutable.ImmutableAgent;
+import modelarium.entities.agents.immutable.ImmutableAgentSet;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class ImmutableAgentSetTest {
     @Test
     public void testGetByName() {
-        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A")));
+        MutableAgentSet agentSet = new MutableAgentSet(List.of(emptyAgent("A")));
         ImmutableAgentSet immutableAgentSet = agentSet.getAsImmutable();
 
         ImmutableAgent immutableAgent = immutableAgentSet.get("A");
@@ -28,7 +28,7 @@ public class ImmutableAgentSetTest {
 
     @Test
     public void testGetByIndex() {
-        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A"), emptyAgent("B")));
+        MutableAgentSet agentSet = new MutableAgentSet(List.of(emptyAgent("A"), emptyAgent("B")));
         ImmutableAgentSet immutableAgentSet = agentSet.getAsImmutable();
 
         assertEquals("A", immutableAgentSet.get(0).name());
@@ -37,7 +37,7 @@ public class ImmutableAgentSetTest {
 
     @Test
     public void testIterator() {
-        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A"), emptyAgent("B")));
+        MutableAgentSet agentSet = new MutableAgentSet(List.of(emptyAgent("A"), emptyAgent("B")));
         ImmutableAgentSet immutableAgentSet = agentSet.getAsImmutable();
 
         int agentCount = 0;
@@ -50,35 +50,35 @@ public class ImmutableAgentSetTest {
 
     @Test
     public void testIsEmpty_True() {
-        ImmutableAgentSet immutableAgentSet = new AgentSet().getAsImmutable();
+        ImmutableAgentSet immutableAgentSet = new MutableAgentSet().getAsImmutable();
 
         assertTrue(immutableAgentSet.isEmpty());
     }
 
     @Test
     public void testIsEmpty_False() {
-        ImmutableAgentSet immutableAgentSet = new AgentSet(List.of(emptyAgent("A"))).getAsImmutable();
+        ImmutableAgentSet immutableAgentSet = new MutableAgentSet(List.of(emptyAgent("A"))).getAsImmutable();
 
         assertFalse(immutableAgentSet.isEmpty());
     }
 
     @Test
     public void testDoesAgentExist_True() {
-        ImmutableAgentSet immutableAgentSet = new AgentSet(List.of(emptyAgent("A"))).getAsImmutable();
+        ImmutableAgentSet immutableAgentSet = new MutableAgentSet(List.of(emptyAgent("A"))).getAsImmutable();
 
         assertTrue(immutableAgentSet.doesAgentExist("A"));
     }
 
     @Test
     public void testDoesAgentExist_False() {
-        ImmutableAgentSet immutableAgentSet = new AgentSet(List.of(emptyAgent("A"))).getAsImmutable();
+        ImmutableAgentSet immutableAgentSet = new MutableAgentSet(List.of(emptyAgent("A"))).getAsImmutable();
 
         assertFalse(immutableAgentSet.doesAgentExist("B"));
     }
 
     @Test
     public void testGetFilteredAgents() {
-        AgentSet agentSet = new AgentSet(List.of(emptyAgent("keep_0"), emptyAgent("keep_1"), emptyAgent("drop_0")));
+        MutableAgentSet agentSet = new MutableAgentSet(List.of(emptyAgent("keep_0"), emptyAgent("keep_1"), emptyAgent("drop_0")));
         ImmutableAgentSet immutableAgentSet = agentSet.getAsImmutable();
 
         ImmutableAgentSet filtered = immutableAgentSet.getFilteredAgents(agent -> agent.name().startsWith("keep"));
@@ -95,7 +95,7 @@ public class ImmutableAgentSetTest {
 
     @Test
     public void testGetRandomIterator() {
-        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A"), emptyAgent("B"), emptyAgent("C")));
+        MutableAgentSet agentSet = new MutableAgentSet(List.of(emptyAgent("A"), emptyAgent("B"), emptyAgent("C")));
         ImmutableAgentSet immutableAgentSet = agentSet.getAsImmutable();
 
         Iterator<ImmutableAgent> randomIterator = immutableAgentSet.getRandomIterator(new SplittableRandom(42));

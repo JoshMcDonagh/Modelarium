@@ -1,10 +1,10 @@
 package unit.modelarium;
 
 import modelarium.Config;
-import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.EnvironmentGenerator;
+import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.generators.EnvironmentGenerator;
 
 import java.util.List;
 import java.util.random.RandomGenerator;
@@ -17,8 +17,8 @@ class ConfigTestHelpers {
             private int index = 0;
 
             @Override
-            protected Agent generateAgent(Config config, RandomGenerator random) {
-                return new Agent("agent_" + index++, List.of());
+            protected MutableAgent generateAgent(Config config, RandomGenerator random) {
+                return new MutableAgent("agent_" + index++, List.of());
             }
         };
     }
@@ -26,8 +26,8 @@ class ConfigTestHelpers {
     static EnvironmentGenerator environmentGenerator() {
         return new EnvironmentGenerator() {
             @Override
-            public Environment generateEnvironment(Config config, RandomGenerator random) {
-                return new Environment(List.of());
+            public MutableEnvironment generateEnvironment(Config config, RandomGenerator random) {
+                return new MutableEnvironment(List.of());
             }
         };
     }

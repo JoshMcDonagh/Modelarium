@@ -1,9 +1,9 @@
 package unit.modelarium.entities.logging;
 
-import modelarium.entities.attributes.AgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
-import modelarium.entities.attributes.AttributeBase;
+import modelarium.entities.attributes.sets.mutable.AttributeBase;
 import modelarium.entities.attributes.events.functional.FunctionalAgentEvent;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.contexts.AgentContext;
@@ -72,12 +72,12 @@ class LoggingTestHelpers {
     }
 
     @SuppressWarnings("unchecked")
-    static AgentAttributeSet agentAttributeSetWithMemoryLog(
+    static MutableAgentAttributeSet agentAttributeSetWithMemoryLog(
             String ownerName,
             String attributeSetName,
             Attribute... attributes
     ) {
-        AgentAttributeSet attributeSet = new AgentAttributeSet(
+        MutableAgentAttributeSet attributeSet = new MutableAgentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(attributes)
         );

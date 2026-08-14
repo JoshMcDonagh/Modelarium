@@ -2,7 +2,7 @@ package unit.modelarium.scheduler;
 
 import modelarium.clock.ImmutableClock;
 import modelarium.clock.MutableClock;
-import modelarium.entities.immutable.ImmutableEnvironment;
+import modelarium.entities.environments.ImmutableEnvironment;
 
 import static org.mockito.Mockito.mock;
 

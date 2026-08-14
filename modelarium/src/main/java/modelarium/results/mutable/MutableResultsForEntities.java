@@ -1,7 +1,7 @@
 package modelarium.results.mutable;
 
-import modelarium.entities.Entity;
-import modelarium.entities.attributes.AttributeSet;
+import modelarium.entities.MutableEntity;
+import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
@@ -25,7 +25,7 @@ import java.util.*;
  * @param <AS> the type of attribute set the entities own
  * @param <ASL> the type of attribute set log the entities produce
  */
-public sealed abstract class MutableResultsForEntities<SC extends SimulationContext, C extends Context, AS extends AttributeSet<SC,C>, ASL extends AttributeSetLog<SC>>
+public sealed abstract class MutableResultsForEntities<SC extends SimulationContext, C extends Context, AS extends MutableAttributeSet<SC,C>, ASL extends AttributeSetLog<SC>>
         permits MutableResultsForAgents, MutableResultsForEnvironment {
 
     /** The logs of the entities these results cover */
@@ -39,9 +39,9 @@ public sealed abstract class MutableResultsForEntities<SC extends SimulationCont
      *
      * @param entities the entities whose logs the results will collect
      */
-    MutableResultsForEntities(List<? extends Entity<SC,C,AS,ASL>> entities) {
+    MutableResultsForEntities(List<? extends MutableEntity<SC,C,AS,ASL>> entities) {
         for (int i = 0; i < entities.size(); i++) {
-            Entity<SC,C,AS,ASL> entity = entities.get(i);
+            MutableEntity<SC,C,AS,ASL> entity = entities.get(i);
             entityLogList.add(entity.getLog());
             entityLogIndexMap.put(entity.name(), i);
         }
@@ -52,7 +52,7 @@ public sealed abstract class MutableResultsForEntities<SC extends SimulationCont
      *
      * @param entity the entity whose log the results will collect
      */
-    MutableResultsForEntities(Entity<SC,C,AS,ASL> entity) {
+    MutableResultsForEntities(MutableEntity<SC,C,AS,ASL> entity) {
         entityLogList.add(entity.getLog());
         entityLogIndexMap.put(entity.name(), 0);
     }

@@ -1,7 +1,7 @@
 package unit.modelarium.results;
 
-import modelarium.entities.agents.Agent;
-import modelarium.entities.environments.Environment;
+import modelarium.entities.agents.mutable.MutableAgent;
+import modelarium.entities.environments.MutableEnvironment;
 import modelarium.results.immutable.ImmutableResults;
 import modelarium.results.immutable.ImmutableResultsForAgents;
 import modelarium.results.immutable.ImmutableResultsForEnvironment;
@@ -15,9 +15,9 @@ import static unit.modelarium.results.ResultsTestHelpers.*;
 
 public class ImmutableResultsTest {
     private MutableResults populatedMutableResults() {
-        Agent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
+        MutableAgent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
         record(agent, "AttributeSet_0", "Property_0", 1.0);
-        Environment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
+        MutableEnvironment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
         record(environment, "AttributeSet_0", "Property_0", 1);
 
         return mutableResults(agentResults(agent), environmentResults(environment));

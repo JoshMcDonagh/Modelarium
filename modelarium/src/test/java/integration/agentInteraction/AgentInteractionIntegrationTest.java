@@ -3,14 +3,15 @@ package integration.agentInteraction;
 import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
 import modelarium.entities.attributes.*;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.contexts.AgentContext;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.FunctionalEnvironmentGenerator;
-import modelarium.entities.immutable.ImmutableAgent;
+import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.generators.FunctionalEnvironmentGenerator;
+import modelarium.entities.agents.immutable.ImmutableAgent;
 import modelarium.exceptions.AgentNotFoundException;
 import modelarium.exceptions.CoordinatorErrorException;
 import modelarium.exceptions.ModelRunException;
@@ -159,9 +160,9 @@ public class AgentInteractionIntegrationTest {
             private int index = 0;
 
             @Override
-            protected Agent generateAgent(Config config, RandomGenerator random) {
+            protected MutableAgent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + index++;
-                return new Agent(name, factory.attributeSetsFor(name));
+                return new MutableAgent(name, factory.attributeSetsFor(name));
             }
         };
 
@@ -171,22 +172,22 @@ public class AgentInteractionIntegrationTest {
                 .threadCount(threads)
                 .areThreadsSynced(synced)
                 .agentGenerator(agentGenerator)
-                .environmentGenerator(new FunctionalEnvironmentGenerator((c, random) -> new Environment(List.of())))
+                .environmentGenerator(new FunctionalEnvironmentGenerator((c, random) -> new MutableEnvironment(List.of())))
                 .scheduler(new InOrderScheduler())
                 .build();
     }
 
     private interface AgentAttributeSetFactory {
-        List<AgentAttributeSet> attributeSetsFor(String agentName);
+        List<MutableAgentAttributeSet> attributeSetsFor(String agentName);
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void testSyncedAgentReadsAnotherCoresAgentProperty() {
         Config config = config(2, 2, true, name -> List.of(
-                new AgentAttributeSet("value",
+                new MutableAgentAttributeSet("value",
                         (List<Attribute>) (List<?>) List.of(new ConstantValue())),
-                new AgentAttributeSet("observation",
+                new MutableAgentAttributeSet("observation",
                         (List<Attribute>) (List<?>) List.of(new Observer()))
         ));
 
@@ -214,7 +215,7 @@ public class AgentInteractionIntegrationTest {
     public void testSyncedFilteredAgentsSeeWholePopulation() {
         int population = 6;
         Config config = config(population, 3, true, name -> List.of(
-                new AgentAttributeSet("census",
+                new MutableAgentAttributeSet("census",
                         (List<Attribute>) (List<?>) List.of(new PopulationCounter()))
         ));
 
@@ -237,7 +238,7 @@ public class AgentInteractionIntegrationTest {
     @SuppressWarnings("unchecked")
     public void testUnsyncedFilteredAgentsAreLocalOnly() {
         Config config = config(4, 2, false, name -> List.of(
-                new AgentAttributeSet("census",
+                new MutableAgentAttributeSet("census",
                         (List<Attribute>) (List<?>) List.of(new PopulationCounter()))
         ));
 
@@ -258,7 +259,7 @@ public class AgentInteractionIntegrationTest {
     @SuppressWarnings("unchecked")
     public void testUnsyncedMissingAgentFailsRun() {
         Config config = config(2, 2, false, name -> List.of(
-                new AgentAttributeSet("lookup",
+                new MutableAgentAttributeSet("lookup",
                         (List<Attribute>) (List<?>) List.of(new Reader("ghost")))
         ));
 
@@ -281,7 +282,7 @@ public class AgentInteractionIntegrationTest {
         // A single worker keeps this deterministic: the failing worker is the only
         // worker, so nothing is left waiting at the tick barrier.
         Config config = config(1, 1, true, name -> List.of(
-                new AgentAttributeSet("lookup",
+                new MutableAgentAttributeSet("lookup",
                         (List<Attribute>) (List<?>) List.of(new Reader("ghost")))
         ));
 

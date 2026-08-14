@@ -159,5 +159,4 @@ public final class ImmutableResultsForAgents implements ResultsForAgents {
 
         return Collections.unmodifiableMap(wrapped);
     }
-
 }

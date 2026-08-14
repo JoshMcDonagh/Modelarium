@@ -1,7 +1,7 @@
 package unit.modelarium.entities.immutable;
 
-import modelarium.entities.environments.Environment;
-import modelarium.entities.immutable.ImmutableEnvironment;
+import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.ImmutableEnvironment;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,7 +10,7 @@ import static unit.modelarium.entities.immutable.ImmutableEntityTestHelpers.envi
 public class ImmutableEnvironmentTest {
     @Test
     public void testName() {
-        Environment environment = environmentWithTickCounter();
+        MutableEnvironment environment = environmentWithTickCounter();
         ImmutableEnvironment immutableEnvironment = new ImmutableEnvironment(environment);
 
         assertEquals("environment", immutableEnvironment.name());
@@ -18,7 +18,7 @@ public class ImmutableEnvironmentTest {
 
     @Test
     public void testAttributeSetCount() {
-        Environment environment = environmentWithTickCounter();
+        MutableEnvironment environment = environmentWithTickCounter();
         ImmutableEnvironment immutableEnvironment = new ImmutableEnvironment(environment);
 
         assertEquals(1, immutableEnvironment.attributeSetCount());

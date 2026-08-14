@@ -1,6 +1,6 @@
 package modelarium.entities.attributes.properties;
 
-import modelarium.entities.attributes.AttributeBase;
+import modelarium.entities.attributes.sets.mutable.AttributeBase;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.contexts.Context;
 

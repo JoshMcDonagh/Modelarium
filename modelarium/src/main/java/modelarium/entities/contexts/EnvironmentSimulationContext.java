@@ -2,11 +2,11 @@ package modelarium.entities.contexts;
 
 import modelarium.Config;
 import modelarium.clock.MutableClock;
-import modelarium.entities.agents.AgentSet;
-import modelarium.entities.attributes.AttributeBase;
-import modelarium.entities.attributes.EnvironmentAttributeSet;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.immutable.ImmutableEnvironment;
+import modelarium.entities.agents.mutable.MutableAgentSet;
+import modelarium.entities.attributes.sets.mutable.AttributeBase;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.ImmutableEnvironment;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 
 import java.util.random.RandomGenerator;
@@ -33,13 +33,13 @@ public final class EnvironmentSimulationContext extends SimulationContext implem
      * @param randomGenerator the random generator the context will provide access to
      */
     public EnvironmentSimulationContext(
-            Environment entity,
-            AgentSet localAgentSet,
+            MutableEnvironment entity,
+            MutableAgentSet localAgentSet,
             Config config,
             ContextCache cache,
             MutableClock clock,
             RequestResponseController requestResponseController,
-            Environment localEnvironment,
+            MutableEnvironment localEnvironment,
             RandomGenerator randomGenerator
     ) {
         super(entity, localAgentSet, config, cache, clock, requestResponseController, localEnvironment, randomGenerator);
@@ -48,21 +48,21 @@ public final class EnvironmentSimulationContext extends SimulationContext implem
     /**
      * Returns the environment this context belongs to.
      *
-     * @return the owning {@link Environment} instance
+     * @return the owning {@link MutableEnvironment} instance
      */
     @Override
-    public Environment getThisEntity() {
-        return (Environment) entity();
+    public MutableEnvironment getThisEntity() {
+        return (MutableEnvironment) entity();
     }
 
     /**
      * Returns the attribute set currently being run on the owning environment.
      *
-     * @return the current {@link EnvironmentAttributeSet} instance
+     * @return the current {@link MutableEnvironmentAttributeSet} instance
      */
     @Override
-    public EnvironmentAttributeSet getThisAttributeSet() {
-        return (EnvironmentAttributeSet) attributeSet();
+    public MutableEnvironmentAttributeSet getThisAttributeSet() {
+        return (MutableEnvironmentAttributeSet) attributeSet();
     }
 
     /**

@@ -1,159 +1,25 @@
 package modelarium.entities.agents;
 
-import modelarium.entities.immutable.ImmutableAgentSet;
-import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
-import modelarium.exceptions.AgentNotFoundException;
-import modelarium.internal.Internal;
-import modelarium.utils.Cloners;
+import modelarium.entities.agents.immutable.ImmutableAgentSet;
+import modelarium.entities.agents.mutable.MutableAgentSet;
 
-import java.util.*;
+import java.util.List;
 import java.util.function.Predicate;
-import java.util.random.RandomGenerator;
 
 /**
- * A collection class for managing {@link Agent} instances, with support for:
- * <ul>
- *     <li>Optional deep copying of agents on insertion</li>
- *     <li>Fast lookup by agent name</li>
- *     <li>Filtering, duplication, and setup routines</li>
- *     <li>Randomised iteration</li>
- * </ul>
+ * An interface to access a stored set of {@link Agent} instances.
  *
- * <p>This class is iterable and designed to support both sequential and parallel simulation use cases.
+ * @param <A> the type of agent stored
+ * @param <AS> the type of agent set this is
  */
-public final class AgentSet implements Iterable<Agent> {
-    /** Ordered list of agents in the set */
-    private List<Agent> agentList = new ArrayList<>();
-
-    /** Map from agent names to their index in the list */
-    private Map<String, Integer> agentIndexMap = new HashMap<>();
-
+public sealed interface AgentSet<A extends Agent, AS extends AgentSet<A, AS>> extends Iterable<A> permits MutableAgentSet, ImmutableAgentSet {
     /**
-     * Constructs a new agent set from a list of agents, without deep copying.
+     * Retrieves an agent by index.
      *
-     * @param agentsList list of agents to add
+     * @param index the index of the agent
+     * @return the agent at the given position
      */
-    public AgentSet(List<Agent> agentsList) {
-        add(agentsList);
-    }
-
-    /** Constructs an empty agent set without deep copying. */
-    public AgentSet() {}
-
-    /**
-     * Provides each agent in this set with the factory used to create its log databases.
-     *
-     * @param databaseFactory the factory the agents' attribute sets will use to create their log databases
-     */
-    @Internal
-    public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory databaseFactory) {
-        for (Agent agent : agentList)
-            agent.setLogDatabaseFactory(databaseFactory);
-    }
-
-    /**
-     * Replaces the agent already stored under the given agent's name.
-     *
-     * @param agent the agent to store in place of the existing one
-     * @param isDeepCopied whether the agent should be deep cloned before being stored
-     */
-    private void replaceExistingAgent(Agent agent, boolean isDeepCopied) {
-        int index = agentIndexMap.get(agent.name());
-
-        if (agentList.get(index).isDead() && !agent.isDead())
-            agent.kill();
-
-        if (isDeepCopied)
-            agentList.set(index, Cloners.standard().deepClone(agent));
-        else
-            agentList.set(index, agent);
-
-    }
-
-    /**
-     * Appends an agent not previously present in the set.
-     *
-     * @param agent the agent to add to the set
-     * @param isDeepCopied whether the agent should be deep cloned before being stored
-     */
-    private void addNewAgent(Agent agent, boolean isDeepCopied) {
-        int index = agentList.size();
-        agentIndexMap.put(agent.name(), index);
-        if (isDeepCopied)
-            agentList.add(Cloners.standard().deepClone(agent));
-        else
-            agentList.add(agent);
-    }
-
-    /**
-     * Adds an agent to the set. If the agent already exists, it will be replaced.
-     *
-     * @param agent the agent to add
-     */
-    public void add(Agent agent) {
-        if (doesAgentExist(agent.name()))
-            replaceExistingAgent(agent, false);
-        else
-            addNewAgent(agent, false);
-    }
-
-    /**
-     * Adds a list of agents to the set.
-     *
-     * @param agents list of agents to add
-     */
-    public void add(List<Agent> agents) {
-        for (Agent agent : agents)
-            add(agent);
-    }
-
-    /**
-     * Adds all agents from another {@link AgentSet}.
-     *
-     * @param agentSet the agent set to add from
-     */
-    public void add(AgentSet agentSet) {
-        if (agentSet == null)
-            throw new IllegalArgumentException("AgentSet must not be null");
-
-        for (Agent agent : agentSet)
-            add(agent);
-    }
-
-    /**
-     * Adds a deep copy of an agent to the set. If the agent already exists, it will be replaced.
-     *
-     * @param agent the agent to deep clone and add
-     */
-    public void addDeepCopy(Agent agent) {
-        if (doesAgentExist(agent.name()))
-            replaceExistingAgent(agent, true);
-        else
-            addNewAgent(agent, true);
-    }
-
-    /**
-     * Adds a deep copy of each agent in a list to the set.
-     *
-     * @param agents list of agents to deep clone and add
-     */
-    public void addDeepCopy(List<Agent> agents) {
-        for (Agent agent : agents)
-            addDeepCopy(agent);
-    }
-
-    /**
-     * Adds a deep copy of each agent from another {@link AgentSet}.
-     *
-     * @param agentSet the agent set to deep clone and add from
-     */
-    public void addDeepCopy(AgentSet agentSet) {
-        if (agentSet == null)
-            throw new IllegalArgumentException("AgentSet must not be null");
-
-        for (Agent agent : agentSet)
-            addDeepCopy(agent);
-    }
+    A get(int index);
 
     /**
      * Retrieves an agent by name.
@@ -161,59 +27,28 @@ public final class AgentSet implements Iterable<Agent> {
      * @param agentName the agent's unique name
      * @return the agent instance
      */
-    public Agent get(String agentName) {
-        Integer index = agentIndexMap.get(agentName);
-
-        if (index == null)
-            throw new AgentNotFoundException("No agent named '" + agentName + "' in set");
-
-        return agentList.get(index);
-    }
-
-    /**
-     * Retrieves an agent by index.
-     *
-     * @param index the index of the agent
-     * @return the agent at the given position
-     */
-    public Agent get(int index) {
-        return agentList.get(index);
-    }
+    A get(String agentName);
 
     /**
      * Returns the list of agents in this set.
      *
      * @return a list of agent instances
      */
-    public List<Agent> getAsList() {
-        return new ArrayList<>(agentList);
-    }
+    List<A> getAsList();
 
     /**
      * Returns the number of agents in the set.
      *
      * @return the size of the agent set
      */
-    public int size() {
-        return agentList.size();
-    }
+    int size();
 
     /**
      * Returns whether the set contains no agents.
      *
      * @return true if the set is empty, false otherwise
      */
-    public boolean isEmpty() {
-        return agentList.isEmpty();
-    }
-
-    /**
-     * Clears the agent set entirely.
-     */
-    public void clear() {
-        agentIndexMap = new HashMap<>();
-        agentList = new ArrayList<>();
-    }
+    boolean isEmpty();
 
     /**
      * Checks if an agent exists in the set by name.
@@ -221,85 +56,13 @@ public final class AgentSet implements Iterable<Agent> {
      * @param agentName the name to check
      * @return true if the agent exists
      */
-    public boolean doesAgentExist(String agentName) {
-        return agentIndexMap.containsKey(agentName);
-    }
-
-    /**
-     * Updates this set with all agents from another set.
-     * Existing agents are replaced if names match.
-     *
-     * @param otherAgentSet the other agent set to pull from
-     * @param areDeepCopied whether the agents should be deep cloned before being stored
-     */
-    public void update(AgentSet otherAgentSet, boolean areDeepCopied) {
-        if (otherAgentSet == null)
-            throw new IllegalArgumentException("otherAgentSet cannot be null");
-
-        for (int i = 0; i < otherAgentSet.size(); i++) {
-            Agent agent = otherAgentSet.get(i);
-            if (areDeepCopied)
-                addDeepCopy(agent);
-            else
-                add(agent);
-        }
-    }
+    boolean doesAgentExist(String agentName);
 
     /**
      * Returns a filtered view of the agent set.
      *
      * @param agentFilter a predicate to apply to each agent
-     * @return a new {@code AgentSet} containing only matching agents
+     * @return a new {@link AgentSet} containing only matching agents
      */
-    public AgentSet getFilteredAgents(Predicate<Agent> agentFilter) {
-        List<Agent> filteredAgents = new ArrayList<>();
-
-        for (Agent agent : agentList) {
-            if (agentFilter.test(agent) && !agent.isDead())
-                filteredAgents.add(agent);
-        }
-
-        return new AgentSet(filteredAgents);
-    }
-
-    /**
-     * Returns a randomised iterator over the agents in this set.
-     *
-     * @param randomGenerator the random generator used to shuffle the agents
-     * @return an iterator that yields agents in random order
-     */
-    public Iterator<Agent> getRandomIterator(RandomGenerator randomGenerator) {
-        List<Agent> shuffledAgents = new ArrayList<>(agentList);
-        Collections.shuffle(shuffledAgents, randomGenerator);
-        return shuffledAgents.iterator();
-    }
-
-    /**
-     * Returns a read-only view of this agent set.
-     *
-     * @return a new {@link ImmutableAgentSet} instance wrapping this set
-     */
-    public ImmutableAgentSet getAsImmutable() {
-        return new ImmutableAgentSet(this);
-    }
-
-    /**
-     * Returns a duplicate of this agent set.
-     * If deep copy is enabled, agents will be duplicated as well.
-     *
-     * @return a new {@code AgentSet} with the same agents
-     */
-    public AgentSet duplicate() {
-        return new AgentSet(agentList);
-    }
-
-    /**
-     * Standard iterator over the agents in the order they were added.
-     *
-     * @return an iterator over the agent list
-     */
-    @Override
-    public Iterator<Agent> iterator() {
-        return agentList.iterator();
-    }
+    AS getFilteredAgents(Predicate<Agent> agentFilter);
 }

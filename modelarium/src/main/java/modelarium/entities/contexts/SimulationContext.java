@@ -1,18 +1,17 @@
 package modelarium.entities.contexts;
 
-import jdk.jshell.spi.ExecutionControl;
 import modelarium.Config;
 import modelarium.clock.Clock;
 import modelarium.clock.MutableClock;
-import modelarium.entities.Entity;
-import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.AgentSet;
-import modelarium.entities.attributes.AttributeBase;
-import modelarium.entities.attributes.AttributeSet;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.immutable.ImmutableAgent;
-import modelarium.entities.immutable.ImmutableAgentSet;
-import modelarium.entities.immutable.ImmutableEnvironment;
+import modelarium.entities.MutableEntity;
+import modelarium.entities.agents.mutable.MutableAgent;
+import modelarium.entities.agents.mutable.MutableAgentSet;
+import modelarium.entities.attributes.sets.mutable.AttributeBase;
+import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
+import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.agents.immutable.ImmutableAgent;
+import modelarium.entities.agents.immutable.ImmutableAgentSet;
+import modelarium.entities.environments.ImmutableEnvironment;
 import modelarium.exceptions.*;
 import modelarium.internal.Internal;
 import modelarium.multithreading.requestresponse.RequestResponseController;
@@ -39,10 +38,10 @@ import java.util.random.RandomGenerator;
  */
 public sealed abstract class SimulationContext implements Context permits AgentSimulationContext, EnvironmentSimulationContext {
     /** The entity this context belongs to */
-    private final Entity<?,?,?,?> entity;
+    private final MutableEntity<?,?,?,?> entity;
 
     /** The agents living on the same core as the owning entity */
-    private final AgentSet localAgentSet;
+    private final MutableAgentSet localAgentSet;
 
     /** Global simulation configuration */
     private final Config config;
@@ -60,13 +59,13 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     private final RequestResponseInterface requestResponseInterface;
 
     /** The environment local to the owning entity's core */
-    private final Environment localEnvironment;
+    private final MutableEnvironment localEnvironment;
 
     /** The random generator the owning entity can use */
     private final RandomGenerator randomGenerator;
 
     /** The attribute set currently being run on the owning entity */
-    private AttributeSet<?,?> attributeSet = null;
+    private MutableAttributeSet<?,?> attributeSet = null;
 
     /** The attribute currently being run on the owning entity */
     private AttributeBase<?> attribute = null;
@@ -86,13 +85,13 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      */
     @Internal
     public SimulationContext(
-            Entity<?,?,?,?> entity,
-            AgentSet localAgentSet,
+            MutableEntity<?,?,?,?> entity,
+            MutableAgentSet localAgentSet,
             Config config,
             ContextCache cache,
             MutableClock clock,
             RequestResponseController requestResponseController,
-            Environment localEnvironment,
+            MutableEnvironment localEnvironment,
             RandomGenerator randomGenerator
     ) {
         this.entity = entity;
@@ -140,7 +139,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * @param attributeSet the attribute set now being run
      */
     @Internal
-    public void setCurrentAttributeSet(AttributeSet<?,?> attributeSet) {
+    public void setCurrentAttributeSet(MutableAttributeSet<?,?> attributeSet) {
         this.attributeSet = attributeSet;
     }
 
@@ -159,7 +158,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      *
      * @return the owning entity
      */
-    protected Entity<?,?,?,?> entity() {
+    protected MutableEntity<?,?,?,?> entity() {
         return entity;
     }
 
@@ -168,7 +167,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      *
      * @return the current attribute set
      */
-    protected AttributeSet<?,?> attributeSet() {
+    protected MutableAttributeSet<?,?> attributeSet() {
         return attributeSet;
     }
 
@@ -213,14 +212,14 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      *
      * @return the owning entity
      */
-    public abstract Entity<?,?,?,?> getThisEntity();
+    public abstract MutableEntity<?,?,?,?> getThisEntity();
 
     /**
      * Returns the attribute set currently being run on the owning entity. Must be implemented by subclasses.
      *
      * @return the current attribute set
      */
-    public abstract AttributeSet<?,?> getThisAttributeSet();
+    public abstract MutableAttributeSet<?,?> getThisAttributeSet();
 
     /**
      * Returns the attribute currently being run on the owning entity. Must be implemented by subclasses.
@@ -241,7 +240,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      *
      * @param agent the agent to create a context for
      */
-    private void createAgentContext(Agent agent) {
+    private void createAgentContext(MutableAgent agent) {
         agent.createContext(
                 localAgentSet,
                 config,
@@ -258,8 +257,8 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      *
      * @param agentSet the agents to create contexts for
      */
-    private void createAgentContexts(AgentSet agentSet) {
-        for (Agent agent : agentSet)
+    private void createAgentContexts(MutableAgentSet agentSet) {
+        for (MutableAgent agent : agentSet)
             createAgentContext(agent);
     }
 
@@ -268,8 +267,8 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      *
      * @param agentList the agents to create contexts for
      */
-    private void createAgentContexts(List<Agent> agentList) {
-        for (Agent agent : agentList)
+    private void createAgentContexts(List<MutableAgent> agentList) {
+        for (MutableAgent agent : agentList)
             createAgentContext(agent);
     }
 
@@ -278,7 +277,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      *
      * @param agent the agent to add
      */
-    public void addAgent(Agent agent) {
+    public void addAgent(MutableAgent agent) {
         createAgentContext(agent);
         localAgentSet.add(agent);
     }
@@ -289,7 +288,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      *
      * @param agentSet the agents to add
      */
-    public void addAgents(AgentSet agentSet) {
+    public void addAgents(MutableAgentSet agentSet) {
         createAgentContexts(agentSet);
         localAgentSet.add(agentSet);
     }
@@ -299,7 +298,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      *
      * @param agentList the agents to add
      */
-    public void addAgents(List<Agent> agentList) {
+    public void addAgents(List<MutableAgent> agentList) {
         createAgentContexts(agentList);
         localAgentSet.add(agentList);
     }
@@ -309,7 +308,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      *
      * @param agent the agent to deep clone and add
      */
-    public void addAgentDeepCopy(Agent agent) {
+    public void addAgentDeepCopy(MutableAgent agent) {
         addAgent(Cloners.standard().deepClone(agent));
     }
 
@@ -318,7 +317,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      *
      * @param agentSet the agents to deep clone and add
      */
-    public void addAgentsDeepCopy(AgentSet agentSet) {
+    public void addAgentsDeepCopy(MutableAgentSet agentSet) {
         addAgents(Cloners.standard().deepClone(agentSet));
     }
 
@@ -327,7 +326,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      *
      * @param agentList the agents to deep clone and add
      */
-    public void addAgentsDeepCopy(List<Agent> agentList) {
+    public void addAgentsDeepCopy(List<MutableAgent> agentList) {
         addAgents(Cloners.standard().deepClone(agentList));
     }
 
@@ -357,7 +356,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
 
         // Request from coordinator
         try {
-            Agent requestedAgent = requestResponseInterface.getAgentFromCoordinator(entity.name(), targetAgentName);
+            MutableAgent requestedAgent = requestResponseInterface.getAgentFromCoordinator(entity.name(), targetAgentName);
             if (requestedAgent.isDead())
                 throw new AgentIsDeadException("Agent '" + targetAgentName + "' requested by '" + entity.name()
                         + "' is dead and not accssible");
@@ -381,12 +380,12 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * @param filter a predicate to apply to each agent
      * @return a read-only view of the matching agents
      */
-    public ImmutableAgentSet getFilteredAgents(Predicate<Agent> filter) {
+    public ImmutableAgentSet getFilteredAgents(Predicate<MutableAgent> filter) {
         // Return cached filtered result if available
         if (cache.doesAgentFilterExist(filter))
             return cache.getFilteredAgents(filter).getAsImmutable();
 
-        AgentSet filteredAgentSet;
+        MutableAgentSet filteredAgentSet;
 
         if (config.areThreadsSynced()) {
             // Request filtered agents from the coordinator

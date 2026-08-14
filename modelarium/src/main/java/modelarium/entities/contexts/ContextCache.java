@@ -1,8 +1,8 @@
 package modelarium.entities.contexts;
 
-import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.AgentSet;
-import modelarium.entities.environments.Environment;
+import modelarium.entities.agents.mutable.MutableAgent;
+import modelarium.entities.agents.mutable.MutableAgentSet;
+import modelarium.entities.environments.MutableEnvironment;
 import modelarium.internal.Internal;
 
 import java.util.IdentityHashMap;
@@ -17,20 +17,20 @@ import java.util.function.Predicate;
 public class ContextCache {
 
     /** List of previously applied agent filters (for caching filtered sets) */
-    private final IdentityHashMap<Predicate<Agent>, AgentSet> filteredAgentsCache = new IdentityHashMap<>();
+    private final IdentityHashMap<Predicate<MutableAgent>, MutableAgentSet> filteredAgentsCache = new IdentityHashMap<>();
 
     /** The individually retrieved agents cached during the current tick */
-    private final AgentSet individualAgentCache;
+    private final MutableAgentSet individualAgentCache;
 
     /** The environment cached during the current tick, or null if it has not been retrieved */
-    private Environment environment = null;
+    private MutableEnvironment environment = null;
 
     /**
      * Constructs a new worker cache.
      */
     @Internal
     public ContextCache() {
-        individualAgentCache = new AgentSet();
+        individualAgentCache = new MutableAgentSet();
     }
 
     /**
@@ -48,7 +48,7 @@ public class ContextCache {
      * @param agentFilter the filter to check for
      * @return true if a result is cached for the filter, false otherwise
      */
-    public boolean doesAgentFilterExist(Predicate<Agent> agentFilter) {
+    public boolean doesAgentFilterExist(Predicate<MutableAgent> agentFilter) {
         return filteredAgentsCache.containsKey(agentFilter);
     }
 
@@ -58,7 +58,7 @@ public class ContextCache {
      * @param agentFilter the filter the agents were matched against
      * @param results the agents matching the filter
      */
-    public void addFilteredAgents(Predicate<Agent> agentFilter, AgentSet results) {
+    public void addFilteredAgents(Predicate<MutableAgent> agentFilter, MutableAgentSet results) {
         filteredAgentsCache.put(agentFilter, results);
     }
 
@@ -66,9 +66,9 @@ public class ContextCache {
      * Retrieves the cached agents matching a filter.
      *
      * @param agentFilter the filter the agents were matched against
-     * @return the cached {@link AgentSet} for the filter, or null if none is cached
+     * @return the cached {@link MutableAgentSet} for the filter, or null if none is cached
      */
-    public AgentSet getFilteredAgents(Predicate<Agent> agentFilter) {
+    public MutableAgentSet getFilteredAgents(Predicate<MutableAgent> agentFilter) {
         return filteredAgentsCache.get(agentFilter);
     }
 
@@ -88,7 +88,7 @@ public class ContextCache {
      * @param agentName the name of the agent to retrieve
      * @return the cached agent with the specified name
      */
-    public Agent getAgent(String agentName) {
+    public MutableAgent getAgent(String agentName) {
         return individualAgentCache.get(agentName);
     }
 
@@ -97,7 +97,7 @@ public class ContextCache {
      *
      * @param agent the agent to cache
      */
-    public void addAgent(Agent agent) {
+    public void addAgent(MutableAgent agent) {
         individualAgentCache.add(agent);
     }
 
@@ -106,7 +106,7 @@ public class ContextCache {
      *
      * @param agentSet the agents to cache
      */
-    public void addAgents(AgentSet agentSet) {
+    public void addAgents(MutableAgentSet agentSet) {
         individualAgentCache.add(agentSet);
     }
 
@@ -122,9 +122,9 @@ public class ContextCache {
     /**
      * Retrieves the cached environment.
      *
-     * @return the cached {@link Environment} instance, or null if none is cached
+     * @return the cached {@link MutableEnvironment} instance, or null if none is cached
      */
-    public Environment getEnvironment() {
+    public MutableEnvironment getEnvironment() {
         return environment;
     }
 
@@ -133,7 +133,7 @@ public class ContextCache {
      *
      * @param environment the environment to cache
      */
-    public void addEnvironment(Environment environment) {
+    public void addEnvironment(MutableEnvironment environment) {
         this.environment = environment;
     }
 }

@@ -1,7 +1,7 @@
 package modelarium.entities.agents.generators;
 
 import modelarium.Config;
-import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.mutable.MutableAgent;
 
 import java.util.function.BiFunction;
 import java.util.random.RandomGenerator;
@@ -15,14 +15,14 @@ import java.util.random.RandomGenerator;
 public class FunctionalDefaultAgentGenerator extends DefaultAgentGenerator {
 
     /** The function used to generate each agent */
-    private final BiFunction<Config, RandomGenerator, Agent> generatorFunction;
+    private final BiFunction<Config, RandomGenerator, MutableAgent> generatorFunction;
 
     /**
      * Constructs a new generator with the specified logic.
      *
      * @param generatorFunction the function used to generate each agent
      */
-    public FunctionalDefaultAgentGenerator(BiFunction<Config, RandomGenerator, Agent> generatorFunction) {
+    public FunctionalDefaultAgentGenerator(BiFunction<Config, RandomGenerator, MutableAgent> generatorFunction) {
         this.generatorFunction = generatorFunction;
     }
 
@@ -31,10 +31,10 @@ public class FunctionalDefaultAgentGenerator extends DefaultAgentGenerator {
      *
      * @param config the model settings passed to the agent during creation
      * @param random the random generator the agent generator can use for constructing agents
-     * @return a new {@link Agent} instance
+     * @return a new {@link MutableAgent} instance
      */
     @Override
-    protected Agent generateAgent(Config config, RandomGenerator random) {
+    protected MutableAgent generateAgent(Config config, RandomGenerator random) {
         return generatorFunction.apply(config, random);
     }
 }

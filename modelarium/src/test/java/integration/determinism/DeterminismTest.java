@@ -3,17 +3,15 @@ package integration.determinism;
 import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
-import modelarium.entities.attributes.AgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.attributes.Attribute;
-import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.contexts.AgentContext;
-import modelarium.entities.contexts.AgentSimulationContext;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.FunctionalEnvironmentGenerator;
+import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.generators.FunctionalEnvironmentGenerator;
 import modelarium.results.immutable.ImmutableResults;
 import modelarium.scheduler.RandomOrderScheduler;
 import org.junit.jupiter.api.BeforeAll;
@@ -75,11 +73,11 @@ public class DeterminismTest {
             private int idx = 0;
 
             @Override
-            protected Agent generateAgent(Config config, RandomGenerator random) {
+            protected MutableAgent generateAgent(Config config, RandomGenerator random) {
                 String name = String.format("agent_%02d", idx++);
-                AgentAttributeSet set = new AgentAttributeSet("state",
+                MutableAgentAttributeSet set = new MutableAgentAttributeSet("state",
                         (List<Attribute>) (List<?>) List.of(new RandomWalk()));
-                return new Agent(name, List.of(set));
+                return new MutableAgent(name, List.of(set));
             }
         };
 
@@ -89,7 +87,7 @@ public class DeterminismTest {
                 .threadCount(THREADS)
                 .areThreadsSynced(areThreadsSynced)
                 .agentGenerator(agentGen)
-                .environmentGenerator(new FunctionalEnvironmentGenerator((c, random) -> new Environment(List.of())))
+                .environmentGenerator(new FunctionalEnvironmentGenerator((c, random) -> new MutableEnvironment(List.of())))
                 .scheduler(new RandomOrderScheduler())
                 .seed(seed)
                 .build();

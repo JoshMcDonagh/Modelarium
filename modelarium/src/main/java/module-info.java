@@ -36,6 +36,7 @@ module modelarium {
     requires java.sql;
     requires cloning;
     requires jdk.jshell;
+    requires modelarium;
 
     // Reflective deep-clone access for the Rits Cloner (see modelarium.utils.Cloners)
     opens modelarium.entities to cloning;
@@ -49,4 +50,20 @@ module modelarium {
     opens modelarium.entities.attributes.events to cloning;
     opens modelarium.entities.attributes.routines to cloning;
     exports modelarium.scheduler.functional;
+    exports modelarium.entities.agents.mutable;
+    opens modelarium.entities.agents.mutable to cloning;
+    exports modelarium.entities.agents.immutable;
+    opens modelarium.entities.agents.immutable to cloning;
+    exports modelarium.entities.environments.mutable;
+    opens modelarium.entities.environments.mutable to cloning;
+    exports modelarium.entities.environments.immutable;
+    opens modelarium.entities.environments.immutable to cloning;
+    exports modelarium.entities.environments.generators;
+    opens modelarium.entities.environments.generators to cloning;
+    exports modelarium.entities.attributes.sets.mutable;
+    opens modelarium.entities.attributes.sets.mutable to cloning;
+    exports modelarium.entities.attributes.sets.immutable;
+    opens modelarium.entities.attributes.sets.immutable to cloning;
+    exports modelarium.entities.attributes.sets;
+    opens modelarium.entities.attributes.sets to cloning;
 }

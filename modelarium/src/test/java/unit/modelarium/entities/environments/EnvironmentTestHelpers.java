@@ -1,21 +1,19 @@
 package unit.modelarium.entities.environments;
 
 import modelarium.Config;
-import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
 import modelarium.entities.attributes.Attribute;
-import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.AttributeAccessLevel;
-import modelarium.entities.attributes.EnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.contexts.EnvironmentContext;
-import modelarium.entities.contexts.EnvironmentSimulationContext;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.EnvironmentGenerator;
+import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.generators.EnvironmentGenerator;
 
 import java.util.List;
 import modelarium.clock.MutableClock;
-import modelarium.entities.agents.AgentSet;
+import modelarium.entities.agents.mutable.MutableAgentSet;
 import modelarium.entities.attributes.events.EnvironmentEvent;
 import modelarium.entities.attributes.routines.EnvironmentRoutine;
 import modelarium.entities.contexts.ContextCache;
@@ -26,8 +24,8 @@ import java.util.random.RandomGenerator;
 class EnvironmentTestHelpers {
     private EnvironmentTestHelpers() {}
 
-    static Environment emptyEnvironment() {
-        return new Environment("env", List.of());
+    static MutableEnvironment emptyEnvironment() {
+        return new MutableEnvironment("env", List.of());
     }
 
     static class EnvironmentTickProperty extends EnvironmentProperty<Integer> {
@@ -54,15 +52,15 @@ class EnvironmentTestHelpers {
     }
 
     @SuppressWarnings("unchecked")
-    static EnvironmentAttributeSet environmentAttributeSet(String ownerName, String attributeSetName, EnvironmentProperty<?>... properties) {
-        return new EnvironmentAttributeSet(
+    static MutableEnvironmentAttributeSet environmentAttributeSet(String ownerName, String attributeSetName, EnvironmentProperty<?>... properties) {
+        return new MutableEnvironmentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(properties)
         );
     }
 
-    static EnvironmentAttributeSet emptyEnvironmentAttributeSet(String ownerName, String attributeSetName) {
-        return new EnvironmentAttributeSet(attributeSetName, List.of());
+    static MutableEnvironmentAttributeSet emptyEnvironmentAttributeSet(String ownerName, String attributeSetName) {
+        return new MutableEnvironmentAttributeSet(attributeSetName, List.of());
     }
 
     static DefaultAgentGenerator agentGenerator() {
@@ -70,8 +68,8 @@ class EnvironmentTestHelpers {
             private int index = 0;
 
             @Override
-            protected Agent generateAgent(Config config, RandomGenerator random) {
-                return new Agent("agent_" + index++, List.of());
+            protected MutableAgent generateAgent(Config config, RandomGenerator random) {
+                return new MutableAgent("agent_" + index++, List.of());
             }
         };
     }
@@ -79,7 +77,7 @@ class EnvironmentTestHelpers {
     static EnvironmentGenerator environmentGenerator() {
         return new EnvironmentGenerator() {
             @Override
-            public Environment generateEnvironment(Config config, RandomGenerator random) {
+            public MutableEnvironment generateEnvironment(Config config, RandomGenerator random) {
                 return emptyEnvironment();
             }
         };
@@ -129,17 +127,17 @@ class EnvironmentTestHelpers {
     }
 
     @SuppressWarnings("unchecked")
-    static EnvironmentAttributeSet environmentAttributeSetFromAttributes(String ownerName, String attributeSetName, Attribute... attributes) {
-        return new EnvironmentAttributeSet(
+    static MutableEnvironmentAttributeSet environmentAttributeSetFromAttributes(String ownerName, String attributeSetName, Attribute... attributes) {
+        return new MutableEnvironmentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(attributes)
         );
     }
 
-    static void createContextFor(Environment environment) {
+    static void createContextFor(MutableEnvironment environment) {
         Config config = syncedConfig(1, 1, 1);
         environment.createContext(
-                new AgentSet(),
+                new MutableAgentSet(),
                 config,
                 new ContextCache(),
                 new MutableClock(config.tickCount()),

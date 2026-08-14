@@ -1,6 +1,6 @@
 package unit.modelarium.entities.logging;
 
-import modelarium.entities.attributes.AgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
@@ -13,9 +13,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static unit.modelarium.entities.logging.LoggingTestHelpers.*;
 
 public class EntityLogTest {
-    private EntityLog<AgentSimulationContext, AgentContext, AgentAttributeSet, AttributeSetLog<AgentSimulationContext>> entityLog(
+    private EntityLog<AgentSimulationContext, AgentContext, MutableAgentAttributeSet, AttributeSetLog<AgentSimulationContext>> entityLog(
             String entityName,
-            AgentAttributeSet... attributeSets
+            MutableAgentAttributeSet... attributeSets
     ) {
         return new EntityLog<>(entityName, List.of(attributeSets));
     }
@@ -24,7 +24,7 @@ public class EntityLogTest {
     public void testGetEntityName() {
         String entityName = "testEntity";
 
-        EntityLog<AgentSimulationContext, AgentContext, AgentAttributeSet, AttributeSetLog<AgentSimulationContext>> log = entityLog(
+        EntityLog<AgentSimulationContext, AgentContext, MutableAgentAttributeSet, AttributeSetLog<AgentSimulationContext>> log = entityLog(
                 entityName,
                 agentAttributeSetWithMemoryLog(entityName, "AttributeSet_0", loggedProperty("Property_0"))
         );
@@ -35,10 +35,10 @@ public class EntityLogTest {
     @Test
     public void testGet_WithIndex() {
         String entityName = "testEntity";
-        AgentAttributeSet attributeSet0 = agentAttributeSetWithMemoryLog(entityName, "AttributeSet_0", loggedProperty("Property_0"));
-        AgentAttributeSet attributeSet1 = agentAttributeSetWithMemoryLog(entityName, "AttributeSet_1", loggedProperty("Property_1"));
+        MutableAgentAttributeSet attributeSet0 = agentAttributeSetWithMemoryLog(entityName, "AttributeSet_0", loggedProperty("Property_0"));
+        MutableAgentAttributeSet attributeSet1 = agentAttributeSetWithMemoryLog(entityName, "AttributeSet_1", loggedProperty("Property_1"));
 
-        EntityLog<AgentSimulationContext, AgentContext, AgentAttributeSet, AttributeSetLog<AgentSimulationContext>> log = entityLog(
+        EntityLog<AgentSimulationContext, AgentContext, MutableAgentAttributeSet, AttributeSetLog<AgentSimulationContext>> log = entityLog(
                 entityName,
                 attributeSet0,
                 attributeSet1
@@ -50,10 +50,10 @@ public class EntityLogTest {
     @Test
     public void testGet_WithName() {
         String entityName = "testEntity";
-        AgentAttributeSet attributeSet0 = agentAttributeSetWithMemoryLog(entityName, "AttributeSet_0", loggedProperty("Property_0"));
-        AgentAttributeSet attributeSet1 = agentAttributeSetWithMemoryLog(entityName, "AttributeSet_1", loggedProperty("Property_1"));
+        MutableAgentAttributeSet attributeSet0 = agentAttributeSetWithMemoryLog(entityName, "AttributeSet_0", loggedProperty("Property_0"));
+        MutableAgentAttributeSet attributeSet1 = agentAttributeSetWithMemoryLog(entityName, "AttributeSet_1", loggedProperty("Property_1"));
 
-        EntityLog<AgentSimulationContext, AgentContext, AgentAttributeSet, AttributeSetLog<AgentSimulationContext>> log = entityLog(
+        EntityLog<AgentSimulationContext, AgentContext, MutableAgentAttributeSet, AttributeSetLog<AgentSimulationContext>> log = entityLog(
                 entityName,
                 attributeSet0,
                 attributeSet1
@@ -66,7 +66,7 @@ public class EntityLogTest {
     public void testAttributeSetLogCount() {
         String entityName = "testEntity";
 
-        EntityLog<AgentSimulationContext, AgentContext, AgentAttributeSet, AttributeSetLog<AgentSimulationContext>> log = entityLog(
+        EntityLog<AgentSimulationContext, AgentContext, MutableAgentAttributeSet, AttributeSetLog<AgentSimulationContext>> log = entityLog(
                 entityName,
                 agentAttributeSetWithMemoryLog(entityName, "AttributeSet_0", loggedProperty("Property_0")),
                 agentAttributeSetWithMemoryLog(entityName, "AttributeSet_1", loggedProperty("Property_1")),
@@ -79,15 +79,15 @@ public class EntityLogTest {
     @Test
     public void testDisconnectDatabases() {
         String entityName = "testEntity";
-        AgentAttributeSet attributeSet0 = agentAttributeSetWithMemoryLog(entityName, "AttributeSet_0", loggedProperty("Property_0"));
-        AgentAttributeSet attributeSet1 = agentAttributeSetWithMemoryLog(entityName, "AttributeSet_1", loggedProperty("Property_1"));
+        MutableAgentAttributeSet attributeSet0 = agentAttributeSetWithMemoryLog(entityName, "AttributeSet_0", loggedProperty("Property_0"));
+        MutableAgentAttributeSet attributeSet1 = agentAttributeSetWithMemoryLog(entityName, "AttributeSet_1", loggedProperty("Property_1"));
 
         AttributeSetLog<AgentSimulationContext> attributeSetLog0 = attributeSet0.getLog();
         AttributeSetLog<AgentSimulationContext> attributeSetLog1 = attributeSet1.getLog();
         attributeSetLog0.record("Property_0", 1.0);
         attributeSetLog1.record("Property_1", 2.0);
 
-        EntityLog<AgentSimulationContext, AgentContext, AgentAttributeSet, AttributeSetLog<AgentSimulationContext>> log = entityLog(
+        EntityLog<AgentSimulationContext, AgentContext, MutableAgentAttributeSet, AttributeSetLog<AgentSimulationContext>> log = entityLog(
                 entityName,
                 attributeSet0,
                 attributeSet1

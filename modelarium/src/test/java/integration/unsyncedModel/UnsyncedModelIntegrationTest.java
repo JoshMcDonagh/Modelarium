@@ -2,17 +2,15 @@ package integration.unsyncedModel;
 
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
-import modelarium.entities.attributes.AgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.attributes.Attribute;
-import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.contexts.AgentContext;
-import modelarium.entities.contexts.AgentSimulationContext;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.FunctionalEnvironmentGenerator;
+import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.generators.FunctionalEnvironmentGenerator;
 import modelarium.results.immutable.ImmutableResults;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.Test;
@@ -66,12 +64,12 @@ public class UnsyncedModelIntegrationTest {
             private int idx = 0;
 
             @Override
-            protected Agent generateAgent(Config config, RandomGenerator random) {
+            protected MutableAgent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + idx++;
                 StepCounter counter = new StepCounter();
-                AgentAttributeSet set = new AgentAttributeSet("movement",
+                MutableAgentAttributeSet set = new MutableAgentAttributeSet("movement",
                         (List<Attribute>) (List<?>) List.of(counter));
-                return new Agent(name, List.of(set));
+                return new MutableAgent(name, List.of(set));
             }
         };
 
@@ -81,7 +79,7 @@ public class UnsyncedModelIntegrationTest {
                 .threadCount(threads)
                 .areThreadsSynced(false)
                 .agentGenerator(agentGen)
-                .environmentGenerator(new FunctionalEnvironmentGenerator((c, random) -> new Environment(List.of())))
+                .environmentGenerator(new FunctionalEnvironmentGenerator((c, random) -> new MutableEnvironment(List.of())))
                 .scheduler(new InOrderScheduler())
                 .build();
 
@@ -116,12 +114,12 @@ public class UnsyncedModelIntegrationTest {
             private int idx = 0;
 
             @Override
-            protected Agent generateAgent(Config config, RandomGenerator random) {
+            protected MutableAgent generateAgent(Config config, RandomGenerator random) {
                 String name = "a_" + idx++;
                 StepCounter c = new StepCounter();
-                AgentAttributeSet set = new AgentAttributeSet("s",
+                MutableAgentAttributeSet set = new MutableAgentAttributeSet("s",
                         (List<Attribute>) (List<?>) List.of(c));
-                return new Agent(name, List.of(set));
+                return new MutableAgent(name, List.of(set));
             }
         };
 
@@ -131,7 +129,7 @@ public class UnsyncedModelIntegrationTest {
                 .threadCount(1)
                 .areThreadsSynced(false)
                 .agentGenerator(agentGen)
-                .environmentGenerator(new FunctionalEnvironmentGenerator((c, random) -> new Environment(List.of())))
+                .environmentGenerator(new FunctionalEnvironmentGenerator((c, random) -> new MutableEnvironment(List.of())))
                 .build();
 
         Model model = new Model(config);

@@ -4,7 +4,7 @@ import dev.modelarium.examples.sirbasic.config.SettingsLoader;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.contexts.AgentContext;
-import modelarium.entities.immutable.attributes.ImmutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.immutable.ImmutableEnvironmentAttributeSet;
 
 import java.util.random.RandomGenerator;
 

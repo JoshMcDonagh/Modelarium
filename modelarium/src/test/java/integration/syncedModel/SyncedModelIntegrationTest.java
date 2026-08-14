@@ -3,18 +3,18 @@ package integration.syncedModel;
 import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
 import modelarium.entities.attributes.*;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.contexts.AgentContext;
-import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.EnvironmentContext;
-import modelarium.entities.contexts.EnvironmentSimulationContext;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.EnvironmentGenerator;
-import modelarium.entities.environments.FunctionalEnvironmentGenerator;
+import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.generators.EnvironmentGenerator;
+import modelarium.entities.environments.generators.FunctionalEnvironmentGenerator;
 import modelarium.results.immutable.ImmutableResults;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.BeforeAll;
@@ -104,22 +104,22 @@ public class SyncedModelIntegrationTest {
             private int index = 0;
 
             @Override
-            protected Agent generateAgent(Config config, RandomGenerator random) {
+            protected MutableAgent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + index++;
                 Hunger hunger = new Hunger();
-                AgentAttributeSet foodSet = new AgentAttributeSet("food",
+                MutableAgentAttributeSet foodSet = new MutableAgentAttributeSet("food",
                         (List<Attribute>) (List<?>) List.of(hunger));
-                return new Agent(name, List.of(foodSet));
+                return new MutableAgent(name, List.of(foodSet));
             }
         };
 
         EnvironmentGenerator envGen = new EnvironmentGenerator() {
             @Override
-            public Environment generateEnvironment(Config config, RandomGenerator random) {
+            public MutableEnvironment generateEnvironment(Config config, RandomGenerator random) {
                 EnvTick envTick = new EnvTick();
-                EnvironmentAttributeSet timingSet = new EnvironmentAttributeSet("timing",
+                MutableEnvironmentAttributeSet timingSet = new MutableEnvironmentAttributeSet("timing",
                         (List<Attribute>) (List<?>) List.of(envTick));
-                return new Environment(List.of(timingSet));
+                return new MutableEnvironment(List.of(timingSet));
             }
         };
 
@@ -173,11 +173,11 @@ public class SyncedModelIntegrationTest {
                 .threadCount(1)
                 .agentGenerator(new DefaultAgentGenerator() {
                     @Override
-                    protected Agent generateAgent(Config c, RandomGenerator random) {
-                        return new Agent("a", List.of());
+                    protected MutableAgent generateAgent(Config c, RandomGenerator random) {
+                        return new MutableAgent("a", List.of());
                     }
                 })
-                .environmentGenerator(new FunctionalEnvironmentGenerator((c, random) -> new Environment(List.of())))
+                .environmentGenerator(new FunctionalEnvironmentGenerator((c, random) -> new MutableEnvironment(List.of())))
                 .build();
 
         Model model = new Model(config);

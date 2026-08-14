@@ -1,9 +1,9 @@
 package modelarium;
 
 import modelarium.clock.MutableClock;
-import modelarium.entities.agents.AgentSet;
+import modelarium.entities.agents.mutable.MutableAgentSet;
 import modelarium.entities.contexts.ContextCache;
-import modelarium.entities.environments.Environment;
+import modelarium.entities.environments.MutableEnvironment;
 import modelarium.exceptions.ModelRunException;
 import modelarium.multithreading.CoordinatorHandle;
 import modelarium.multithreading.CoordinatorThread;
@@ -46,24 +46,24 @@ public class Model {
     /**
      * Generates sets of agents each thread will use and provides each set with the log's database factory.
      *
-     * @return a list of {@link AgentSet} objects, one per core
+     * @return a list of {@link MutableAgentSet} objects, one per core
      */
-    private List<AgentSet> generateAgentsForEachCoreAsList(RandomGenerator randomGenerator) {
-        List<AgentSet> agentsForEachCore = config.agentGenerator().getAgentsForEachCore(config, randomGenerator);
+    private List<MutableAgentSet> generateAgentsForEachCoreAsList(RandomGenerator randomGenerator) {
+        List<MutableAgentSet> agentsForEachCore = config.agentGenerator().getAgentsForEachCore(config, randomGenerator);
 
-        for (AgentSet agentSet : agentsForEachCore)
+        for (MutableAgentSet agentSet : agentsForEachCore)
             agentSet.setLogDatabaseFactory(config.runLogDatabaseFactory());
 
         return agentsForEachCore;
     }
 
     /**
-     * Generates the {@link Environment} that the model will use.
+     * Generates the {@link MutableEnvironment} that the model will use.
      *
-     * @return a new {@link Environment} instance
+     * @return a new {@link MutableEnvironment} instance
      */
-    private Environment generateEnvironment(RandomGenerator randomGenerator) {
-        Environment environment = config.environmentGenerator().generateEnvironment(config, randomGenerator);
+    private MutableEnvironment generateEnvironment(RandomGenerator randomGenerator) {
+        MutableEnvironment environment = config.environmentGenerator().generateEnvironment(config, randomGenerator);
         environment.setLogDatabaseFactory(config.runLogDatabaseFactory());
         return environment;
     }
@@ -73,9 +73,9 @@ public class Model {
      *
      * @param agentsForEachCore the list of agent sets for each core
      */
-    private void setupResultsContainer(List<AgentSet> agentsForEachCore) {
+    private void setupResultsContainer(List<MutableAgentSet> agentsForEachCore) {
         results.setAgentNames(agentsForEachCore);
-        results.setAgentResults(new MutableResultsForAgents(new AgentSet()));
+        results.setAgentResults(new MutableResultsForAgents(new MutableAgentSet()));
     }
 
     /**
@@ -100,7 +100,7 @@ public class Model {
      * @param randomGenerator the splittable random generator the environment can use
      */
     private void createAndSetEnvironmentContext(
-            Environment environment,
+            MutableEnvironment environment,
             RequestResponseController requestResponseController,
             MutableClock sharedClock,
             SplittableRandom randomGenerator
@@ -110,7 +110,7 @@ public class Model {
         clock = Objects.requireNonNullElseGet(sharedClock, () -> new MutableClock(config.tickCount()));
 
         environment.createContext(
-                new AgentSet(),
+                new MutableAgentSet(),
                 config,
                 new ContextCache(),
                 clock,
@@ -130,7 +130,7 @@ public class Model {
      * @return a new {@link CoordinatorHandle} instance for the coordinator thread
      */
     private CoordinatorHandle launchCoordinator(
-            Environment environment,
+            MutableEnvironment environment,
             RequestResponseController requestResponseController,
             MutableClock sharedClock
     ) {
@@ -159,8 +159,8 @@ public class Model {
      * @param randomGenerator the splittable random generator agents can use
      */
     private void launchWorkers(
-            List<AgentSet> agentsForEachCore,
-            Environment environment,
+            List<MutableAgentSet> agentsForEachCore,
+            MutableEnvironment environment,
             RequestResponseController requestResponseController,
             MutableClock sharedClock,
             SplittableRandom randomGenerator
@@ -171,12 +171,12 @@ public class Model {
         // Launch worker threads
         for (int threadIndex = 0; threadIndex < config.threadCount(); threadIndex++) {
             // Create an agent set for the current core
-            AgentSet threadAgentSet = new AgentSet();
-            AgentSet perThreadAgentSet = agentsForEachCore.get(threadIndex);
+            MutableAgentSet threadAgentSet = new MutableAgentSet();
+            MutableAgentSet perThreadAgentSet = agentsForEachCore.get(threadIndex);
 
             // Make sure agent set is not null
             if (perThreadAgentSet == null)
-                perThreadAgentSet = new AgentSet();
+                perThreadAgentSet = new MutableAgentSet();
 
             // Add the pre-assigned agent set for this core
             threadAgentSet.add(perThreadAgentSet);
@@ -243,8 +243,8 @@ public class Model {
         results = new MutableResults();
 
         // Generate entities
-        List<AgentSet> agentsForEachCore = generateAgentsForEachCoreAsList(randomGenerator);
-        Environment environment = generateEnvironment(randomGenerator);
+        List<MutableAgentSet> agentsForEachCore = generateAgentsForEachCoreAsList(randomGenerator);
+        MutableEnvironment environment = generateEnvironment(randomGenerator);
 
         // Updates the results container with the agents in the model
         setupResultsContainer(agentsForEachCore);

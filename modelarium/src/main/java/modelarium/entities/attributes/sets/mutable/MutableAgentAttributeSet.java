@@ -1,5 +1,8 @@
-package modelarium.entities.attributes;
+package modelarium.entities.attributes.sets.mutable;
 
+import modelarium.entities.attributes.AgentAttribute;
+import modelarium.entities.attributes.sets.AgentAttributeSet;
+import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.routines.AgentRoutine;
@@ -11,10 +14,10 @@ import java.util.List;
 /**
  * Class for containing and managing a named group of an agent's attributes.
  *
- * <p>This class specialises {@link AttributeSet} so that retrieved attributes are returned as their
+ * <p>This class specialises {@link MutableAttributeSet} so that retrieved attributes are returned as their
  * agent-flavoured types.
  */
-public final class AgentAttributeSet extends AttributeSet<AgentSimulationContext, AgentContext> {
+public final class MutableAgentAttributeSet extends MutableAttributeSet<AgentSimulationContext, AgentContext> implements AgentAttributeSet {
 
     /**
      * Constructs a new agent attribute set with the specified owner, name and attributes.
@@ -22,7 +25,7 @@ public final class AgentAttributeSet extends AttributeSet<AgentSimulationContext
      * @param name the name of the attribute set, used to identify it within its owning agent
      * @param attributes the attributes the set will contain, in the order they will be run
      */
-    public AgentAttributeSet(String name, List<Attribute> attributes) {
+    public MutableAgentAttributeSet(String name, List<Attribute> attributes) {
         super(name, attributes);
     }
 

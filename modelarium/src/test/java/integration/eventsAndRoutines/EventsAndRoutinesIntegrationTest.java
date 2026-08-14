@@ -3,19 +3,21 @@ package integration.eventsAndRoutines;
 import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
 import modelarium.entities.attributes.*;
 import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.attributes.events.EnvironmentEvent;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.attributes.routines.AgentRoutine;
 import modelarium.entities.attributes.routines.EnvironmentRoutine;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.EnvironmentContext;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.EnvironmentGenerator;
+import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.generators.EnvironmentGenerator;
 import modelarium.results.immutable.ImmutableResults;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.BeforeAll;
@@ -224,32 +226,32 @@ public class EventsAndRoutinesIntegrationTest {
             private int index = 0;
 
             @Override
-            protected Agent generateAgent(Config config, RandomGenerator random) {
+            protected MutableAgent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + index++;
                 StepCount stepCount = new StepCount();
                 Energy energy = new Energy();
-                AgentAttributeSet activity = new AgentAttributeSet("activity",
+                MutableAgentAttributeSet activity = new MutableAgentAttributeSet("activity",
                         (List<Attribute>) (List<?>) List.of(
                                 stepCount,
                                 new PulseEvent(stepCount),
                                 new RechargeRoutine(energy),
                                 energy));
-                return new Agent(name, List.of(activity));
+                return new MutableAgent(name, List.of(activity));
             }
         };
 
         EnvironmentGenerator environmentGenerator = new EnvironmentGenerator() {
             @Override
-            public Environment generateEnvironment(Config config, RandomGenerator random) {
+            public MutableEnvironment generateEnvironment(Config config, RandomGenerator random) {
                 Temperature temperature = new Temperature();
                 Airflow airflow = new Airflow();
-                EnvironmentAttributeSet climate = new EnvironmentAttributeSet("climate",
+                MutableEnvironmentAttributeSet climate = new MutableEnvironmentAttributeSet("climate",
                         (List<Attribute>) (List<?>) List.of(
                                 temperature,
                                 new HeatAlarm(temperature),
                                 new VentilateRoutine(airflow),
                                 airflow));
-                return new Environment(List.of(climate));
+                return new MutableEnvironment(List.of(climate));
             }
         };
 

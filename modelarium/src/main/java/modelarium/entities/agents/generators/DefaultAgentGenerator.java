@@ -1,8 +1,8 @@
 package modelarium.entities.agents.generators;
 
 import modelarium.Config;
-import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.AgentSet;
+import modelarium.entities.agents.mutable.MutableAgent;
+import modelarium.entities.agents.mutable.MutableAgentSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,15 +23,15 @@ import java.util.random.RandomGenerator;
 public abstract class DefaultAgentGenerator implements AgentGenerator {
 
     /**
-     * Generates a complete {@link AgentSet} based on the number of agents specified in the model settings.
+     * Generates a complete {@link MutableAgentSet} based on the number of agents specified in the model settings.
      *
      * @param config the simulation configuration containing the agent count
      * @param random the random generator the agent generator can use for constructing agents
-     * @return an {@link AgentSet} containing all generated agents
+     * @return an {@link MutableAgentSet} containing all generated agents
      */
     @Override
-    public AgentSet generateAgents(Config config, RandomGenerator random) {
-        AgentSet agents = new AgentSet();
+    public MutableAgentSet generateAgents(Config config, RandomGenerator random) {
+        MutableAgentSet agents = new MutableAgentSet();
         int numOfAgents = config.populationSize();
 
         for (int i = 0; i < numOfAgents; i++)
@@ -46,10 +46,10 @@ public abstract class DefaultAgentGenerator implements AgentGenerator {
      *
      * @param config the simulation settings containing agent and core counts
      * @param random the random generator the agent generator can use for constructing agents
-     * @return a list of {@link AgentSet} objects, one per core
+     * @return a list of {@link MutableAgentSet} objects, one per core
      */
-    public List<AgentSet> getAgentsForEachCore(Config config, RandomGenerator random) {
-        AgentSet agents = generateAgents(config, random);
+    public List<MutableAgentSet> getAgentsForEachCore(Config config, RandomGenerator random) {
+        MutableAgentSet agents = generateAgents(config, random);
         int numOfCores = config.threadCount();
 
         // If no cores are defined, return an empty list
@@ -58,19 +58,19 @@ public abstract class DefaultAgentGenerator implements AgentGenerator {
 
         // If only one core is used, assign all agents to it
         if (numOfCores == 1) {
-            List<AgentSet> singleCoreList = new ArrayList<>();
+            List<MutableAgentSet> singleCoreList = new ArrayList<>();
             singleCoreList.add(agents);
             return singleCoreList;
         }
 
         // Prepare empty agent sets for each core
-        List<AgentSet> agentsForEachCore = new ArrayList<>();
+        List<MutableAgentSet> agentsForEachCore = new ArrayList<>();
         for (int i = 0; i < numOfCores; i++)
-            agentsForEachCore.add(new AgentSet());
+            agentsForEachCore.add(new MutableAgentSet());
 
         // Distribute agents evenly across cores (round-robin)
         int core = 0;
-        for (Agent agent : agents) {
+        for (MutableAgent agent : agents) {
             agentsForEachCore.get(core).add(agent);
             core = (core + 1) % numOfCores;
         }
@@ -83,7 +83,7 @@ public abstract class DefaultAgentGenerator implements AgentGenerator {
      * Must be implemented by concrete subclasses.
      *
      * @param config the model settings passed to the agent during creation
-     * @return a new {@link Agent} instance
+     * @return a new {@link MutableAgent} instance
      */
-    protected abstract Agent generateAgent(Config config, RandomGenerator random);
+    protected abstract MutableAgent generateAgent(Config config, RandomGenerator random);
 }

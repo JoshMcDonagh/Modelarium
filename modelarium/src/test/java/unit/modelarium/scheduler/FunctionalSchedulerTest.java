@@ -1,7 +1,7 @@
 package unit.modelarium.scheduler;
 
-import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.AgentSet;
+import modelarium.entities.agents.mutable.MutableAgent;
+import modelarium.entities.agents.mutable.MutableAgentSet;
 import modelarium.scheduler.functional.FunctionalScheduler;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +24,7 @@ public class FunctionalSchedulerTest {
         FunctionalScheduler scheduler = new FunctionalScheduler(
                 (threadName, clock, environment, agents, randomGenerator) -> callCount.incrementAndGet()
         );
-        AgentSet agentSet = new AgentSet();
+        MutableAgentSet agentSet = new MutableAgentSet();
 
         scheduler.runTick("0", immutableClock(), immutableEnvironment(), agentSet, new SplittableRandom(42));
 
@@ -33,11 +33,11 @@ public class FunctionalSchedulerTest {
 
     @Test
     public void testRunTick_PassesAgentSetToFunction() {
-        Agent agent = mock(Agent.class);
+        MutableAgent agent = mock(MutableAgent.class);
         when(agent.name()).thenReturn("a");
-        AgentSet agentSet = new AgentSet(List.of(agent));
+        MutableAgentSet agentSet = new MutableAgentSet(List.of(agent));
 
-        List<AgentSet> capturedAgentSets = new ArrayList<>();
+        List<MutableAgentSet> capturedAgentSets = new ArrayList<>();
         FunctionalScheduler scheduler = new FunctionalScheduler(
                 (threadName, clock, environment, agents, randomGenerator) -> capturedAgentSets.add(agents)
         );

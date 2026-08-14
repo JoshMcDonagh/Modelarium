@@ -3,19 +3,19 @@ package integration.agentEnvironmentInteraction;
 import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
 import modelarium.entities.attributes.*;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.contexts.AgentContext;
-import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.EnvironmentContext;
-import modelarium.entities.contexts.EnvironmentSimulationContext;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.EnvironmentGenerator;
-import modelarium.entities.immutable.ImmutableEnvironment;
-import modelarium.entities.immutable.attributes.ImmutableEnvironmentAttributeSet;
+import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.generators.EnvironmentGenerator;
+import modelarium.entities.environments.ImmutableEnvironment;
+import modelarium.entities.attributes.sets.immutable.ImmutableEnvironmentAttributeSet;
 import modelarium.results.immutable.ImmutableResults;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.BeforeAll;
@@ -118,22 +118,22 @@ public class AgentEnvironmentInteractionIntegrationTest {
             private int idx = 0;
 
             @Override
-            protected Agent generateAgent(Config config, RandomGenerator random) {
+            protected MutableAgent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + idx++;
                 ObservedTemperature obs = new ObservedTemperature();
-                AgentAttributeSet set = new AgentAttributeSet("sensors",
+                MutableAgentAttributeSet set = new MutableAgentAttributeSet("sensors",
                         (List<Attribute>) (List<?>) List.of(obs));
-                return new Agent(name, List.of(set));
+                return new MutableAgent(name, List.of(set));
             }
         };
 
         EnvironmentGenerator envGen = new EnvironmentGenerator() {
             @Override
-            public Environment generateEnvironment(Config config, RandomGenerator random) {
+            public MutableEnvironment generateEnvironment(Config config, RandomGenerator random) {
                 Temperature temp = new Temperature();
-                EnvironmentAttributeSet weatherSet = new EnvironmentAttributeSet("weather",
+                MutableEnvironmentAttributeSet weatherSet = new MutableEnvironmentAttributeSet("weather",
                         (List<Attribute>) (List<?>) List.of(temp));
-                return new Environment(List.of(weatherSet));
+                return new MutableEnvironment(List.of(weatherSet));
             }
         };
 

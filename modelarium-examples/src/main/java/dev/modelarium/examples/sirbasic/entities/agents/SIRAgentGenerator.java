@@ -9,9 +9,9 @@ import dev.modelarium.examples.sirbasic.entities.agents.attributes.sir.Recovered
 import dev.modelarium.examples.sirbasic.entities.agents.attributes.sir.SIRState;
 import dev.modelarium.examples.sirbasic.entities.agents.attributes.sir.SIRStateProperty;
 import modelarium.Config;
-import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
-import modelarium.entities.attributes.AgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.attributes.Attribute;
 
 import java.util.ArrayList;
@@ -30,8 +30,8 @@ public class SIRAgentGenerator extends DefaultAgentGenerator {
     }
 
     @Override
-    protected Agent generateAgent(Config config, RandomGenerator random) {
-        ArrayList<AgentAttributeSet> agentAttributeSets = new ArrayList<>();
+    protected MutableAgent generateAgent(Config config, RandomGenerator random) {
+        ArrayList<MutableAgentAttributeSet> agentAttributeSets = new ArrayList<>();
 
         LocationProperty locationProperty = new LocationProperty();
         ArrayList<Attribute> agentLocationAttributes = new ArrayList<>();
@@ -39,7 +39,7 @@ public class SIRAgentGenerator extends DefaultAgentGenerator {
         int x = random.nextInt(0, sirSettings.environment().area().width());
         int y = random.nextInt(0, sirSettings.environment().area().height());
         locationProperty.set(new Coordinates(x, y));
-        agentAttributeSets.add(new AgentAttributeSet("location", agentLocationAttributes));
+        agentAttributeSets.add(new MutableAgentAttributeSet("location", agentLocationAttributes));
 
         SIRStateProperty sirStateProperty = new SIRStateProperty();
         ArrayList<Attribute> agentSIRAttributes = new ArrayList<>();
@@ -58,9 +58,9 @@ public class SIRAgentGenerator extends DefaultAgentGenerator {
         } else {
             throw new IllegalStateException("Agent cannot be generated - all initial SIR states have already been assigned.");
         }
-        agentAttributeSets.add(new AgentAttributeSet("sir", agentSIRAttributes));
+        agentAttributeSets.add(new MutableAgentAttributeSet("sir", agentSIRAttributes));
 
-        Agent newAgent = new Agent("agent_" + agentCount, agentAttributeSets);
+        MutableAgent newAgent = new MutableAgent("agent_" + agentCount, agentAttributeSets);
         agentCount++;
         return newAgent;
     }

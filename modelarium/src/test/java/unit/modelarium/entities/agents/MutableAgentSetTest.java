@@ -1,8 +1,8 @@
 package unit.modelarium.entities.agents;
 
 import com.rits.cloning.Cloner;
-import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.AgentSet;
+import modelarium.entities.agents.mutable.MutableAgent;
+import modelarium.entities.agents.mutable.MutableAgentSet;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -15,17 +15,17 @@ import java.util.SplittableRandom;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static unit.modelarium.entities.agents.AgentTestHelpers.emptyAgent;
-import modelarium.entities.attributes.AgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
 
 import static unit.modelarium.entities.agents.AgentTestHelpers.singlePropertyAgentSet;
 import static unit.modelarium.entities.agents.AgentTestHelpers.agentAttributeSet;
 import static unit.modelarium.entities.agents.AgentTestHelpers.AgentCounterProperty;
 
-public class AgentSetTest {
+public class MutableAgentSetTest {
     @BeforeAll
     static void openForCloning() {
-        AgentSetTest.class.getModule().addOpens(
+        MutableAgentSetTest.class.getModule().addOpens(
                 "unit.modelarium.entities.agents",
                 Cloner.class.getModule()
         );
@@ -33,8 +33,8 @@ public class AgentSetTest {
 
     @Test
     public void testAdd() {
-        Agent agent = emptyAgent("A");
-        AgentSet agentSet = new AgentSet();
+        MutableAgent agent = emptyAgent("A");
+        MutableAgentSet agentSet = new MutableAgentSet();
 
         agentSet.add(agent);
 
@@ -44,9 +44,9 @@ public class AgentSetTest {
 
     @Test
     public void testAdd_ReplacesExistingAgent() {
-        Agent agent = emptyAgent("A");
-        Agent replacementAgent = emptyAgent("A");
-        AgentSet agentSet = new AgentSet();
+        MutableAgent agent = emptyAgent("A");
+        MutableAgent replacementAgent = emptyAgent("A");
+        MutableAgentSet agentSet = new MutableAgentSet();
         agentSet.add(agent);
 
         agentSet.add(replacementAgent);
@@ -57,7 +57,7 @@ public class AgentSetTest {
 
     @Test
     public void testAddList() {
-        AgentSet agentSet = new AgentSet();
+        MutableAgentSet agentSet = new MutableAgentSet();
 
         agentSet.add(List.of(emptyAgent("A"), emptyAgent("B")));
 
@@ -68,8 +68,8 @@ public class AgentSetTest {
 
     @Test
     public void testAddAgentSet() {
-        AgentSet sourceAgentSet = new AgentSet(List.of(emptyAgent("A"), emptyAgent("B")));
-        AgentSet targetAgentSet = new AgentSet();
+        MutableAgentSet sourceAgentSet = new MutableAgentSet(List.of(emptyAgent("A"), emptyAgent("B")));
+        MutableAgentSet targetAgentSet = new MutableAgentSet();
 
         targetAgentSet.add(sourceAgentSet);
 
@@ -78,16 +78,16 @@ public class AgentSetTest {
 
     @Test
     public void testConstructorFromList() {
-        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A"), emptyAgent("B"), emptyAgent("C")));
+        MutableAgentSet agentSet = new MutableAgentSet(List.of(emptyAgent("A"), emptyAgent("B"), emptyAgent("C")));
 
         assertEquals(3, agentSet.size());
     }
 
     @Test
     public void testGetByIndex() {
-        Agent firstAgent = emptyAgent("A");
-        Agent secondAgent = emptyAgent("B");
-        AgentSet agentSet = new AgentSet();
+        MutableAgent firstAgent = emptyAgent("A");
+        MutableAgent secondAgent = emptyAgent("B");
+        MutableAgentSet agentSet = new MutableAgentSet();
         agentSet.add(firstAgent);
         agentSet.add(secondAgent);
 
@@ -97,23 +97,23 @@ public class AgentSetTest {
 
     @Test
     public void testDoesAgentExistTrue() {
-        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A")));
+        MutableAgentSet agentSet = new MutableAgentSet(List.of(emptyAgent("A")));
 
         assertTrue(agentSet.doesAgentExist("A"));
     }
 
     @Test
     public void testDoesAgentExistFalse() {
-        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A")));
+        MutableAgentSet agentSet = new MutableAgentSet(List.of(emptyAgent("A")));
 
         assertFalse(agentSet.doesAgentExist("Z"));
     }
 
     @Test
     public void testGetFilteredAgents() {
-        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A"), emptyAgent("B"), emptyAgent("C")));
+        MutableAgentSet agentSet = new MutableAgentSet(List.of(emptyAgent("A"), emptyAgent("B"), emptyAgent("C")));
 
-        AgentSet filteredAgentSet = agentSet.getFilteredAgents(agent -> agent.name().equals("B"));
+        MutableAgentSet filteredAgentSet = agentSet.getFilteredAgents(agent -> agent.name().equals("B"));
 
         assertEquals(1, filteredAgentSet.size());
         assertEquals("B", filteredAgentSet.get(0).name());
@@ -121,19 +121,19 @@ public class AgentSetTest {
 
     @Test
     public void testGetFilteredAgents_NoMatches() {
-        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A")));
+        MutableAgentSet agentSet = new MutableAgentSet(List.of(emptyAgent("A")));
 
-        AgentSet filteredAgentSet = agentSet.getFilteredAgents(agent -> false);
+        MutableAgentSet filteredAgentSet = agentSet.getFilteredAgents(agent -> false);
 
         assertEquals(0, filteredAgentSet.size());
     }
 
     @Test
     public void testGetRandomIterator() {
-        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A"), emptyAgent("B"), emptyAgent("C")));
+        MutableAgentSet agentSet = new MutableAgentSet(List.of(emptyAgent("A"), emptyAgent("B"), emptyAgent("C")));
         Set<String> agentNames = new HashSet<>();
 
-        Iterator<Agent> randomIterator = agentSet.getRandomIterator(new SplittableRandom(42));
+        Iterator<MutableAgent> randomIterator = agentSet.getRandomIterator(new SplittableRandom(42));
         while (randomIterator.hasNext())
             agentNames.add(randomIterator.next().name());
 
@@ -143,28 +143,28 @@ public class AgentSetTest {
 
     @Test
     public void testGetAsList() {
-        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A"), emptyAgent("B")));
+        MutableAgentSet agentSet = new MutableAgentSet(List.of(emptyAgent("A"), emptyAgent("B")));
 
-        List<Agent> agentList = agentSet.getAsList();
+        List<MutableAgent> agentList = agentSet.getAsList();
 
         assertEquals(2, agentList.size());
     }
 
     @Test
     public void testDuplicate() {
-        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A"), emptyAgent("B")));
+        MutableAgentSet agentSet = new MutableAgentSet(List.of(emptyAgent("A"), emptyAgent("B")));
 
-        AgentSet duplicateAgentSet = agentSet.duplicate();
+        MutableAgentSet duplicateAgentSet = agentSet.duplicate();
 
         assertEquals(2, duplicateAgentSet.size());
     }
 
     @Test
     public void testIterator() {
-        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A"), emptyAgent("B")));
+        MutableAgentSet agentSet = new MutableAgentSet(List.of(emptyAgent("A"), emptyAgent("B")));
         List<String> agentNames = new ArrayList<>();
 
-        for (Agent agent : agentSet)
+        for (MutableAgent agent : agentSet)
             agentNames.add(agent.name());
 
         assertEquals(List.of("A", "B"), agentNames);
@@ -172,14 +172,14 @@ public class AgentSetTest {
 
     @Test
     public void testSize_Empty() {
-        AgentSet agentSet = new AgentSet();
+        MutableAgentSet agentSet = new MutableAgentSet();
 
         assertEquals(0, agentSet.size());
     }
 
     @Test
     public void testGetAsImmutable() {
-        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A")));
+        MutableAgentSet agentSet = new MutableAgentSet(List.of(emptyAgent("A")));
 
         assertNotNull(agentSet.getAsImmutable());
     }
@@ -187,13 +187,13 @@ public class AgentSetTest {
 
     @Test
     public void testAddDeepCopy_NewAgent() {
-        AgentAttributeSet attributeSet = singlePropertyAgentSet("A", "food", "hunger");
-        Agent original = new Agent("A", List.of(attributeSet));
-        AgentSet agentSet = new AgentSet();
+        MutableAgentAttributeSet attributeSet = singlePropertyAgentSet("A", "food", "hunger");
+        MutableAgent original = new MutableAgent("A", List.of(attributeSet));
+        MutableAgentSet agentSet = new MutableAgentSet();
 
         agentSet.addDeepCopy(original);
 
-        Agent stored = agentSet.get("A");
+        MutableAgent stored = agentSet.get("A");
         assertNotSame(original, stored);
         assertEquals("A", stored.name());
         assertNotSame(original.getAttributeSet(0), stored.getAttributeSet(0));
@@ -201,8 +201,8 @@ public class AgentSetTest {
 
     @Test
     public void testAddDeepCopy_ReplacesExistingAgent() {
-        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A")));
-        Agent replacement = new Agent("A", List.of(singlePropertyAgentSet("A", "food", "hunger")));
+        MutableAgentSet agentSet = new MutableAgentSet(List.of(emptyAgent("A")));
+        MutableAgent replacement = new MutableAgent("A", List.of(singlePropertyAgentSet("A", "food", "hunger")));
 
         agentSet.addDeepCopy(replacement);
 
@@ -214,8 +214,8 @@ public class AgentSetTest {
     public void testAddDeepCopy_StoredCopyIsIndependentOfOriginal() {
         AgentCounterProperty property = new AgentCounterProperty("hunger");
         property.set(5.0);
-        Agent original = new Agent("A", List.of(agentAttributeSet("A", "food", property)));
-        AgentSet agentSet = new AgentSet();
+        MutableAgent original = new MutableAgent("A", List.of(agentAttributeSet("A", "food", property)));
+        MutableAgentSet agentSet = new MutableAgentSet();
         agentSet.addDeepCopy(original);
 
         property.set(9.0);
@@ -225,8 +225,8 @@ public class AgentSetTest {
 
     @Test
     public void testAddDeepCopyList() {
-        List<Agent> agentList = List.of(emptyAgent("A"), emptyAgent("B"));
-        AgentSet agentSet = new AgentSet();
+        List<MutableAgent> agentList = List.of(emptyAgent("A"), emptyAgent("B"));
+        MutableAgentSet agentSet = new MutableAgentSet();
 
         agentSet.addDeepCopy(agentList);
 
@@ -240,9 +240,9 @@ public class AgentSetTest {
 
     @Test
     public void testAddDeepCopyAgentSet() {
-        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A")));
-        AgentSet other = new AgentSet(List.of(
-                new Agent("A", List.of(singlePropertyAgentSet("A", "food", "hunger"))),
+        MutableAgentSet agentSet = new MutableAgentSet(List.of(emptyAgent("A")));
+        MutableAgentSet other = new MutableAgentSet(List.of(
+                new MutableAgent("A", List.of(singlePropertyAgentSet("A", "food", "hunger"))),
                 emptyAgent("B")
         ));
 
@@ -256,23 +256,23 @@ public class AgentSetTest {
 
     @Test
     public void testAddAgentSet_Null_IllegalArgumentException() {
-        AgentSet agentSet = new AgentSet();
+        MutableAgentSet agentSet = new MutableAgentSet();
 
-        assertThrows(IllegalArgumentException.class, () -> agentSet.add((AgentSet) null));
+        assertThrows(IllegalArgumentException.class, () -> agentSet.add((MutableAgentSet) null));
     }
 
     @Test
     public void testAddDeepCopyAgentSet_Null_IllegalArgumentException() {
-        AgentSet agentSet = new AgentSet();
+        MutableAgentSet agentSet = new MutableAgentSet();
 
-        assertThrows(IllegalArgumentException.class, () -> agentSet.addDeepCopy((AgentSet) null));
+        assertThrows(IllegalArgumentException.class, () -> agentSet.addDeepCopy((MutableAgentSet) null));
     }
 
     @Test
     public void testUpdate_ShallowSharesInstances() {
-        AgentSet agentSet = new AgentSet();
-        Agent agent = emptyAgent("A");
-        AgentSet other = new AgentSet(List.of(agent));
+        MutableAgentSet agentSet = new MutableAgentSet();
+        MutableAgent agent = emptyAgent("A");
+        MutableAgentSet other = new MutableAgentSet(List.of(agent));
 
         agentSet.update(other, false);
 
@@ -281,9 +281,9 @@ public class AgentSetTest {
 
     @Test
     public void testUpdate_DeepCopied() {
-        AgentSet agentSet = new AgentSet();
-        Agent agent = new Agent("A", List.of(singlePropertyAgentSet("A", "food", "hunger")));
-        AgentSet other = new AgentSet(List.of(agent));
+        MutableAgentSet agentSet = new MutableAgentSet();
+        MutableAgent agent = new MutableAgent("A", List.of(singlePropertyAgentSet("A", "food", "hunger")));
+        MutableAgentSet other = new MutableAgentSet(List.of(agent));
 
         agentSet.update(other, true);
 
@@ -293,15 +293,15 @@ public class AgentSetTest {
 
     @Test
     public void testUpdate_Null_IllegalArgumentException() {
-        AgentSet agentSet = new AgentSet();
+        MutableAgentSet agentSet = new MutableAgentSet();
 
         assertThrows(IllegalArgumentException.class, () -> agentSet.update(null, false));
     }
 
     @Test
     public void testSetLogDatabaseFactory_PropagatesToAgents() {
-        AgentSet agentSet = new AgentSet(List.of(
-                new Agent("A", List.of(singlePropertyAgentSet("A", "food", "hunger")))
+        MutableAgentSet agentSet = new MutableAgentSet(List.of(
+                new MutableAgent("A", List.of(singlePropertyAgentSet("A", "food", "hunger")))
         ));
 
         agentSet.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());

@@ -1,7 +1,7 @@
 package unit.modelarium.entities.immutable.attributes;
 
 import modelarium.entities.attributes.AgentAttribute;
-import modelarium.entities.attributes.AgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.attributes.events.functional.FunctionalAgentEvent;
@@ -9,7 +9,7 @@ import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.functional.FunctionalAgentProperty;
 import modelarium.entities.attributes.routines.AgentRoutine;
 import modelarium.entities.attributes.routines.functional.FunctionalAgentRoutine;
-import modelarium.entities.immutable.attributes.ImmutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.immutable.ImmutableAgentAttributeSet;
 import modelarium.entities.logging.AttributeSetLog;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +46,7 @@ public class ImmutableAgentAttributeSetTest {
 
         AgentAttribute returnedAttribute = runGetClonedAttribute(
                 immutableAttributeSet,
-                AgentAttributeSet.class,
+                MutableAgentAttributeSet.class,
                 AgentAttribute.class,
                 "get",
                 int.class,
@@ -83,7 +83,7 @@ public class ImmutableAgentAttributeSetTest {
                 IllegalArgumentException.class,
                 () -> runGetClonedAttribute(
                         immutableAttributeSet,
-                        AgentAttributeSet.class,
+                        MutableAgentAttributeSet.class,
                         AgentAttribute.class,
                         getterMethodName,
                         attributeIdClass,
@@ -131,8 +131,8 @@ public class ImmutableAgentAttributeSetTest {
     @Test
     public void testGetLog() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         AttributeSetLog<?> attributeSetLog = mock(AttributeSetLog.class);
-        AgentAttributeSet attributeSet = spy(makeAttributeSet(
-                AgentAttributeSet.class,
+        MutableAgentAttributeSet attributeSet = spy(makeAttributeSet(
+                MutableAgentAttributeSet.class,
                 "testAttributeSetName",
                 new ArrayList<>()
         ));

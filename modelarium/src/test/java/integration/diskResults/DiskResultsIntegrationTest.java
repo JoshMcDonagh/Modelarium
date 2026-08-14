@@ -3,16 +3,18 @@ package integration.diskResults;
 import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
 import modelarium.entities.attributes.*;
 import modelarium.entities.attributes.events.AgentEvent;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.EnvironmentContext;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.EnvironmentGenerator;
+import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.generators.EnvironmentGenerator;
 import modelarium.entities.logging.databases.factories.DiskBasedAttributeSetLogDatabaseFactory;
 import modelarium.results.immutable.ImmutableResults;
 import modelarium.scheduler.InOrderScheduler;
@@ -118,21 +120,21 @@ public class DiskResultsIntegrationTest {
             private int index = 0;
 
             @Override
-            protected Agent generateAgent(Config config, RandomGenerator random) {
+            protected MutableAgent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + index++;
                 StepCounter stepCounter = new StepCounter();
-                AgentAttributeSet movement = new AgentAttributeSet("movement",
+                MutableAgentAttributeSet movement = new MutableAgentAttributeSet("movement",
                         (List<Attribute>) (List<?>) List.of(stepCounter, new Pulse(stepCounter)));
-                return new Agent(name, List.of(movement));
+                return new MutableAgent(name, List.of(movement));
             }
         };
 
         EnvironmentGenerator environmentGenerator = new EnvironmentGenerator() {
             @Override
-            public Environment generateEnvironment(Config config, RandomGenerator random) {
-                EnvironmentAttributeSet climate = new EnvironmentAttributeSet("climate",
+            public MutableEnvironment generateEnvironment(Config config, RandomGenerator random) {
+                MutableEnvironmentAttributeSet climate = new MutableEnvironmentAttributeSet("climate",
                         (List<Attribute>) (List<?>) List.of(new Temperature()));
-                return new Environment(List.of(climate));
+                return new MutableEnvironment(List.of(climate));
             }
         };
 

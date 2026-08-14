@@ -1,22 +1,22 @@
 package unit.modelarium.entities.immutable;
 
-import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.attributes.*;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.contexts.AgentContext;
-import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.EnvironmentContext;
-import modelarium.entities.contexts.EnvironmentSimulationContext;
-import modelarium.entities.environments.Environment;
+import modelarium.entities.environments.MutableEnvironment;
 
 import java.util.List;
 
 class ImmutableEntityTestHelpers {
     private ImmutableEntityTestHelpers() {}
 
-    static Agent emptyAgent(String name) {
-        return new Agent(name, List.of());
+    static MutableAgent emptyAgent(String name) {
+        return new MutableAgent(name, List.of());
     }
 
     static class AgentCounterProperty extends AgentProperty<Double> {
@@ -66,23 +66,23 @@ class ImmutableEntityTestHelpers {
     }
 
     @SuppressWarnings("unchecked")
-    static AgentAttributeSet singlePropertyAgentSet(String ownerName, String attributeSetName, String propertyName) {
-        return new AgentAttributeSet(
+    static MutableAgentAttributeSet singlePropertyAgentSet(String ownerName, String attributeSetName, String propertyName) {
+        return new MutableAgentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(new AgentCounterProperty(propertyName))
         );
     }
 
-    static Agent agentWithCounter(String name) {
-        return new Agent(name, List.of(singlePropertyAgentSet(name, "stats", "counter")));
+    static MutableAgent agentWithCounter(String name) {
+        return new MutableAgent(name, List.of(singlePropertyAgentSet(name, "stats", "counter")));
     }
 
     @SuppressWarnings("unchecked")
-    static Environment environmentWithTickCounter() {
-        EnvironmentAttributeSet attributeSet = new EnvironmentAttributeSet(
+    static MutableEnvironment environmentWithTickCounter() {
+        MutableEnvironmentAttributeSet attributeSet = new MutableEnvironmentAttributeSet(
                 "timing",
                 (List<Attribute>) (List<?>) List.of(new EnvironmentTickProperty("envTick"))
         );
-        return new Environment(List.of(attributeSet));
+        return new MutableEnvironment(List.of(attributeSet));
     }
 }

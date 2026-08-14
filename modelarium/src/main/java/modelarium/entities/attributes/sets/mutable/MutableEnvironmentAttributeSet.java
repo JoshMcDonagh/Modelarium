@@ -1,5 +1,8 @@
-package modelarium.entities.attributes;
+package modelarium.entities.attributes.sets.mutable;
 
+import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.EnvironmentAttribute;
+import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
 import modelarium.entities.attributes.events.EnvironmentEvent;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.attributes.routines.EnvironmentRoutine;
@@ -11,10 +14,10 @@ import java.util.List;
 /**
  * Class for containing and managing a named group of an environment's attributes.
  *
- * <p>This class specialises {@link AttributeSet} so that retrieved attributes are returned as their
+ * <p>This class specialises {@link MutableAttributeSet} so that retrieved attributes are returned as their
  * environment-flavoured types.
  */
-public final class EnvironmentAttributeSet extends AttributeSet<EnvironmentSimulationContext, EnvironmentContext> {
+public final class MutableEnvironmentAttributeSet extends MutableAttributeSet<EnvironmentSimulationContext, EnvironmentContext> implements EnvironmentAttributeSet {
 
     /**
      * Constructs a new environment attribute set with the specified owner, name and attributes.
@@ -22,7 +25,7 @@ public final class EnvironmentAttributeSet extends AttributeSet<EnvironmentSimul
      * @param name the name of the attribute set, used to identify it within its owning environment
      * @param attributes the attributes the set will contain, in the order they will be run
      */
-    public EnvironmentAttributeSet(String name, List<Attribute> attributes) {
+    public MutableEnvironmentAttributeSet(String name, List<Attribute> attributes) {
         super(name, attributes);
     }
 

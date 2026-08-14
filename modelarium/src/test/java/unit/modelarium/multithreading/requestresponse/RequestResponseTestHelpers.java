@@ -1,10 +1,10 @@
 package unit.modelarium.multithreading.requestresponse;
 
 import modelarium.Config;
-import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.EnvironmentGenerator;
+import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.generators.EnvironmentGenerator;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 
 import java.util.List;
@@ -18,8 +18,8 @@ class RequestResponseTestHelpers {
             private int index = 0;
 
             @Override
-            protected Agent generateAgent(Config config, RandomGenerator random) {
-                return new Agent("agent_" + index++, List.of());
+            protected MutableAgent generateAgent(Config config, RandomGenerator random) {
+                return new MutableAgent("agent_" + index++, List.of());
             }
         };
     }
@@ -27,8 +27,8 @@ class RequestResponseTestHelpers {
     private static EnvironmentGenerator environmentGenerator() {
         return new EnvironmentGenerator() {
             @Override
-            public Environment generateEnvironment(Config config, RandomGenerator random) {
-                return new Environment("env", List.of());
+            public MutableEnvironment generateEnvironment(Config config, RandomGenerator random) {
+                return new MutableEnvironment("env", List.of());
             }
         };
     }

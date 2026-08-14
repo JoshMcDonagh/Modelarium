@@ -1,7 +1,9 @@
-package modelarium.entities.immutable;
+package modelarium.entities.agents.immutable;
 
 import modelarium.entities.agents.Agent;
 import modelarium.entities.agents.AgentSet;
+import modelarium.entities.agents.mutable.MutableAgent;
+import modelarium.entities.agents.mutable.MutableAgentSet;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,22 +13,22 @@ import java.util.function.Predicate;
 import java.util.random.RandomGenerator;
 
 /**
- * Class for providing a read-only view of an {@link AgentSet}.
+ * Class for providing a read-only view of an {@link MutableAgentSet}.
  *
  * <p>This class wraps a mutable agent set so that its agents can be looked up, filtered and iterated over without
  * the underlying set being modifiable, with each retrieved agent wrapped as an {@link ImmutableAgent}.
  */
-public final class ImmutableAgentSet implements Iterable<ImmutableAgent> {
+public final class ImmutableAgentSet implements AgentSet<ImmutableAgent, ImmutableAgentSet> {
 
     /** The mutable agent set this read-only view wraps */
-    private final AgentSet agentSet;
+    private final MutableAgentSet agentSet;
 
     /**
      * Constructs a new immutable agent set wrapping the specified mutable agent set.
      *
      * @param agentSet the mutable agent set to provide a read-only view of
      */
-    public ImmutableAgentSet(AgentSet agentSet) {
+    public ImmutableAgentSet(MutableAgentSet agentSet) {
         this.agentSet = agentSet;
     }
 
@@ -56,10 +58,10 @@ public final class ImmutableAgentSet implements Iterable<ImmutableAgent> {
      * @return a list of {@link ImmutableAgent} instances
      */
     public List<ImmutableAgent> getAsList() {
-        List<Agent> originalList = agentSet.getAsList();
+        List<MutableAgent> originalList = agentSet.getAsList();
         List<ImmutableAgent> newList = new ArrayList<>();
 
-        for (Agent agent : originalList)
+        for (MutableAgent agent : originalList)
             newList.add(new ImmutableAgent(agent));
 
         return newList;

@@ -2,9 +2,10 @@ package modelarium.entities.contexts;
 
 import modelarium.clock.Clock;
 import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.AgentSet;
-import modelarium.entities.immutable.ImmutableAgent;
-import modelarium.entities.immutable.ImmutableAgentSet;
+import modelarium.entities.agents.mutable.MutableAgent;
+import modelarium.entities.agents.mutable.MutableAgentSet;
+import modelarium.entities.agents.immutable.ImmutableAgent;
+import modelarium.entities.agents.immutable.ImmutableAgentSet;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -39,7 +40,7 @@ public sealed interface Context permits SimulationContext, EntityContext {
      * @param targetAgentName the name of the agent to retrieve
      * @return a read-only view of the requested agent
      */
-    ImmutableAgent getAgent(String targetAgentName);
+    Agent getAgent(String targetAgentName);
 
     /**
      * Retrieves the agents matching a filter, drawn from the whole population in a synchronised model or from this
@@ -48,7 +49,7 @@ public sealed interface Context permits SimulationContext, EntityContext {
      * @param filter a predicate to apply to each agent
      * @return a read-only view of the matching agents
      */
-    ImmutableAgentSet getFilteredAgents(Predicate<Agent> filter);
+    ImmutableAgentSet getFilteredAgents(Predicate<MutableAgent> filter);
 
     /**
      * Returns the random generator this model element can use.
@@ -62,7 +63,7 @@ public sealed interface Context permits SimulationContext, EntityContext {
      *
      * @param agent the agent to add
      */
-    void addAgent(Agent agent);
+    void addAgent(MutableAgent agent);
 
     /**
      * Adds each agent in an agent set to the current core's local agent set, creating the contexts the agents need
@@ -70,14 +71,14 @@ public sealed interface Context permits SimulationContext, EntityContext {
      *
      * @param agentSet the agents to add
      */
-    void addAgents(AgentSet agentSet);
+    void addAgents(MutableAgentSet agentSet);
 
     /**
      * Adds each agent in a list to the current core's local agent set, creating the contexts the agents need to run.
      *
      * @param agentList the agents to add
      */
-    void addAgents(List<Agent> agentList);
+    void addAgents(List<MutableAgent> agentList);
 
     /**
      * Kills the agent with the given name.

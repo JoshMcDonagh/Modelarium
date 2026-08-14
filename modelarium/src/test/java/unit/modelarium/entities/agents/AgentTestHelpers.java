@@ -1,24 +1,22 @@
 package unit.modelarium.entities.agents;
 
-import modelarium.entities.agents.Agent;
-import modelarium.entities.attributes.AgentAttributeSet;
+import modelarium.entities.agents.mutable.MutableAgent;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.attributes.Attribute;
-import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.contexts.AgentContext;
-import modelarium.entities.contexts.AgentSimulationContext;
 
 import java.util.List;
 import modelarium.Config;
 import modelarium.clock.MutableClock;
-import modelarium.entities.agents.AgentSet;
+import modelarium.entities.agents.mutable.MutableAgentSet;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
 import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.attributes.routines.AgentRoutine;
 import modelarium.entities.contexts.ContextCache;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.EnvironmentGenerator;
+import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.generators.EnvironmentGenerator;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import java.util.SplittableRandom;
 import java.util.random.RandomGenerator;
@@ -26,8 +24,8 @@ import java.util.random.RandomGenerator;
 class AgentTestHelpers {
     private AgentTestHelpers() {}
 
-    static Agent emptyAgent(String name) {
-        return new Agent(name, List.of());
+    static MutableAgent emptyAgent(String name) {
+        return new MutableAgent(name, List.of());
     }
 
     static class AgentCounterProperty extends AgentProperty<Double> {
@@ -54,14 +52,14 @@ class AgentTestHelpers {
     }
 
     @SuppressWarnings("unchecked")
-    static AgentAttributeSet agentAttributeSet(String ownerName, String attributeSetName, AgentProperty<?>... properties) {
-        return new AgentAttributeSet(
+    static MutableAgentAttributeSet agentAttributeSet(String ownerName, String attributeSetName, AgentProperty<?>... properties) {
+        return new MutableAgentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(properties)
         );
     }
 
-    static AgentAttributeSet singlePropertyAgentSet(String ownerName, String attributeSetName, String propertyName) {
+    static MutableAgentAttributeSet singlePropertyAgentSet(String ownerName, String attributeSetName, String propertyName) {
         return agentAttributeSet(ownerName, attributeSetName, new AgentCounterProperty(propertyName));
     }
 
@@ -98,8 +96,8 @@ class AgentTestHelpers {
     }
 
     @SuppressWarnings("unchecked")
-    static AgentAttributeSet agentAttributeSetFromAttributes(String ownerName, String attributeSetName, Attribute... attributes) {
-        return new AgentAttributeSet(
+    static MutableAgentAttributeSet agentAttributeSetFromAttributes(String ownerName, String attributeSetName, Attribute... attributes) {
+        return new MutableAgentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(attributes)
         );
@@ -110,8 +108,8 @@ class AgentTestHelpers {
             private int index = 0;
 
             @Override
-            protected Agent generateAgent(Config config, RandomGenerator random) {
-                return new Agent("agent_" + index++, List.of());
+            protected MutableAgent generateAgent(Config config, RandomGenerator random) {
+                return new MutableAgent("agent_" + index++, List.of());
             }
         };
     }
@@ -119,8 +117,8 @@ class AgentTestHelpers {
     private static EnvironmentGenerator environmentGenerator() {
         return new EnvironmentGenerator() {
             @Override
-            public Environment generateEnvironment(Config config, RandomGenerator random) {
-                return new Environment("env", List.of());
+            public MutableEnvironment generateEnvironment(Config config, RandomGenerator random) {
+                return new MutableEnvironment("env", List.of());
             }
         };
     }
@@ -136,15 +134,15 @@ class AgentTestHelpers {
                 .build();
     }
 
-    static void createContextFor(Agent agent) {
+    static void createContextFor(MutableAgent agent) {
         Config config = syncedConfig(1, 1, 1);
         agent.createContext(
-                new AgentSet(List.of(agent)),
+                new MutableAgentSet(List.of(agent)),
                 config,
                 new ContextCache(),
                 new MutableClock(config.tickCount()),
                 new RequestResponseController(config),
-                new Environment("env", List.of()),
+                new MutableEnvironment("env", List.of()),
                 new SplittableRandom()
         );
     }

@@ -1,9 +1,9 @@
 package modelarium.multithreading.requestresponse;
 
 import modelarium.Config;
-import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.AgentSet;
-import modelarium.entities.environments.Environment;
+import modelarium.entities.agents.mutable.MutableAgent;
+import modelarium.entities.agents.mutable.MutableAgentSet;
+import modelarium.entities.environments.MutableEnvironment;
 import modelarium.exceptions.CoordinatorErrorException;
 import modelarium.exceptions.CoordinatorTimeoutException;
 
@@ -151,11 +151,11 @@ public class RequestResponseInterface {
      *
      * @param requesterAgentName the name of the requesting agent
      * @param targetAgentName the name of the agent to retrieve
-     * @return the {@link Agent} instance returned by the coordinator
+     * @return the {@link MutableAgent} instance returned by the coordinator
      */
-    public Agent getAgentFromCoordinator(String requesterAgentName, String targetAgentName) throws InterruptedException {
+    public MutableAgent getAgentFromCoordinator(String requesterAgentName, String targetAgentName) throws InterruptedException {
         Request request = new Request(requesterAgentName, null, RequestType.AGENT_ACCESS, targetAgentName);
-        return (Agent) sendAndAwait(request, ResponseType.AGENT_ACCESS);
+        return (MutableAgent) sendAndAwait(request, ResponseType.AGENT_ACCESS);
     }
 
     /**
@@ -163,22 +163,22 @@ public class RequestResponseInterface {
      *
      * @param requesterAgentName the name of the requester
      * @param agentFilter a predicate to apply to the global agent set
-     * @return an {@link AgentSet} containing matching agents
+     * @return an {@link MutableAgentSet} containing matching agents
      */
-    public AgentSet getFilteredAgentsFromCoordinator(String requesterAgentName, Predicate<Agent> agentFilter) throws InterruptedException {
+    public MutableAgentSet getFilteredAgentsFromCoordinator(String requesterAgentName, Predicate<MutableAgent> agentFilter) throws InterruptedException {
         Request request = new Request(requesterAgentName, null, RequestType.FILTERED_AGENTS_ACCESS, agentFilter);
-        return (AgentSet) sendAndAwait(request, ResponseType.FILTERED_AGENTS_ACCESS);
+        return (MutableAgentSet) sendAndAwait(request, ResponseType.FILTERED_AGENTS_ACCESS);
     }
 
     /**
      * Requests the current environment state from the coordinator.
      *
      * @param requesterAgentName the requesting agent's name
-     * @return the current {@link Environment} instance
+     * @return the current {@link MutableEnvironment} instance
      */
-    public Environment getEnvironmentFromCoordinator(String requesterAgentName) throws InterruptedException {
+    public MutableEnvironment getEnvironmentFromCoordinator(String requesterAgentName) throws InterruptedException {
         Request request = new Request(requesterAgentName, null, RequestType.ENVIRONMENT_ATTRIBUTES_ACCESS, null);
-        return (Environment) sendAndAwait(request, ResponseType.ENVIRONMENT_ATTRIBUTES_ACCESS);
+        return (MutableEnvironment) sendAndAwait(request, ResponseType.ENVIRONMENT_ATTRIBUTES_ACCESS);
     }
 
     /**
@@ -186,7 +186,7 @@ public class RequestResponseInterface {
      *
      * @param agentSet the updated set of agents
      */
-    public void updateCoordinatorAgents(AgentSet agentSet) throws InterruptedException {
+    public void updateCoordinatorAgents(MutableAgentSet agentSet) throws InterruptedException {
         Objects.requireNonNull(agentSet, "agentSet");
         requestQueue.put(new Request(name, null, RequestType.UPDATE_COORDINATOR_AGENTS, agentSet));
     }

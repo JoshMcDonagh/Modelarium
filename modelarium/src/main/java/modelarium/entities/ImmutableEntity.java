@@ -1,15 +1,16 @@
-package modelarium.entities.immutable;
+package modelarium.entities;
 
-import modelarium.entities.Entity;
-import modelarium.entities.attributes.AttributeSet;
+import modelarium.entities.agents.immutable.ImmutableAgent;
+import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.SimulationContext;
-import modelarium.entities.immutable.attributes.ImmutableAttributeSet;
+import modelarium.entities.environments.ImmutableEnvironment;
+import modelarium.entities.attributes.sets.immutable.ImmutableAttributeSet;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
 
 /**
- * Abstract class for providing a read-only view of an {@link Entity}.
+ * Abstract class for providing a read-only view of an {@link MutableEntity}.
  *
  * <p>This class wraps a mutable entity so that other model elements can inspect its name, attribute counts,
  * attributes and logs without being able to modify it. It is extended by {@link ImmutableAgent} and
@@ -20,17 +21,17 @@ import modelarium.entities.logging.EntityLog;
  * @param <AS> the type of attribute set the wrapped entity owns
  * @param <ASL> the type of attribute set log the wrapped entity produces
  */
-public sealed abstract class ImmutableEntity<SC extends SimulationContext, C extends Context, AS extends AttributeSet<SC,C>, ASL extends AttributeSetLog<SC>> permits ImmutableAgent, ImmutableEnvironment {
+public sealed abstract class ImmutableEntity<SC extends SimulationContext, C extends Context, AS extends MutableAttributeSet<SC,C>, ASL extends AttributeSetLog<SC>> implements Entity permits ImmutableAgent, ImmutableEnvironment {
 
     /** The mutable entity this read-only view wraps */
-    private final Entity<SC,C,AS,ASL> entity;
+    private final MutableEntity<SC,C,AS,ASL> entity;
 
     /**
      * Constructs a new immutable entity wrapping the specified mutable entity.
      *
      * @param entity the mutable entity to provide a read-only view of
      */
-    protected ImmutableEntity(Entity<SC,C,AS,ASL> entity) {
+    protected ImmutableEntity(MutableEntity<SC,C,AS,ASL> entity) {
         this.entity = entity;
     }
 
@@ -39,7 +40,7 @@ public sealed abstract class ImmutableEntity<SC extends SimulationContext, C ext
      *
      * @return the wrapped entity
      */
-    Entity<SC,C,AS,ASL> getMutableEntity() {
+    protected MutableEntity<SC,C,AS,ASL> getMutableEntity() {
         return entity;
     }
 

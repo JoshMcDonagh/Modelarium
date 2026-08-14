@@ -1,5 +1,7 @@
-package modelarium.entities.attributes;
+package modelarium.entities.attributes.sets.mutable;
 
+import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.events.Event;
 import modelarium.entities.attributes.properties.Property;
 import modelarium.entities.attributes.routines.Routine;

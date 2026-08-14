@@ -1,8 +1,8 @@
 package unit.modelarium.entities.immutable;
 
-import modelarium.entities.agents.Agent;
-import modelarium.entities.attributes.AgentAttributeSet;
-import modelarium.entities.immutable.ImmutableAgent;
+import modelarium.entities.agents.mutable.MutableAgent;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.agents.immutable.ImmutableAgent;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import static unit.modelarium.entities.immutable.ImmutableEntityTestHelpers.sing
 public class ImmutableAgentTest {
     @Test
     public void testName() {
-        Agent agent = agentWithCounter("Alice");
+        MutableAgent agent = agentWithCounter("Alice");
         ImmutableAgent immutableAgent = new ImmutableAgent(agent);
 
         assertEquals("Alice", immutableAgent.name());
@@ -23,9 +23,9 @@ public class ImmutableAgentTest {
 
     @Test
     public void testAttributeSetCount() {
-        AgentAttributeSet firstAttributeSet = singlePropertyAgentSet("a", "food", "hunger");
-        AgentAttributeSet secondAttributeSet = singlePropertyAgentSet("a", "health", "hp");
-        Agent agent = new Agent("a", List.of(firstAttributeSet, secondAttributeSet));
+        MutableAgentAttributeSet firstAttributeSet = singlePropertyAgentSet("a", "food", "hunger");
+        MutableAgentAttributeSet secondAttributeSet = singlePropertyAgentSet("a", "health", "hp");
+        MutableAgent agent = new MutableAgent("a", List.of(firstAttributeSet, secondAttributeSet));
         ImmutableAgent immutableAgent = new ImmutableAgent(agent);
 
         assertEquals(2, immutableAgent.attributeSetCount());
@@ -33,7 +33,7 @@ public class ImmutableAgentTest {
 
     @Test
     public void testAttributeCount() {
-        Agent agent = agentWithCounter("a");
+        MutableAgent agent = agentWithCounter("a");
         ImmutableAgent immutableAgent = new ImmutableAgent(agent);
 
         assertEquals(agent.attributeCount(), immutableAgent.attributeCount());
@@ -41,7 +41,7 @@ public class ImmutableAgentTest {
 
     @Test
     public void testGetAttributeSetByName() {
-        Agent agent = agentWithCounter("a");
+        MutableAgent agent = agentWithCounter("a");
         ImmutableAgent immutableAgent = new ImmutableAgent(agent);
 
         assertNotNull(immutableAgent.getAttributeSet("stats"));
@@ -49,7 +49,7 @@ public class ImmutableAgentTest {
 
     @Test
     public void testGetAttributeSetByIndex() {
-        Agent agent = agentWithCounter("a");
+        MutableAgent agent = agentWithCounter("a");
         ImmutableAgent immutableAgent = new ImmutableAgent(agent);
 
         assertNotNull(immutableAgent.getAttributeSet(0));

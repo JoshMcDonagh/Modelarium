@@ -1,6 +1,6 @@
 package unit.modelarium.multithreading.requestresponse;
 
-import modelarium.entities.agents.AgentSet;
+import modelarium.entities.agents.mutable.MutableAgentSet;
 import modelarium.multithreading.requestresponse.Request;
 import modelarium.multithreading.requestresponse.RequestType;
 import modelarium.multithreading.requestresponse.Response;
@@ -27,7 +27,7 @@ public class RequestResponseTest {
 
     @Test
     public void testRequestConstructor_UpdateCoordinatorAgentsWithAgentSetPayload() {
-        AgentSet agentSet = new AgentSet();
+        MutableAgentSet agentSet = new MutableAgentSet();
 
         assertDoesNotThrow(() -> new Request("w", "c", RequestType.UPDATE_COORDINATOR_AGENTS, agentSet));
     }

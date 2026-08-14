@@ -1,7 +1,7 @@
 package modelarium.results.mutable;
 
-import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.AgentSet;
+import modelarium.entities.agents.mutable.MutableAgent;
+import modelarium.entities.agents.mutable.MutableAgentSet;
 import modelarium.results.Results;
 import modelarium.results.immutable.ImmutableResults;
 
@@ -51,8 +51,8 @@ public final class MutableResults implements Results {
      *
      * @param agents the set of agents
      */
-    public void setAgentNames(AgentSet agents) {
-        for (Agent agent : agents)
+    public void setAgentNames(MutableAgentSet agents) {
+        for (MutableAgent agent : agents)
             agentNames.add(agent.name());
     }
 
@@ -61,8 +61,8 @@ public final class MutableResults implements Results {
      *
      * @param agentSetList list of agent sets
      */
-    public void setAgentNames(List<AgentSet> agentSetList) {
-        for (AgentSet agents : agentSetList)
+    public void setAgentNames(List<MutableAgentSet> agentSetList) {
+        for (MutableAgentSet agents : agentSetList)
             setAgentNames(agents);
     }
 

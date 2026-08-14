@@ -2,9 +2,10 @@ package unit.modelarium.entities.immutable.attributes;
 
 import modelarium.entities.attributes.*;
 import modelarium.entities.attributes.events.functional.FunctionalEnvironmentEvent;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.attributes.properties.functional.FunctionalEnvironmentProperty;
 import modelarium.entities.attributes.routines.functional.FunctionalEnvironmentRoutine;
-import modelarium.entities.immutable.attributes.ImmutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.immutable.ImmutableEnvironmentAttributeSet;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -48,7 +49,7 @@ public class ImmutableEnvironmentAttributeSetTest {
 
         EnvironmentAttribute returnedAttribute = runGetClonedAttribute(
                 immutableAttributeSet,
-                EnvironmentAttributeSet.class,
+                MutableEnvironmentAttributeSet.class,
                 EnvironmentAttribute.class,
                 "get",
                 int.class,
@@ -85,7 +86,7 @@ public class ImmutableEnvironmentAttributeSetTest {
                 IllegalArgumentException.class,
                 () -> runGetClonedAttribute(
                         immutableAttributeSet,
-                        EnvironmentAttributeSet.class,
+                        MutableEnvironmentAttributeSet.class,
                         EnvironmentAttribute.class,
                         getterMethodName,
                         attributeIdClass,
@@ -133,8 +134,8 @@ public class ImmutableEnvironmentAttributeSetTest {
 
     @Test
     public void testGetLog() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        EnvironmentAttributeSet attributeSet = makeAttributeSet(
-                EnvironmentAttributeSet.class,
+        MutableEnvironmentAttributeSet attributeSet = makeAttributeSet(
+                MutableEnvironmentAttributeSet.class,
                 "testAttributeSetName",
                 new ArrayList<>()
         );

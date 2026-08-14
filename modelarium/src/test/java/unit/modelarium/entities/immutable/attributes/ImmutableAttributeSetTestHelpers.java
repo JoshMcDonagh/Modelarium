@@ -3,6 +3,9 @@ package unit.modelarium.entities.immutable.attributes;
 import modelarium.entities.attributes.*;
 import modelarium.entities.attributes.events.Event;
 import modelarium.entities.attributes.events.functional.*;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.attributes.properties.Property;
 import modelarium.entities.attributes.properties.functional.*;
 import modelarium.entities.attributes.routines.Routine;
@@ -12,9 +15,9 @@ import modelarium.entities.attributes.routines.functional.FunctionalAgentRoutine
 import modelarium.entities.attributes.routines.functional.FunctionalEnvironmentRoutine;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.SimulationContext;
-import modelarium.entities.immutable.attributes.ImmutableAgentAttributeSet;
-import modelarium.entities.immutable.attributes.ImmutableAttributeSet;
-import modelarium.entities.immutable.attributes.ImmutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.immutable.ImmutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.immutable.ImmutableAttributeSet;
+import modelarium.entities.attributes.sets.immutable.ImmutableEnvironmentAttributeSet;
 import org.junit.jupiter.api.function.Executable;
 
 import java.lang.reflect.Field;
@@ -27,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ImmutableAttributeSetTestHelpers {
     private ImmutableAttributeSetTestHelpers() {}
 
-    static <T extends AttributeSet<?,?>> T makeAttributeSet(
+    static <T extends MutableAttributeSet<?,?>> T makeAttributeSet(
             Class<T> attributeSetClass,
             String attributeSetName,
             List<Attribute> attributes
@@ -48,14 +51,14 @@ class ImmutableAttributeSetTestHelpers {
     ) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         if (attributeSetClass.equals(ImmutableAgentAttributeSet.class)) {
             return (T) new ImmutableAgentAttributeSet(makeAttributeSet(
-                    AgentAttributeSet.class,
+                    MutableAgentAttributeSet.class,
                     attributeSetName,
                     attributes
             ));
         }
         else if (attributeSetClass.equals(ImmutableEnvironmentAttributeSet.class)) {
             return (T) new ImmutableEnvironmentAttributeSet(makeAttributeSet(
-                    EnvironmentAttributeSet.class,
+                    MutableEnvironmentAttributeSet.class,
                     attributeSetName,
                     attributes
             ));
@@ -65,24 +68,24 @@ class ImmutableAttributeSetTestHelpers {
         }
     }
 
-    private static <SC extends SimulationContext, C extends Context> AttributeSet<SC, C> getMutableAttributeSetFromImmutableAttributeSet(
+    private static <SC extends SimulationContext, C extends Context> MutableAttributeSet<SC, C> getMutableAttributeSetFromImmutableAttributeSet(
             ImmutableAttributeSet<SC, C> immutableAttributeSet
     ) throws NoSuchFieldException, IllegalAccessException {
         Field attributeSetField = ImmutableAttributeSet.class.getDeclaredField("attributeSet");
         attributeSetField.setAccessible(true);
-        return (AttributeSet<SC, C>) attributeSetField.get(immutableAttributeSet);
+        return (MutableAttributeSet<SC, C>) attributeSetField.get(immutableAttributeSet);
     }
 
-    static AgentAttributeSet getMutableFromImmutable(
+    static MutableAgentAttributeSet getMutableFromImmutable(
             ImmutableAgentAttributeSet immutableAttributeSet
     ) throws NoSuchFieldException, IllegalAccessException {
-        return (AgentAttributeSet) getMutableAttributeSetFromImmutableAttributeSet(immutableAttributeSet);
+        return (MutableAgentAttributeSet) getMutableAttributeSetFromImmutableAttributeSet(immutableAttributeSet);
     }
 
-    static EnvironmentAttributeSet getMutableFromImmutable(
+    static MutableEnvironmentAttributeSet getMutableFromImmutable(
             ImmutableEnvironmentAttributeSet immutableAttributeSet
     ) throws NoSuchFieldException, IllegalAccessException {
-        return (EnvironmentAttributeSet) getMutableAttributeSetFromImmutableAttributeSet(immutableAttributeSet);
+        return (MutableEnvironmentAttributeSet) getMutableAttributeSetFromImmutableAttributeSet(immutableAttributeSet);
     }
 
     static <A,T,P> T runGetClonedAttribute(

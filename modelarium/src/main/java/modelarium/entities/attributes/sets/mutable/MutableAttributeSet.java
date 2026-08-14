@@ -1,5 +1,8 @@
-package modelarium.entities.attributes;
+package modelarium.entities.attributes.sets.mutable;
 
+import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeAccessLevel;
+import modelarium.entities.attributes.sets.AttributeSet;
 import modelarium.entities.attributes.events.Event;
 import modelarium.entities.attributes.properties.Property;
 import modelarium.entities.attributes.routines.Routine;
@@ -20,12 +23,12 @@ import java.util.Map;
  *
  * <p>This class is responsible for storing an entity's attributes, providing typed and access-checked retrieval of
  * events, routines and properties, running each attribute in order every tick, and recording the values of logged
- * attributes. It is extended by {@link AgentAttributeSet} and {@link EnvironmentAttributeSet}.
+ * attributes. It is extended by {@link MutableAgentAttributeSet} and {@link MutableEnvironmentAttributeSet}.
  *
  * @param <SC> the type of simulation context this attribute set uses
  * @param <C> the type of context interface this attribute set's attributes are given
  */
-public sealed abstract class AttributeSet<SC extends SimulationContext, C extends Context> permits AgentAttributeSet, EnvironmentAttributeSet {
+public sealed abstract class MutableAttributeSet<SC extends SimulationContext, C extends Context> implements AttributeSet permits MutableAgentAttributeSet, MutableEnvironmentAttributeSet {
 
     /** The name of the entity that owns this attribute set */
     private String ownerName = null;
@@ -61,7 +64,7 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
      * @param attributeList the attributes the set will contain, in the order they will be run
      */
     @SuppressWarnings("unchecked")
-    AttributeSet(String name, List<Attribute> attributeList) {
+    protected MutableAttributeSet(String name, List<Attribute> attributeList) {
         this.name = name;
 
         for (int i = 0; i < attributeList.size(); i++) {
@@ -170,7 +173,7 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
      * @param index the index of the attribute to retrieve
      * @return the attribute at the specified index
      */
-    Attribute get(int index) {
+    public Attribute get(int index) {
         return getAttribute(index);
     }
 
@@ -180,7 +183,7 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
      * @param attributeName the name of the attribute to retrieve
      * @return the attribute with the specified name
      */
-    Attribute get(String attributeName) {
+    public Attribute get(String attributeName) {
         return getAttribute(attributeName);
     }
 
@@ -205,7 +208,7 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
      * @param eventIndex the index of the event to retrieve
      * @return the event at the specified index
      */
-    Event<C> getEvent(int eventIndex) {
+    public Event<C> getEvent(int eventIndex) {
         return getEventAttribute(eventIndexList.get(eventIndex));
     }
 
@@ -215,7 +218,7 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
      * @param eventName the name of the event to retrieve
      * @return the event with the specified name
      */
-    Event<C> getEvent(String eventName) {
+    public Event<C> getEvent(String eventName) {
         return getEventAttribute(attributeIndexMap.get(eventName));
     }
 
@@ -240,7 +243,7 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
      * @param routineIndex the index of the routine to retrieve
      * @return the routine at the specified index
      */
-    Routine<C> getRoutine(int routineIndex) {
+    public Routine<C> getRoutine(int routineIndex) {
         return getRoutineAttribute(routineIndexList.get(routineIndex));
     }
 
@@ -250,7 +253,7 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
      * @param routineName the name of the routine to retrieve
      * @return the routine with the specified name
      */
-    Routine<C> getRoutine(String routineName) {
+    public Routine<C> getRoutine(String routineName) {
         return getRoutineAttribute(attributeIndexMap.get(routineName));
     }
 
@@ -275,7 +278,7 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
      * @param propertyIndex the index of the property to retrieve
      * @return the property at the specified index
      */
-    Property<?,C> getProperty(int propertyIndex) {
+    public Property<?,C> getProperty(int propertyIndex) {
         return getPropertyAttribute(propertyIndexList.get(propertyIndex));
     }
 
@@ -285,7 +288,7 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
      * @param propertyName the name of the property to retrieve
      * @return the property with the specified name
      */
-    Property<?,C> getProperty(String propertyName) {
+    public Property<?,C> getProperty(String propertyName) {
         return getPropertyAttribute(attributeIndexMap.get(propertyName));
     }
 

@@ -1,9 +1,9 @@
 package unit.modelarium.entities.attributes;
 
-import modelarium.entities.attributes.AgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
-import modelarium.entities.attributes.EnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.exceptions.AttributeAccessException;
 import org.junit.jupiter.api.Test;
 
@@ -18,14 +18,14 @@ import java.util.List;
 public class AttributeSetTest {
     @Test
     public void testName() {
-        AgentAttributeSet attributeSet = singlePropertyAgentSet("owner", "food", "hunger");
+        MutableAgentAttributeSet attributeSet = singlePropertyAgentSet("owner", "food", "hunger");
 
         assertEquals("food", attributeSet.name());
     }
 
     @Test
     public void testSize() {
-        AgentAttributeSet attributeSet = agentAttributeSet(
+        MutableAgentAttributeSet attributeSet = agentAttributeSet(
                 "owner",
                 "s",
                 new AgentCounterProperty("a"),
@@ -37,28 +37,28 @@ public class AttributeSetTest {
 
     @Test
     public void testSize_Empty() {
-        AgentAttributeSet attributeSet = agentAttributeSet("owner", "empty");
+        MutableAgentAttributeSet attributeSet = agentAttributeSet("owner", "empty");
 
         assertEquals(0, attributeSet.size());
     }
 
     @Test
     public void testGetProperty_PublicAccessLevel() {
-        AgentAttributeSet attributeSet = agentAttributeSet("owner", "s", new AgentCounterProperty("counter"));
+        MutableAgentAttributeSet attributeSet = agentAttributeSet("owner", "s", new AgentCounterProperty("counter"));
 
         assertDoesNotThrow(() -> attributeSet.getProperty("counter"));
     }
 
     @Test
     public void testGetProperty_PrivateAccessLevel_AttributeAccessException() {
-        AgentAttributeSet attributeSet = agentAttributeSet("owner", "s", new PrivateCounterProperty("secret"));
+        MutableAgentAttributeSet attributeSet = agentAttributeSet("owner", "s", new PrivateCounterProperty("secret"));
 
         assertThrows(AttributeAccessException.class, () -> attributeSet.getProperty("secret"));
     }
 
     @Test
     public void testGetEvent() {
-        AgentAttributeSet attributeSet = agentAttributeSetFromEvents(
+        MutableAgentAttributeSet attributeSet = agentAttributeSetFromEvents(
                 "owner",
                 "food",
                 new AlwaysTriggeredAgentEvent("eatFood")
@@ -69,14 +69,14 @@ public class AttributeSetTest {
 
     @Test
     public void testGetEvent_GivenPropertyName_AttributeAccessException() {
-        AgentAttributeSet attributeSet = agentAttributeSet("owner", "s", new AgentCounterProperty("hp"));
+        MutableAgentAttributeSet attributeSet = agentAttributeSet("owner", "s", new AgentCounterProperty("hp"));
 
         assertThrows(AttributeAccessException.class, () -> attributeSet.getEvent("hp"));
     }
 
     @Test
     public void testGetRoutine() {
-        AgentAttributeSet attributeSet = agentAttributeSetFromRoutines(
+        MutableAgentAttributeSet attributeSet = agentAttributeSetFromRoutines(
                 "owner",
                 "sim",
                 new EmptyAgentRoutine("tick")
@@ -87,14 +87,14 @@ public class AttributeSetTest {
 
     @Test
     public void testEnvironmentAttributeSetName() {
-        EnvironmentAttributeSet attributeSet = emptyEnvironmentAttributeSet("env", "weather");
+        MutableEnvironmentAttributeSet attributeSet = emptyEnvironmentAttributeSet("env", "weather");
 
         assertEquals("weather", attributeSet.name());
     }
 
     @Test
     public void testEnvironmentAttributeSetSize() {
-        EnvironmentAttributeSet attributeSet = environmentAttributeSet(
+        MutableEnvironmentAttributeSet attributeSet = environmentAttributeSet(
                 "env",
                 "timing",
                 new EnvironmentTickProperty("tick")
@@ -105,7 +105,7 @@ public class AttributeSetTest {
 
 
     @SuppressWarnings("unchecked")
-    private EnvironmentAttributeSet mixedEnvironmentAttributeSet() {
+    private MutableEnvironmentAttributeSet mixedEnvironmentAttributeSet() {
         FunctionalEnvironmentEvent event0 = new FunctionalEnvironmentEvent(
                 "Event_0", false, AttributeAccessLevel.PUBLIC, (context) -> {}, (context) -> true);
         FunctionalEnvironmentEvent event1 = new FunctionalEnvironmentEvent(
@@ -114,7 +114,7 @@ public class AttributeSetTest {
         FunctionalEnvironmentRoutine routine0 = new FunctionalEnvironmentRoutine(
                 "Routine_0", AttributeAccessLevel.PUBLIC, (context) -> {});
 
-        return new EnvironmentAttributeSet(
+        return new MutableEnvironmentAttributeSet(
                 "testAttributeSetName",
                 (List<Attribute>) (List<?>) List.of(event0, event1, property0, routine0)
         );
@@ -122,7 +122,7 @@ public class AttributeSetTest {
 
     @Test
     public void testEnvironmentGet() {
-        EnvironmentAttributeSet attributeSet = mixedEnvironmentAttributeSet();
+        MutableEnvironmentAttributeSet attributeSet = mixedEnvironmentAttributeSet();
 
         assertEquals("Property_0", attributeSet.get(2).name());
         assertEquals("Event_1", attributeSet.get("Event_1").name());
@@ -130,7 +130,7 @@ public class AttributeSetTest {
 
     @Test
     public void testEnvironmentGetEvent() {
-        EnvironmentAttributeSet attributeSet = mixedEnvironmentAttributeSet();
+        MutableEnvironmentAttributeSet attributeSet = mixedEnvironmentAttributeSet();
 
         assertEquals("Event_1", attributeSet.getEvent(1).name());
         assertEquals("Event_0", attributeSet.getEvent("Event_0").name());
@@ -138,7 +138,7 @@ public class AttributeSetTest {
 
     @Test
     public void testEnvironmentGetRoutine() {
-        EnvironmentAttributeSet attributeSet = mixedEnvironmentAttributeSet();
+        MutableEnvironmentAttributeSet attributeSet = mixedEnvironmentAttributeSet();
 
         assertEquals("Routine_0", attributeSet.getRoutine(0).name());
         assertEquals("Routine_0", attributeSet.getRoutine("Routine_0").name());
@@ -146,7 +146,7 @@ public class AttributeSetTest {
 
     @Test
     public void testEnvironmentGetProperty() {
-        EnvironmentAttributeSet attributeSet = mixedEnvironmentAttributeSet();
+        MutableEnvironmentAttributeSet attributeSet = mixedEnvironmentAttributeSet();
 
         assertEquals("Property_0", attributeSet.getProperty(0).name());
         assertEquals("Property_0", attributeSet.getProperty("Property_0").name());
@@ -159,7 +159,7 @@ public class AttributeSetTest {
         ToggleableAgentEvent triggeredEvent = new ToggleableAgentEvent("Event_0", true);
         CountingAgentRoutine routine = new CountingAgentRoutine("Routine_0");
 
-        AgentAttributeSet attributeSet = agentAttributeSetFromAttributes(
+        MutableAgentAttributeSet attributeSet = agentAttributeSetFromAttributes(
                 "TestOwner", "testAttributeSetName", property, unloggedProperty, triggeredEvent, routine);
         attributeSet.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         attributeSet.setContext(agentSimulationContext(attributeSet));
@@ -177,7 +177,7 @@ public class AttributeSetTest {
         AgentCounterProperty property = new AgentCounterProperty("Property_0");
         UnloggedAgentCounterProperty unloggedProperty = new UnloggedAgentCounterProperty("Property_1");
 
-        AgentAttributeSet attributeSet = agentAttributeSetFromAttributes(
+        MutableAgentAttributeSet attributeSet = agentAttributeSetFromAttributes(
                 "TestOwner", "testAttributeSetName", property, unloggedProperty);
         attributeSet.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         attributeSet.setContext(agentSimulationContext(attributeSet));
@@ -192,7 +192,7 @@ public class AttributeSetTest {
     public void testRun_EventNotTriggered() {
         ToggleableAgentEvent untriggeredEvent = new ToggleableAgentEvent("Event_0", false);
 
-        AgentAttributeSet attributeSet = agentAttributeSetFromAttributes(
+        MutableAgentAttributeSet attributeSet = agentAttributeSetFromAttributes(
                 "TestOwner", "testAttributeSetName", untriggeredEvent);
         attributeSet.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         attributeSet.setContext(agentSimulationContext(attributeSet));
@@ -207,7 +207,7 @@ public class AttributeSetTest {
     public void testSetContext_SecondCallIgnored() {
         AgentCounterProperty property = new AgentCounterProperty("Property_0");
 
-        AgentAttributeSet attributeSet = agentAttributeSetFromAttributes(
+        MutableAgentAttributeSet attributeSet = agentAttributeSetFromAttributes(
                 "TestOwner", "testAttributeSetName", property);
         attributeSet.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         attributeSet.setContext(agentSimulationContext(attributeSet));
@@ -218,7 +218,7 @@ public class AttributeSetTest {
 
     @Test
     public void testSetLogDatabaseFactory_SecondCallIgnored() {
-        AgentAttributeSet attributeSet = singlePropertyAgentSet(
+        MutableAgentAttributeSet attributeSet = singlePropertyAgentSet(
                 "TestOwner", "testAttributeSetName", "Property_0");
 
         attributeSet.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());

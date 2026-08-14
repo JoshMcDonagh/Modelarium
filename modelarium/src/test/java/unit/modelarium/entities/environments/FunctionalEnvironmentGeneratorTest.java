@@ -1,8 +1,8 @@
 package unit.modelarium.entities.environments;
 
 import modelarium.Config;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.FunctionalEnvironmentGenerator;
+import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.generators.FunctionalEnvironmentGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import static unit.modelarium.entities.environments.EnvironmentTestHelpers.*;
 public class FunctionalEnvironmentGeneratorTest {
     @Test
     public void testGenerateEnvironment() {
-        Environment environment = new Environment("testEnv", List.of());
+        MutableEnvironment environment = new MutableEnvironment("testEnv", List.of());
         FunctionalEnvironmentGenerator generator = new FunctionalEnvironmentGenerator((config, random) -> environment);
         Config config = syncedConfig(1, 1, 1);
 

@@ -1,6 +1,6 @@
 package unit.modelarium.results;
 
-import modelarium.entities.environments.Environment;
+import modelarium.entities.environments.MutableEnvironment;
 import modelarium.results.immutable.ImmutableResultsForEnvironment;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +12,7 @@ import static unit.modelarium.results.ResultsTestHelpers.*;
 
 public class ImmutableResultsForEnvironmentTest {
     private ImmutableResultsForEnvironment populatedImmutableResults() {
-        Environment environment = environmentWithMemoryLogs(
+        MutableEnvironment environment = environmentWithMemoryLogs(
                 "Environment_0",
                 environmentAttributeSet("Environment_0", "AttributeSet_0", "Property_0", "Property_1")
         );

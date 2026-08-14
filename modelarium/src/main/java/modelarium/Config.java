@@ -1,7 +1,7 @@
 package modelarium;
 
 import modelarium.entities.agents.generators.AgentGenerator;
-import modelarium.entities.environments.EnvironmentGenerator;
+import modelarium.entities.environments.generators.EnvironmentGenerator;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
 import modelarium.scheduler.InOrderScheduler;

@@ -6,9 +6,9 @@ import dev.modelarium.examples.sirbasic.entities.environment.attributes.geograph
 import dev.modelarium.examples.sirbasic.entities.environment.attributes.geography.WidthProperty;
 import modelarium.Config;
 import modelarium.entities.attributes.Attribute;
-import modelarium.entities.attributes.EnvironmentAttributeSet;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.EnvironmentGenerator;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.generators.EnvironmentGenerator;
 
 import java.util.ArrayList;
 import java.util.random.RandomGenerator;
@@ -21,8 +21,8 @@ public class SIREnvironmentGenerator extends EnvironmentGenerator {
     }
 
     @Override
-    public Environment generateEnvironment(Config config, RandomGenerator random) {
-        ArrayList<EnvironmentAttributeSet> environmentAttributeSets = new ArrayList<EnvironmentAttributeSet>();
+    public MutableEnvironment generateEnvironment(Config config, RandomGenerator random) {
+        ArrayList<MutableEnvironmentAttributeSet> environmentAttributeSets = new ArrayList<MutableEnvironmentAttributeSet>();
         ArrayList<Attribute> environmentGeographyAttributes = new ArrayList<>();
 
         WidthProperty widthProperty = new WidthProperty();
@@ -33,8 +33,8 @@ public class SIREnvironmentGenerator extends EnvironmentGenerator {
         heightProperty.set(sirSettings.environment().area().height());
         environmentGeographyAttributes.add(heightProperty);
 
-        environmentAttributeSets.add(new EnvironmentAttributeSet("geography", environmentGeographyAttributes));
+        environmentAttributeSets.add(new MutableEnvironmentAttributeSet("geography", environmentGeographyAttributes));
 
-        return new Environment(environmentAttributeSets);
+        return new MutableEnvironment(environmentAttributeSets);
     }
 }

@@ -1,27 +1,28 @@
-package modelarium.entities.immutable.attributes;
+package modelarium.entities.attributes.sets.immutable;
 
 import modelarium.entities.attributes.AgentAttribute;
-import modelarium.entities.attributes.AgentAttributeSet;
+import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.attributes.events.AgentEvent;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.routines.AgentRoutine;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.AgentSimulationContext;
 
 /**
- * Class for providing a read-only view of an {@link AgentAttributeSet}.
+ * Class for providing a read-only view of an {@link MutableAgentAttributeSet}.
  *
  * <p>This class specialises {@link ImmutableAttributeSet} so that retrieved attributes are returned as deep clones
  * of their agent-flavoured types.
  */
-public final class ImmutableAgentAttributeSet extends ImmutableAttributeSet<AgentSimulationContext, AgentContext> {
+public final class ImmutableAgentAttributeSet extends ImmutableAttributeSet<AgentSimulationContext, AgentContext> implements AgentAttributeSet {
 
     /**
      * Constructs a new immutable agent attribute set wrapping the specified mutable attribute set.
      *
      * @param attributeSet the mutable agent attribute set to provide a read-only view of
      */
-    public ImmutableAgentAttributeSet(AgentAttributeSet attributeSet) {
+    public ImmutableAgentAttributeSet(MutableAgentAttributeSet attributeSet) {
         super(attributeSet);
     }
 
@@ -34,7 +35,7 @@ public final class ImmutableAgentAttributeSet extends ImmutableAttributeSet<Agen
     @Override
     public AgentAttribute get(int index) {
         return getClonedAttribute(
-                AgentAttributeSet.class,
+                MutableAgentAttributeSet.class,
                 AgentAttribute.class,
                 "get",
                 int.class,
@@ -51,7 +52,7 @@ public final class ImmutableAgentAttributeSet extends ImmutableAttributeSet<Agen
     @Override
     public AgentAttribute get(String attributeName) {
         return getClonedAttribute(
-                AgentAttributeSet.class,
+                MutableAgentAttributeSet.class,
                 AgentAttribute.class,
                 "get",
                 String.class,
@@ -68,7 +69,7 @@ public final class ImmutableAgentAttributeSet extends ImmutableAttributeSet<Agen
     @Override
     public AgentEvent getEvent(int eventIndex) {
         return getClonedAttribute(
-                AgentAttributeSet.class,
+                MutableAgentAttributeSet.class,
                 AgentEvent.class,
                 "getEvent",
                 int.class,
@@ -85,7 +86,7 @@ public final class ImmutableAgentAttributeSet extends ImmutableAttributeSet<Agen
     @Override
     public AgentEvent getEvent(String eventName) {
         return getClonedAttribute(
-                AgentAttributeSet.class,
+                MutableAgentAttributeSet.class,
                 AgentEvent.class,
                 "getEvent",
                 String.class,
@@ -102,7 +103,7 @@ public final class ImmutableAgentAttributeSet extends ImmutableAttributeSet<Agen
     @Override
     public AgentRoutine getRoutine(int routineIndex) {
         return getClonedAttribute(
-                AgentAttributeSet.class,
+                MutableAgentAttributeSet.class,
                 AgentRoutine.class,
                 "getRoutine",
                 int.class,
@@ -119,7 +120,7 @@ public final class ImmutableAgentAttributeSet extends ImmutableAttributeSet<Agen
     @Override
     public AgentRoutine getRoutine(String routineName) {
         return getClonedAttribute(
-                AgentAttributeSet.class,
+                MutableAgentAttributeSet.class,
                 AgentRoutine.class,
                 "getRoutine",
                 String.class,
@@ -136,7 +137,7 @@ public final class ImmutableAgentAttributeSet extends ImmutableAttributeSet<Agen
     @Override
     public AgentProperty<?> getProperty(int propertyIndex) {
         return getClonedAttribute(
-                AgentAttributeSet.class,
+                MutableAgentAttributeSet.class,
                 AgentProperty.class,
                 "getProperty",
                 int.class,
@@ -153,7 +154,7 @@ public final class ImmutableAgentAttributeSet extends ImmutableAttributeSet<Agen
     @Override
     public AgentProperty<?> getProperty(String propertyName) {
         return getClonedAttribute(
-                AgentAttributeSet.class,
+                MutableAgentAttributeSet.class,
                 AgentProperty.class,
                 "getProperty",
                 String.class,

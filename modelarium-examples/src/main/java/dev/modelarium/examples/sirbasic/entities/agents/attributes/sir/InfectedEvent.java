@@ -3,11 +3,11 @@ package dev.modelarium.examples.sirbasic.entities.agents.attributes.sir;
 import dev.modelarium.examples.sirbasic.config.SettingsLoader;
 import dev.modelarium.examples.sirbasic.config.SIRSettings;
 import dev.modelarium.examples.sirbasic.entities.agents.attributes.location.Coordinates;
-import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.contexts.AgentContext;
-import modelarium.entities.immutable.ImmutableAgentSet;
+import modelarium.entities.agents.immutable.ImmutableAgentSet;
 
 import java.util.function.Predicate;
 
@@ -43,7 +43,7 @@ public class InfectedEvent extends AgentEvent {
                 .getProperty("location", "location")
                 .get();
 
-        Predicate<Agent> nearbyAndInfectiousOnly = agent -> {
+        Predicate<MutableAgent> nearbyAndInfectiousOnly = agent -> {
             Coordinates otherCoordinates = (Coordinates) agent
                     .getProperty("location", "location")
                     .get();

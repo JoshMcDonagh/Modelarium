@@ -2,11 +2,15 @@ package unit.modelarium.entities.contexts;
 
 import modelarium.Config;
 import modelarium.clock.MutableClock;
-import modelarium.entities.Entity;
-import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.AgentSet;
+import modelarium.entities.MutableEntity;
+import modelarium.entities.agents.mutable.MutableAgent;
+import modelarium.entities.agents.mutable.MutableAgentSet;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
 import modelarium.entities.attributes.*;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AttributeBase;
+import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.contexts.AgentContext;
@@ -15,12 +19,12 @@ import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.contexts.SimulationContext;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.EnvironmentGenerator;
-import modelarium.entities.immutable.ImmutableAgent;
-import modelarium.entities.immutable.ImmutableAgentSet;
-import modelarium.entities.immutable.ImmutableEntity;
-import modelarium.entities.immutable.ImmutableEnvironment;
+import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.generators.EnvironmentGenerator;
+import modelarium.entities.agents.immutable.ImmutableAgent;
+import modelarium.entities.agents.immutable.ImmutableAgentSet;
+import modelarium.entities.ImmutableEntity;
+import modelarium.entities.environments.ImmutableEnvironment;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 import org.junit.jupiter.api.function.Executable;
@@ -44,16 +48,16 @@ class ContextTestHelpers {
 
     private static int agentCount = 0;
 
-    static Agent emptyAgent(String name) {
-        return new Agent(name, List.of());
+    static MutableAgent emptyAgent(String name) {
+        return new MutableAgent(name, List.of());
     }
 
-    static AgentSet agentSet(Agent... agents) {
-        return new AgentSet(List.of(agents));
+    static MutableAgentSet agentSet(MutableAgent... agents) {
+        return new MutableAgentSet(List.of(agents));
     }
 
-    static AgentSet agentSetOfSize(int size) {
-        AgentSet agentSet = new AgentSet();
+    static MutableAgentSet agentSetOfSize(int size) {
+        MutableAgentSet agentSet = new MutableAgentSet();
 
         for (int i = 0; i < size; i++) {
             agentSet.add(emptyAgent(String.valueOf(agentCount)));
@@ -63,8 +67,8 @@ class ContextTestHelpers {
         return agentSet;
     }
 
-    static Environment emptyEnvironment() {
-        return new Environment(List.of());
+    static MutableEnvironment emptyEnvironment() {
+        return new MutableEnvironment(List.of());
     }
 
     static ContextCache contextCache() {
@@ -84,7 +88,7 @@ class ContextTestHelpers {
             private int index = 0;
 
             @Override
-            protected Agent generateAgent(Config config, RandomGenerator random) {
+            protected MutableAgent generateAgent(Config config, RandomGenerator random) {
                 return emptyAgent("agent_" + index++);
             }
         };
@@ -93,7 +97,7 @@ class ContextTestHelpers {
     private static EnvironmentGenerator environmentGenerator() {
         return new EnvironmentGenerator() {
             @Override
-            public Environment generateEnvironment(Config config, RandomGenerator random) {
+            public MutableEnvironment generateEnvironment(Config config, RandomGenerator random) {
                 return emptyEnvironment();
             }
         };
@@ -168,16 +172,16 @@ class ContextTestHelpers {
     }
 
     @SuppressWarnings("unchecked")
-    static AgentAttributeSet singlePropertyAgentSet(String ownerName, String attributeSetName, String propertyName) {
-        return new AgentAttributeSet(
+    static MutableAgentAttributeSet singlePropertyAgentSet(String ownerName, String attributeSetName, String propertyName) {
+        return new MutableAgentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(new AgentCounterProperty(propertyName))
         );
     }
 
     @SuppressWarnings("unchecked")
-    static EnvironmentAttributeSet singlePropertyEnvironmentSet(String ownerName, String attributeSetName, String propertyName) {
-        return new EnvironmentAttributeSet(
+    static MutableEnvironmentAttributeSet singlePropertyEnvironmentSet(String ownerName, String attributeSetName, String propertyName) {
+        return new MutableEnvironmentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(new EnvironmentTickProperty(propertyName))
         );
@@ -186,22 +190,22 @@ class ContextTestHelpers {
     private static <C extends SimulationContext> C simulationContext(
             Class<C> contextClass,
             Config config,
-            AgentSet agentSet,
+            MutableAgentSet agentSet,
             ContextCache contextCache,
             MutableClock clock,
-            Environment thisEnvironment,
-            Environment localEnvironment,
+            MutableEnvironment thisEnvironment,
+            MutableEnvironment localEnvironment,
             RandomGenerator randomGenerator
     ) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         Class<?> entityClass;
-        Entity<?,?,?,?> entity;
+        MutableEntity<?,?,?,?> entity;
 
         if (contextClass.equals(AgentSimulationContext.class)) {
-            entityClass = Agent.class;
+            entityClass = MutableAgent.class;
             entity = agentSet.get(0);
         }
         else if (contextClass.equals(EnvironmentSimulationContext.class)) {
-            entityClass = Environment.class;
+            entityClass = MutableEnvironment.class;
             entity = thisEnvironment;
         }
         else {
@@ -210,12 +214,12 @@ class ContextTestHelpers {
 
         return contextClass.getConstructor(
                 entityClass,
-                AgentSet.class,
+                MutableAgentSet.class,
                 Config.class,
                 ContextCache.class,
                 MutableClock.class,
                 RequestResponseController.class,
-                Environment.class,
+                MutableEnvironment.class,
                 RandomGenerator.class
         ).newInstance(
                 entity,
@@ -233,7 +237,7 @@ class ContextTestHelpers {
             Class<C> contextClass,
             Config config
     ) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        Environment environment = emptyEnvironment();
+        MutableEnvironment environment = emptyEnvironment();
         return simulationContext(
                 contextClass,
                 config,
@@ -249,7 +253,7 @@ class ContextTestHelpers {
     static <C extends SimulationContext> C simulationContextWithAgentSet(
             Class<C> contextClass,
             Config config,
-            AgentSet agentSet
+            MutableAgentSet agentSet
     ) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         return simulationContext(
                 contextClass,
@@ -282,8 +286,8 @@ class ContextTestHelpers {
 
     static AgentSimulationContext agentSimulationContextWithAgent(
             Config config,
-            Agent agent,
-            AgentSet agentSet
+            MutableAgent agent,
+            MutableAgentSet agentSet
     ) {
         return new AgentSimulationContext(
                 agent,
@@ -300,7 +304,7 @@ class ContextTestHelpers {
     static <C extends SimulationContext> C simulationContextWithEnvironment(
             Class<C> contextClass,
             Config config,
-            Environment environment
+            MutableEnvironment environment
     ) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         return simulationContext(
                 contextClass,
@@ -334,7 +338,7 @@ class ContextTestHelpers {
     static <C extends SimulationContext> C simulationContextWithAttributeSet(
             Class<C> contextClass,
             Config config,
-            AttributeSet<?,?> attributeSet
+            MutableAttributeSet<?,?> attributeSet
     ) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         C context = simulationContext(
                 contextClass,
@@ -390,22 +394,22 @@ class ContextTestHelpers {
         );
     }
 
-    static Agent getMutableFromImmutable(ImmutableAgent immutableAgent) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    static MutableAgent getMutableFromImmutable(ImmutableAgent immutableAgent) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         Method getMutableEntityMethod = ImmutableEntity.class.getDeclaredMethod("getMutableEntity");
         getMutableEntityMethod.setAccessible(true);
-        return (Agent) getMutableEntityMethod.invoke(immutableAgent);
+        return (MutableAgent) getMutableEntityMethod.invoke(immutableAgent);
     }
 
-    static Environment getMutableFromImmutable(ImmutableEnvironment immutableEnvironment) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    static MutableEnvironment getMutableFromImmutable(ImmutableEnvironment immutableEnvironment) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method getMutableEntityMethod = ImmutableEntity.class.getDeclaredMethod("getMutableEntity");
         getMutableEntityMethod.setAccessible(true);
-        return (Environment) getMutableEntityMethod.invoke(immutableEnvironment);
+        return (MutableEnvironment) getMutableEntityMethod.invoke(immutableEnvironment);
     }
 
-    static AgentSet getMutableFromImmutable(ImmutableAgentSet immutableAgentSet) throws NoSuchFieldException, IllegalAccessException {
+    static MutableAgentSet getMutableFromImmutable(ImmutableAgentSet immutableAgentSet) throws NoSuchFieldException, IllegalAccessException {
         Field agentSetField = ImmutableAgentSet.class.getDeclaredField("agentSet");
         agentSetField.setAccessible(true);
-        return (AgentSet) agentSetField.get(immutableAgentSet);
+        return (MutableAgentSet) agentSetField.get(immutableAgentSet);
     }
 
     static <E extends Throwable, C extends Throwable> void assertCorrectExceptionThrown(
@@ -451,7 +455,7 @@ class ContextTestHelpers {
         throw new IllegalArgumentException("Unhandled primitive parameter type: " + parameterType);
     }
 
-    private static <C extends SimulationContext, T, E extends Entity<?,?,?,?>> C generateContextWithMockRequestResponseInterface(
+    private static <C extends SimulationContext, T, E extends MutableEntity<?,?,?,?>> C generateContextWithMockRequestResponseInterface(
             Class<C> contextClass,
             T returned,
             String methodName,
@@ -472,8 +476,8 @@ class ContextTestHelpers {
         C context;
 
         if (contextClass.equals(AgentSimulationContext.class)) {
-            Agent agent = (Agent) thisEntity;
-            AgentSet agentSet = agentSetOfSize(config.populationSize() - 1);
+            MutableAgent agent = (MutableAgent) thisEntity;
+            MutableAgentSet agentSet = agentSetOfSize(config.populationSize() - 1);
             agentSet.add(agent);
             context = (C) agentSimulationContextWithAgent(
                     config,
@@ -485,7 +489,7 @@ class ContextTestHelpers {
             context = simulationContextWithEnvironment(
                     contextClass,
                     config,
-                    (Environment) thisEntity
+                    (MutableEnvironment) thisEntity
             );
         }
         else {
@@ -501,7 +505,7 @@ class ContextTestHelpers {
         return context;
     }
 
-    static <C extends SimulationContext, T, E extends Entity<?,?,?,?>> C generateContextWhereRequestResponseInterfaceMethodReturns(
+    static <C extends SimulationContext, T, E extends MutableEntity<?,?,?,?>> C generateContextWhereRequestResponseInterfaceMethodReturns(
             Class<C> contextClass,
             T returned,
             String methodName,
@@ -520,7 +524,7 @@ class ContextTestHelpers {
         );
     }
 
-    static <C extends SimulationContext, T extends Throwable, E extends Entity<?,?,?,?>> C generateContextWhereRequestResponseInterfaceMethodThrows(
+    static <C extends SimulationContext, T extends Throwable, E extends MutableEntity<?,?,?,?>> C generateContextWhereRequestResponseInterfaceMethodThrows(
             Class<C> contextClass,
             Class<T> exceptionClass,
             String methodName,
@@ -539,7 +543,7 @@ class ContextTestHelpers {
         );
     }
 
-    static void assertSetsContainSameAgents(AgentSet expected, ImmutableAgentSet actual) {
+    static void assertSetsContainSameAgents(MutableAgentSet expected, ImmutableAgentSet actual) {
         assertEquals(expected.size(), actual.size());
         for (int i = 0; i < expected.size(); i++)
             assertEquals(expected.get(i).name(), actual.get(i).name());

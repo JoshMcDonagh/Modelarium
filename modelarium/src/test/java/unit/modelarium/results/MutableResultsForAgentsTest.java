@@ -1,6 +1,6 @@
 package unit.modelarium.results;
 
-import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.results.immutable.ImmutableResultsForAgents;
 import modelarium.results.mutable.MutableResultsForAgents;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ public class MutableResultsForAgentsTest {
 
     @Test
     public void testAttributeSetLogCount() {
-        Agent agent = agentWithMemoryLogs(
+        MutableAgent agent = agentWithMemoryLogs(
                 "Agent_0",
                 agentAttributeSet("Agent_0", "AttributeSet_0", "Property_0"),
                 agentAttributeSet("Agent_0", "AttributeSet_1", "Property_1")
@@ -37,7 +37,7 @@ public class MutableResultsForAgentsTest {
 
     @Test
     public void testAttributeLogCount() {
-        Agent agent = agentWithMemoryLogs(
+        MutableAgent agent = agentWithMemoryLogs(
                 "Agent_0",
                 agentAttributeSet("Agent_0", "AttributeSet_0", "Property_0", "Property_1", "Property_2")
         );
@@ -49,7 +49,7 @@ public class MutableResultsForAgentsTest {
 
     @Test
     public void testAttributeLogs_PreservesOrder() {
-        Agent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
+        MutableAgent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
         record(agent, "AttributeSet_0", "Property_0", 1.0, 2.0, 3.0);
 
         MutableResultsForAgents results = agentResults(agent);
@@ -64,7 +64,7 @@ public class MutableResultsForAgentsTest {
 
     @Test
     public void testAttributeLogs_Typed() {
-        Agent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
+        MutableAgent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
         record(agent, "AttributeSet_0", "Property_0", 1.0, 2.0);
 
         MutableResultsForAgents results = agentResults(agent);
@@ -76,7 +76,7 @@ public class MutableResultsForAgentsTest {
 
     @Test
     public void testAttributeLogs_Typed_WrongType_ClassCastException() {
-        Agent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
+        MutableAgent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
         record(agent, "AttributeSet_0", "Property_0", 1.0);
 
         MutableResultsForAgents results = agentResults(agent);
@@ -89,7 +89,7 @@ public class MutableResultsForAgentsTest {
 
     @Test
     public void testAttributeSetLogs() {
-        Agent agent = agentWithMemoryLogs(
+        MutableAgent agent = agentWithMemoryLogs(
                 "Agent_0",
                 agentAttributeSet("Agent_0", "AttributeSet_0", "Property_0", "Property_1")
         );
@@ -107,7 +107,7 @@ public class MutableResultsForAgentsTest {
 
     @Test
     public void testAgentLogs() {
-        Agent agent = agentWithMemoryLogs(
+        MutableAgent agent = agentWithMemoryLogs(
                 "Agent_0",
                 agentAttributeSet("Agent_0", "AttributeSet_0", "Property_0"),
                 agentAttributeSet("Agent_0", "AttributeSet_1", "Property_1")
@@ -126,8 +126,8 @@ public class MutableResultsForAgentsTest {
 
     @Test
     public void testAllLogs() {
-        Agent agent0 = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
-        Agent agent1 = agentWithLoggedProperty("Agent_1", "AttributeSet_0", "Property_0");
+        MutableAgent agent0 = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
+        MutableAgent agent1 = agentWithLoggedProperty("Agent_1", "AttributeSet_0", "Property_0");
         record(agent0, "AttributeSet_0", "Property_0", 1.0);
         record(agent1, "AttributeSet_0", "Property_0", 2.0);
 
@@ -142,8 +142,8 @@ public class MutableResultsForAgentsTest {
 
     @Test
     public void testMergeWith() {
-        Agent agent0 = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
-        Agent agent1 = agentWithLoggedProperty("Agent_1", "AttributeSet_0", "Property_0");
+        MutableAgent agent0 = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
+        MutableAgent agent1 = agentWithLoggedProperty("Agent_1", "AttributeSet_0", "Property_0");
         record(agent0, "AttributeSet_0", "Property_0", 1.0);
         record(agent1, "AttributeSet_0", "Property_0", 2.0);
 
@@ -158,7 +158,7 @@ public class MutableResultsForAgentsTest {
 
     @Test
     public void testDisconnectDatabases() {
-        Agent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
+        MutableAgent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
         record(agent, "AttributeSet_0", "Property_0", 1.0);
 
         MutableResultsForAgents results = agentResults(agent);
@@ -171,7 +171,7 @@ public class MutableResultsForAgentsTest {
 
     @Test
     public void testGetAsImmutable() {
-        Agent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
+        MutableAgent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
         record(agent, "AttributeSet_0", "Property_0", 1.0);
 
         MutableResultsForAgents results = agentResults(agent);

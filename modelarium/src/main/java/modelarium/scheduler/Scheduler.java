@@ -1,8 +1,8 @@
 package modelarium.scheduler;
 
 import modelarium.clock.ImmutableClock;
-import modelarium.entities.agents.AgentSet;
-import modelarium.entities.immutable.ImmutableEnvironment;
+import modelarium.entities.agents.mutable.MutableAgentSet;
+import modelarium.entities.environments.ImmutableEnvironment;
 
 import java.util.random.RandomGenerator;
 
@@ -26,7 +26,7 @@ public interface Scheduler {
             String threadName,
             ImmutableClock clock,
             ImmutableEnvironment environment,
-            AgentSet agentSet,
+            MutableAgentSet agentSet,
             RandomGenerator random
     );
 }
