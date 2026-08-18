@@ -214,4 +214,11 @@ public sealed abstract class MutableEntity<SC extends SimulationContext, C exten
         for (AS attributeSet : attributeSetList)
             attributeSet.run();
     }
+
+    /**
+     * Creates and returns an immutable version of this entity.
+     *
+     * @return the new {@link ImmutableEntity} instance
+     */
+    public abstract ImmutableEntity<SC,C,AS,ASL> getAsImmutable();
 }

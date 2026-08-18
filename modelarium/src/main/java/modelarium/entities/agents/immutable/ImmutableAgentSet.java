@@ -21,15 +21,15 @@ import java.util.random.RandomGenerator;
 public final class ImmutableAgentSet implements AgentSet<ImmutableAgent, ImmutableAgentSet> {
 
     /** The mutable agent set this read-only view wraps */
-    private final MutableAgentSet agentSet;
+    private final MutableAgentSet mutableVersion;
 
     /**
      * Constructs a new immutable agent set wrapping the specified mutable agent set.
      *
-     * @param agentSet the mutable agent set to provide a read-only view of
+     * @param mutableVersion the mutable agent set to provide a read-only view of
      */
-    public ImmutableAgentSet(MutableAgentSet agentSet) {
-        this.agentSet = agentSet;
+    public ImmutableAgentSet(MutableAgentSet mutableVersion) {
+        this.mutableVersion = mutableVersion;
     }
 
     /**
@@ -39,7 +39,7 @@ public final class ImmutableAgentSet implements AgentSet<ImmutableAgent, Immutab
      * @return a read-only view of the agent with the specified name
      */
     public ImmutableAgent get(String agentName) {
-        return new ImmutableAgent(agentSet.get(agentName));
+        return mutableVersion.get(agentName).getAsImmutable();
     }
 
     /**
@@ -49,7 +49,7 @@ public final class ImmutableAgentSet implements AgentSet<ImmutableAgent, Immutab
      * @return a read-only view of the agent at the given position
      */
     public ImmutableAgent get(int index) {
-        return new ImmutableAgent(agentSet.get(index));
+        return mutableVersion.get(index).getAsImmutable();
     }
 
     /**
@@ -58,11 +58,11 @@ public final class ImmutableAgentSet implements AgentSet<ImmutableAgent, Immutab
      * @return a list of {@link ImmutableAgent} instances
      */
     public List<ImmutableAgent> getAsList() {
-        List<MutableAgent> originalList = agentSet.getAsList();
+        List<MutableAgent> originalList = mutableVersion.getAsList();
         List<ImmutableAgent> newList = new ArrayList<>();
 
         for (MutableAgent agent : originalList)
-            newList.add(new ImmutableAgent(agent));
+            newList.add(agent.getAsImmutable());
 
         return newList;
     }
@@ -73,7 +73,7 @@ public final class ImmutableAgentSet implements AgentSet<ImmutableAgent, Immutab
      * @return the size of the agent set
      */
     public int size() {
-        return agentSet.size();
+        return mutableVersion.size();
     }
 
     /**
@@ -82,7 +82,7 @@ public final class ImmutableAgentSet implements AgentSet<ImmutableAgent, Immutab
      * @return true if the set is empty, false otherwise
      */
     public boolean isEmpty() {
-        return agentSet.isEmpty();
+        return mutableVersion.isEmpty();
     }
 
     /**
@@ -92,7 +92,7 @@ public final class ImmutableAgentSet implements AgentSet<ImmutableAgent, Immutab
      * @return true if the agent exists
      */
     public boolean doesAgentExist(String agentName) {
-        return agentSet.doesAgentExist(agentName);
+        return mutableVersion.doesAgentExist(agentName);
     }
 
     /**
@@ -102,7 +102,7 @@ public final class ImmutableAgentSet implements AgentSet<ImmutableAgent, Immutab
      * @return a new {@link ImmutableAgentSet} containing only matching agents
      */
     public ImmutableAgentSet getFilteredAgents(Predicate<Agent> agentFilter) {
-        return agentSet.getFilteredAgents(agentFilter).getAsImmutable();
+        return mutableVersion.getFilteredAgents(agentFilter).getAsImmutable();
     }
 
     /**

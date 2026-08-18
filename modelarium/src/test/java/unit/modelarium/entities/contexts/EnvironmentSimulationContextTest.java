@@ -198,7 +198,7 @@ public class EnvironmentSimulationContextTest {
     @Test
     public void testGetAgent_ThreadsSynced() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         Config config = syncedConfig(20, 10, 1);
-        MutableAgent agent = emptyAgent("Carol");
+        ImmutableAgent agent = emptyAgent("Carol").getAsImmutable();
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodReturns(
                 EnvironmentSimulationContext.class,
@@ -209,7 +209,7 @@ public class EnvironmentSimulationContextTest {
                 emptyEnvironment()
         );
 
-        MutableAgent returnedAgent = getMutableFromImmutable(context.getAgent(agent.name()));
+        ImmutableAgent returnedAgent = context.getAgent(agent.name());
 
         assertSame(agent, returnedAgent);
     }
@@ -324,7 +324,7 @@ public class EnvironmentSimulationContextTest {
     @Test
     public void testGetFilteredAgents_ThreadsSynced_SimulationInterruptedException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         Config config = syncedConfig(2, 10, 1);
-        ImmutableEnvironment environment = new ImmutableEnvironment(emptyEnvironment());
+        MutableEnvironment environment = emptyEnvironment();
         Predicate<Agent> filter = a -> true;
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
@@ -348,7 +348,7 @@ public class EnvironmentSimulationContextTest {
     public void testGetFilteredAgents_ThreadsSynced_AgentNotFoundException_CoordinatorTimeoutException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         Config config = syncedConfig(2, 10, 1);
         MutableEnvironment environment = emptyEnvironment();
-        Predicate<MutableAgent> filter = a -> true;
+        Predicate<Agent> filter = a -> true;
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
                 EnvironmentSimulationContext.class,
@@ -371,7 +371,7 @@ public class EnvironmentSimulationContextTest {
     public void testGetFilteredAgents_ThreadsSynced_AgentNotFoundException_CoordinatorErrorException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         Config config = syncedConfig(2, 10, 1);
         MutableEnvironment environment = emptyEnvironment();
-        Predicate<MutableAgent> filter = a -> true;
+        Predicate<Agent> filter = a -> true;
 
         EnvironmentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
                 EnvironmentSimulationContext.class,
@@ -395,7 +395,7 @@ public class EnvironmentSimulationContextTest {
         int populationSize = 20;
         Config config = unsyncedConfig(populationSize, 10, 1);
         MutableAgentSet agentSet = agentSetOfSize(populationSize);
-        Predicate<MutableAgent> filter = a -> true;
+        Predicate<Agent> filter = a -> true;
 
         EnvironmentSimulationContext context = simulationContextWithAgentSet(
                 EnvironmentSimulationContext.class,

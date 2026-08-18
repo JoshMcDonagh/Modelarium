@@ -24,6 +24,7 @@ import java.util.random.RandomGenerator;
  * {@link EnvironmentSimulationContext} for its behaviour and interactions.
  */
 public final class MutableEnvironment extends MutableEntity<EnvironmentSimulationContext, EnvironmentContext, MutableEnvironmentAttributeSet, AttributeSetLog<EnvironmentSimulationContext>> implements Environment {
+    private ImmutableEnvironment immutableVersion = null;
 
     /**
      * Constructs a new environment with the specified name and attribute sets.
@@ -110,5 +111,16 @@ public final class MutableEnvironment extends MutableEntity<EnvironmentSimulatio
      */
     public EnvironmentProperty<?> getProperty(String attributeSetName, String propertyName) {
         return getAttributeSet(attributeSetName).getProperty(propertyName);
+    }
+
+    /**
+     * Creates and returns an immutable version of this environment.
+     *
+     * @return the new {@link ImmutableEnvironment} instance
+     */
+    public ImmutableEnvironment getAsImmutable() {
+        if (immutableVersion == null)
+            immutableVersion = new ImmutableEnvironment(this);
+        return immutableVersion;
     }
 }

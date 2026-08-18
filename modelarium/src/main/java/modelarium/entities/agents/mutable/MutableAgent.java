@@ -2,8 +2,10 @@ package modelarium.entities.agents.mutable;
 
 import modelarium.Config;
 import modelarium.clock.MutableClock;
+import modelarium.entities.ImmutableEntity;
 import modelarium.entities.MutableEntity;
 import modelarium.entities.agents.Agent;
+import modelarium.entities.agents.immutable.ImmutableAgent;
 import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.attributes.properties.AgentProperty;
@@ -26,6 +28,7 @@ import java.util.random.RandomGenerator;
  */
 public final class MutableAgent extends MutableEntity<AgentSimulationContext, AgentContext, MutableAgentAttributeSet, AttributeSetLog<AgentSimulationContext>> implements Agent {
     private boolean isDead = false;
+    private ImmutableAgent immutableVersion = null;
 
     /**
      * Constructs a new agent with the specified name and attribute sets.
@@ -150,5 +153,17 @@ public final class MutableAgent extends MutableEntity<AgentSimulationContext, Ag
             return;
 
         super.run();
+    }
+
+    /**
+     * Creates and returns an immutable version of this agent.
+     *
+     * @return the new {@link ImmutableAgent} instance
+     */
+    @Override
+    public ImmutableAgent getAsImmutable() {
+        if (immutableVersion == null)
+            immutableVersion = new ImmutableAgent(this);
+        return immutableVersion;
     }
 }

@@ -24,6 +24,8 @@ import java.util.random.RandomGenerator;
  * <p>This class is iterable and designed to support both sequential and parallel simulation use cases.
  */
 public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgentSet> {
+    private ImmutableAgentSet immutableVersion = null;
+
     /** Ordered list of agents in the set */
     private List<MutableAgent> agentList = new ArrayList<>();
 
@@ -282,7 +284,9 @@ public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgen
      * @return a new {@link ImmutableAgentSet} instance wrapping this set
      */
     public ImmutableAgentSet getAsImmutable() {
-        return new ImmutableAgentSet(this);
+        if (immutableVersion == null)
+            immutableVersion = new ImmutableAgentSet(this);
+        return immutableVersion;
     }
 
     /**
