@@ -151,6 +151,13 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
             synchronized (activeDatabases) {
                 try {
                     if (connection != null) {
+                        try (Statement stmt = connection.createStatement()) {
+                            stmt.execute("PRAGMA wal_checkpoint(TRUNCATE);");
+                            stmt.execute("PRAGMA journal_mode = DELETE;");
+                        } catch (SQLException e) {
+                            System.err.println("Error finalising WAL before close: " + e.getMessage());
+                        }
+
                         try {
                             connection.close();
                         } catch (SQLException e) {
@@ -484,7 +491,25 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
                     });
                 }
 
-                Files.deleteIfExists(normalisedParent);
+                IOException lastError = null;
+                for (int attempt = 0; attempt < 5; attempt++) {
+                    try {
+                        Files.deleteIfExists(normalisedParent);
+                        lastError = null;
+                        break;
+                    } catch (IOException e) {
+                        lastError = e;
+                        System.gc();
+                        try {
+                            Thread.sleep(30);
+                        } catch (InterruptedException ie) {
+                            Thread.currentThread().interrupt();
+                            break;
+                        }
+                    }
+                }
+                if (lastError != null)
+                    throw lastError;
             }
         } catch (Exception e) {
             System.err.println("Failed to clean up parent temp directory: " + parent + " (" + e.getMessage() + ")");
