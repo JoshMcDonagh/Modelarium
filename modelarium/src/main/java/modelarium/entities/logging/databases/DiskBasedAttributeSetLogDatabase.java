@@ -72,14 +72,13 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
     }
 
     /**
-     * Creates a unique path for the database's backing file inside the system's temporary directory.
+     * Creates a path for the database's backing file inside the system's temporary directory.
      *
-     * @return a new database file path within a uniquely named temporary folder
+     * @return a new database file path
      */
     private static String createTempDatabasePath() {
-        String folderName = "temp_" + RandomStringGenerator.generateUniqueRandomString(20);
-        Path tempDir = Paths.get(System.getProperty("java.io.tmpdir"), folderName);
-        return tempDir.resolve(RandomStringGenerator.generateUniqueRandomString(20) + ".db").toString();
+        String fileName = "temp_" + RandomStringGenerator.generateUniqueRandomString(20) + ".db";
+        return Paths.get(System.getProperty("java.io.tmpdir"), fileName).toString();
     }
 
     /**
@@ -456,63 +455,20 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
     }
 
     /**
-     * Deletes the database's backing file, and deletes its parent directory too if that directory lives inside the
-     * system's temporary directory.
+     * Deletes the database's file.
      */
     private void deleteDatabaseFileAndMaybeParentDirectory() {
         String databasePathString = getDatabasePath();
         if (databasePathString == null || databasePathString.isBlank())
             return;
 
-        Path databasePath = Paths.get(databasePathString);
-
-        try {
-            Files.deleteIfExists(databasePath);
-        } catch (IOException e) {
-            System.err.println("Failed to delete database file: " + databasePath + " (" + e.getMessage() + ")");
-        }
-
-        Path parent = databasePath.getParent();
-        if (parent == null)
-            return;
-
-        try {
-            Path systemTempDir = Paths.get(System.getProperty("java.io.tmpdir")).toAbsolutePath().normalize();
-            Path normalisedParent = parent.toAbsolutePath().normalize();
-
-            if (normalisedParent.startsWith(systemTempDir)) {
-                try (var entries = Files.list(normalisedParent)) {
-                    entries.forEach(file -> {
-                        try {
-                            Files.deleteIfExists(file);
-                        } catch (IOException ex) {
-                            System.err.println("Failed to delete file: " + file + " (" + ex.getMessage() + ")");
-                        }
-                    });
-                }
-
-                IOException lastError = null;
-                for (int attempt = 0; attempt < 5; attempt++) {
-                    try {
-                        Files.deleteIfExists(normalisedParent);
-                        lastError = null;
-                        break;
-                    } catch (IOException e) {
-                        lastError = e;
-                        System.gc();
-                        try {
-                            Thread.sleep(30);
-                        } catch (InterruptedException ie) {
-                            Thread.currentThread().interrupt();
-                            break;
-                        }
-                    }
-                }
-                if (lastError != null)
-                    throw lastError;
+        for (String suffix : new String[] { "", "-wal", "-shm", "-journal" }) {
+            Path file = Paths.get(databasePathString + suffix);
+            try {
+                Files.deleteIfExists(file);
+            } catch (IOException e) {
+                file.toFile().deleteOnExit();
             }
-        } catch (Exception e) {
-            System.err.println("Failed to clean up parent temp directory: " + parent + " (" + e.getMessage() + ")");
         }
     }
 
