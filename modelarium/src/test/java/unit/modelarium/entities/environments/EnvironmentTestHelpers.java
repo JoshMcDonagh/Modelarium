@@ -1,31 +1,31 @@
 package unit.modelarium.entities.environments;
 
 import modelarium.Config;
-import modelarium.entities.agents.mutable.MutableAgent;
+import modelarium.clock.MutableClock;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
+import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.events.EnvironmentEvent;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
+import modelarium.entities.attributes.routines.EnvironmentRoutine;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.contexts.EnvironmentContext;
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.EnvironmentGenerator;
+import modelarium.multithreading.requestresponse.RequestResponseController;
 
 import java.util.List;
-import modelarium.clock.MutableClock;
-import modelarium.entities.agents.mutable.MutableAgentSet;
-import modelarium.entities.attributes.events.EnvironmentEvent;
-import modelarium.entities.attributes.routines.EnvironmentRoutine;
-import modelarium.entities.contexts.ContextCache;
-import modelarium.multithreading.requestresponse.RequestResponseController;
 import java.util.SplittableRandom;
 import java.util.random.RandomGenerator;
 
 class EnvironmentTestHelpers {
     private EnvironmentTestHelpers() {}
 
-    static MutableEnvironment emptyEnvironment() {
-        return new MutableEnvironment("env", List.of());
+    static Environment emptyEnvironment() {
+        return new Environment("env", List.of());
     }
 
     static class EnvironmentTickProperty extends EnvironmentProperty<Integer> {
@@ -68,8 +68,8 @@ class EnvironmentTestHelpers {
             private int index = 0;
 
             @Override
-            protected MutableAgent generateAgent(Config config, RandomGenerator random) {
-                return new MutableAgent("agent_" + index++, List.of());
+            protected Agent generateAgent(Config config, RandomGenerator random) {
+                return new Agent("agent_" + index++, List.of());
             }
         };
     }
@@ -77,7 +77,7 @@ class EnvironmentTestHelpers {
     static EnvironmentGenerator environmentGenerator() {
         return new EnvironmentGenerator() {
             @Override
-            public MutableEnvironment generateEnvironment(Config config, RandomGenerator random) {
+            public Environment generateEnvironment(Config config, RandomGenerator random) {
                 return emptyEnvironment();
             }
         };
@@ -134,10 +134,10 @@ class EnvironmentTestHelpers {
         );
     }
 
-    static void createContextFor(MutableEnvironment environment) {
+    static void createContextFor(Environment environment) {
         Config config = syncedConfig(1, 1, 1);
         environment.createContext(
-                new MutableAgentSet(),
+                new AgentSet(),
                 config,
                 new ContextCache(),
                 new MutableClock(config.tickCount()),

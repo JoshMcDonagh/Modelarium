@@ -5,7 +5,8 @@ import modelarium.entities.logging.databases.DiskBasedAttributeSetLogDatabase;
 import modelarium.entities.logging.databases.factories.DiskBasedAttributeSetLogDatabaseFactory;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 public class DiskBasedLogDatabaseFactoryTest {
     @Test

@@ -3,8 +3,8 @@ package dev.modelarium.examples.sirbasic.entities.agents.attributes.location;
 import dev.modelarium.examples.sirbasic.config.SettingsLoader;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
-import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.attributes.sets.immutable.ImmutableEnvironmentAttributeSet;
+import modelarium.entities.contexts.AgentContext;
 
 import java.util.random.RandomGenerator;
 

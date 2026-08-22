@@ -1,7 +1,7 @@
 package modelarium.entities.environments.generators;
 
 import modelarium.Config;
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.Environment;
 
 import java.util.function.BiFunction;
 import java.util.random.RandomGenerator;
@@ -15,14 +15,14 @@ import java.util.random.RandomGenerator;
 public class FunctionalEnvironmentGenerator extends EnvironmentGenerator {
 
     /** The function used to generate the environment */
-    private final BiFunction<Config, RandomGenerator, MutableEnvironment> generatorFunction;
+    private final BiFunction<Config, RandomGenerator, Environment> generatorFunction;
 
     /**
      * Constructs a new functional generator.
      *
      * @param generatorFunction the function used to generate the environment
      */
-    public FunctionalEnvironmentGenerator(BiFunction<Config, RandomGenerator, MutableEnvironment> generatorFunction) {
+    public FunctionalEnvironmentGenerator(BiFunction<Config, RandomGenerator, Environment> generatorFunction) {
         this.generatorFunction = generatorFunction;
     }
 
@@ -31,10 +31,10 @@ public class FunctionalEnvironmentGenerator extends EnvironmentGenerator {
      *
      * @param config the global model settings used to configure the environment
      * @param random the random generator the environment generator can use for constructing an environment
-     * @return a new {@link MutableEnvironment} instance
+     * @return a new {@link Environment} instance
      */
     @Override
-    public MutableEnvironment generateEnvironment(Config config, RandomGenerator random) {
+    public Environment generateEnvironment(Config config, RandomGenerator random) {
         return generatorFunction.apply(config, random);
     }
 }

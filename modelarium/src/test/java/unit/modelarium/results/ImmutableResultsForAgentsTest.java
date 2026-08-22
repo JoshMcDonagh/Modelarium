@@ -1,6 +1,6 @@
 package unit.modelarium.results;
 
-import modelarium.entities.agents.mutable.MutableAgent;
+import modelarium.entities.agents.mutable.Agent;
 import modelarium.results.immutable.ImmutableResultsForAgents;
 import modelarium.results.mutable.MutableResultsForAgents;
 import org.junit.jupiter.api.Test;
@@ -8,12 +8,13 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static unit.modelarium.results.ResultsTestHelpers.*;
 
 public class ImmutableResultsForAgentsTest {
     private ImmutableResultsForAgents populatedImmutableResults() {
-        MutableAgent agent = agentWithMemoryLogs(
+        Agent agent = agentWithMemoryLogs(
                 "Agent_0",
                 agentAttributeSet("Agent_0", "AttributeSet_0", "Property_0", "Property_1")
         );

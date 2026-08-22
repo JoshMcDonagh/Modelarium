@@ -1,11 +1,9 @@
 package unit.modelarium.entities.immutable.attributes;
 
-import modelarium.entities.attributes.*;
+import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.events.Event;
 import modelarium.entities.attributes.events.functional.*;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.attributes.properties.Property;
 import modelarium.entities.attributes.properties.functional.*;
 import modelarium.entities.attributes.routines.Routine;
@@ -13,11 +11,14 @@ import modelarium.entities.attributes.routines.functional.AgentRoutineRunFunctio
 import modelarium.entities.attributes.routines.functional.EnvironmentRoutineRunFunction;
 import modelarium.entities.attributes.routines.functional.FunctionalAgentRoutine;
 import modelarium.entities.attributes.routines.functional.FunctionalEnvironmentRoutine;
-import modelarium.entities.contexts.Context;
-import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.attributes.sets.immutable.ImmutableAgentAttributeSet;
 import modelarium.entities.attributes.sets.immutable.ImmutableAttributeSet;
 import modelarium.entities.attributes.sets.immutable.ImmutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.contexts.Context;
+import modelarium.entities.contexts.SimulationContext;
 import org.junit.jupiter.api.function.Executable;
 
 import java.lang.reflect.Field;

@@ -1,10 +1,10 @@
 package modelarium.entities.contexts;
 
-import modelarium.entities.agents.mutable.MutableAgent;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
-import modelarium.entities.environments.ImmutableEnvironment;
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.environments.Environment;
+import modelarium.entities.environments.ReadOnlyEnvironment;
 
 /**
  * Interface for providing an agent's attributes with access to their owning agent and the wider model.
@@ -17,9 +17,9 @@ public sealed interface AgentContext extends EntityContext permits AgentSimulati
     /**
      * Returns the agent this context belongs to.
      *
-     * @return the owning {@link MutableAgent} instance
+     * @return the owning {@link Agent} instance
      */
-    MutableAgent getThisEntity();
+    Agent getThisEntity();
 
     /**
      * Returns the attribute set currently being run on the owning agent.
@@ -38,7 +38,7 @@ public sealed interface AgentContext extends EntityContext permits AgentSimulati
     /**
      * Returns the model's environment.
      *
-     * @return a read-only view of the model's {@link MutableEnvironment}
+     * @return a read-only view of the model's {@link Environment}
      */
-    ImmutableEnvironment getEnvironment();
+    ReadOnlyEnvironment getEnvironment();
 }

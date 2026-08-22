@@ -3,20 +3,21 @@ package integration.eventsAndRoutines;
 import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
-import modelarium.entities.attributes.*;
+import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.attributes.events.EnvironmentEvent;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.attributes.routines.AgentRoutine;
 import modelarium.entities.attributes.routines.EnvironmentRoutine;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.EnvironmentContext;
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.EnvironmentGenerator;
 import modelarium.results.immutable.ImmutableResults;
 import modelarium.scheduler.InOrderScheduler;
@@ -26,7 +27,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.random.RandomGenerator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Integration test: runs a complete synchronised model whose agents and
@@ -226,7 +228,7 @@ public class EventsAndRoutinesIntegrationTest {
             private int index = 0;
 
             @Override
-            protected MutableAgent generateAgent(Config config, RandomGenerator random) {
+            protected Agent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + index++;
                 StepCount stepCount = new StepCount();
                 Energy energy = new Energy();
@@ -236,13 +238,13 @@ public class EventsAndRoutinesIntegrationTest {
                                 new PulseEvent(stepCount),
                                 new RechargeRoutine(energy),
                                 energy));
-                return new MutableAgent(name, List.of(activity));
+                return new Agent(name, List.of(activity));
             }
         };
 
         EnvironmentGenerator environmentGenerator = new EnvironmentGenerator() {
             @Override
-            public MutableEnvironment generateEnvironment(Config config, RandomGenerator random) {
+            public Environment generateEnvironment(Config config, RandomGenerator random) {
                 Temperature temperature = new Temperature();
                 Airflow airflow = new Airflow();
                 MutableEnvironmentAttributeSet climate = new MutableEnvironmentAttributeSet("climate",
@@ -251,7 +253,7 @@ public class EventsAndRoutinesIntegrationTest {
                                 new HeatAlarm(temperature),
                                 new VentilateRoutine(airflow),
                                 airflow));
-                return new MutableEnvironment(List.of(climate));
+                return new Environment(List.of(climate));
             }
         };
 

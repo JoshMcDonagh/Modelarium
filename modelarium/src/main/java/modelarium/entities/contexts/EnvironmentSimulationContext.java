@@ -2,11 +2,11 @@ package modelarium.entities.contexts;
 
 import modelarium.Config;
 import modelarium.clock.MutableClock;
-import modelarium.entities.agents.mutable.MutableAgentSet;
+import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
 import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
-import modelarium.entities.environments.MutableEnvironment;
-import modelarium.entities.environments.ImmutableEnvironment;
+import modelarium.entities.environments.Environment;
+import modelarium.entities.environments.ReadOnlyEnvironment;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 
 import java.util.random.RandomGenerator;
@@ -33,13 +33,13 @@ public final class EnvironmentSimulationContext extends SimulationContext implem
      * @param randomGenerator the random generator the context will provide access to
      */
     public EnvironmentSimulationContext(
-            MutableEnvironment entity,
-            MutableAgentSet localAgentSet,
+            Environment entity,
+            AgentSet localAgentSet,
             Config config,
             ContextCache cache,
             MutableClock clock,
             RequestResponseController requestResponseController,
-            MutableEnvironment localEnvironment,
+            Environment localEnvironment,
             RandomGenerator randomGenerator
     ) {
         super(entity, localAgentSet, config, cache, clock, requestResponseController, localEnvironment, randomGenerator);
@@ -48,11 +48,11 @@ public final class EnvironmentSimulationContext extends SimulationContext implem
     /**
      * Returns the environment this context belongs to.
      *
-     * @return the owning {@link MutableEnvironment} instance
+     * @return the owning {@link Environment} instance
      */
     @Override
-    public MutableEnvironment getThisEntity() {
-        return (MutableEnvironment) entity();
+    public Environment getThisEntity() {
+        return (Environment) entity();
     }
 
     /**
@@ -83,7 +83,7 @@ public final class EnvironmentSimulationContext extends SimulationContext implem
      * @return this method never returns normally
      */
     @Override
-    public ImmutableEnvironment getEnvironment() {
+    public ReadOnlyEnvironment getEnvironment() {
         throw new UnsupportedOperationException("Context requester is already an Environment - use 'getThisEntity()' instead");
     }
 }

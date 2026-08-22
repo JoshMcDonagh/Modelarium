@@ -1,7 +1,7 @@
 package modelarium.entities.attributes.events;
 
-import modelarium.entities.attributes.sets.mutable.AttributeBase;
 import modelarium.entities.attributes.AttributeAccessLevel;
+import modelarium.entities.attributes.sets.mutable.AttributeBase;
 import modelarium.entities.contexts.Context;
 
 /**
@@ -14,6 +14,7 @@ import modelarium.entities.contexts.Context;
  * @param <C> the type of context this event is given
  */
 public sealed abstract class Event<C extends Context> extends AttributeBase<C> permits AgentEvent, EnvironmentEvent {
+    private ReadOnlyEvent immutableVersion = null;
 
     /**
      * Constructs a new event with the specified name, logging flag and access level.
@@ -57,4 +58,16 @@ public sealed abstract class Event<C extends Context> extends AttributeBase<C> p
      * @param context the context the event can use in its behaviour
      */
     protected abstract void run(C context);
+
+    /**
+     * Creates and returns an immutable version of this attribute.
+     *
+     * @return the new {@link ReadOnlyEvent} instance
+     */
+    @Override
+    public ReadOnlyEvent getAsImmutable() {
+        if (immutableVersion == null)
+            immutableVersion = new ReadOnlyEvent(this);
+        return immutableVersion;
+    }
 }

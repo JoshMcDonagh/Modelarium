@@ -2,13 +2,13 @@ package dev.modelarium.examples.randomwalk;
 
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.generators.FunctionalDefaultAgentGenerator;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.functional.FunctionalAgentProperty;
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.FunctionalEnvironmentGenerator;
 import modelarium.results.immutable.ImmutableResults;
 import modelarium.scheduler.InOrderScheduler;
@@ -53,7 +53,7 @@ public final class RandomWalkExample {
                 .agentGenerator(new FunctionalDefaultAgentGenerator((cfg, random) ->
                         makeWalker("walker_" + nextWalkerIndex.getAndIncrement())))
                 .environmentGenerator(new FunctionalEnvironmentGenerator((cfg, random) ->
-                        new MutableEnvironment("environment", List.of())))
+                        new Environment("environment", List.of())))
                 .scheduler(new InOrderScheduler())
                 .seed(seed)
                 .build();
@@ -67,9 +67,9 @@ public final class RandomWalkExample {
      * Creates a single walker agent with a logged position property.
      *
      * @param name the walker's unique name
-     * @return a new walker {@link MutableAgent} instance
+     * @return a new walker {@link Agent} instance
      */
-    private static MutableAgent makeWalker(String name) {
+    private static Agent makeWalker(String name) {
         FunctionalAgentProperty<Double> position = new FunctionalAgentProperty<>(
                 POSITION_PROPERTY_NAME,
                 true,
@@ -80,7 +80,7 @@ public final class RandomWalkExample {
                 (context, value) -> (value == null ? 0.0 : value) + context.getRandom().nextGaussian()
         );
 
-        return new MutableAgent(name, List.of(
+        return new Agent(name, List.of(
                 new MutableAgentAttributeSet(ATTRIBUTE_SET_NAME, List.<Attribute>of(position))
         ));
     }

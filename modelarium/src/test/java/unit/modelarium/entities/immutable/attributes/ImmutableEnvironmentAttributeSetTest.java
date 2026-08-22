@@ -1,11 +1,16 @@
 package unit.modelarium.entities.immutable.attributes;
 
-import modelarium.entities.attributes.*;
+import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.EnvironmentAttribute;
+import modelarium.entities.attributes.events.EnvironmentEvent;
 import modelarium.entities.attributes.events.functional.FunctionalEnvironmentEvent;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.attributes.properties.functional.FunctionalEnvironmentProperty;
+import modelarium.entities.attributes.routines.EnvironmentRoutine;
 import modelarium.entities.attributes.routines.functional.FunctionalEnvironmentRoutine;
 import modelarium.entities.attributes.sets.immutable.ImmutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -13,16 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static unit.modelarium.entities.immutable.attributes.ImmutableAttributeSetTestHelpers.*;
-import static unit.modelarium.entities.immutable.attributes.ImmutableAttributeSetTestHelpers.makeEmptyFunctionalProperty;
-import static unit.modelarium.entities.immutable.attributes.ImmutableAttributeSetTestHelpers.makeEmptyFunctionalRoutine;
-import static unit.modelarium.entities.immutable.attributes.ImmutableAttributeSetTestHelpers.makeImmutableAttributeSet;
-import static unit.modelarium.entities.immutable.attributes.ImmutableAttributeSetTestHelpers.runGetClonedAttribute;
-import modelarium.entities.attributes.events.EnvironmentEvent;
-import modelarium.entities.attributes.properties.EnvironmentProperty;
-import modelarium.entities.attributes.routines.EnvironmentRoutine;
-import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static unit.modelarium.entities.immutable.attributes.ImmutableAttributeSetTestHelpers.*;
 
 public class ImmutableEnvironmentAttributeSetTest {
     @Test

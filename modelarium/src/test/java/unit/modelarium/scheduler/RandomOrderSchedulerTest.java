@@ -1,7 +1,7 @@
 package unit.modelarium.scheduler;
 
-import modelarium.entities.agents.mutable.MutableAgent;
-import modelarium.entities.agents.mutable.MutableAgentSet;
+import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.scheduler.RandomOrderScheduler;
 import org.junit.jupiter.api.Test;
 
@@ -15,11 +15,11 @@ import static unit.modelarium.scheduler.SchedulerTestHelpers.immutableEnvironmen
 public class RandomOrderSchedulerTest {
     @Test
     public void testRunTick_RunsAllAgents() {
-        MutableAgent firstAgent = mock(MutableAgent.class);
-        MutableAgent secondAgent = mock(MutableAgent.class);
+        Agent firstAgent = mock(Agent.class);
+        Agent secondAgent = mock(Agent.class);
         when(firstAgent.name()).thenReturn("a1");
         when(secondAgent.name()).thenReturn("a2");
-        MutableAgentSet agentSet = new MutableAgentSet(List.of(firstAgent, secondAgent));
+        AgentSet agentSet = new AgentSet(List.of(firstAgent, secondAgent));
 
         new RandomOrderScheduler().runTick("0", immutableClock(), immutableEnvironment(), agentSet, new SplittableRandom(42));
 

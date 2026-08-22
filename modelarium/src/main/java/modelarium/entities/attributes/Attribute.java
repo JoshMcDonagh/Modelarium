@@ -36,4 +36,11 @@ public sealed interface Attribute permits AgentAttribute, AttributeBase, Environ
      * Runs this attribute's behaviour for the current tick.
      */
     void run();
+
+    /**
+     * Creates and returns an immutable version of this attribute.
+     *
+     * @return the new {@link ReadOnlyAttribute} instance
+     */
+    ReadOnlyAttribute<?> getAsImmutable();
 }

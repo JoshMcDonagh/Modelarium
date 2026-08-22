@@ -1,9 +1,7 @@
 package modelarium.entities.agents.immutable;
 
-import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.AgentSet;
-import modelarium.entities.agents.mutable.MutableAgent;
-import modelarium.entities.agents.mutable.MutableAgentSet;
+import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.agents.mutable.AgentSet;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,22 +11,22 @@ import java.util.function.Predicate;
 import java.util.random.RandomGenerator;
 
 /**
- * Class for providing a read-only view of an {@link MutableAgentSet}.
+ * Class for providing a read-only view of an {@link AgentSet}.
  *
  * <p>This class wraps a mutable agent set so that its agents can be looked up, filtered and iterated over without
- * the underlying set being modifiable, with each retrieved agent wrapped as an {@link ImmutableAgent}.
+ * the underlying set being modifiable, with each retrieved agent wrapped as an {@link ReadOnlyAgent}.
  */
-public final class ImmutableAgentSet implements AgentSet<ImmutableAgent, ImmutableAgentSet> {
+public final class ReadOnlyAgentSet implements Iterable<ReadOnlyAgent> {
 
     /** The mutable agent set this read-only view wraps */
-    private final MutableAgentSet mutableVersion;
+    private final AgentSet mutableVersion;
 
     /**
      * Constructs a new immutable agent set wrapping the specified mutable agent set.
      *
      * @param mutableVersion the mutable agent set to provide a read-only view of
      */
-    public ImmutableAgentSet(MutableAgentSet mutableVersion) {
+    public ReadOnlyAgentSet(AgentSet mutableVersion) {
         this.mutableVersion = mutableVersion;
     }
 
@@ -38,7 +36,7 @@ public final class ImmutableAgentSet implements AgentSet<ImmutableAgent, Immutab
      * @param agentName the agent's unique name
      * @return a read-only view of the agent with the specified name
      */
-    public ImmutableAgent get(String agentName) {
+    public ReadOnlyAgent get(String agentName) {
         return mutableVersion.get(agentName).getAsImmutable();
     }
 
@@ -48,20 +46,20 @@ public final class ImmutableAgentSet implements AgentSet<ImmutableAgent, Immutab
      * @param index the index of the agent
      * @return a read-only view of the agent at the given position
      */
-    public ImmutableAgent get(int index) {
+    public ReadOnlyAgent get(int index) {
         return mutableVersion.get(index).getAsImmutable();
     }
 
     /**
      * Returns the agents in this set as a list of read-only views.
      *
-     * @return a list of {@link ImmutableAgent} instances
+     * @return a list of {@link ReadOnlyAgent} instances
      */
-    public List<ImmutableAgent> getAsList() {
-        List<MutableAgent> originalList = mutableVersion.getAsList();
-        List<ImmutableAgent> newList = new ArrayList<>();
+    public List<ReadOnlyAgent> getAsList() {
+        List<Agent> originalList = mutableVersion.getAsList();
+        List<ReadOnlyAgent> newList = new ArrayList<>();
 
-        for (MutableAgent agent : originalList)
+        for (Agent agent : originalList)
             newList.add(agent.getAsImmutable());
 
         return newList;
@@ -99,9 +97,9 @@ public final class ImmutableAgentSet implements AgentSet<ImmutableAgent, Immutab
      * Returns a filtered view of the agent set.
      *
      * @param agentFilter a predicate to apply to each agent
-     * @return a new {@link ImmutableAgentSet} containing only matching agents
+     * @return a new {@link ReadOnlyAgentSet} containing only matching agents
      */
-    public ImmutableAgentSet getFilteredAgents(Predicate<Agent> agentFilter) {
+    public ReadOnlyAgentSet getFilteredAgents(Predicate<ReadOnlyAgent> agentFilter) {
         return mutableVersion.getFilteredAgents(agentFilter).getAsImmutable();
     }
 
@@ -111,8 +109,8 @@ public final class ImmutableAgentSet implements AgentSet<ImmutableAgent, Immutab
      * @param randomGenerator the random generator used to shuffle the agents
      * @return an iterator that yields read-only views of the agents in random order
      */
-    public Iterator<ImmutableAgent> getRandomIterator(RandomGenerator randomGenerator) {
-        List<ImmutableAgent> shuffledAgents = getAsList();
+    public Iterator<ReadOnlyAgent> getRandomIterator(RandomGenerator randomGenerator) {
+        List<ReadOnlyAgent> shuffledAgents = getAsList();
         Collections.shuffle(shuffledAgents, randomGenerator);
         return shuffledAgents.iterator();
     }
@@ -123,7 +121,7 @@ public final class ImmutableAgentSet implements AgentSet<ImmutableAgent, Immutab
      * @return an iterator over read-only views of the agents
      */
     @Override
-    public Iterator<ImmutableAgent> iterator() {
+    public Iterator<ReadOnlyAgent> iterator() {
         return getAsList().iterator();
     }
 }

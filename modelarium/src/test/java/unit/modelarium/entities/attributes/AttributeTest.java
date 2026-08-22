@@ -2,15 +2,15 @@ package unit.modelarium.entities.attributes;
 
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.events.functional.FunctionalAgentEvent;
+import modelarium.entities.attributes.events.functional.FunctionalEnvironmentEvent;
 import modelarium.entities.attributes.properties.functional.FunctionalAgentProperty;
+import modelarium.entities.attributes.properties.functional.FunctionalEnvironmentProperty;
 import modelarium.entities.attributes.routines.functional.FunctionalAgentRoutine;
+import modelarium.entities.attributes.routines.functional.FunctionalEnvironmentRoutine;
 import modelarium.exceptions.MissingAttributeFunctionException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import modelarium.entities.attributes.events.functional.FunctionalEnvironmentEvent;
-import modelarium.entities.attributes.properties.functional.FunctionalEnvironmentProperty;
-import modelarium.entities.attributes.routines.functional.FunctionalEnvironmentRoutine;
 
 public class AttributeTest {
     @Test

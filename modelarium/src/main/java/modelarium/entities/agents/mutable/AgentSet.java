@@ -1,8 +1,7 @@
 package modelarium.entities.agents.mutable;
 
-import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.AgentSet;
-import modelarium.entities.agents.immutable.ImmutableAgentSet;
+import modelarium.entities.agents.immutable.ReadOnlyAgent;
+import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 import modelarium.exceptions.AgentNotFoundException;
 import modelarium.internal.Internal;
@@ -13,7 +12,7 @@ import java.util.function.Predicate;
 import java.util.random.RandomGenerator;
 
 /**
- * A collection class for managing {@link MutableAgent} instances, with support for:
+ * A collection class for managing {@link Agent} instances, with support for:
  * <ul>
  *     <li>Optional deep copying of agents on insertion</li>
  *     <li>Fast lookup by agent name</li>
@@ -23,11 +22,11 @@ import java.util.random.RandomGenerator;
  *
  * <p>This class is iterable and designed to support both sequential and parallel simulation use cases.
  */
-public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgentSet> {
-    private ImmutableAgentSet immutableVersion = null;
+public final class AgentSet implements Iterable<Agent> {
+    private ReadOnlyAgentSet immutableVersion = null;
 
     /** Ordered list of agents in the set */
-    private List<MutableAgent> agentList = new ArrayList<>();
+    private List<Agent> agentList = new ArrayList<>();
 
     /** Map from agent names to their index in the list */
     private Map<String, Integer> agentIndexMap = new HashMap<>();
@@ -37,12 +36,12 @@ public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgen
      *
      * @param agentsList list of agents to add
      */
-    public MutableAgentSet(List<MutableAgent> agentsList) {
+    public AgentSet(List<Agent> agentsList) {
         add(agentsList);
     }
 
     /** Constructs an empty agent set without deep copying. */
-    public MutableAgentSet() {}
+    public AgentSet() {}
 
     /**
      * Provides each agent in this set with the factory used to create its log databases.
@@ -51,7 +50,7 @@ public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgen
      */
     @Internal
     public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory databaseFactory) {
-        for (MutableAgent agent : agentList)
+        for (Agent agent : agentList)
             agent.setLogDatabaseFactory(databaseFactory);
     }
 
@@ -61,7 +60,7 @@ public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgen
      * @param agent the agent to store in place of the existing one
      * @param isDeepCopied whether the agent should be deep cloned before being stored
      */
-    private void replaceExistingAgent(MutableAgent agent, boolean isDeepCopied) {
+    private void replaceExistingAgent(Agent agent, boolean isDeepCopied) {
         int index = agentIndexMap.get(agent.name());
 
         if (agentList.get(index).isDead() && !agent.isDead())
@@ -80,7 +79,7 @@ public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgen
      * @param agent the agent to add to the set
      * @param isDeepCopied whether the agent should be deep cloned before being stored
      */
-    private void addNewAgent(MutableAgent agent, boolean isDeepCopied) {
+    private void addNewAgent(Agent agent, boolean isDeepCopied) {
         int index = agentList.size();
         agentIndexMap.put(agent.name(), index);
         if (isDeepCopied)
@@ -94,7 +93,7 @@ public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgen
      *
      * @param agent the agent to add
      */
-    public void add(MutableAgent agent) {
+    public void add(Agent agent) {
         if (doesAgentExist(agent.name()))
             replaceExistingAgent(agent, false);
         else
@@ -106,21 +105,21 @@ public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgen
      *
      * @param agents list of agents to add
      */
-    public void add(List<MutableAgent> agents) {
-        for (MutableAgent agent : agents)
+    public void add(List<Agent> agents) {
+        for (Agent agent : agents)
             add(agent);
     }
 
     /**
-     * Adds all agents from another {@link MutableAgentSet}.
+     * Adds all agents from another {@link AgentSet}.
      *
      * @param agentSet the agent set to add from
      */
-    public void add(MutableAgentSet agentSet) {
+    public void add(AgentSet agentSet) {
         if (agentSet == null)
             throw new IllegalArgumentException("AgentSet must not be null");
 
-        for (MutableAgent agent : agentSet)
+        for (Agent agent : agentSet)
             add(agent);
     }
 
@@ -129,7 +128,7 @@ public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgen
      *
      * @param agent the agent to deep clone and add
      */
-    public void addDeepCopy(MutableAgent agent) {
+    public void addDeepCopy(Agent agent) {
         if (doesAgentExist(agent.name()))
             replaceExistingAgent(agent, true);
         else
@@ -141,21 +140,21 @@ public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgen
      *
      * @param agents list of agents to deep clone and add
      */
-    public void addDeepCopy(List<MutableAgent> agents) {
-        for (MutableAgent agent : agents)
+    public void addDeepCopy(List<Agent> agents) {
+        for (Agent agent : agents)
             addDeepCopy(agent);
     }
 
     /**
-     * Adds a deep copy of each agent from another {@link MutableAgentSet}.
+     * Adds a deep copy of each agent from another {@link AgentSet}.
      *
      * @param agentSet the agent set to deep clone and add from
      */
-    public void addDeepCopy(MutableAgentSet agentSet) {
+    public void addDeepCopy(AgentSet agentSet) {
         if (agentSet == null)
             throw new IllegalArgumentException("AgentSet must not be null");
 
-        for (MutableAgent agent : agentSet)
+        for (Agent agent : agentSet)
             addDeepCopy(agent);
     }
 
@@ -165,7 +164,7 @@ public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgen
      * @param agentName the agent's unique name
      * @return the agent instance
      */
-    public MutableAgent get(String agentName) {
+    public Agent get(String agentName) {
         Integer index = agentIndexMap.get(agentName);
 
         if (index == null)
@@ -180,7 +179,7 @@ public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgen
      * @param index the index of the agent
      * @return the agent at the given position
      */
-    public MutableAgent get(int index) {
+    public Agent get(int index) {
         return agentList.get(index);
     }
 
@@ -189,7 +188,7 @@ public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgen
      *
      * @return a list of agent instances
      */
-    public List<MutableAgent> getAsList() {
+    public List<Agent> getAsList() {
         return new ArrayList<>(agentList);
     }
 
@@ -236,12 +235,12 @@ public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgen
      * @param otherAgentSet the other agent set to pull from
      * @param areDeepCopied whether the agents should be deep cloned before being stored
      */
-    public void update(MutableAgentSet otherAgentSet, boolean areDeepCopied) {
+    public void update(AgentSet otherAgentSet, boolean areDeepCopied) {
         if (otherAgentSet == null)
             throw new IllegalArgumentException("otherAgentSet cannot be null");
 
         for (int i = 0; i < otherAgentSet.size(); i++) {
-            MutableAgent agent = otherAgentSet.get(i);
+            Agent agent = otherAgentSet.get(i);
             if (areDeepCopied)
                 addDeepCopy(agent);
             else
@@ -253,18 +252,20 @@ public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgen
      * Returns a filtered view of the agent set.
      *
      * @param agentFilter a predicate to apply to each agent
-     * @return a new {@link MutableAgentSet} containing only matching agents
+     * @return a new {@link AgentSet} containing only matching agents
      */
-    public MutableAgentSet getFilteredAgents(Predicate<Agent> agentFilter) {
-        List<MutableAgent> filteredAgents = new ArrayList<>();
+    public AgentSet getFilteredAgents(Predicate<ReadOnlyAgent> agentFilter) {
+        List<Agent> filteredAgents = new ArrayList<>();
 
-        for (MutableAgent agent : agentList) {
-            if (agentFilter.test(agent) && !agent.isDead())
+        for (Agent agent : agentList) {
+            if (agentFilter.test(agent.getAsImmutable()) && !agent.isDead())
                 filteredAgents.add(agent);
         }
 
-        return new MutableAgentSet(filteredAgents);
+        return new AgentSet(filteredAgents);
     }
+
+
 
     /**
      * Returns a randomised iterator over the agents in this set.
@@ -272,8 +273,8 @@ public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgen
      * @param randomGenerator the random generator used to shuffle the agents
      * @return an iterator that yields agents in random order
      */
-    public Iterator<MutableAgent> getRandomIterator(RandomGenerator randomGenerator) {
-        List<MutableAgent> shuffledAgents = new ArrayList<>(agentList);
+    public Iterator<Agent> getRandomIterator(RandomGenerator randomGenerator) {
+        List<Agent> shuffledAgents = new ArrayList<>(agentList);
         Collections.shuffle(shuffledAgents, randomGenerator);
         return shuffledAgents.iterator();
     }
@@ -281,11 +282,11 @@ public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgen
     /**
      * Returns a read-only view of this agent set.
      *
-     * @return a new {@link ImmutableAgentSet} instance wrapping this set
+     * @return a new {@link ReadOnlyAgentSet} instance wrapping this set
      */
-    public ImmutableAgentSet getAsImmutable() {
+    public ReadOnlyAgentSet getAsImmutable() {
         if (immutableVersion == null)
-            immutableVersion = new ImmutableAgentSet(this);
+            immutableVersion = new ReadOnlyAgentSet(this);
         return immutableVersion;
     }
 
@@ -295,8 +296,8 @@ public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgen
      *
      * @return a new {@code AgentSet} with the same agents
      */
-    public MutableAgentSet duplicate() {
-        return new MutableAgentSet(agentList);
+    public AgentSet duplicate() {
+        return new AgentSet(agentList);
     }
 
     /**
@@ -305,7 +306,7 @@ public final class MutableAgentSet implements AgentSet<MutableAgent, MutableAgen
      * @return an iterator over the agent list
      */
     @Override
-    public Iterator<MutableAgent> iterator() {
+    public Iterator<Agent> iterator() {
         return agentList.iterator();
     }
 }

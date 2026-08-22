@@ -2,10 +2,10 @@ package modelarium.entities.attributes.sets;
 
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.events.Event;
-import modelarium.entities.attributes.sets.immutable.ImmutableAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
 import modelarium.entities.attributes.properties.Property;
 import modelarium.entities.attributes.routines.Routine;
+import modelarium.entities.attributes.sets.immutable.ImmutableAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
 import modelarium.entities.logging.AttributeSetLog;
 
 /**

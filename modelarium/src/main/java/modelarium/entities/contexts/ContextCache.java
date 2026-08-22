@@ -1,10 +1,9 @@
 package modelarium.entities.contexts;
 
-import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.immutable.ImmutableAgent;
-import modelarium.entities.agents.immutable.ImmutableAgentSet;
-import modelarium.entities.agents.mutable.MutableAgentSet;
-import modelarium.entities.environments.ImmutableEnvironment;
+import modelarium.entities.agents.immutable.ReadOnlyAgent;
+import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
+import modelarium.entities.agents.mutable.AgentSet;
+import modelarium.entities.environments.ReadOnlyEnvironment;
 import modelarium.internal.Internal;
 
 import java.util.*;
@@ -19,14 +18,14 @@ import java.util.function.Predicate;
 public class ContextCache {
 
     /** List of previously applied agent filters (for caching filtered sets) */
-    private final IdentityHashMap<Predicate<Agent>, ImmutableAgentSet> filteredAgentsCache = new IdentityHashMap<>();
+    private final IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredAgentsCache = new IdentityHashMap<>();
 
     /** The individually retrieved agents cached during the current tick */
-    private final List<ImmutableAgent> individualAgentCacheList = new ArrayList<>();;
+    private final List<ReadOnlyAgent> individualAgentCacheList = new ArrayList<>();;
     private final Map<String, Integer> individualAgentCacheMap = new HashMap<>();
 
     /** The environment cached during the current tick, or null if it has not been retrieved */
-    private ImmutableEnvironment environment = null;
+    private ReadOnlyEnvironment environment = null;
 
     /**
      * Constructs a new worker cache.
@@ -50,7 +49,7 @@ public class ContextCache {
      * @param agentFilter the filter to check for
      * @return true if a result is cached for the filter, false otherwise
      */
-    public boolean doesAgentFilterExist(Predicate<Agent> agentFilter) {
+    public boolean doesAgentFilterExist(Predicate<ReadOnlyAgent> agentFilter) {
         return filteredAgentsCache.containsKey(agentFilter);
     }
 
@@ -60,7 +59,7 @@ public class ContextCache {
      * @param agentFilter the filter the agents were matched against
      * @param results the agents matching the filter
      */
-    public void addFilteredAgents(Predicate<Agent> agentFilter, ImmutableAgentSet results) {
+    public void addFilteredAgents(Predicate<ReadOnlyAgent> agentFilter, ReadOnlyAgentSet results) {
         filteredAgentsCache.put(agentFilter, results);
     }
 
@@ -68,9 +67,9 @@ public class ContextCache {
      * Retrieves the cached agents matching a filter.
      *
      * @param agentFilter the filter the agents were matched against
-     * @return the cached {@link MutableAgentSet} for the filter, or null if none is cached
+     * @return the cached {@link AgentSet} for the filter, or null if none is cached
      */
-    public ImmutableAgentSet getFilteredAgents(Predicate<Agent> agentFilter) {
+    public ReadOnlyAgentSet getFilteredAgents(Predicate<ReadOnlyAgent> agentFilter) {
         return filteredAgentsCache.get(agentFilter);
     }
 
@@ -90,7 +89,7 @@ public class ContextCache {
      * @param agentName the name of the agent to retrieve
      * @return the cached agent with the specified name
      */
-    public ImmutableAgent getAgent(String agentName) {
+    public ReadOnlyAgent getAgent(String agentName) {
         return individualAgentCacheList.get(individualAgentCacheMap.get(agentName));
     }
 
@@ -99,7 +98,7 @@ public class ContextCache {
      *
      * @param agent the agent to cache
      */
-    public void addAgent(ImmutableAgent agent) {
+    public void addAgent(ReadOnlyAgent agent) {
         individualAgentCacheMap.put(agent.name(), individualAgentCacheList.size());
         individualAgentCacheList.add(agent);
     }
@@ -116,9 +115,9 @@ public class ContextCache {
     /**
      * Retrieves the cached environment.
      *
-     * @return the cached {@link ImmutableEnvironment} instance, or null if none is cached
+     * @return the cached {@link ReadOnlyEnvironment} instance, or null if none is cached
      */
-    public ImmutableEnvironment getEnvironment() {
+    public ReadOnlyEnvironment getEnvironment() {
         return environment;
     }
 
@@ -127,7 +126,7 @@ public class ContextCache {
      *
      * @param environment the environment to cache
      */
-    public void addEnvironment(ImmutableEnvironment environment) {
+    public void addEnvironment(ReadOnlyEnvironment environment) {
         this.environment = environment;
     }
 }

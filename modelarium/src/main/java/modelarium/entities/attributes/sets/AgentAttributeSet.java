@@ -2,10 +2,10 @@ package modelarium.entities.attributes.sets;
 
 import modelarium.entities.attributes.AgentAttribute;
 import modelarium.entities.attributes.events.AgentEvent;
-import modelarium.entities.attributes.sets.immutable.ImmutableAgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.routines.AgentRoutine;
+import modelarium.entities.attributes.sets.immutable.ImmutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 
 /**
  * Interface for accessing a named group of an agent's attributes.

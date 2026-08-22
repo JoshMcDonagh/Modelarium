@@ -1,7 +1,7 @@
 package modelarium.entities.attributes.properties;
 
-import modelarium.entities.attributes.sets.mutable.AttributeBase;
 import modelarium.entities.attributes.AttributeAccessLevel;
+import modelarium.entities.attributes.sets.mutable.AttributeBase;
 import modelarium.entities.contexts.Context;
 
 /**
@@ -16,6 +16,7 @@ import modelarium.entities.contexts.Context;
  */
 public sealed abstract class Property<T,C extends Context> extends AttributeBase<C>
         permits AgentProperty, EnvironmentProperty {
+    private ReadOnlyProperty<T> immutableVersion = null;
 
     /** The class of the value this property carries */
     private final Class<T> type;
@@ -90,4 +91,16 @@ public sealed abstract class Property<T,C extends Context> extends AttributeBase
      * @return the property's value
      */
     protected abstract T get(C context);
+
+    /**
+     * Creates and returns an immutable version of this attribute.
+     *
+     * @return the new {@link ReadOnlyProperty} instance
+     */
+    @Override
+    public ReadOnlyProperty<T> getAsImmutable() {
+        if (immutableVersion == null)
+            immutableVersion = new ReadOnlyProperty<>(this);
+        return immutableVersion;
+    }
 }

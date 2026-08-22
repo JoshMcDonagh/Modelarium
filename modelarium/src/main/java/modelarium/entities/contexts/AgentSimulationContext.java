@@ -2,12 +2,12 @@ package modelarium.entities.contexts;
 
 import modelarium.Config;
 import modelarium.clock.MutableClock;
-import modelarium.entities.agents.mutable.MutableAgent;
-import modelarium.entities.agents.mutable.MutableAgentSet;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
-import modelarium.entities.environments.MutableEnvironment;
-import modelarium.entities.environments.ImmutableEnvironment;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.environments.Environment;
+import modelarium.entities.environments.ReadOnlyEnvironment;
 import modelarium.exceptions.CoordinatorErrorException;
 import modelarium.exceptions.CoordinatorTimeoutException;
 import modelarium.exceptions.EnvironmentNotFoundException;
@@ -25,7 +25,7 @@ import java.util.random.RandomGenerator;
 public final class AgentSimulationContext extends SimulationContext implements AgentContext {
 
     /** The environment local to the owning agent's core */
-    private final MutableEnvironment localEnvironment;
+    private final Environment localEnvironment;
 
     /**
      * Constructs a new simulation context for the given agent.
@@ -41,13 +41,13 @@ public final class AgentSimulationContext extends SimulationContext implements A
      * @param randomGenerator the random generator the context will provide access to
      */
     public AgentSimulationContext(
-            MutableAgent entity,
-            MutableAgentSet localAgentSet,
+            Agent entity,
+            AgentSet localAgentSet,
             Config config,
             ContextCache cache,
             MutableClock clock,
             RequestResponseController requestResponseController,
-            MutableEnvironment localEnvironment,
+            Environment localEnvironment,
             RandomGenerator randomGenerator
     ) {
         super(entity, localAgentSet, config, cache, clock, requestResponseController, localEnvironment, randomGenerator);
@@ -57,11 +57,11 @@ public final class AgentSimulationContext extends SimulationContext implements A
     /**
      * Returns the agent this context belongs to.
      *
-     * @return the owning {@link MutableAgent} instance
+     * @return the owning {@link Agent} instance
      */
     @Override
-    public MutableAgent getThisEntity() {
-        return (MutableAgent) entity();
+    public Agent getThisEntity() {
+        return (Agent) entity();
     }
 
     /**
@@ -92,19 +92,19 @@ public final class AgentSimulationContext extends SimulationContext implements A
      * environment is taken from the cache if present, or requested from the co-ordinator and cached for the
      * remainder of the tick.
      *
-     * @return a read-only view of the model's {@link MutableEnvironment}
+     * @return a read-only view of the model's {@link Environment}
      */
     @Override
-    public ImmutableEnvironment getEnvironment() {
+    public ReadOnlyEnvironment getEnvironment() {
         if (!config().areThreadsSynced())
-            return new ImmutableEnvironment(localEnvironment);
+            return new ReadOnlyEnvironment(localEnvironment);
 
         // Return cached environment if available
         if (cache().doesEnvironmentExist())
             return cache().getEnvironment();
 
         // Request environment from coordinator
-        ImmutableEnvironment requestedEnvironment;
+        ReadOnlyEnvironment requestedEnvironment;
         try {
             requestedEnvironment = requestResponseInterface().getEnvironmentFromCoordinator(entity().name());
         } catch (InterruptedException e) {

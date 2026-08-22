@@ -1,7 +1,6 @@
 package unit.modelarium.entities.immutable.attributes;
 
 import modelarium.entities.attributes.AgentAttribute;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.attributes.events.functional.FunctionalAgentEvent;
@@ -10,6 +9,7 @@ import modelarium.entities.attributes.properties.functional.FunctionalAgentPrope
 import modelarium.entities.attributes.routines.AgentRoutine;
 import modelarium.entities.attributes.routines.functional.FunctionalAgentRoutine;
 import modelarium.entities.attributes.sets.immutable.ImmutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.logging.AttributeSetLog;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +17,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.*;
 import static unit.modelarium.entities.immutable.attributes.ImmutableAttributeSetTestHelpers.*;
 

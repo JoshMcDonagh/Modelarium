@@ -1,18 +1,19 @@
 package unit.modelarium.results;
 
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.Environment;
 import modelarium.results.immutable.ImmutableResultsForEnvironment;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static unit.modelarium.results.ResultsTestHelpers.*;
 
 public class ImmutableResultsForEnvironmentTest {
     private ImmutableResultsForEnvironment populatedImmutableResults() {
-        MutableEnvironment environment = environmentWithMemoryLogs(
+        Environment environment = environmentWithMemoryLogs(
                 "Environment_0",
                 environmentAttributeSet("Environment_0", "AttributeSet_0", "Property_0", "Property_1")
         );

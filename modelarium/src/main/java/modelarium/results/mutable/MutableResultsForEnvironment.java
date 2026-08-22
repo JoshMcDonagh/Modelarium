@@ -3,7 +3,7 @@ package modelarium.results.mutable;
 import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.Environment;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
 import modelarium.results.ResultsForEnvironment;
@@ -35,7 +35,7 @@ public final class MutableResultsForEnvironment extends MutableResultsForEntitie
      *
      * @param environment the environment whose results are to be stored
      */
-    public MutableResultsForEnvironment(MutableEnvironment environment) {
+    public MutableResultsForEnvironment(Environment environment) {
         super(environment);
         this.environmentName = environment.name();
     }

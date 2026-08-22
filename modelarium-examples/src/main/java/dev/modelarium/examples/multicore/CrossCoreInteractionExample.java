@@ -2,17 +2,17 @@ package dev.modelarium.examples.multicore;
 
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.generators.FunctionalDefaultAgentGenerator;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.agents.immutable.ReadOnlyAgent;
+import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.functional.FunctionalAgentProperty;
 import modelarium.entities.attributes.properties.functional.FunctionalEnvironmentProperty;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.FunctionalEnvironmentGenerator;
-import modelarium.entities.agents.immutable.ImmutableAgent;
 import modelarium.results.immutable.ImmutableResults;
 import modelarium.scheduler.InOrderScheduler;
 
@@ -93,9 +93,9 @@ public final class CrossCoreInteractionExample {
      * @param name the agent's unique name
      * @param startingValue the value the agent's local value starts at (its index)
      * @param partnerName the name of the agent whose local value is accumulated each tick
-     * @return a new {@link MutableAgent} instance
+     * @return a new {@link Agent} instance
      */
-    private static MutableAgent makeAgent(String name, int startingValue, String partnerName) {
+    private static Agent makeAgent(String name, int startingValue, String partnerName) {
         FunctionalAgentProperty<Double> localValue = new FunctionalAgentProperty<>(
                 LOCAL_VALUE_PROPERTY_NAME,
                 true,
@@ -120,7 +120,7 @@ public final class CrossCoreInteractionExample {
                     if (context.getClock().currentTick() == 0)
                         return accumulated;
 
-                    ImmutableAgent partner = context.getAgent(partnerName);
+                    ReadOnlyAgent partner = context.getAgent(partnerName);
                     Double partnerValue = (Double) partner
                             .getAttributeSet(ATTRIBUTE_SET_NAME)
                             .getProperty(LOCAL_VALUE_PROPERTY_NAME)
@@ -130,7 +130,7 @@ public final class CrossCoreInteractionExample {
                 }
         );
 
-        return new MutableAgent(name, List.of(
+        return new Agent(name, List.of(
                 new MutableAgentAttributeSet(ATTRIBUTE_SET_NAME, List.<Attribute>of(localValue, partnerSum))
         ));
     }
@@ -138,9 +138,9 @@ public final class CrossCoreInteractionExample {
     /**
      * Creates the model's environment with a logged tick counter property.
      *
-     * @return a new {@link MutableEnvironment} instance
+     * @return a new {@link Environment} instance
      */
-    private static MutableEnvironment makeEnvironment() {
+    private static Environment makeEnvironment() {
         FunctionalEnvironmentProperty<Integer> ticksCompleted = new FunctionalEnvironmentProperty<>(
                 TICKS_COMPLETED_PROPERTY_NAME,
                 true,
@@ -151,7 +151,7 @@ public final class CrossCoreInteractionExample {
                 (context, value) -> value == null ? 1 : value + 1
         );
 
-        return new MutableEnvironment("environment", List.of(
+        return new Environment("environment", List.of(
                 new MutableEnvironmentAttributeSet(ENVIRONMENT_ATTRIBUTE_SET_NAME,
                         List.<Attribute>of(ticksCompleted))
         ));

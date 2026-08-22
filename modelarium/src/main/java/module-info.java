@@ -3,7 +3,6 @@ module modelarium {
     exports modelarium;
     exports modelarium.clock;
     exports modelarium.entities;
-    exports modelarium.entities.agents;
     exports modelarium.entities.agents.generators;
     exports modelarium.entities.attributes;
     exports modelarium.entities.attributes.events;
@@ -37,7 +36,6 @@ module modelarium {
 
     // Reflective deep-clone access for the Rits Cloner (see modelarium.utils.Cloners)
     opens modelarium.entities to cloning;
-    opens modelarium.entities.agents to cloning;
     opens modelarium.entities.attributes to cloning;
     opens modelarium.entities.attributes.properties to cloning;
     opens modelarium.entities.attributes.properties.functional to cloning;

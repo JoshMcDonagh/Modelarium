@@ -1,6 +1,6 @@
 package modelarium.results.mutable;
 
-import modelarium.entities.MutableEntity;
+import modelarium.entities.Entity;
 import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.SimulationContext;
@@ -39,9 +39,9 @@ public sealed abstract class MutableResultsForEntities<SC extends SimulationCont
      *
      * @param entities the entities whose logs the results will collect
      */
-    MutableResultsForEntities(List<? extends MutableEntity<SC,C,AS,ASL>> entities) {
+    MutableResultsForEntities(List<? extends Entity<SC,C,AS,ASL>> entities) {
         for (int i = 0; i < entities.size(); i++) {
-            MutableEntity<SC,C,AS,ASL> entity = entities.get(i);
+            Entity<SC,C,AS,ASL> entity = entities.get(i);
             entityLogList.add(entity.getLog());
             entityLogIndexMap.put(entity.name(), i);
         }
@@ -52,7 +52,7 @@ public sealed abstract class MutableResultsForEntities<SC extends SimulationCont
      *
      * @param entity the entity whose log the results will collect
      */
-    MutableResultsForEntities(MutableEntity<SC,C,AS,ASL> entity) {
+    MutableResultsForEntities(Entity<SC,C,AS,ASL> entity) {
         entityLogList.add(entity.getLog());
         entityLogIndexMap.put(entity.name(), 0);
     }

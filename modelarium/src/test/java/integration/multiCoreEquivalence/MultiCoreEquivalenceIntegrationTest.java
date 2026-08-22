@@ -2,14 +2,14 @@ package integration.multiCoreEquivalence;
 
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.FunctionalEnvironmentGenerator;
 import modelarium.results.immutable.ImmutableResults;
 import modelarium.scheduler.InOrderScheduler;
@@ -65,12 +65,12 @@ public class MultiCoreEquivalenceIntegrationTest {
             private int idx = 0;
 
             @Override
-            protected MutableAgent generateAgent(Config config, RandomGenerator random) {
+            protected Agent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + idx++;
                 DeterministicCounter counter = new DeterministicCounter();
                 MutableAgentAttributeSet set = new MutableAgentAttributeSet("stats",
                         (List<Attribute>) (List<?>) List.of(counter));
-                return new MutableAgent(name, List.of(set));
+                return new Agent(name, List.of(set));
             }
         };
 
@@ -80,7 +80,7 @@ public class MultiCoreEquivalenceIntegrationTest {
                 .threadCount(threads)
                 .areThreadsSynced(false)
                 .agentGenerator(agentGen)
-                .environmentGenerator(new FunctionalEnvironmentGenerator((c, random) -> new MutableEnvironment(List.of())))
+                .environmentGenerator(new FunctionalEnvironmentGenerator((c, random) -> new Environment(List.of())))
                 .scheduler(new InOrderScheduler())
                 .build();
 

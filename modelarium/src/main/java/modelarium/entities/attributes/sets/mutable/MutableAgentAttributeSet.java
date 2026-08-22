@@ -1,11 +1,11 @@
 package modelarium.entities.attributes.sets.mutable;
 
 import modelarium.entities.attributes.AgentAttribute;
-import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.routines.AgentRoutine;
+import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.AgentSimulationContext;
 

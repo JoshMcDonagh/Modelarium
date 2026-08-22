@@ -1,28 +1,25 @@
 package unit.modelarium.entities.environments;
 
 import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.Environment;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 import static unit.modelarium.entities.environments.EnvironmentTestHelpers.*;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class MutableEnvironmentTest {
+public class EnvironmentTest {
     @Test
     public void testName() {
-        MutableEnvironment environment = emptyEnvironment();
+        Environment environment = emptyEnvironment();
 
         assertEquals("env", environment.name());
     }
 
     @Test
     public void testAttributeSetCount_NoAttributeSets() {
-        MutableEnvironment environment = emptyEnvironment();
+        Environment environment = emptyEnvironment();
 
         assertEquals(0, environment.attributeSetCount());
     }
@@ -34,7 +31,7 @@ public class MutableEnvironmentTest {
                 "timing",
                 new EnvironmentTickProperty("tick")
         );
-        MutableEnvironment environment = new MutableEnvironment("env", List.of(attributeSet));
+        Environment environment = new Environment("env", List.of(attributeSet));
 
         assertSame(attributeSet, environment.getAttributeSet("timing"));
     }
@@ -42,7 +39,7 @@ public class MutableEnvironmentTest {
     @Test
     public void testGetAttributeSetByIndex() {
         MutableEnvironmentAttributeSet attributeSet = emptyEnvironmentAttributeSet("env", "timing");
-        MutableEnvironment environment = new MutableEnvironment("env", List.of(attributeSet));
+        Environment environment = new Environment("env", List.of(attributeSet));
 
         assertSame(attributeSet, environment.getAttributeSet(0));
     }
@@ -52,7 +49,7 @@ public class MutableEnvironmentTest {
     public void testGetEvent() {
         MutableEnvironmentAttributeSet attributeSet = environmentAttributeSetFromAttributes(
                 "env", "weather", new AlwaysTriggeredEnvironmentEvent("storm"));
-        MutableEnvironment environment = new MutableEnvironment("env", List.of(attributeSet));
+        Environment environment = new Environment("env", List.of(attributeSet));
 
         assertEquals("storm", environment.getEvent("weather", "storm").name());
     }
@@ -61,7 +58,7 @@ public class MutableEnvironmentTest {
     public void testGetRoutine() {
         MutableEnvironmentAttributeSet attributeSet = environmentAttributeSetFromAttributes(
                 "env", "weather", new EmptyEnvironmentRoutine("cycle"));
-        MutableEnvironment environment = new MutableEnvironment("env", List.of(attributeSet));
+        Environment environment = new Environment("env", List.of(attributeSet));
 
         assertEquals("cycle", environment.getRoutine("weather", "cycle").name());
     }
@@ -70,7 +67,7 @@ public class MutableEnvironmentTest {
     public void testGetProperty() {
         MutableEnvironmentAttributeSet attributeSet = environmentAttributeSet(
                 "env", "timing", new EnvironmentTickProperty("tick"));
-        MutableEnvironment environment = new MutableEnvironment("env", List.of(attributeSet));
+        Environment environment = new Environment("env", List.of(attributeSet));
 
         assertEquals("tick", environment.getProperty("timing", "tick").name());
     }
@@ -79,7 +76,7 @@ public class MutableEnvironmentTest {
     public void testAttributeCount() {
         MutableEnvironmentAttributeSet firstAttributeSet = environmentAttributeSet("env", "s1", new EnvironmentTickProperty("a"));
         MutableEnvironmentAttributeSet secondAttributeSet = environmentAttributeSet("env", "s2", new EnvironmentTickProperty("b"));
-        MutableEnvironment environment = new MutableEnvironment("env", List.of(firstAttributeSet, secondAttributeSet));
+        Environment environment = new Environment("env", List.of(firstAttributeSet, secondAttributeSet));
 
         assertEquals(2, environment.attributeCount());
     }
@@ -88,7 +85,7 @@ public class MutableEnvironmentTest {
     public void testCreateContext() {
         MutableEnvironmentAttributeSet attributeSet = environmentAttributeSet(
                 "env", "timing", new EnvironmentTickProperty("tick"));
-        MutableEnvironment environment = new MutableEnvironment("env", List.of(attributeSet));
+        Environment environment = new Environment("env", List.of(attributeSet));
 
         createContextFor(environment);
 
@@ -98,7 +95,7 @@ public class MutableEnvironmentTest {
 
     @Test
     public void testCreateContext_CalledTwice_IllegalStateException() {
-        MutableEnvironment environment = new MutableEnvironment("env", List.of(
+        Environment environment = new Environment("env", List.of(
                 environmentAttributeSet("env", "timing", new EnvironmentTickProperty("tick"))));
         createContextFor(environment);
 

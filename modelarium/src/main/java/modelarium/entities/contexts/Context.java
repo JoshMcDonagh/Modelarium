@@ -1,12 +1,10 @@
 package modelarium.entities.contexts;
 
 import modelarium.clock.Clock;
-import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.AgentSet;
-import modelarium.entities.agents.mutable.MutableAgent;
-import modelarium.entities.agents.mutable.MutableAgentSet;
-import modelarium.entities.agents.immutable.ImmutableAgent;
-import modelarium.entities.agents.immutable.ImmutableAgentSet;
+import modelarium.entities.agents.immutable.ReadOnlyAgent;
+import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
+import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.agents.mutable.AgentSet;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -41,7 +39,7 @@ public sealed interface Context permits SimulationContext, EntityContext {
      * @param targetAgentName the name of the agent to retrieve
      * @return a read-only view of the requested agent
      */
-    ImmutableAgent getAgent(String targetAgentName);
+    ReadOnlyAgent getAgent(String targetAgentName);
 
     /**
      * Retrieves the agents matching a filter, drawn from the whole population in a synchronised model or from this
@@ -50,7 +48,7 @@ public sealed interface Context permits SimulationContext, EntityContext {
      * @param filter a predicate to apply to each agent
      * @return a read-only view of the matching agents
      */
-    ImmutableAgentSet getFilteredAgents(Predicate<Agent> filter);
+    ReadOnlyAgentSet getFilteredAgents(Predicate<ReadOnlyAgent> filter);
 
     /**
      * Returns the random generator this model element can use.
@@ -64,7 +62,7 @@ public sealed interface Context permits SimulationContext, EntityContext {
      *
      * @param agent the agent to add
      */
-    void addAgent(MutableAgent agent);
+    void addAgent(Agent agent);
 
     /**
      * Adds each agent in an agent set to the current core's local agent set, creating the contexts the agents need
@@ -72,14 +70,14 @@ public sealed interface Context permits SimulationContext, EntityContext {
      *
      * @param agentSet the agents to add
      */
-    void addAgents(MutableAgentSet agentSet);
+    void addAgents(AgentSet agentSet);
 
     /**
      * Adds each agent in a list to the current core's local agent set, creating the contexts the agents need to run.
      *
      * @param agentList the agents to add
      */
-    void addAgents(List<MutableAgent> agentList);
+    void addAgents(List<Agent> agentList);
 
     /**
      * Kills the agent with the given name.
@@ -89,11 +87,11 @@ public sealed interface Context permits SimulationContext, EntityContext {
     void killAgent(String agentName);
 
     /**
-     * Kills the agent of the given {@link Agent} instance.
+     * Kills the agent of the given {@link ReadOnlyAgent} instance.
      *
      * @param agent the agent to kill
      */
-    void killAgent(Agent agent);
+    void killAgent(ReadOnlyAgent agent);
 
     /**
      * Kills all the agents with names in a given {@link List<String>} instance.
@@ -103,9 +101,9 @@ public sealed interface Context permits SimulationContext, EntityContext {
     void killAgents(List<String> agentNames);
 
     /**
-     * Kills all the agents in a given {@link ImmutableAgentSet} instance.
+     * Kills all the agents in a given {@link ReadOnlyAgentSet} instance.
      *
      * @param agentSet the agent set of agents to kill
      */
-    <A extends Agent, AS extends AgentSet<A, AS>> void killAgents(AgentSet<A, AS> agentSet);
+    void killAgents(ReadOnlyAgentSet agentSet);
 }

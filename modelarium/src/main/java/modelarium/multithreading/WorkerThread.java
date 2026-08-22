@@ -3,11 +3,11 @@ package modelarium.multithreading;
 import modelarium.Config;
 import modelarium.clock.ImmutableClock;
 import modelarium.clock.MutableClock;
-import modelarium.entities.agents.mutable.MutableAgent;
-import modelarium.entities.agents.mutable.MutableAgentSet;
+import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.contexts.ContextCache;
-import modelarium.entities.environments.MutableEnvironment;
-import modelarium.entities.environments.ImmutableEnvironment;
+import modelarium.entities.environments.Environment;
+import modelarium.entities.environments.ReadOnlyEnvironment;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 import modelarium.results.mutable.MutableResults;
@@ -22,7 +22,7 @@ import java.util.random.RandomGenerator;
  * Represents a single worker thread responsible for simulating one subset of agents
  * across the configured number of ticks.
  *
- * <p>Each {@code WorkerThread} operates on its own {@link MutableAgentSet}, may use a local
+ * <p>Each {@code WorkerThread} operates on its own {@link AgentSet}, may use a local
  * {@link ContextCache} for caching, and optionally communicates with a coordinator via
  * {@link RequestResponseInterface} if synchronisation is enabled.
  */
@@ -38,16 +38,16 @@ public class WorkerThread implements Callable<MutableResults> {
     private final RequestResponseController requestResponseController;
 
     /** The model's environment, which this worker clones locally when threads are synchronised */
-    private final MutableEnvironment environment;
+    private final Environment environment;
 
     /** The original set of agents this worker is responsible for simulating */
-    private final MutableAgentSet agentsInThread;
+    private final AgentSet agentsInThread;
 
     /** The clock shared with the co-ordinator and other workers, or null if threads are not synchronised */
     private final MutableClock sharedClock;
 
     /** A duplicate of the agent set to allow for safe merging during synchronisation */
-    private final MutableAgentSet updatedAgents;
+    private final AgentSet updatedAgents;
 
     /** The splittable random generator this worker and its agents can use */
     private final RandomGenerator randomGenerator;
@@ -66,8 +66,8 @@ public class WorkerThread implements Callable<MutableResults> {
     public WorkerThread(String threadName,
                         Config config,
                         RequestResponseController requestResponseController,
-                        MutableEnvironment environment,
-                        MutableAgentSet agentsInThread,
+                        Environment environment,
+                        AgentSet agentsInThread,
                         MutableClock sharedClock,
                         RandomGenerator randomGenerator
     ) {
@@ -94,8 +94,8 @@ public class WorkerThread implements Callable<MutableResults> {
         MutableClock clock = Objects.requireNonNullElseGet(sharedClock, () -> new MutableClock(config.tickCount()));
         ContextCache cache = new ContextCache();
 
-        for (MutableAgent agent : agentsInThread) {
-            MutableEnvironment localEnvironment = null;
+        for (Agent agent : agentsInThread) {
+            Environment localEnvironment = null;
 
             if (config.areThreadsSynced())
                 localEnvironment = Cloners.standard().deepClone(environment);
@@ -112,7 +112,7 @@ public class WorkerThread implements Callable<MutableResults> {
         }
 
         ImmutableClock immutableClock = new ImmutableClock(clock);
-        ImmutableEnvironment immutableEnvironment = new ImmutableEnvironment(environment);
+        ReadOnlyEnvironment immutableEnvironment = new ReadOnlyEnvironment(environment);
 
         RequestResponseInterface requestResponseInterface = requestResponseController.getInterface(threadName);
 

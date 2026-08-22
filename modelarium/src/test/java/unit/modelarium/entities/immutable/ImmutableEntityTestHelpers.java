@@ -1,22 +1,23 @@
 package unit.modelarium.entities.immutable;
 
-import modelarium.entities.agents.mutable.MutableAgent;
-import modelarium.entities.attributes.*;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.EnvironmentContext;
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.Environment;
 
 import java.util.List;
 
 class ImmutableEntityTestHelpers {
     private ImmutableEntityTestHelpers() {}
 
-    static MutableAgent emptyAgent(String name) {
-        return new MutableAgent(name, List.of());
+    static Agent emptyAgent(String name) {
+        return new Agent(name, List.of());
     }
 
     static class AgentCounterProperty extends AgentProperty<Double> {
@@ -73,16 +74,16 @@ class ImmutableEntityTestHelpers {
         );
     }
 
-    static MutableAgent agentWithCounter(String name) {
-        return new MutableAgent(name, List.of(singlePropertyAgentSet(name, "stats", "counter")));
+    static Agent agentWithCounter(String name) {
+        return new Agent(name, List.of(singlePropertyAgentSet(name, "stats", "counter")));
     }
 
     @SuppressWarnings("unchecked")
-    static MutableEnvironment environmentWithTickCounter() {
+    static Environment environmentWithTickCounter() {
         MutableEnvironmentAttributeSet attributeSet = new MutableEnvironmentAttributeSet(
                 "timing",
                 (List<Attribute>) (List<?>) List.of(new EnvironmentTickProperty("envTick"))
         );
-        return new MutableEnvironment(List.of(attributeSet));
+        return new Environment(List.of(attributeSet));
     }
 }

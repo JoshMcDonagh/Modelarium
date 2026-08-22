@@ -2,13 +2,11 @@ package modelarium.multithreading.requestresponse;
 
 import modelarium.Config;
 import modelarium.clock.MutableClock;
-import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.immutable.ImmutableAgent;
-import modelarium.entities.agents.immutable.ImmutableAgentSet;
-import modelarium.entities.agents.mutable.MutableAgent;
-import modelarium.entities.agents.mutable.MutableAgentSet;
-import modelarium.entities.environments.ImmutableEnvironment;
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.agents.immutable.ReadOnlyAgent;
+import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
+import modelarium.entities.agents.mutable.AgentSet;
+import modelarium.entities.environments.Environment;
+import modelarium.entities.environments.ReadOnlyEnvironment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +32,10 @@ public abstract class CoordinatorRequestHandler {
     private final RequestResponseController requestResponseController;
 
     /** The global set of all agents in the model */
-    private final MutableAgentSet globalAgentSet;
+    private final AgentSet globalAgentSet;
 
     /** The environment shared across all workers */
-    private final MutableEnvironment environment;
+    private final Environment environment;
 
     /** The clock shared with the workers to synchronise the passing of ticks */
     private final MutableClock sharedClock;
@@ -58,8 +56,8 @@ public abstract class CoordinatorRequestHandler {
     public CoordinatorRequestHandler(String threadName,
                                      Config config,
                                      RequestResponseController requestResponseController,
-                                     MutableAgentSet globalAgentSet,
-                                     MutableEnvironment environment,
+                                     AgentSet globalAgentSet,
+                                     Environment environment,
                                      MutableClock sharedClock
     ) {
         this.threadName = threadName;
@@ -103,7 +101,7 @@ public abstract class CoordinatorRequestHandler {
      *
      * @return the current global set of all agents
      */
-    protected MutableAgentSet getGlobalAgentSet() {
+    protected AgentSet getGlobalAgentSet() {
         return globalAgentSet;
     }
 
@@ -112,7 +110,7 @@ public abstract class CoordinatorRequestHandler {
      *
      * @return the global environment
      */
-    protected MutableEnvironment getEnvironment() {
+    protected Environment getEnvironment() {
         return environment;
     }
 
@@ -167,7 +165,7 @@ public abstract class CoordinatorRequestHandler {
          * @param environment the environment shared across all workers
          * @param sharedClock the clock used to synchronise the entities and cores in the model
          */
-        public AllWorkersFinishTick(String threadName, Config settings, RequestResponseController requestResponseController, MutableAgentSet globalAgentSet, MutableEnvironment environment, MutableClock sharedClock) {
+        public AllWorkersFinishTick(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
@@ -206,7 +204,7 @@ public abstract class CoordinatorRequestHandler {
          * @param environment the environment shared across all workers
          * @param sharedClock the clock used to synchronise the entities and cores in the model
          */
-        public AllWorkersUpdateCoordinator(String threadName, Config settings, RequestResponseController requestResponseController, MutableAgentSet globalAgentSet, MutableEnvironment environment, MutableClock sharedClock) {
+        public AllWorkersUpdateCoordinator(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
@@ -246,7 +244,7 @@ public abstract class CoordinatorRequestHandler {
          * @param environment the environment shared across all workers
          * @param sharedClock the clock used to synchronise the entities and cores in the model
          */
-        public AgentAccess(String threadName, Config settings, RequestResponseController requestResponseController, MutableAgentSet globalAgentSet, MutableEnvironment environment, MutableClock sharedClock) {
+        public AgentAccess(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
@@ -267,7 +265,7 @@ public abstract class CoordinatorRequestHandler {
                 );
             }
 
-            ImmutableAgent agent = new ImmutableAgent(getGlobalAgentSet().get((String) payload));
+            ReadOnlyAgent agent = new ReadOnlyAgent(getGlobalAgentSet().get((String) payload));
             getResponseQueue(request.getRequester()).put(new Response(getThreadName(), request.getRequester(), ResponseType.AGENT_ACCESS, agent));
         }
     }
@@ -287,7 +285,7 @@ public abstract class CoordinatorRequestHandler {
          * @param environment the environment shared across all workers
          * @param sharedClock the clock used to synchronise the entities and cores in the model
          */
-        public UpdateCoordinatorAgents(String threadName, Config settings, RequestResponseController requestResponseController, MutableAgentSet globalAgentSet, MutableEnvironment environment, MutableClock sharedClock) {
+        public UpdateCoordinatorAgents(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
@@ -299,13 +297,13 @@ public abstract class CoordinatorRequestHandler {
         @Override
         public void handleRequest(Request request) {
             Object payload = request.getPayload();
-            if (!(payload instanceof MutableAgentSet)) {
+            if (!(payload instanceof AgentSet)) {
                 throw new IllegalArgumentException("UPDATE_COORDINATOR_AGENTS payload must be an AgentSet (got: "
                         + (payload == null ? "null" : payload.getClass().getName())
                         + ") from requester: " + request.getRequester()
                 );
             }
-            getGlobalAgentSet().update((MutableAgentSet) payload, true);
+            getGlobalAgentSet().update((AgentSet) payload, true);
         }
     }
 
@@ -324,7 +322,7 @@ public abstract class CoordinatorRequestHandler {
          * @param environment the environment shared across all workers
          * @param sharedClock the clock used to synchronise the entities and cores in the model
          */
-        public FilteredAgentsAccess(String threadName, Config settings, RequestResponseController requestResponseController, MutableAgentSet globalAgentSet, MutableEnvironment environment, MutableClock sharedClock) {
+        public FilteredAgentsAccess(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
@@ -343,8 +341,8 @@ public abstract class CoordinatorRequestHandler {
                         + (payload == null ? "null" : payload.getClass().getName()) + ")"
                 );
             }
-            Predicate<Agent> filter = (Predicate<Agent>) payload;
-            ImmutableAgentSet filtered = getGlobalAgentSet().getFilteredAgents(filter).getAsImmutable();
+            Predicate<ReadOnlyAgent> filter = (Predicate<ReadOnlyAgent>) payload;
+            ReadOnlyAgentSet filtered = getGlobalAgentSet().getFilteredAgents(filter).getAsImmutable();
             getResponseQueue(request.getRequester()).put(new Response(
                     getThreadName(),
                     request.getRequester(),
@@ -368,7 +366,7 @@ public abstract class CoordinatorRequestHandler {
          * @param environment the environment shared across all workers
          * @param sharedClock the clock used to synchronise the entities and cores in the model
          */
-        public EnvironmentAttributesAccess(String threadName, Config settings, RequestResponseController requestResponseController, MutableAgentSet globalAgentSet, MutableEnvironment environment, MutableClock sharedClock) {
+        public EnvironmentAttributesAccess(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
@@ -383,7 +381,7 @@ public abstract class CoordinatorRequestHandler {
                     getThreadName(),
                     request.getRequester(),
                     ResponseType.ENVIRONMENT_ATTRIBUTES_ACCESS,
-                    new ImmutableEnvironment(getEnvironment())));
+                    new ReadOnlyEnvironment(getEnvironment())));
         }
     }
 
@@ -399,7 +397,7 @@ public abstract class CoordinatorRequestHandler {
          * @param environment               the environment shared across all workers
          * @param sharedClock               the clock used to synchronise the entities and cores in the model
          */
-        public KillAgent(String threadName, Config config, RequestResponseController requestResponseController, MutableAgentSet globalAgentSet, MutableEnvironment environment, MutableClock sharedClock) {
+        public KillAgent(String threadName, Config config, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
             super(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
@@ -429,7 +427,7 @@ public abstract class CoordinatorRequestHandler {
          * @param environment               the environment shared across all workers
          * @param sharedClock               the clock used to synchronise the entities and cores in the model
          */
-        public KillAgents(String threadName, Config config, RequestResponseController requestResponseController, MutableAgentSet globalAgentSet, MutableEnvironment environment, MutableClock sharedClock) {
+        public KillAgents(String threadName, Config config, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
             super(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 

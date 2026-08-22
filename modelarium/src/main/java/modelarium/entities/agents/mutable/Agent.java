@@ -2,18 +2,16 @@ package modelarium.entities.agents.mutable;
 
 import modelarium.Config;
 import modelarium.clock.MutableClock;
-import modelarium.entities.ImmutableEntity;
-import modelarium.entities.MutableEntity;
-import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.immutable.ImmutableAgent;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.Entity;
+import modelarium.entities.agents.immutable.ReadOnlyAgent;
 import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.routines.AgentRoutine;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.ContextCache;
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.Environment;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 
@@ -26,9 +24,9 @@ import java.util.random.RandomGenerator;
  * <p>This class is an entity that owns {@link MutableAgentAttributeSet} instances and uses an
  * {@link AgentSimulationContext} for its behaviour and interactions.
  */
-public final class MutableAgent extends MutableEntity<AgentSimulationContext, AgentContext, MutableAgentAttributeSet, AttributeSetLog<AgentSimulationContext>> implements Agent {
+public final class Agent extends Entity<AgentSimulationContext, AgentContext, MutableAgentAttributeSet, AttributeSetLog<AgentSimulationContext>> {
     private boolean isDead = false;
-    private ImmutableAgent immutableVersion = null;
+    private ReadOnlyAgent immutableVersion = null;
 
     /**
      * Constructs a new agent with the specified name and attribute sets.
@@ -36,7 +34,7 @@ public final class MutableAgent extends MutableEntity<AgentSimulationContext, Ag
      * @param name the name of the agent, used to identify it within the model
      * @param attributeSets the attribute sets the agent will own
      */
-    public MutableAgent(String name, List<MutableAgentAttributeSet> attributeSets) {
+    public Agent(String name, List<MutableAgentAttributeSet> attributeSets) {
         super(name, attributeSets);
     }
 
@@ -55,12 +53,12 @@ public final class MutableAgent extends MutableEntity<AgentSimulationContext, Ag
      */
     @Override
     protected AgentSimulationContext makeContextInstance(
-            MutableAgentSet agentSet,
+            AgentSet agentSet,
             Config config,
             ContextCache contextCache,
             MutableClock clock,
             RequestResponseController requestResponseController,
-            MutableEnvironment localEnvironment,
+            Environment localEnvironment,
             RandomGenerator randomGenerator
     ) {
         return new AgentSimulationContext(
@@ -158,12 +156,12 @@ public final class MutableAgent extends MutableEntity<AgentSimulationContext, Ag
     /**
      * Creates and returns an immutable version of this agent.
      *
-     * @return the new {@link ImmutableAgent} instance
+     * @return the new {@link ReadOnlyAgent} instance
      */
     @Override
-    public ImmutableAgent getAsImmutable() {
+    public ReadOnlyAgent getAsImmutable() {
         if (immutableVersion == null)
-            immutableVersion = new ImmutableAgent(this);
+            immutableVersion = new ReadOnlyAgent(this);
         return immutableVersion;
     }
 }

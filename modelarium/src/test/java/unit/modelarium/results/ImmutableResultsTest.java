@@ -1,7 +1,7 @@
 package unit.modelarium.results;
 
-import modelarium.entities.agents.mutable.MutableAgent;
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.environments.Environment;
 import modelarium.results.immutable.ImmutableResults;
 import modelarium.results.immutable.ImmutableResultsForAgents;
 import modelarium.results.immutable.ImmutableResultsForEnvironment;
@@ -10,14 +10,15 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static unit.modelarium.results.ResultsTestHelpers.*;
 
 public class ImmutableResultsTest {
     private MutableResults populatedMutableResults() {
-        MutableAgent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
+        Agent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
         record(agent, "AttributeSet_0", "Property_0", 1.0);
-        MutableEnvironment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
+        Environment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
         record(environment, "AttributeSet_0", "Property_0", 1);
 
         return mutableResults(agentResults(agent), environmentResults(environment));

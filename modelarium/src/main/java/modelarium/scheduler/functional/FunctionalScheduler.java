@@ -1,8 +1,8 @@
 package modelarium.scheduler.functional;
 
 import modelarium.clock.ImmutableClock;
-import modelarium.entities.agents.mutable.MutableAgentSet;
-import modelarium.entities.environments.ImmutableEnvironment;
+import modelarium.entities.agents.mutable.AgentSet;
+import modelarium.entities.environments.ReadOnlyEnvironment;
 import modelarium.scheduler.Scheduler;
 
 import java.util.random.RandomGenerator;
@@ -44,8 +44,8 @@ public class FunctionalScheduler implements Scheduler {
     public void runTick(
             String threadName,
             ImmutableClock clock,
-            ImmutableEnvironment environment,
-            MutableAgentSet agentSet,
+            ReadOnlyEnvironment environment,
+            AgentSet agentSet,
             RandomGenerator random
     ) {
         tickFunction.runTick(threadName, clock, environment, agentSet, random);

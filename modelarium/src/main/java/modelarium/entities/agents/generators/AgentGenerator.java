@@ -1,7 +1,7 @@
 package modelarium.entities.agents.generators;
 
 import modelarium.Config;
-import modelarium.entities.agents.mutable.MutableAgentSet;
+import modelarium.entities.agents.mutable.AgentSet;
 
 import java.util.List;
 import java.util.random.RandomGenerator;
@@ -19,16 +19,16 @@ public interface AgentGenerator {
      *
      * @param config the model settings used to construct the agents
      * @param random the random generator the agent generator can use for constructing agents
-     * @return a new {@link MutableAgentSet} containing all generated agents
+     * @return a new {@link AgentSet} containing all generated agents
      */
-    MutableAgentSet generateAgents(Config config, RandomGenerator random);
+    AgentSet generateAgents(Config config, RandomGenerator random);
 
     /**
      * Generates the model's agents and distributes them across the model's worker cores.
      *
      * @param config the model settings containing the agent and core counts
      * @param random the random generator the agent generator can use for constructing agents
-     * @return a list of {@link MutableAgentSet} objects, one per core
+     * @return a list of {@link AgentSet} objects, one per core
      */
-    List<MutableAgentSet> getAgentsForEachCore(Config config, RandomGenerator random);
+    List<AgentSet> getAgentsForEachCore(Config config, RandomGenerator random);
 }

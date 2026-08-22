@@ -1,7 +1,7 @@
 package dev.modelarium.examples.sirbasic;
 
-import dev.modelarium.examples.sirbasic.config.SettingsLoader;
 import dev.modelarium.examples.sirbasic.config.SIRSettings;
+import dev.modelarium.examples.sirbasic.config.SettingsLoader;
 import dev.modelarium.examples.sirbasic.entities.agents.SIRAgentGenerator;
 import dev.modelarium.examples.sirbasic.entities.environment.SIREnvironmentGenerator;
 import modelarium.Config;

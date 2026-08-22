@@ -1,9 +1,9 @@
 package modelarium.scheduler;
 
 import modelarium.clock.ImmutableClock;
-import modelarium.entities.agents.mutable.MutableAgent;
-import modelarium.entities.agents.mutable.MutableAgentSet;
-import modelarium.entities.environments.ImmutableEnvironment;
+import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.agents.mutable.AgentSet;
+import modelarium.entities.environments.ReadOnlyEnvironment;
 
 import java.util.random.RandomGenerator;
 
@@ -28,11 +28,11 @@ public class InOrderScheduler implements Scheduler {
     public void runTick(
             String threadName,
             ImmutableClock clock,
-            ImmutableEnvironment environment,
-            MutableAgentSet agentSet,
+            ReadOnlyEnvironment environment,
+            AgentSet agentSet,
             RandomGenerator random
     ) {
-        for (MutableAgent agent : agentSet)
+        for (Agent agent : agentSet)
             agent.run();
     }
 }

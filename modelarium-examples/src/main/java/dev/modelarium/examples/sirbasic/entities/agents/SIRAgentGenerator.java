@@ -1,7 +1,7 @@
 package dev.modelarium.examples.sirbasic.entities.agents;
 
-import dev.modelarium.examples.sirbasic.config.SettingsLoader;
 import dev.modelarium.examples.sirbasic.config.SIRSettings;
+import dev.modelarium.examples.sirbasic.config.SettingsLoader;
 import dev.modelarium.examples.sirbasic.entities.agents.attributes.location.Coordinates;
 import dev.modelarium.examples.sirbasic.entities.agents.attributes.location.LocationProperty;
 import dev.modelarium.examples.sirbasic.entities.agents.attributes.sir.InfectedEvent;
@@ -9,10 +9,10 @@ import dev.modelarium.examples.sirbasic.entities.agents.attributes.sir.Recovered
 import dev.modelarium.examples.sirbasic.entities.agents.attributes.sir.SIRState;
 import dev.modelarium.examples.sirbasic.entities.agents.attributes.sir.SIRStateProperty;
 import modelarium.Config;
-import modelarium.entities.agents.mutable.MutableAgent;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 
 import java.util.ArrayList;
 import java.util.random.RandomGenerator;
@@ -30,7 +30,7 @@ public class SIRAgentGenerator extends DefaultAgentGenerator {
     }
 
     @Override
-    protected MutableAgent generateAgent(Config config, RandomGenerator random) {
+    protected Agent generateAgent(Config config, RandomGenerator random) {
         ArrayList<MutableAgentAttributeSet> agentAttributeSets = new ArrayList<>();
 
         LocationProperty locationProperty = new LocationProperty();
@@ -60,7 +60,7 @@ public class SIRAgentGenerator extends DefaultAgentGenerator {
         }
         agentAttributeSets.add(new MutableAgentAttributeSet("sir", agentSIRAttributes));
 
-        MutableAgent newAgent = new MutableAgent("agent_" + agentCount, agentAttributeSets);
+        Agent newAgent = new Agent("agent_" + agentCount, agentAttributeSets);
         agentCount++;
         return newAgent;
     }

@@ -2,8 +2,8 @@ package modelarium.multithreading;
 
 import modelarium.Config;
 import modelarium.clock.MutableClock;
-import modelarium.entities.agents.mutable.MutableAgentSet;
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.agents.mutable.AgentSet;
+import modelarium.entities.environments.Environment;
 import modelarium.multithreading.requestresponse.*;
 
 import java.util.HashMap;
@@ -26,7 +26,7 @@ public class CoordinatorThread implements Runnable {
     private final Config config;
 
     /** The environment shared across all workers */
-    private final MutableEnvironment environment;
+    private final Environment environment;
 
     /** Controller that manages the request and response queues for inter-thread communication */
     private final RequestResponseController requestResponseController;
@@ -35,7 +35,7 @@ public class CoordinatorThread implements Runnable {
     private final MutableClock sharedClock;
 
     /** Global agent set of the model */
-    private final MutableAgentSet predefinedGlobalAgentSet;
+    private final AgentSet predefinedGlobalAgentSet;
 
     /** Map indexed by agent names containing the thread names containing the corresponding agent **/
     private final Map<String, String> agentThreadMap;
@@ -57,7 +57,7 @@ public class CoordinatorThread implements Runnable {
      */
     public CoordinatorThread(String name,
                              Config config,
-                             MutableEnvironment environment,
+                             Environment environment,
                              RequestResponseController requestResponseController,
                              MutableClock sharedClock
     ) {
@@ -75,10 +75,10 @@ public class CoordinatorThread implements Runnable {
      */
     public CoordinatorThread(String name,
                              Config config,
-                             MutableEnvironment environment,
+                             Environment environment,
                              RequestResponseController requestResponseController,
                              MutableClock sharedClock,
-                             MutableAgentSet globalAgentSet,
+                             AgentSet globalAgentSet,
                              Map<String, String> agentThreadMap
     ) {
         this.threadName = name;
@@ -105,9 +105,9 @@ public class CoordinatorThread implements Runnable {
      * or a newly created empty set.
      */
     private void initialiseHandlers() {
-        MutableAgentSet globalAgentSet;
+        AgentSet globalAgentSet;
 
-        globalAgentSet = Objects.requireNonNullElseGet(predefinedGlobalAgentSet, MutableAgentSet::new);
+        globalAgentSet = Objects.requireNonNullElseGet(predefinedGlobalAgentSet, AgentSet::new);
 
         requestHandlerMap.put(RequestType.ALL_WORKERS_FINISH_TICK,
                 new CoordinatorRequestHandler.AllWorkersFinishTick(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));

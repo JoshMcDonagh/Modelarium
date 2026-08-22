@@ -1,6 +1,6 @@
 package unit.modelarium.results;
 
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.Environment;
 import modelarium.results.immutable.ImmutableResultsForEnvironment;
 import modelarium.results.mutable.MutableResultsForEnvironment;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import static unit.modelarium.results.ResultsTestHelpers.*;
 public class MutableResultsForEnvironmentTest {
     @Test
     public void testAttributeSetLogCount() {
-        MutableEnvironment environment = environmentWithMemoryLogs(
+        Environment environment = environmentWithMemoryLogs(
                 "Environment_0",
                 environmentAttributeSet("Environment_0", "AttributeSet_0", "Property_0"),
                 environmentAttributeSet("Environment_0", "AttributeSet_1", "Property_1")
@@ -27,7 +27,7 @@ public class MutableResultsForEnvironmentTest {
 
     @Test
     public void testAttributeLogCount() {
-        MutableEnvironment environment = environmentWithMemoryLogs(
+        Environment environment = environmentWithMemoryLogs(
                 "Environment_0",
                 environmentAttributeSet("Environment_0", "AttributeSet_0", "Property_0", "Property_1", "Property_2")
         );
@@ -39,7 +39,7 @@ public class MutableResultsForEnvironmentTest {
 
     @Test
     public void testAttributeLogs_PreservesOrder() {
-        MutableEnvironment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
+        Environment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
         record(environment, "AttributeSet_0", "Property_0", 1, 2, 3);
 
         MutableResultsForEnvironment results = environmentResults(environment);
@@ -54,7 +54,7 @@ public class MutableResultsForEnvironmentTest {
 
     @Test
     public void testAttributeLogs_Typed() {
-        MutableEnvironment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
+        Environment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
         record(environment, "AttributeSet_0", "Property_0", 1, 2);
 
         MutableResultsForEnvironment results = environmentResults(environment);
@@ -66,7 +66,7 @@ public class MutableResultsForEnvironmentTest {
 
     @Test
     public void testAttributeLogs_Typed_WrongType_ClassCastException() {
-        MutableEnvironment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
+        Environment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
         record(environment, "AttributeSet_0", "Property_0", 1);
 
         MutableResultsForEnvironment results = environmentResults(environment);
@@ -79,7 +79,7 @@ public class MutableResultsForEnvironmentTest {
 
     @Test
     public void testAttributeSetLogs() {
-        MutableEnvironment environment = environmentWithMemoryLogs(
+        Environment environment = environmentWithMemoryLogs(
                 "Environment_0",
                 environmentAttributeSet("Environment_0", "AttributeSet_0", "Property_0", "Property_1")
         );
@@ -97,7 +97,7 @@ public class MutableResultsForEnvironmentTest {
 
     @Test
     public void testEnvironmentLogs() {
-        MutableEnvironment environment = environmentWithMemoryLogs(
+        Environment environment = environmentWithMemoryLogs(
                 "Environment_0",
                 environmentAttributeSet("Environment_0", "AttributeSet_0", "Property_0"),
                 environmentAttributeSet("Environment_0", "AttributeSet_1", "Property_1")
@@ -116,7 +116,7 @@ public class MutableResultsForEnvironmentTest {
 
     @Test
     public void testDisconnectDatabases() {
-        MutableEnvironment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
+        Environment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
         record(environment, "AttributeSet_0", "Property_0", 1);
 
         MutableResultsForEnvironment results = environmentResults(environment);
@@ -128,7 +128,7 @@ public class MutableResultsForEnvironmentTest {
 
     @Test
     public void testGetAsImmutable() {
-        MutableEnvironment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
+        Environment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
         record(environment, "AttributeSet_0", "Property_0", 1);
 
         MutableResultsForEnvironment results = environmentResults(environment);

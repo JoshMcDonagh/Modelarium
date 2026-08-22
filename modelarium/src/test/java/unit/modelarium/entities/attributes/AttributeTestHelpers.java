@@ -1,26 +1,27 @@
 package unit.modelarium.entities.attributes;
 
-import modelarium.entities.attributes.*;
+import modelarium.Config;
+import modelarium.clock.MutableClock;
+import modelarium.entities.agents.generators.DefaultAgentGenerator;
+import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.agents.mutable.AgentSet;
+import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.events.AgentEvent;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.attributes.routines.AgentRoutine;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.AgentSimulationContext;
-import modelarium.entities.contexts.EnvironmentContext;
-
-import java.util.List;
-import modelarium.Config;
-import modelarium.clock.MutableClock;
-import modelarium.entities.agents.mutable.MutableAgent;
-import modelarium.entities.agents.mutable.MutableAgentSet;
-import modelarium.entities.agents.generators.DefaultAgentGenerator;
 import modelarium.entities.contexts.ContextCache;
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.contexts.EnvironmentContext;
+import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.EnvironmentGenerator;
 import modelarium.multithreading.requestresponse.RequestResponseController;
+
+import java.util.List;
 import java.util.SplittableRandom;
 import java.util.random.RandomGenerator;
 
@@ -237,8 +238,8 @@ class AttributeTestHelpers {
             private int index = 0;
 
             @Override
-            protected MutableAgent generateAgent(Config config, RandomGenerator random) {
-                return new MutableAgent("agent_" + index++, List.of());
+            protected Agent generateAgent(Config config, RandomGenerator random) {
+                return new Agent("agent_" + index++, List.of());
             }
         };
     }
@@ -246,8 +247,8 @@ class AttributeTestHelpers {
     private static EnvironmentGenerator environmentGenerator() {
         return new EnvironmentGenerator() {
             @Override
-            public MutableEnvironment generateEnvironment(Config config, RandomGenerator random) {
-                return new MutableEnvironment("env", List.of());
+            public Environment generateEnvironment(Config config, RandomGenerator random) {
+                return new Environment("env", List.of());
             }
         };
     }
@@ -262,16 +263,16 @@ class AttributeTestHelpers {
                 .environmentGenerator(environmentGenerator())
                 .build();
 
-        MutableAgent agent = new MutableAgent("TestOwner", List.of(attributeSet));
+        Agent agent = new Agent("TestOwner", List.of(attributeSet));
 
         return new AgentSimulationContext(
                 agent,
-                new MutableAgentSet(List.of(agent)),
+                new AgentSet(List.of(agent)),
                 config,
                 new ContextCache(),
                 new MutableClock(config.tickCount()),
                 new RequestResponseController(config),
-                new MutableEnvironment("env", List.of()),
+                new Environment("env", List.of()),
                 new SplittableRandom()
         );
     }

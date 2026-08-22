@@ -1,7 +1,7 @@
 package unit.modelarium.scheduler;
 
-import modelarium.entities.agents.mutable.MutableAgent;
-import modelarium.entities.agents.mutable.MutableAgentSet;
+import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
@@ -15,14 +15,14 @@ import static unit.modelarium.scheduler.SchedulerTestHelpers.immutableEnvironmen
 public class InOrderSchedulerTest {
     @Test
     public void testRunTick_RunsAgentsInOrder() {
-        MutableAgent firstAgent = mock(MutableAgent.class);
-        MutableAgent secondAgent = mock(MutableAgent.class);
-        MutableAgent thirdAgent = mock(MutableAgent.class);
+        Agent firstAgent = mock(Agent.class);
+        Agent secondAgent = mock(Agent.class);
+        Agent thirdAgent = mock(Agent.class);
         when(firstAgent.name()).thenReturn("a1");
         when(secondAgent.name()).thenReturn("a2");
         when(thirdAgent.name()).thenReturn("a3");
 
-        MutableAgentSet agentSet = new MutableAgentSet();
+        AgentSet agentSet = new AgentSet();
         agentSet.add(firstAgent);
         agentSet.add(secondAgent);
         agentSet.add(thirdAgent);

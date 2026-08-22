@@ -1,7 +1,7 @@
 package modelarium.entities.contexts;
 
-import modelarium.entities.agents.mutable.MutableAgent;
-import modelarium.entities.agents.mutable.MutableAgentSet;
+import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.agents.mutable.AgentSet;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public sealed interface EntityContext extends Context permits AgentContext, Envi
      *
      * @param agent the agent to add
      */
-    void addAgent(MutableAgent agent);
+    void addAgent(Agent agent);
 
     /**
      * Adds each agent in an agent set to the current core's local agent set, creating the contexts the agents need
@@ -25,12 +25,12 @@ public sealed interface EntityContext extends Context permits AgentContext, Envi
      *
      * @param agentSet the agents to add
      */
-    void addAgents(MutableAgentSet agentSet);
+    void addAgents(AgentSet agentSet);
 
     /**
      * Adds each agent in a list to the current core's local agent set, creating the contexts the agents need to run.
      *
      * @param agentList the agents to add
      */
-    void addAgents(List<MutableAgent> agentList);
+    void addAgents(List<Agent> agentList);
 }

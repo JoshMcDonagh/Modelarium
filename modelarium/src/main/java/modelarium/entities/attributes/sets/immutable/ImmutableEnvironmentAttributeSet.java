@@ -1,11 +1,11 @@
 package modelarium.entities.attributes.sets.immutable;
 
 import modelarium.entities.attributes.EnvironmentAttribute;
-import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
 import modelarium.entities.attributes.events.EnvironmentEvent;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.attributes.routines.EnvironmentRoutine;
+import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
 

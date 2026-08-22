@@ -2,7 +2,7 @@ package modelarium.entities.contexts;
 
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
 import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.Environment;
 
 /**
  * Interface for providing the environment's attributes with access to their owning environment and the wider model.
@@ -15,9 +15,9 @@ public sealed interface EnvironmentContext extends EntityContext permits Environ
     /**
      * Returns the environment this context belongs to.
      *
-     * @return the owning {@link MutableEnvironment} instance
+     * @return the owning {@link Environment} instance
      */
-    MutableEnvironment getThisEntity();
+    Environment getThisEntity();
 
     /**
      * Returns the attribute set currently being run on the owning environment.

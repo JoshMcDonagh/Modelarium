@@ -3,8 +3,9 @@ package unit.modelarium;
 import modelarium.Model;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static unit.modelarium.ConfigTestHelpers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static unit.modelarium.ConfigTestHelpers.syncedConfig;
 
 public class ModelTest {
     @Test

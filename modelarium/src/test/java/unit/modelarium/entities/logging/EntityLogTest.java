@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static unit.modelarium.entities.logging.LoggingTestHelpers.*;
+import static unit.modelarium.entities.logging.LoggingTestHelpers.agentAttributeSetWithMemoryLog;
+import static unit.modelarium.entities.logging.LoggingTestHelpers.loggedProperty;
 
 public class EntityLogTest {
     private EntityLog<AgentSimulationContext, AgentContext, MutableAgentAttributeSet, AttributeSetLog<AgentSimulationContext>> entityLog(

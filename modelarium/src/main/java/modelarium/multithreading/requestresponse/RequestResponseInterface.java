@@ -1,13 +1,10 @@
 package modelarium.multithreading.requestresponse;
 
 import modelarium.Config;
-import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.immutable.ImmutableAgent;
-import modelarium.entities.agents.immutable.ImmutableAgentSet;
-import modelarium.entities.agents.mutable.MutableAgent;
-import modelarium.entities.agents.mutable.MutableAgentSet;
-import modelarium.entities.environments.ImmutableEnvironment;
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.agents.immutable.ReadOnlyAgent;
+import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
+import modelarium.entities.agents.mutable.AgentSet;
+import modelarium.entities.environments.ReadOnlyEnvironment;
 import modelarium.exceptions.CoordinatorErrorException;
 import modelarium.exceptions.CoordinatorTimeoutException;
 
@@ -155,11 +152,11 @@ public class RequestResponseInterface {
      *
      * @param requesterAgentName the name of the requesting agent
      * @param targetAgentName the name of the agent to retrieve
-     * @return the {@link ImmutableAgent} instance returned by the coordinator
+     * @return the {@link ReadOnlyAgent} instance returned by the coordinator
      */
-    public ImmutableAgent getAgentFromCoordinator(String requesterAgentName, String targetAgentName) throws InterruptedException {
+    public ReadOnlyAgent getAgentFromCoordinator(String requesterAgentName, String targetAgentName) throws InterruptedException {
         Request request = new Request(requesterAgentName, null, RequestType.AGENT_ACCESS, targetAgentName);
-        return (ImmutableAgent) sendAndAwait(request, ResponseType.AGENT_ACCESS);
+        return (ReadOnlyAgent) sendAndAwait(request, ResponseType.AGENT_ACCESS);
     }
 
     /**
@@ -167,22 +164,22 @@ public class RequestResponseInterface {
      *
      * @param requesterAgentName the name of the requester
      * @param agentFilter a predicate to apply to the global agent set
-     * @return an {@link ImmutableAgentSet} containing matching agents
+     * @return an {@link ReadOnlyAgentSet} containing matching agents
      */
-    public ImmutableAgentSet getFilteredAgentsFromCoordinator(String requesterAgentName, Predicate<Agent> agentFilter) throws InterruptedException {
+    public ReadOnlyAgentSet getFilteredAgentsFromCoordinator(String requesterAgentName, Predicate<ReadOnlyAgent> agentFilter) throws InterruptedException {
         Request request = new Request(requesterAgentName, null, RequestType.FILTERED_AGENTS_ACCESS, agentFilter);
-        return (ImmutableAgentSet) sendAndAwait(request, ResponseType.FILTERED_AGENTS_ACCESS);
+        return (ReadOnlyAgentSet) sendAndAwait(request, ResponseType.FILTERED_AGENTS_ACCESS);
     }
 
     /**
      * Requests the current environment state from the coordinator.
      *
      * @param requesterAgentName the requesting agent's name
-     * @return the current {@link ImmutableEnvironment} instance
+     * @return the current {@link ReadOnlyEnvironment} instance
      */
-    public ImmutableEnvironment getEnvironmentFromCoordinator(String requesterAgentName) throws InterruptedException {
+    public ReadOnlyEnvironment getEnvironmentFromCoordinator(String requesterAgentName) throws InterruptedException {
         Request request = new Request(requesterAgentName, null, RequestType.ENVIRONMENT_ATTRIBUTES_ACCESS, null);
-        return (ImmutableEnvironment) sendAndAwait(request, ResponseType.ENVIRONMENT_ATTRIBUTES_ACCESS);
+        return (ReadOnlyEnvironment) sendAndAwait(request, ResponseType.ENVIRONMENT_ATTRIBUTES_ACCESS);
     }
 
     /**
@@ -190,7 +187,7 @@ public class RequestResponseInterface {
      *
      * @param agentSet the updated set of agents
      */
-    public void updateCoordinatorAgents(MutableAgentSet agentSet) throws InterruptedException {
+    public void updateCoordinatorAgents(AgentSet agentSet) throws InterruptedException {
         Objects.requireNonNull(agentSet, "agentSet");
         requestQueue.put(new Request(name, null, RequestType.UPDATE_COORDINATOR_AGENTS, agentSet));
     }

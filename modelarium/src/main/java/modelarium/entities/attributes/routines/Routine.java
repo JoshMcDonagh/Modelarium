@@ -1,7 +1,7 @@
 package modelarium.entities.attributes.routines;
 
-import modelarium.entities.attributes.sets.mutable.AttributeBase;
 import modelarium.entities.attributes.AttributeAccessLevel;
+import modelarium.entities.attributes.sets.mutable.AttributeBase;
 import modelarium.entities.contexts.Context;
 
 /**
@@ -13,6 +13,7 @@ import modelarium.entities.contexts.Context;
  * @param <C> the type of context this routine is given
  */
 public sealed abstract class Routine<C extends Context> extends AttributeBase<C> permits AgentRoutine, EnvironmentRoutine {
+    private ReadOnlyRoutine immutableVersion = null;
 
     /**
      * Constructs a new routine with the specified name and access level.
@@ -38,4 +39,16 @@ public sealed abstract class Routine<C extends Context> extends AttributeBase<C>
      * @param context the context the routine can use in its behaviour
      */
     protected abstract void run(C context);
+
+    /**
+     * Creates and returns an immutable version of this attribute.
+     *
+     * @return the new {@link ReadOnlyRoutine} instance
+     */
+    @Override
+    public ReadOnlyRoutine getAsImmutable() {
+        if (immutableVersion == null)
+            immutableVersion = new ReadOnlyRoutine(this);
+        return immutableVersion;
+    }
 }

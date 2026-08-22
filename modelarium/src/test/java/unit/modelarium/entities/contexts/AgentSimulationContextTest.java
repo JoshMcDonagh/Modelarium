@@ -3,28 +3,27 @@ package unit.modelarium.entities.contexts;
 import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.clock.MutableClock;
-import modelarium.entities.agents.Agent;
-import modelarium.entities.agents.immutable.ImmutableAgent;
-import modelarium.entities.agents.mutable.MutableAgent;
-import modelarium.entities.agents.mutable.MutableAgentSet;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.agents.immutable.ReadOnlyAgent;
+import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
+import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.ContextCache;
-import modelarium.entities.environments.ImmutableEnvironment;
-import modelarium.entities.environments.MutableEnvironment;
-import modelarium.entities.agents.immutable.ImmutableAgentSet;
+import modelarium.entities.environments.Environment;
+import modelarium.entities.environments.ReadOnlyEnvironment;
 import modelarium.exceptions.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.SplittableRandom;
 import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static unit.modelarium.entities.contexts.ContextTestHelpers.*;
-import java.util.List;
 
 public class AgentSimulationContextTest {
     @BeforeAll
@@ -37,9 +36,9 @@ public class AgentSimulationContextTest {
 
     @Test
     public void testGetThisEntity() {
-        MutableAgent agent = emptyAgent("Alice");
-        MutableAgent otherAgent = emptyAgent("Bob");
-        MutableAgentSet agentSet = agentSet(agent, otherAgent);
+        Agent agent = emptyAgent("Alice");
+        Agent otherAgent = emptyAgent("Bob");
+        AgentSet agentSet = agentSet(agent, otherAgent);
         Config config = syncedConfig(2, 10, 1);
         AgentSimulationContext context = agentSimulationContextWithAgent(
                 config,
@@ -79,14 +78,14 @@ public class AgentSimulationContextTest {
     @Test
     public void testGetEnvironment_ThreadsUnsynced() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
         Config config = unsyncedConfig(2, 10, 1);
-        MutableEnvironment environment = emptyEnvironment();
+        Environment environment = emptyEnvironment();
         AgentSimulationContext context = simulationContextWithEnvironment(
                 AgentSimulationContext.class,
                 config,
                 environment
         );
 
-        MutableEnvironment returnedEnvironment = getMutableFromImmutable(context.getEnvironment());
+        Environment returnedEnvironment = getMutableFromImmutable(context.getEnvironment());
 
         assertSame(environment, returnedEnvironment);
     }
@@ -95,7 +94,7 @@ public class AgentSimulationContextTest {
     public void testGetEnvironment_ThreadsSynced_IsCached() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
         Config config = syncedConfig(2, 10, 1);
         ContextCache cache = contextCache();
-        ImmutableEnvironment environment = emptyEnvironment().getAsImmutable();
+        ReadOnlyEnvironment environment = emptyEnvironment().getAsImmutable();
         cache.addEnvironment(environment);
         AgentSimulationContext context = simulationContextWithCache(
                 AgentSimulationContext.class,
@@ -103,7 +102,7 @@ public class AgentSimulationContextTest {
                 cache
         );
 
-        ImmutableEnvironment returnedEnvironment = context.getEnvironment();
+        ReadOnlyEnvironment returnedEnvironment = context.getEnvironment();
 
         assertSame(environment, returnedEnvironment);
     }
@@ -111,8 +110,8 @@ public class AgentSimulationContextTest {
     @Test
     public void testGetEnvironment_ThreadsSynced_IsNotCached() throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException {
         Config config = syncedConfig(2, 10, 1);
-        MutableAgent agent = emptyAgent("James");
-        ImmutableEnvironment environment = emptyEnvironment().getAsImmutable();
+        Agent agent = emptyAgent("James");
+        ReadOnlyEnvironment environment = emptyEnvironment().getAsImmutable();
 
         AgentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodReturns(
                 AgentSimulationContext.class,
@@ -123,7 +122,7 @@ public class AgentSimulationContextTest {
                 agent
         );
 
-        ImmutableEnvironment returnedEnvironment = context.getEnvironment();
+        ReadOnlyEnvironment returnedEnvironment = context.getEnvironment();
 
         assertSame(environment, returnedEnvironment);
     }
@@ -132,7 +131,7 @@ public class AgentSimulationContextTest {
     public void testGetEnvironment_ThreadsSynced_SimulationInterruptedException() throws NoSuchFieldException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
         String thisAgentName = "Alice";
         Config config = syncedConfig(2, 10, 1);
-        MutableAgent agent = emptyAgent(thisAgentName);
+        Agent agent = emptyAgent(thisAgentName);
 
         AgentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
                 AgentSimulationContext.class,
@@ -155,7 +154,7 @@ public class AgentSimulationContextTest {
     public void testGetEnvironment_ThreadsSynced_EnvironmentNotFoundException_CoordinatorTimeoutException() throws NoSuchFieldException, InterruptedException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         String thisAgentName = "Alice";
         Config config = syncedConfig(2, 10, 1);
-        MutableAgent agent = emptyAgent(thisAgentName);
+        Agent agent = emptyAgent(thisAgentName);
 
         AgentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
                 AgentSimulationContext.class,
@@ -178,7 +177,7 @@ public class AgentSimulationContextTest {
     public void testGetEnvironment_ThreadsSynced_EnvironmentNotFoundException_CoordinatorErrorException() throws NoSuchFieldException, InterruptedException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         String thisAgentName = "Alice";
         Config config = syncedConfig(2, 10, 1);
-        MutableAgent agent = emptyAgent(thisAgentName);
+        Agent agent = emptyAgent(thisAgentName);
 
         AgentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
                 AgentSimulationContext.class,
@@ -215,7 +214,7 @@ public class AgentSimulationContextTest {
         int populationSize = 20;
 
         Config config = syncedConfig(populationSize, 10, 1);
-        MutableAgentSet agentSet = agentSetOfSize(populationSize);
+        AgentSet agentSet = agentSetOfSize(populationSize);
         AgentSimulationContext context = simulationContextWithAgentSet(
                 AgentSimulationContext.class,
                 config,
@@ -232,7 +231,7 @@ public class AgentSimulationContextTest {
         int populationSize = 20;
 
         Config config = syncedConfig(populationSize, 10, 1);
-        MutableAgentSet agentSet = agentSetOfSize(populationSize);
+        AgentSet agentSet = agentSetOfSize(populationSize);
         AgentSimulationContext context = simulationContextWithAgentSet(
                 AgentSimulationContext.class,
                 config,
@@ -262,7 +261,7 @@ public class AgentSimulationContextTest {
         int populationSize = 20;
         int agentIndex = 8;
         Config config = syncedConfig(populationSize, 10, 1);
-        MutableAgentSet agentSet = agentSetOfSize(populationSize);
+        AgentSet agentSet = agentSetOfSize(populationSize);
         AgentSimulationContext context = simulationContextWithAgentSet(
                 AgentSimulationContext.class,
                 config,
@@ -270,7 +269,7 @@ public class AgentSimulationContextTest {
         );
         String agentName = agentSet.get(agentIndex).name();
 
-        MutableAgent returnedAgent = getMutableFromImmutable(context.getAgent(agentName));
+        Agent returnedAgent = getMutableFromImmutable(context.getAgent(agentName));
 
         assertSame(agentSet.get(agentIndex), returnedAgent);
     }
@@ -279,7 +278,7 @@ public class AgentSimulationContextTest {
     public void testGetAgent_IsCached() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Config config = syncedConfig(20, 10, 1);
         ContextCache cache = contextCache();
-        ImmutableAgent agent = emptyAgent("Carol").getAsImmutable();
+        ReadOnlyAgent agent = emptyAgent("Carol").getAsImmutable();
         cache.addAgent(agent);
         AgentSimulationContext context = simulationContextWithCache(
                 AgentSimulationContext.class,
@@ -287,7 +286,7 @@ public class AgentSimulationContextTest {
                 cache
         );
 
-        ImmutableAgent returnedAgent = context.getAgent(agent.name());
+        ReadOnlyAgent returnedAgent = context.getAgent(agent.name());
 
         assertSame(agent, returnedAgent);
     }
@@ -296,8 +295,8 @@ public class AgentSimulationContextTest {
     public void testGetAgent_ThreadsUnsynced_AgentNotFoundException() {
         int populationSize = 20;
         Config config = unsyncedConfig(populationSize, 10, 1);
-        MutableAgent thisAgent = emptyAgent("Greg");
-        MutableAgentSet agentSet = agentSetOfSize(populationSize - 1);
+        Agent thisAgent = emptyAgent("Greg");
+        AgentSet agentSet = agentSetOfSize(populationSize - 1);
         agentSet.add(thisAgent);
         AgentSimulationContext context = agentSimulationContextWithAgent(
                 config,
@@ -317,8 +316,8 @@ public class AgentSimulationContextTest {
     @Test
     public void testGetAgent_ThreadsSynced() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         Config config = syncedConfig(20, 10, 1);
-        ImmutableAgent requestedAgent = emptyAgent("Carol").getAsImmutable();
-        MutableAgent thisAgent = emptyAgent("Greg");
+        ReadOnlyAgent requestedAgent = emptyAgent("Carol").getAsImmutable();
+        Agent thisAgent = emptyAgent("Greg");
 
         AgentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodReturns(
                 AgentSimulationContext.class,
@@ -329,7 +328,7 @@ public class AgentSimulationContextTest {
                 thisAgent
         );
 
-        ImmutableAgent returnedAgent = context.getAgent(requestedAgent.name());
+        ReadOnlyAgent returnedAgent = context.getAgent(requestedAgent.name());
 
         assertSame(requestedAgent, returnedAgent);
     }
@@ -338,7 +337,7 @@ public class AgentSimulationContextTest {
     public void testGetAgent_ThreadsSynced_SimulationInterruptedException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         String requestedAgentName = "John";
         Config config = syncedConfig(2, 10, 1);
-        MutableAgent thisAgent = emptyAgent("Greg");
+        Agent thisAgent = emptyAgent("Greg");
 
         AgentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
                 AgentSimulationContext.class,
@@ -361,7 +360,7 @@ public class AgentSimulationContextTest {
     public void testGetAgent_ThreadsSynced_AgentNotFoundException_CoordinatorTimeoutException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         String requestedAgentName = "John";
         Config config = syncedConfig(2, 10, 1);
-        MutableAgent thisAgent = emptyAgent("Greg");
+        Agent thisAgent = emptyAgent("Greg");
 
         AgentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
                 AgentSimulationContext.class,
@@ -384,7 +383,7 @@ public class AgentSimulationContextTest {
     public void testGetAgent_ThreadsSynced_AgentNotFoundException_CoordinatorErrorException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         String requestedAgentName = "John";
         Config config = syncedConfig(2, 10, 1);
-        MutableAgent thisAgent = emptyAgent("Greg");
+        Agent thisAgent = emptyAgent("Greg");
 
         AgentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
                 AgentSimulationContext.class,
@@ -407,9 +406,9 @@ public class AgentSimulationContextTest {
     public void testGetFilteredAgents_IsCached() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         int populationSize = 7;
         Config config = syncedConfig(populationSize, 10, 1);
-        ImmutableAgentSet agentSet = agentSetOfSize(populationSize).getAsImmutable();
+        ReadOnlyAgentSet agentSet = agentSetOfSize(populationSize).getAsImmutable();
         ContextCache cache = contextCache();
-        Predicate<Agent> filter = a -> true;
+        Predicate<ReadOnlyAgent> filter = a -> true;
         cache.addFilteredAgents(filter, agentSet);
         AgentSimulationContext context = simulationContextWithCache(
                 AgentSimulationContext.class,
@@ -417,7 +416,7 @@ public class AgentSimulationContextTest {
                 cache
         );
 
-        ImmutableAgentSet filteredAgentSet = context.getFilteredAgents(filter);
+        ReadOnlyAgentSet filteredAgentSet = context.getFilteredAgents(filter);
 
         assertSame(agentSet, filteredAgentSet);
     }
@@ -426,10 +425,10 @@ public class AgentSimulationContextTest {
     public void testGetFilteredAgents_ThreadsSynced() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         int populationSize = 7;
         Config config = syncedConfig(populationSize, 10, 1);
-        MutableAgent thisAgent = emptyAgent("Greg");
-        MutableAgentSet agentSet = agentSetOfSize(populationSize - 1);
+        Agent thisAgent = emptyAgent("Greg");
+        AgentSet agentSet = agentSetOfSize(populationSize - 1);
         agentSet.add(thisAgent);
-        Predicate<Agent> filter = a -> true;
+        Predicate<ReadOnlyAgent> filter = a -> true;
 
         AgentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodReturns(
                 AgentSimulationContext.class,
@@ -446,8 +445,8 @@ public class AgentSimulationContextTest {
     @Test
     public void testGetFilteredAgents_ThreadsSynced_SimulationInterruptedException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         Config config = syncedConfig(2, 10, 1);
-        MutableAgent thisAgent = emptyAgent("Greg");
-        Predicate<Agent> filter = a -> true;
+        Agent thisAgent = emptyAgent("Greg");
+        Predicate<ReadOnlyAgent> filter = a -> true;
 
         AgentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
                 AgentSimulationContext.class,
@@ -469,8 +468,8 @@ public class AgentSimulationContextTest {
     @Test
     public void testGetFilteredAgents_ThreadsSynced_AgentNotFoundException_CoordinatorTimeoutException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         Config config = syncedConfig(2, 10, 1);
-        MutableAgent thisAgent = emptyAgent("Greg");
-        Predicate<Agent> filter = a -> true;
+        Agent thisAgent = emptyAgent("Greg");
+        Predicate<ReadOnlyAgent> filter = a -> true;
 
         AgentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
                 AgentSimulationContext.class,
@@ -492,8 +491,8 @@ public class AgentSimulationContextTest {
     @Test
     public void testGetFilteredAgents_ThreadsSynced_AgentNotFoundException_CoordinatorErrorException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         Config config = syncedConfig(2, 10, 1);
-        MutableAgent thisAgent = emptyAgent("Greg");
-        Predicate<Agent> filter = a -> true;
+        Agent thisAgent = emptyAgent("Greg");
+        Predicate<ReadOnlyAgent> filter = a -> true;
 
         AgentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
                 AgentSimulationContext.class,
@@ -516,8 +515,8 @@ public class AgentSimulationContextTest {
     public void testGetFilteredAgents_ThreadsUnsynced() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         int populationSize = 20;
         Config config = unsyncedConfig(populationSize, 10, 1);
-        MutableAgentSet agentSet = agentSetOfSize(populationSize);
-        Predicate<Agent> filter = a -> true;
+        AgentSet agentSet = agentSetOfSize(populationSize);
+        Predicate<ReadOnlyAgent> filter = a -> true;
 
         AgentSimulationContext context = simulationContextWithAgentSet(
                 AgentSimulationContext.class,
@@ -532,14 +531,14 @@ public class AgentSimulationContextTest {
     @Test
     public void testAddAgent() throws ReflectiveOperationException {
         Config config = unsyncedConfig(1, 1, 1);
-        MutableAgentSet agentSet = agentSet(emptyAgent("agent_0"));
+        AgentSet agentSet = agentSet(emptyAgent("agent_0"));
 
         AgentSimulationContext context = simulationContextWithAgentSet(
                 AgentSimulationContext.class,
                 config,
                 agentSet
         );
-        MutableAgent newAgent = emptyAgent("agent_1");
+        Agent newAgent = emptyAgent("agent_1");
 
         context.addAgent(newAgent);
 
@@ -550,7 +549,7 @@ public class AgentSimulationContextTest {
     @Test
     public void testAddAgents_WithList() throws ReflectiveOperationException {
         Config config = unsyncedConfig(1, 1, 1);
-        MutableAgentSet agentSet = agentSet(emptyAgent("agent_0"));
+        AgentSet agentSet = agentSet(emptyAgent("agent_0"));
 
         AgentSimulationContext context = simulationContextWithAgentSet(
                 AgentSimulationContext.class,
@@ -567,7 +566,7 @@ public class AgentSimulationContextTest {
     @Test
     public void testAddAgents_WithAgentSet() throws ReflectiveOperationException {
         Config config = unsyncedConfig(1, 1, 1);
-        MutableAgentSet agentSet = agentSet(emptyAgent("agent_0"));
+        AgentSet agentSet = agentSet(emptyAgent("agent_0"));
 
         AgentSimulationContext context = simulationContextWithAgentSet(
                 AgentSimulationContext.class,
@@ -584,7 +583,7 @@ public class AgentSimulationContextTest {
     @Test
     public void testAddAgentDeepCopy() throws ReflectiveOperationException {
         Config config = unsyncedConfig(1, 1, 1);
-        MutableAgentSet agentSet = agentSet(emptyAgent("agent_0"));
+        AgentSet agentSet = agentSet(emptyAgent("agent_0"));
 
         AgentSimulationContext context = simulationContextWithAgentSet(
                 AgentSimulationContext.class,
@@ -592,11 +591,11 @@ public class AgentSimulationContextTest {
                 agentSet
         );
 
-        MutableAgent newAgent = new MutableAgent("agent_1", List.of(singlePropertyAgentSet("agent_1", "food", "hunger")));
+        Agent newAgent = new Agent("agent_1", List.of(singlePropertyAgentSet("agent_1", "food", "hunger")));
         context.addAgentDeepCopy(newAgent);
 
         assertTrue(context.doesAgentExistInThisCore("agent_1"));
-        MutableAgent stored = getMutableFromImmutable(context.getAgent("agent_1"));
+        Agent stored = getMutableFromImmutable(context.getAgent("agent_1"));
         assertNotSame(newAgent, stored);
         assertEquals("agent_1", stored.name());
     }
@@ -605,7 +604,7 @@ public class AgentSimulationContextTest {
     public void testAddAgentsDeepCopy_WithList() throws ReflectiveOperationException {
         AgentSimulationContext context = simulationContextWithAgentSet(
                 AgentSimulationContext.class, unsyncedConfig(1, 1, 1), agentSet(emptyAgent("agent_0")));
-        MutableAgent newAgent = emptyAgent("agent_1");
+        Agent newAgent = emptyAgent("agent_1");
 
         context.addAgentsDeepCopy(List.of(newAgent));
 
@@ -617,7 +616,7 @@ public class AgentSimulationContextTest {
     public void testAddAgentsDeepCopy_WithAgentSet() throws ReflectiveOperationException {
         AgentSimulationContext context = simulationContextWithAgentSet(
                 AgentSimulationContext.class, unsyncedConfig(1, 1, 1), agentSet(emptyAgent("agent_0")));
-        MutableAgent newAgent = emptyAgent("agent_1");
+        Agent newAgent = emptyAgent("agent_1");
 
         context.addAgentsDeepCopy(agentSet(newAgent));
 

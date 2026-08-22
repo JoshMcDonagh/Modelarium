@@ -1,17 +1,17 @@
 package unit.modelarium.results;
 
-import modelarium.entities.MutableEntity;
-import modelarium.entities.agents.mutable.MutableAgent;
-import modelarium.entities.agents.mutable.MutableAgentSet;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.Entity;
+import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
+import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.EnvironmentContext;
-import modelarium.entities.environments.MutableEnvironment;
+import modelarium.entities.environments.Environment;
 import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
 import modelarium.results.mutable.MutableResults;
 import modelarium.results.mutable.MutableResultsForAgents;
@@ -83,40 +83,40 @@ class ResultsTestHelpers {
         return new MutableEnvironmentAttributeSet(attributeSetName, properties);
     }
 
-    static MutableAgent agentWithMemoryLogs(String agentName, MutableAgentAttributeSet... attributeSets) {
-        MutableAgent agent = new MutableAgent(agentName, List.of(attributeSets));
+    static Agent agentWithMemoryLogs(String agentName, MutableAgentAttributeSet... attributeSets) {
+        Agent agent = new Agent(agentName, List.of(attributeSets));
         agent.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         return agent;
     }
 
-    static MutableEnvironment environmentWithMemoryLogs(String environmentName, MutableEnvironmentAttributeSet... attributeSets) {
-        MutableEnvironment environment = new MutableEnvironment(environmentName, List.of(attributeSets));
+    static Environment environmentWithMemoryLogs(String environmentName, MutableEnvironmentAttributeSet... attributeSets) {
+        Environment environment = new Environment(environmentName, List.of(attributeSets));
         environment.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         return environment;
     }
 
-    static MutableAgent agentWithLoggedProperty(String agentName, String attributeSetName, String propertyName) {
+    static Agent agentWithLoggedProperty(String agentName, String attributeSetName, String propertyName) {
         return agentWithMemoryLogs(agentName, agentAttributeSet(agentName, attributeSetName, propertyName));
     }
 
-    static MutableEnvironment environmentWithLoggedProperty(String environmentName, String attributeSetName, String propertyName) {
+    static Environment environmentWithLoggedProperty(String environmentName, String attributeSetName, String propertyName) {
         return environmentWithMemoryLogs(environmentName, environmentAttributeSet(environmentName, attributeSetName, propertyName));
     }
 
-    static MutableAgentSet agentSet(MutableAgent... agents) {
-        return new MutableAgentSet(List.of(agents));
+    static AgentSet agentSet(Agent... agents) {
+        return new AgentSet(List.of(agents));
     }
 
-    static void record(MutableEntity<?,?,?,?> entity, String attributeSetName, String attributeName, Object... values) {
+    static void record(Entity<?,?,?,?> entity, String attributeSetName, String attributeName, Object... values) {
         for (Object value : values)
             entity.getAttributeSet(attributeSetName).getLog().record(attributeName, value);
     }
 
-    static MutableResultsForAgents agentResults(MutableAgent... agents) {
+    static MutableResultsForAgents agentResults(Agent... agents) {
         return new MutableResultsForAgents(agentSet(agents));
     }
 
-    static MutableResultsForEnvironment environmentResults(MutableEnvironment environment) {
+    static MutableResultsForEnvironment environmentResults(Environment environment) {
         return new MutableResultsForEnvironment(environment);
     }
 

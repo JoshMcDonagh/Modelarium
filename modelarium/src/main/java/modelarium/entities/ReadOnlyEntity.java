@@ -1,37 +1,37 @@
 package modelarium.entities;
 
-import modelarium.entities.agents.immutable.ImmutableAgent;
+import modelarium.entities.agents.immutable.ReadOnlyAgent;
+import modelarium.entities.attributes.sets.immutable.ImmutableAttributeSet;
 import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.SimulationContext;
-import modelarium.entities.environments.ImmutableEnvironment;
-import modelarium.entities.attributes.sets.immutable.ImmutableAttributeSet;
+import modelarium.entities.environments.ReadOnlyEnvironment;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
 
 /**
- * Abstract class for providing a read-only view of an {@link MutableEntity}.
+ * Abstract class for providing a read-only view of an {@link Entity}.
  *
  * <p>This class wraps a mutable entity so that other model elements can inspect its name, attribute counts,
- * attributes and logs without being able to modify it. It is extended by {@link ImmutableAgent} and
- * {@link ImmutableEnvironment}.
+ * attributes and logs without being able to modify it. It is extended by {@link ReadOnlyAgent} and
+ * {@link ReadOnlyEnvironment}.
  *
  * @param <SC> the type of simulation context the wrapped entity uses
  * @param <C> the type of context interface the wrapped entity's attributes are given
  * @param <AS> the type of attribute set the wrapped entity owns
  * @param <ASL> the type of attribute set log the wrapped entity produces
  */
-public sealed abstract class ImmutableEntity<SC extends SimulationContext, C extends Context, AS extends MutableAttributeSet<SC,C>, ASL extends AttributeSetLog<SC>> implements Entity permits ImmutableAgent, ImmutableEnvironment {
+public sealed abstract class ReadOnlyEntity<SC extends SimulationContext, C extends Context, AS extends MutableAttributeSet<SC,C>, ASL extends AttributeSetLog<SC>> permits ReadOnlyAgent, ReadOnlyEnvironment {
 
     /** The mutable entity this read-only view wraps */
-    private final MutableEntity<SC,C,AS,ASL> entity;
+    private final Entity<SC,C,AS,ASL> entity;
 
     /**
      * Constructs a new immutable entity wrapping the specified mutable entity.
      *
      * @param entity the mutable entity to provide a read-only view of
      */
-    protected ImmutableEntity(MutableEntity<SC,C,AS,ASL> entity) {
+    protected ReadOnlyEntity(Entity<SC,C,AS,ASL> entity) {
         this.entity = entity;
     }
 
@@ -40,7 +40,7 @@ public sealed abstract class ImmutableEntity<SC extends SimulationContext, C ext
      *
      * @return the wrapped entity
      */
-    protected MutableEntity<SC,C,AS,ASL> getMutableEntity() {
+    protected Entity<SC,C,AS,ASL> getMutableEntity() {
         return entity;
     }
 
