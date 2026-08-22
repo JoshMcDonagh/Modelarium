@@ -3,6 +3,7 @@ package unit.modelarium.entities.contexts;
 import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.clock.MutableClock;
+import modelarium.entities.agents.generators.DefaultAgentGenerator;
 import modelarium.entities.agents.immutable.ReadOnlyAgent;
 import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
 import modelarium.entities.agents.mutable.Agent;
@@ -13,7 +14,9 @@ import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.ReadOnlyEnvironment;
+import modelarium.entities.environments.generators.EnvironmentGenerator;
 import modelarium.exceptions.*;
+import modelarium.multithreading.requestresponse.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.SplittableRandom;
 import java.util.function.Predicate;
+import java.util.random.RandomGenerator;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static unit.modelarium.entities.contexts.ContextTestHelpers.*;
@@ -622,5 +626,313 @@ public class AgentSimulationContextTest {
 
         assertTrue(context.doesAgentExistInThisCore("agent_1"));
         assertNotSame(newAgent, getMutableFromImmutable(context.getAgent("agent_1")));
+    }
+
+    private static Config config(boolean synced, int populationSize) {
+        return Config.builder()
+                .populationSize(populationSize)
+                .tickCount(5)
+                .threadCount(synced ? 2 : 1)
+                .areThreadsSynced(synced)
+                .agentGenerator(new DefaultAgentGenerator() {
+                    @Override
+                    protected Agent generateAgent(Config config, RandomGenerator random) {
+                        return emptyAgent("generated");
+                    }
+                })
+                .environmentGenerator(new EnvironmentGenerator() {
+                    @Override
+                    public Environment generateEnvironment(Config config, RandomGenerator random) {
+                        return new Environment("environment", List.of());
+                    }
+                })
+                .build();
+    }
+
+    private static AgentSimulationContext context(
+            Config config,
+            Agent self,
+            AgentSet localAgents,
+            RequestResponseController controller
+    ) {
+        return new AgentSimulationContext(
+                self,
+                localAgents,
+                config,
+                new ContextCache(),
+                new MutableClock(config.tickCount()),
+                controller,
+                new Environment("environment", List.of()),
+                new SplittableRandom()
+        );
+    }
+
+    @Test
+    public void testKillAgent_ThreadsUnsynced_KillsLocalAgent() {
+        Agent self = emptyAgent("self");
+        Agent target = emptyAgent("target");
+        AgentSet localAgents = agentSet(self, target);
+        Config config = config(false, 2);
+        AgentSimulationContext context = context(config, self, localAgents, new RequestResponseController(config));
+
+        context.killAgent("target");
+
+        assertTrue(target.isDead());
+    }
+
+    @Test
+    public void testKillAgent_ReadOnlyAgent_UsesWrappedAgentsName() {
+        Agent self = emptyAgent("self");
+        Agent target = emptyAgent("target");
+        AgentSet localAgents = agentSet(self, target);
+        Config config = config(false, 2);
+        AgentSimulationContext context = context(config, self, localAgents, new RequestResponseController(config));
+
+        context.killAgent(target.getAsImmutable());
+
+        assertTrue(target.isDead());
+    }
+
+    @Test
+    public void testKillAgent_ThreadsUnsynced_MissingAgent_AgentNotFoundException() {
+        Agent self = emptyAgent("self");
+        AgentSet localAgents = agentSet(self);
+        Config config = config(false, 1);
+        AgentSimulationContext context = context(config, self, localAgents, new RequestResponseController(config));
+
+        assertThrows(AgentNotFoundException.class, () -> context.killAgent("missing"));
+        assertFalse(self.isDead());
+    }
+
+    @Test
+    public void testKillAgents_ThreadsUnsynced_KillsAllNamedAgents() {
+        Agent self = emptyAgent("self");
+        Agent first = emptyAgent("first");
+        Agent second = emptyAgent("second");
+        AgentSet localAgents = agentSet(self, first, second);
+        Config config = config(false, 3);
+        AgentSimulationContext context = context(config, self, localAgents, new RequestResponseController(config));
+
+        context.killAgents(List.of("first", "second"));
+
+        assertTrue(first.isDead());
+        assertTrue(second.isDead());
+        assertFalse(self.isDead());
+    }
+
+    @Test
+    public void testKillAgents_ThreadsUnsynced_ValidatesWholeListBeforeKillingAnything() {
+        Agent self = emptyAgent("self");
+        Agent first = emptyAgent("first");
+        AgentSet localAgents = agentSet(self, first);
+        Config config = config(false, 2);
+        AgentSimulationContext context = context(config, self, localAgents, new RequestResponseController(config));
+
+        assertThrows(
+                AgentNotFoundException.class,
+                () -> context.killAgents(List.of("first", "missing"))
+        );
+
+        assertFalse(first.isDead());
+    }
+
+    @Test
+    public void testKillAgents_ReadOnlyAgentSet_KillsAllAgentsInSet() {
+        Agent self = emptyAgent("self");
+        Agent first = emptyAgent("first");
+        Agent second = emptyAgent("second");
+        AgentSet localAgents = agentSet(self, first, second);
+        ReadOnlyAgentSet targets = new AgentSet(List.of(first, second)).getAsImmutable();
+        Config config = config(false, 3);
+        AgentSimulationContext context = context(config, self, localAgents, new RequestResponseController(config));
+
+        context.killAgents(targets);
+
+        assertTrue(first.isDead());
+        assertTrue(second.isDead());
+    }
+
+    @Test
+    public void testKillAgent_ThreadsSynced_QueuesCoordinatorRequest() throws InterruptedException {
+        Agent self = emptyAgent("self");
+        AgentSet localAgents = agentSet(self);
+        Config config = config(true, 2);
+        RequestResponseController controller = new RequestResponseController(config);
+        AgentSimulationContext context = context(config, self, localAgents, controller);
+
+        context.killAgent("remote");
+
+        Request request = controller.getRequestQueue().take();
+        assertEquals("self", request.getRequester());
+        assertEquals(RequestType.KILL_AGENT, request.getRequestType());
+        assertEquals("remote", request.getPayload());
+    }
+
+    @Test
+    public void testKillAgents_ThreadsSynced_QueuesCoordinatorRequest() throws InterruptedException {
+        Agent self = emptyAgent("self");
+        AgentSet localAgents = agentSet(self);
+        Config config = config(true, 3);
+        RequestResponseController controller = new RequestResponseController(config);
+        AgentSimulationContext context = context(config, self, localAgents, controller);
+        List<String> names = List.of("remote_0", "remote_1");
+
+        context.killAgents(names);
+
+        Request request = controller.getRequestQueue().take();
+        assertEquals(RequestType.KILL_AGENTS, request.getRequestType());
+        assertSame(names, request.getPayload());
+    }
+
+    private static void throwFailure(Throwable failure) throws InterruptedException {
+        if (failure == null)
+            return;
+        if (failure instanceof InterruptedException interruptedException)
+            throw interruptedException;
+        if (failure instanceof RuntimeException runtimeException)
+            throw runtimeException;
+        throw new RuntimeException(failure);
+    }
+
+    private static RequestResponseController failingController(
+            Config config,
+            Throwable killOneFailure,
+            Throwable killManyFailure
+    ) {
+        return new RequestResponseController(config) {
+            @Override
+            public RequestResponseInterface getInterface(String name) {
+                return new RequestResponseInterface(name, config, this) {
+                    @Override
+                    public void killCoordinatorAgent(String agentName) throws InterruptedException {
+                        throwFailure(killOneFailure);
+                    }
+
+                    @Override
+                    public void killCoordinatorAgents(List<String> agentNames) throws InterruptedException {
+                        throwFailure(killManyFailure);
+                    }
+                };
+            }
+        };
+    }
+
+    @Test
+    public void testKillAgent_ThreadsSynced_Interrupted_ThrowsSimulationInterruptedExceptionAndRestoresInterrupt() {
+        Agent self = emptyAgent("self");
+        AgentSet localAgents = agentSet(self);
+        Config config = config(true, 2);
+        RequestResponseController controller = failingController(config, new InterruptedException("interrupted"), null);
+        AgentSimulationContext context = context(config, self, localAgents, controller);
+
+        try {
+            SimulationInterruptedException exception = assertThrows(
+                    SimulationInterruptedException.class,
+                    () -> context.killAgent("remote")
+            );
+
+            assertInstanceOf(InterruptedException.class, exception.getCause());
+            assertTrue(Thread.currentThread().isInterrupted());
+        } finally {
+            Thread.interrupted();
+        }
+    }
+
+    @Test
+    public void testKillAgent_ThreadsSynced_CoordinatorTimeout_WrappedAsAgentNotFoundException() {
+        Agent self = emptyAgent("self");
+        AgentSet localAgents = agentSet(self);
+        Config config = config(true, 2);
+        CoordinatorTimeoutException cause = new CoordinatorTimeoutException("timeout");
+        RequestResponseController controller = failingController(config, cause, null);
+        AgentSimulationContext context = context(config, self, localAgents, controller);
+
+        AgentNotFoundException exception = assertThrows(
+                AgentNotFoundException.class,
+                () -> context.killAgent("remote")
+        );
+
+        assertSame(cause, exception.getCause());
+    }
+
+    @Test
+    public void testKillAgent_ThreadsSynced_CoordinatorError_WrappedAsAgentNotFoundException() {
+        Agent self = emptyAgent("self");
+        AgentSet localAgents = agentSet(self);
+        Config config = config(true, 2);
+        CoordinatorErrorException cause = new CoordinatorErrorException("error", new IllegalStateException());
+        RequestResponseController controller = failingController(config, cause, null);
+        AgentSimulationContext context = context(config, self, localAgents, controller);
+
+        AgentNotFoundException exception = assertThrows(
+                AgentNotFoundException.class,
+                () -> context.killAgent("remote")
+        );
+
+        assertSame(cause, exception.getCause());
+    }
+
+    @Test
+    public void testKillAgents_ThreadsSynced_Interrupted_ThrowsSimulationInterruptedExceptionAndRestoresInterrupt() {
+        Agent self = emptyAgent("self");
+        AgentSet localAgents = agentSet(self);
+        Config config = config(true, 2);
+        RequestResponseController controller = failingController(config, null, new InterruptedException("interrupted"));
+        AgentSimulationContext context = context(config, self, localAgents, controller);
+
+        try {
+            SimulationInterruptedException exception = assertThrows(
+                    SimulationInterruptedException.class,
+                    () -> context.killAgents(List.of("remote"))
+            );
+
+            assertInstanceOf(InterruptedException.class, exception.getCause());
+            assertTrue(Thread.currentThread().isInterrupted());
+        } finally {
+            Thread.interrupted();
+        }
+    }
+
+    @Test
+    public void testKillAgents_ThreadsSynced_CoordinatorError_WrappedAsAgentNotFoundException() {
+        Agent self = emptyAgent("self");
+        AgentSet localAgents = agentSet(self);
+        Config config = config(true, 2);
+        CoordinatorErrorException cause = new CoordinatorErrorException("error", new IllegalStateException());
+        RequestResponseController controller = failingController(config, null, cause);
+        AgentSimulationContext context = context(config, self, localAgents, controller);
+
+        AgentNotFoundException exception = assertThrows(
+                AgentNotFoundException.class,
+                () -> context.killAgents(List.of("remote"))
+        );
+
+        assertSame(cause, exception.getCause());
+    }
+
+    @Test
+    public void testGetAgent_ThreadsSynced_RemoteDeadAgent_AgentIsDeadException() throws InterruptedException {
+        Agent self = emptyAgent("self");
+        AgentSet localAgents = agentSet(self);
+        Config config = config(true, 2);
+        RequestResponseController controller = new RequestResponseController(config);
+        AgentSimulationContext context = context(config, self, localAgents, controller);
+        Agent remote = emptyAgent("remote");
+        remote.kill();
+
+        controller.getResponseQueue("self").put(new Response(
+                "coordinator",
+                "self",
+                ResponseType.AGENT_ACCESS,
+                remote.getAsImmutable()
+        ));
+
+        AgentIsDeadException exception = assertThrows(
+                AgentIsDeadException.class,
+                () -> context.getAgent("remote")
+        );
+
+        assertTrue(exception.getMessage().contains("Agent 'remote'"));
+        assertEquals(RequestType.AGENT_ACCESS, controller.getRequestQueue().take().getRequestType());
     }
 }

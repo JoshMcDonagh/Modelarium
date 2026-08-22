@@ -12,7 +12,7 @@ import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.FunctionalEnvironmentGenerator;
-import modelarium.results.immutable.ImmutableResults;
+import modelarium.results.immutable.ReadOnlyResults;
 import modelarium.scheduler.RandomOrderScheduler;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -95,7 +95,7 @@ public class DeterminismTest {
         Model model = new Model(config);
         model.run();
 
-        ImmutableResults results = model.getResults();
+        ReadOnlyResults results = model.getResults();
         Map<String, List<Long>> logs = new TreeMap<>();
 
         for (int i = 0; i < POPULATION; i++) {

@@ -1,7 +1,7 @@
 package unit.modelarium.results;
 
 import modelarium.entities.environments.Environment;
-import modelarium.results.immutable.ImmutableResultsForEnvironment;
+import modelarium.results.immutable.ReadOnlyResultsForEnvironment;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -11,8 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static unit.modelarium.results.ResultsTestHelpers.*;
 
-public class ImmutableResultsForEnvironmentTest {
-    private ImmutableResultsForEnvironment populatedImmutableResults() {
+public class ReadOnlyResultsForEnvironmentTest {
+    private ReadOnlyResultsForEnvironment populatedImmutableResults() {
         Environment environment = environmentWithMemoryLogs(
                 "Environment_0",
                 environmentAttributeSet("Environment_0", "AttributeSet_0", "Property_0", "Property_1")
@@ -20,26 +20,26 @@ public class ImmutableResultsForEnvironmentTest {
         record(environment, "AttributeSet_0", "Property_0", 1, 2);
         record(environment, "AttributeSet_0", "Property_1", 3);
 
-        return new ImmutableResultsForEnvironment(environmentResults(environment));
+        return new ReadOnlyResultsForEnvironment(environmentResults(environment));
     }
 
     @Test
     public void testAttributeSetLogCount() {
-        ImmutableResultsForEnvironment immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForEnvironment immutableResults = populatedImmutableResults();
 
         assertEquals(1, immutableResults.attributeSetLogCount());
     }
 
     @Test
     public void testAttributeLogCount() {
-        ImmutableResultsForEnvironment immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForEnvironment immutableResults = populatedImmutableResults();
 
         assertEquals(2, immutableResults.attributeLogCount("AttributeSet_0"));
     }
 
     @Test
     public void testAttributeLogs() {
-        ImmutableResultsForEnvironment immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForEnvironment immutableResults = populatedImmutableResults();
 
         List<Object> values = immutableResults.attributeLogs("AttributeSet_0", "Property_0");
 
@@ -48,7 +48,7 @@ public class ImmutableResultsForEnvironmentTest {
 
     @Test
     public void testAttributeLogs_Unmodifiable() {
-        ImmutableResultsForEnvironment immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForEnvironment immutableResults = populatedImmutableResults();
 
         List<Object> values = immutableResults.attributeLogs("AttributeSet_0", "Property_0");
 
@@ -57,7 +57,7 @@ public class ImmutableResultsForEnvironmentTest {
 
     @Test
     public void testAttributeLogs_Typed() {
-        ImmutableResultsForEnvironment immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForEnvironment immutableResults = populatedImmutableResults();
 
         List<Integer> values = immutableResults.attributeLogs("AttributeSet_0", "Property_0", Integer.class);
 
@@ -66,7 +66,7 @@ public class ImmutableResultsForEnvironmentTest {
 
     @Test
     public void testAttributeLogs_Typed_Unmodifiable() {
-        ImmutableResultsForEnvironment immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForEnvironment immutableResults = populatedImmutableResults();
 
         List<Integer> values = immutableResults.attributeLogs("AttributeSet_0", "Property_0", Integer.class);
 
@@ -75,7 +75,7 @@ public class ImmutableResultsForEnvironmentTest {
 
     @Test
     public void testAttributeSetLogs() {
-        ImmutableResultsForEnvironment immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForEnvironment immutableResults = populatedImmutableResults();
 
         Map<String, List<Object>> attributeSetLogs = immutableResults.attributeSetLogs("AttributeSet_0");
 
@@ -86,7 +86,7 @@ public class ImmutableResultsForEnvironmentTest {
 
     @Test
     public void testAttributeSetLogs_UnmodifiableAtEveryLevel() {
-        ImmutableResultsForEnvironment immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForEnvironment immutableResults = populatedImmutableResults();
 
         Map<String, List<Object>> attributeSetLogs = immutableResults.attributeSetLogs("AttributeSet_0");
 
@@ -96,7 +96,7 @@ public class ImmutableResultsForEnvironmentTest {
 
     @Test
     public void testEnvironmentLogs() {
-        ImmutableResultsForEnvironment immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForEnvironment immutableResults = populatedImmutableResults();
 
         Map<String, Map<String, List<Object>>> environmentLogs = immutableResults.environmentLogs();
 
@@ -106,7 +106,7 @@ public class ImmutableResultsForEnvironmentTest {
 
     @Test
     public void testEnvironmentLogs_UnmodifiableAtEveryLevel() {
-        ImmutableResultsForEnvironment immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForEnvironment immutableResults = populatedImmutableResults();
 
         Map<String, Map<String, List<Object>>> environmentLogs = immutableResults.environmentLogs();
 

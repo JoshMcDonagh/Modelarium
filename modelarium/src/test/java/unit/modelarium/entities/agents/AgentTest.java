@@ -1,7 +1,11 @@
 package unit.modelarium.entities.agents;
 
 import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeAccessLevel;
+import modelarium.entities.attributes.routines.AgentRoutine;
 import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +14,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static unit.modelarium.entities.agents.AgentTestHelpers.*;
 
-public class MutableAgentTest {
+public class AgentTest {
     @Test
     public void testName() {
         Agent agent = emptyAgent("Alice");
@@ -123,5 +127,79 @@ public class MutableAgentTest {
         agent.run();
 
         assertEquals(List.of(1.0), agent.getAttributeSet(0).getLog().getValues("hunger"));
+    }
+
+    @Test
+    public void testIsDead_InitiallyFalse() {
+        Agent agent = emptyAgent("A");
+
+        assertFalse(agent.isDead());
+    }
+
+    @Test
+    public void testKill_MarksAgentDead() {
+        Agent agent = emptyAgent("A");
+
+        agent.kill();
+
+        assertTrue(agent.isDead());
+    }
+
+    @Test
+    public void testKill_CalledTwice_RemainsDead() {
+        Agent agent = emptyAgent("A");
+
+        agent.kill();
+        agent.kill();
+
+        assertTrue(agent.isDead());
+    }
+
+    @Test
+    public void testRun_AfterKill_DoesNotRunOrAddAnotherLogEntry() {
+        AgentCounterProperty property = new AgentCounterProperty("counter");
+        MutableAgentAttributeSet attributeSet = agentAttributeSet("A", "state", property);
+        Agent agent = new Agent("A", List.of(attributeSet));
+        agent.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+        createContextFor(agent);
+
+        agent.run();
+        agent.kill();
+        agent.run();
+
+        assertEquals(1.0, property.get());
+        assertEquals(List.of(1.0), attributeSet.getLog().getValues("counter"));
+    }
+
+    private static class ContextCapturingRoutine extends AgentRoutine {
+        private MutableAgentAttributeSet observedAttributeSet;
+        private Object observedAttribute;
+
+        private ContextCapturingRoutine(String name) {
+            super(name, AttributeAccessLevel.PUBLIC);
+        }
+
+        @Override
+        protected void run(AgentContext context) {
+            observedAttributeSet = context.getThisAttributeSet();
+            observedAttribute = context.getThisAttribute();
+        }
+    }
+
+    @Test
+    public void testRun_AttributeSeesCorrectCurrentAttributeAndAttributeSet() {
+        ContextCapturingRoutine routine = new ContextCapturingRoutine("capture");
+        MutableAgentAttributeSet attributeSet = new MutableAgentAttributeSet(
+                "behaviour",
+                List.<Attribute>of(routine)
+        );
+        Agent agent = new Agent("A", List.of(attributeSet));
+        agent.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+        createContextFor(agent);
+
+        agent.run();
+
+        assertSame(attributeSet, routine.observedAttributeSet);
+        assertSame(routine, routine.observedAttribute);
     }
 }

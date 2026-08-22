@@ -18,15 +18,15 @@ import java.util.*;
  *
  * <p>This class gathers each entity's {@link EntityLog} and provides the shared machinery for counting logs,
  * retrieving them at various levels of granularity, merging results across workers and disconnecting the underlying
- * databases. It is extended by {@link MutableResultsForAgents} and {@link MutableResultsForEnvironment}.
+ * databases. It is extended by {@link ResultsForAgents} and {@link ResultsForEnvironment}.
  *
  * @param <SC> the type of simulation context the entities use
  * @param <C> the type of context interface the entities' attributes are given
  * @param <AS> the type of attribute set the entities own
  * @param <ASL> the type of attribute set log the entities produce
  */
-public sealed abstract class MutableResultsForEntities<SC extends SimulationContext, C extends Context, AS extends MutableAttributeSet<SC,C>, ASL extends AttributeSetLog<SC>>
-        permits MutableResultsForAgents, MutableResultsForEnvironment {
+public sealed abstract class ResultsForEntities<SC extends SimulationContext, C extends Context, AS extends MutableAttributeSet<SC,C>, ASL extends AttributeSetLog<SC>>
+        permits ResultsForAgents, ResultsForEnvironment {
 
     /** The logs of the entities these results cover */
     private final List<EntityLog<SC,C,AS,ASL>> entityLogList = new ArrayList<>();
@@ -39,7 +39,7 @@ public sealed abstract class MutableResultsForEntities<SC extends SimulationCont
      *
      * @param entities the entities whose logs the results will collect
      */
-    MutableResultsForEntities(List<? extends Entity<SC,C,AS,ASL>> entities) {
+    ResultsForEntities(List<? extends Entity<SC,C,AS,ASL>> entities) {
         for (int i = 0; i < entities.size(); i++) {
             Entity<SC,C,AS,ASL> entity = entities.get(i);
             entityLogList.add(entity.getLog());
@@ -52,7 +52,7 @@ public sealed abstract class MutableResultsForEntities<SC extends SimulationCont
      *
      * @param entity the entity whose log the results will collect
      */
-    MutableResultsForEntities(Entity<SC,C,AS,ASL> entity) {
+    ResultsForEntities(Entity<SC,C,AS,ASL> entity) {
         entityLogList.add(entity.getLog());
         entityLogIndexMap.put(entity.name(), 0);
     }
@@ -71,7 +71,7 @@ public sealed abstract class MutableResultsForEntities<SC extends SimulationCont
      *
      * @param other the results container whose logs to merge into this one
      */
-    public void mergeWith(MutableResultsForEntities<SC,C,AS,ASL> other) {
+    public void mergeWith(ResultsForEntities<SC,C,AS,ASL> other) {
         int originalLogListSize = entityLogList.size();
         entityLogList.addAll(other.entityLogList);
         for (Map.Entry<String, Integer> otherIndexMapEntry : other.entityLogIndexMap.entrySet()) {

@@ -1,7 +1,6 @@
 package modelarium.results.immutable;
 
-import modelarium.results.ResultsForAgents;
-import modelarium.results.mutable.MutableResultsForAgents;
+import modelarium.results.mutable.ResultsForAgents;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,20 +10,20 @@ import java.util.Map;
 /**
  * Class for providing a read-only view of the model's agent-level results.
  *
- * <p>This class wraps a {@link MutableResultsForAgents} instance so that agent logs can be queried without being
+ * <p>This class wraps a {@link ResultsForAgents} instance so that agent logs can be queried without being
  * modifiable, with every returned list and map wrapped as unmodifiable.
  */
-public final class ImmutableResultsForAgents implements ResultsForAgents {
+public final class ReadOnlyResultsForAgents {
 
     /** The mutable agent results this read-only view wraps */
-    private final MutableResultsForAgents results;
+    private final ResultsForAgents results;
 
     /**
      * Constructs a new immutable agent results view wrapping the specified mutable results.
      *
      * @param results the mutable agent results to provide a read-only view of
      */
-    public ImmutableResultsForAgents(MutableResultsForAgents results) {
+    public ReadOnlyResultsForAgents(ResultsForAgents results) {
         this.results = results;
     }
 
@@ -33,7 +32,6 @@ public final class ImmutableResultsForAgents implements ResultsForAgents {
      *
      * @return the agent log count
      */
-    @Override
     public int agentLogCount() {
         return results.agentLogCount();
     }
@@ -44,7 +42,6 @@ public final class ImmutableResultsForAgents implements ResultsForAgents {
      * @param agentName the name of the agent whose logs to count
      * @return the agent's attribute set log count
      */
-    @Override
     public int attributeSetLogCount(String agentName) {
         return results.attributeSetLogCount(agentName);
     }
@@ -56,7 +53,6 @@ public final class ImmutableResultsForAgents implements ResultsForAgents {
      * @param attributeSetName the name of the attribute set whose logs to count
      * @return the attribute set's attribute log count
      */
-    @Override
     public int attributeLogCount(String agentName, String attributeSetName) {
         return results.attributeLogCount(agentName, attributeSetName);
     }
@@ -69,7 +65,6 @@ public final class ImmutableResultsForAgents implements ResultsForAgents {
      * @param attributeName the name of the attribute whose values to retrieve
      * @return an unmodifiable list of the attribute's logged values, one per tick
      */
-    @Override
     public List<Object> attributeLogs(String agentName, String attributeSetName, String attributeName) {
         return Collections.unmodifiableList(results.attributeLogs(agentName, attributeSetName, attributeName));
     }
@@ -84,7 +79,6 @@ public final class ImmutableResultsForAgents implements ResultsForAgents {
      * @param <T> the type the logged values are returned as
      * @return an unmodifiable list of the attribute's logged values, one per tick
      */
-    @Override
     public <T> List<T> attributeLogs(String agentName, String attributeSetName, String attributeName, Class<T> type) {
         return Collections.unmodifiableList(results.attributeLogs(agentName, attributeSetName, attributeName, type));
     }
@@ -96,7 +90,6 @@ public final class ImmutableResultsForAgents implements ResultsForAgents {
      * @param attributeSetName the name of the attribute set whose logs to retrieve
      * @return an unmodifiable map from attribute name to that attribute's logged values
      */
-    @Override
     public Map<String, List<Object>> attributeSetLogs(String agentName, String attributeSetName) {
         return unmodifiableMapOfLists(results.attributeSetLogs(agentName, attributeSetName));
     }
@@ -108,7 +101,6 @@ public final class ImmutableResultsForAgents implements ResultsForAgents {
      * @return an unmodifiable map from attribute set name to a map from attribute name to that attribute's logged
      *         values
      */
-    @Override
     public Map<String, Map<String, List<Object>>> agentLogs(String agentName) {
         return unmodifiableNestedMapOfLists(results.agentLogs(agentName));
     }
@@ -119,7 +111,6 @@ public final class ImmutableResultsForAgents implements ResultsForAgents {
      * @return an unmodifiable map from agent name to a map from attribute set name to a map from attribute name to
      *         that attribute's logged values
      */
-    @Override
     public Map<String, Map<String, Map<String, List<Object>>>> allLogs() {
         Map<String, Map<String, Map<String, List<Object>>>> original = results.allLogs();
         Map<String, Map<String, Map<String, List<Object>>>> wrapped = new HashMap<>();

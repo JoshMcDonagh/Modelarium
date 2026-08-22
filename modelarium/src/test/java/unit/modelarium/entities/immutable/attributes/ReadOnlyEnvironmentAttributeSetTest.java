@@ -19,9 +19,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static unit.modelarium.entities.immutable.attributes.ImmutableAttributeSetTestHelpers.*;
+import static unit.modelarium.entities.immutable.attributes.ReadOnlyAttributeSetTestHelpers.*;
 
-public class ImmutableEnvironmentAttributeSetTest {
+public class ReadOnlyEnvironmentAttributeSetTest {
     @Test
     public void testGetClonedAttribute() throws Throwable {
         int index = 7;

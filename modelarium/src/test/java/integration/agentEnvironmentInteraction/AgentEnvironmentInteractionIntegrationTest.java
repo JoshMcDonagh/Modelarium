@@ -17,7 +17,7 @@ import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.ReadOnlyEnvironment;
 import modelarium.entities.environments.generators.EnvironmentGenerator;
-import modelarium.results.immutable.ImmutableResults;
+import modelarium.results.immutable.ReadOnlyResults;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -151,7 +151,7 @@ public class AgentEnvironmentInteractionIntegrationTest {
         Model model = new Model(config);
         model.run();
 
-        ImmutableResults results = model.getResults();
+        ReadOnlyResults results = model.getResults();
 
         // Each agent should have `ticks` observations
         List<Double> observed = results.agents().attributeLogs(

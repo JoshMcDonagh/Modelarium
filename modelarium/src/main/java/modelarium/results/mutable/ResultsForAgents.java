@@ -6,8 +6,7 @@ import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
-import modelarium.results.ResultsForAgents;
-import modelarium.results.immutable.ImmutableResultsForAgents;
+import modelarium.results.immutable.ReadOnlyResultsForAgents;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,20 +18,20 @@ import java.util.Map;
 /**
  * A concrete results container for a set of agents.
  *
- * <p>Wraps an {@link AgentSet} into a {@link MutableResultsForEntities} structure,
+ * <p>Wraps an {@link AgentSet} into a {@link ResultsForEntities} structure,
  * enabling easy access to recorded properties and events for all agents over time.
  */
-public final class MutableResultsForAgents extends MutableResultsForEntities<AgentSimulationContext, AgentContext, MutableAgentAttributeSet, AttributeSetLog<AgentSimulationContext>> implements ResultsForAgents {
+public final class ResultsForAgents extends ResultsForEntities<AgentSimulationContext, AgentContext, MutableAgentAttributeSet, AttributeSetLog<AgentSimulationContext>> {
 
     /** The immutable version of this mutable agent-level results */
-    private ImmutableResultsForAgents immutableResultsForAgents = null;
+    private ReadOnlyResultsForAgents immutableResultsForAgents = null;
 
     /**
      * Constructs agent results from a given agent set.
      *
      * @param agentSet the set of agents whose results will be stored and accessed
      */
-    public MutableResultsForAgents(AgentSet agentSet) {
+    public ResultsForAgents(AgentSet agentSet) {
         super(agentSet.getAsList());
     }
 
@@ -41,7 +40,6 @@ public final class MutableResultsForAgents extends MutableResultsForEntities<Age
      *
      * @return the agent log count
      */
-    @Override
     public int agentLogCount() {
         return entityLogCount();
     }
@@ -52,7 +50,6 @@ public final class MutableResultsForAgents extends MutableResultsForEntities<Age
      * @param agentName the name of the agent whose logs to count
      * @return the agent's attribute set log count
      */
-    @Override
     public int attributeSetLogCount(String agentName) {
         return entityAttributeSetLogCount(agentName);
     }
@@ -64,7 +61,6 @@ public final class MutableResultsForAgents extends MutableResultsForEntities<Age
      * @param attributeSetName the name of the attribute set whose logs to count
      * @return the attribute set's attribute log count
      */
-    @Override
     public int attributeLogCount(String agentName, String attributeSetName) {
         return entityAttributeSetAttributeLogCount(agentName, attributeSetName);
     }
@@ -77,7 +73,6 @@ public final class MutableResultsForAgents extends MutableResultsForEntities<Age
      * @param attributeName the name of the attribute whose values to retrieve
      * @return the attribute's logged values, one per tick
      */
-    @Override
     public List<Object> attributeLogs(String agentName, String attributeSetName, String attributeName) {
         return getLogsForEntityAttribute(agentName, attributeSetName, attributeName);
     }
@@ -92,7 +87,6 @@ public final class MutableResultsForAgents extends MutableResultsForEntities<Age
      * @param <T> the type the logged values are returned as
      * @return the attribute's logged values, one per tick
      */
-    @Override
     public <T> List<T> attributeLogs(String agentName, String attributeSetName, String attributeName, Class<T> type) {
         List<Object> raw = getLogsForEntityAttribute(agentName, attributeSetName, attributeName);
         List<T> typed = new ArrayList<>(raw.size());
@@ -108,7 +102,6 @@ public final class MutableResultsForAgents extends MutableResultsForEntities<Age
      * @param attributeSetName the name of the attribute set whose logs to retrieve
      * @return a map from attribute name to that attribute's logged values
      */
-    @Override
     public Map<String, List<Object>> attributeSetLogs(String agentName, String attributeSetName) {
         return getLogsForEntityAttributeSetAsMap(agentName, attributeSetName);
     }
@@ -119,7 +112,6 @@ public final class MutableResultsForAgents extends MutableResultsForEntities<Age
      * @param agentName the name of the agent whose logs to retrieve
      * @return a map from attribute set name to a map from attribute name to that attribute's logged values
      */
-    @Override
     public Map<String, Map<String, List<Object>>> agentLogs(String agentName) {
         return getLogsForEntityAsMap(agentName);
     }
@@ -180,11 +172,11 @@ public final class MutableResultsForAgents extends MutableResultsForEntities<Age
     /**
      * Returns a read-only view of these agent results.
      *
-     * @return a new {@link ImmutableResultsForAgents} instance wrapping these results
+     * @return a new {@link ReadOnlyResultsForAgents} instance wrapping these results
      */
-    public ImmutableResultsForAgents getAsImmutable() {
+    public ReadOnlyResultsForAgents getAsImmutable() {
         if (immutableResultsForAgents == null)
-            immutableResultsForAgents = new ImmutableResultsForAgents(this);
+            immutableResultsForAgents = new ReadOnlyResultsForAgents(this);
 
         return immutableResultsForAgents;
     }

@@ -10,8 +10,8 @@ import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.ReadOnlyEnvironment;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
-import modelarium.results.mutable.MutableResults;
-import modelarium.results.mutable.MutableResultsForAgents;
+import modelarium.results.mutable.Results;
+import modelarium.results.mutable.ResultsForAgents;
 import modelarium.utils.Cloners;
 
 import java.util.Objects;
@@ -26,7 +26,7 @@ import java.util.random.RandomGenerator;
  * {@link ContextCache} for caching, and optionally communicates with a coordinator via
  * {@link RequestResponseInterface} if synchronisation is enabled.
  */
-public class WorkerThread implements Callable<MutableResults> {
+public class WorkerThread implements Callable<Results> {
 
     /** The name or ID assigned to this worker thread (usually based on core index) */
     private final String threadName;
@@ -87,10 +87,10 @@ public class WorkerThread implements Callable<MutableResults> {
      * <p>This includes calling the scheduler each tick, synchronising with the coordinator
      * if needed, and collecting agent results after the simulation ends.
      *
-     * @return a {@link MutableResults} object containing final agent-level outputs
+     * @return a {@link Results} object containing final agent-level outputs
      */
     @Override
-    public MutableResults call() throws InterruptedException {
+    public Results call() throws InterruptedException {
         MutableClock clock = Objects.requireNonNullElseGet(sharedClock, () -> new MutableClock(config.tickCount()));
         ContextCache cache = new ContextCache();
 
@@ -143,8 +143,8 @@ public class WorkerThread implements Callable<MutableResults> {
         }
 
         // Final setup and result collection
-        MutableResultsForAgents agentsResults = new MutableResultsForAgents(agentsInThread);
-        MutableResults results = new MutableResults();
+        ResultsForAgents agentsResults = new ResultsForAgents(agentsInThread);
+        Results results = new Results();
         results.setAgentNames(agentsInThread);
         results.setAgentResults(agentsResults);
 

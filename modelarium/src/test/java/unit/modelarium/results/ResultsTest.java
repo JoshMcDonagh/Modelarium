@@ -2,10 +2,10 @@ package unit.modelarium.results;
 
 import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.environments.Environment;
-import modelarium.results.immutable.ImmutableResults;
-import modelarium.results.mutable.MutableResults;
-import modelarium.results.mutable.MutableResultsForAgents;
-import modelarium.results.mutable.MutableResultsForEnvironment;
+import modelarium.results.immutable.ReadOnlyResults;
+import modelarium.results.mutable.Results;
+import modelarium.results.mutable.ResultsForAgents;
+import modelarium.results.mutable.ResultsForEnvironment;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -13,10 +13,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static unit.modelarium.results.ResultsTestHelpers.*;
 
-public class MutableResultsTest {
+public class ResultsTest {
     @Test
     public void testSetAgentNames_WithAgentSet() {
-        MutableResults results = new MutableResults();
+        Results results = new Results();
 
         results.setAgentNames(agentSet(
                 agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0"),
@@ -28,7 +28,7 @@ public class MutableResultsTest {
 
     @Test
     public void testSetAgentNames_WithAgentSetList() {
-        MutableResults results = new MutableResults();
+        Results results = new Results();
 
         results.setAgentNames(List.of(
                 agentSet(agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0")),
@@ -40,7 +40,7 @@ public class MutableResultsTest {
 
     @Test
     public void testGetAgentNames_ReturnsDefensiveCopy() {
-        MutableResults results = new MutableResults();
+        Results results = new Results();
         results.setAgentNames(agentSet(agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0")));
 
         results.getAgentNames().clear();
@@ -50,8 +50,8 @@ public class MutableResultsTest {
 
     @Test
     public void testSetAgentResults() {
-        MutableResults results = new MutableResults();
-        MutableResultsForAgents agentsResults = agentResults(
+        Results results = new Results();
+        ResultsForAgents agentsResults = agentResults(
                 agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0")
         );
 
@@ -62,8 +62,8 @@ public class MutableResultsTest {
 
     @Test
     public void testSetEnvironmentResults() {
-        MutableResults results = new MutableResults();
-        MutableResultsForEnvironment environmentResults = environmentResults(
+        Results results = new Results();
+        ResultsForEnvironment environmentResults = environmentResults(
                 environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0")
         );
 
@@ -74,14 +74,14 @@ public class MutableResultsTest {
 
     @Test
     public void testAgents_NullBeforeSet() {
-        MutableResults results = new MutableResults();
+        Results results = new Results();
 
         assertNull(results.agents());
     }
 
     @Test
     public void testEnvironment_NullBeforeSet() {
-        MutableResults results = new MutableResults();
+        Results results = new Results();
 
         assertNull(results.environment());
     }
@@ -93,7 +93,7 @@ public class MutableResultsTest {
         Environment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
         record(environment, "AttributeSet_0", "Property_0", 1);
 
-        MutableResults results = mutableResults(agentResults(agent), environmentResults(environment));
+        Results results = mutableResults(agentResults(agent), environmentResults(environment));
 
         results.disconnectDatabases();
 
@@ -104,14 +104,14 @@ public class MutableResultsTest {
 
     @Test
     public void testDisconnectDatabases_NotConnected() {
-        MutableResults results = new MutableResults();
+        Results results = new Results();
 
         assertDoesNotThrow(results::disconnectDatabases);
     }
 
     @Test
     public void testDisconnectDatabases_CalledTwice() {
-        MutableResults results = mutableResults(
+        Results results = mutableResults(
                 agentResults(agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0")),
                 environmentResults(environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0"))
         );
@@ -123,7 +123,7 @@ public class MutableResultsTest {
 
     @Test
     public void testSetAgentResults_NullDoesNotConnect() {
-        MutableResults results = new MutableResults();
+        Results results = new Results();
 
         results.setAgentResults(null);
 
@@ -133,7 +133,7 @@ public class MutableResultsTest {
 
     @Test
     public void testSetEnvironmentResults_NullDoesNotConnect() {
-        MutableResults results = new MutableResults();
+        Results results = new Results();
 
         results.setEnvironmentResults(null);
 
@@ -147,10 +147,10 @@ public class MutableResultsTest {
         Agent agent1 = agentWithLoggedProperty("Agent_1", "AttributeSet_0", "Property_0");
         record(agent1, "AttributeSet_0", "Property_0", 2.0);
 
-        MutableResults results = new MutableResults();
+        Results results = new Results();
         results.setAgentResults(agentResults(agent0));
 
-        MutableResults otherResults = new MutableResults();
+        Results otherResults = new Results();
         otherResults.setAgentResults(agentResults(agent1));
 
         results.mergeAgentsWith(otherResults);
@@ -166,9 +166,9 @@ public class MutableResultsTest {
         Environment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
         record(environment, "AttributeSet_0", "Property_0", 1);
 
-        MutableResults results = mutableResults(agentResults(agent), environmentResults(environment));
+        Results results = mutableResults(agentResults(agent), environmentResults(environment));
 
-        ImmutableResults immutableResults = results.getAsImmutable();
+        ReadOnlyResults immutableResults = results.getAsImmutable();
 
         assertEquals(results.agents().agentLogCount(), immutableResults.agents().agentLogCount());
         assertEquals(results.environment().attributeSetLogCount(), immutableResults.environment().attributeSetLogCount());

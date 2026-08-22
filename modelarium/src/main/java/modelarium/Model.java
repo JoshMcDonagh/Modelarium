@@ -9,10 +9,10 @@ import modelarium.multithreading.CoordinatorHandle;
 import modelarium.multithreading.CoordinatorThread;
 import modelarium.multithreading.WorkerThread;
 import modelarium.multithreading.requestresponse.RequestResponseController;
-import modelarium.results.immutable.ImmutableResults;
-import modelarium.results.mutable.MutableResults;
-import modelarium.results.mutable.MutableResultsForAgents;
-import modelarium.results.mutable.MutableResultsForEnvironment;
+import modelarium.results.immutable.ReadOnlyResults;
+import modelarium.results.mutable.Results;
+import modelarium.results.mutable.ResultsForAgents;
+import modelarium.results.mutable.ResultsForEnvironment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class Model {
     /** Configuration settings for this model run */
     private final Config config;
 
-    private MutableResults results = null;
+    private Results results = null;
 
     /**
      * Constructs a new model instance with the specified settings.
@@ -75,7 +75,7 @@ public class Model {
      */
     private void setupResultsContainer(List<AgentSet> agentsForEachCore) {
         results.setAgentNames(agentsForEachCore);
-        results.setAgentResults(new MutableResultsForAgents(new AgentSet()));
+        results.setAgentResults(new ResultsForAgents(new AgentSet()));
     }
 
     /**
@@ -166,7 +166,7 @@ public class Model {
             SplittableRandom randomGenerator
     ) {
         ExecutorService executorService = Executors.newFixedThreadPool(config.threadCount());
-        List<Future<MutableResults>> futures = new ArrayList<>();
+        List<Future<Results>> futures = new ArrayList<>();
 
         // Launch worker threads
         for (int threadIndex = 0; threadIndex < config.threadCount(); threadIndex++) {
@@ -182,7 +182,7 @@ public class Model {
             threadAgentSet.add(perThreadAgentSet);
 
             // Create and submit the worker task
-            Callable<MutableResults> worker = new WorkerThread(
+            Callable<Results> worker = new WorkerThread(
                     String.valueOf(threadIndex),
                     config,
                     requestResponseController,
@@ -197,9 +197,9 @@ public class Model {
 
         // Collect results from each worker thread
         try {
-            for (Future<MutableResults> future : futures) {
+            for (Future<Results> future : futures) {
                 try {
-                    MutableResults resultsForThread = future.get();
+                    Results resultsForThread = future.get();
                     results.mergeAgentsWith(resultsForThread);
                 } catch (ExecutionException e) {
                     // A worker threw. Cancel the rest and propagate.
@@ -240,7 +240,7 @@ public class Model {
         SplittableRandom randomGenerator = new SplittableRandom(config.seed());
 
         // Create new results container to store model results
-        results = new MutableResults();
+        results = new Results();
 
         // Generate entities
         List<AgentSet> agentsForEachCore = generateAgentsForEachCoreAsList(randomGenerator);
@@ -274,15 +274,15 @@ public class Model {
         }
 
         // Provide the results container with the environment's results
-        results.setEnvironmentResults(new MutableResultsForEnvironment(environment));
+        results.setEnvironmentResults(new ResultsForEnvironment(environment));
     }
 
     /**
      * Returns the results of the most recent model run.
      *
-     * @return a new {@link ImmutableResults} instance
+     * @return a new {@link ReadOnlyResults} instance
      */
-    public ImmutableResults getResults() {
+    public ReadOnlyResults getResults() {
         if (results == null)
             throw new IllegalStateException("Results cannot be accessed before a model run has been completed");
 

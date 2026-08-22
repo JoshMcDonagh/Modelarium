@@ -19,7 +19,7 @@ import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.EnvironmentGenerator;
-import modelarium.results.immutable.ImmutableResults;
+import modelarium.results.immutable.ReadOnlyResults;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -270,7 +270,7 @@ public class EventsAndRoutinesIntegrationTest {
         Model model = new Model(config);
         model.run();
 
-        ImmutableResults results = model.getResults();
+        ReadOnlyResults results = model.getResults();
 
         // Every agent's step counter should log 1..ticks.
         List<Integer> expectedSteps = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);

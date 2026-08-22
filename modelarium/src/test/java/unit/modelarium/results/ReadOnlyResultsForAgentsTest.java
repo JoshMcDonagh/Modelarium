@@ -1,8 +1,8 @@
 package unit.modelarium.results;
 
 import modelarium.entities.agents.mutable.Agent;
-import modelarium.results.immutable.ImmutableResultsForAgents;
-import modelarium.results.mutable.MutableResultsForAgents;
+import modelarium.results.immutable.ReadOnlyResultsForAgents;
+import modelarium.results.mutable.ResultsForAgents;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -12,8 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static unit.modelarium.results.ResultsTestHelpers.*;
 
-public class ImmutableResultsForAgentsTest {
-    private ImmutableResultsForAgents populatedImmutableResults() {
+public class ReadOnlyResultsForAgentsTest {
+    private ReadOnlyResultsForAgents populatedImmutableResults() {
         Agent agent = agentWithMemoryLogs(
                 "Agent_0",
                 agentAttributeSet("Agent_0", "AttributeSet_0", "Property_0", "Property_1")
@@ -21,38 +21,38 @@ public class ImmutableResultsForAgentsTest {
         record(agent, "AttributeSet_0", "Property_0", 1.0, 2.0);
         record(agent, "AttributeSet_0", "Property_1", 3.0);
 
-        return new ImmutableResultsForAgents(agentResults(agent));
+        return new ReadOnlyResultsForAgents(agentResults(agent));
     }
 
     @Test
     public void testAgentLogCount() {
-        MutableResultsForAgents results = agentResults(
+        ResultsForAgents results = agentResults(
                 agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0"),
                 agentWithLoggedProperty("Agent_1", "AttributeSet_0", "Property_0")
         );
 
-        ImmutableResultsForAgents immutableResults = new ImmutableResultsForAgents(results);
+        ReadOnlyResultsForAgents immutableResults = new ReadOnlyResultsForAgents(results);
 
         assertEquals(2, immutableResults.agentLogCount());
     }
 
     @Test
     public void testAttributeSetLogCount() {
-        ImmutableResultsForAgents immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForAgents immutableResults = populatedImmutableResults();
 
         assertEquals(1, immutableResults.attributeSetLogCount("Agent_0"));
     }
 
     @Test
     public void testAttributeLogCount() {
-        ImmutableResultsForAgents immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForAgents immutableResults = populatedImmutableResults();
 
         assertEquals(2, immutableResults.attributeLogCount("Agent_0", "AttributeSet_0"));
     }
 
     @Test
     public void testAttributeLogs() {
-        ImmutableResultsForAgents immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForAgents immutableResults = populatedImmutableResults();
 
         List<Object> values = immutableResults.attributeLogs("Agent_0", "AttributeSet_0", "Property_0");
 
@@ -61,7 +61,7 @@ public class ImmutableResultsForAgentsTest {
 
     @Test
     public void testAttributeLogs_Unmodifiable() {
-        ImmutableResultsForAgents immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForAgents immutableResults = populatedImmutableResults();
 
         List<Object> values = immutableResults.attributeLogs("Agent_0", "AttributeSet_0", "Property_0");
 
@@ -70,7 +70,7 @@ public class ImmutableResultsForAgentsTest {
 
     @Test
     public void testAttributeLogs_Typed() {
-        ImmutableResultsForAgents immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForAgents immutableResults = populatedImmutableResults();
 
         List<Double> values = immutableResults.attributeLogs("Agent_0", "AttributeSet_0", "Property_0", Double.class);
 
@@ -79,7 +79,7 @@ public class ImmutableResultsForAgentsTest {
 
     @Test
     public void testAttributeLogs_Typed_Unmodifiable() {
-        ImmutableResultsForAgents immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForAgents immutableResults = populatedImmutableResults();
 
         List<Double> values = immutableResults.attributeLogs("Agent_0", "AttributeSet_0", "Property_0", Double.class);
 
@@ -88,7 +88,7 @@ public class ImmutableResultsForAgentsTest {
 
     @Test
     public void testAttributeSetLogs() {
-        ImmutableResultsForAgents immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForAgents immutableResults = populatedImmutableResults();
 
         Map<String, List<Object>> attributeSetLogs = immutableResults.attributeSetLogs("Agent_0", "AttributeSet_0");
 
@@ -99,7 +99,7 @@ public class ImmutableResultsForAgentsTest {
 
     @Test
     public void testAttributeSetLogs_UnmodifiableAtEveryLevel() {
-        ImmutableResultsForAgents immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForAgents immutableResults = populatedImmutableResults();
 
         Map<String, List<Object>> attributeSetLogs = immutableResults.attributeSetLogs("Agent_0", "AttributeSet_0");
 
@@ -109,7 +109,7 @@ public class ImmutableResultsForAgentsTest {
 
     @Test
     public void testAgentLogs() {
-        ImmutableResultsForAgents immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForAgents immutableResults = populatedImmutableResults();
 
         Map<String, Map<String, List<Object>>> agentLogs = immutableResults.agentLogs("Agent_0");
 
@@ -119,7 +119,7 @@ public class ImmutableResultsForAgentsTest {
 
     @Test
     public void testAgentLogs_UnmodifiableAtEveryLevel() {
-        ImmutableResultsForAgents immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForAgents immutableResults = populatedImmutableResults();
 
         Map<String, Map<String, List<Object>>> agentLogs = immutableResults.agentLogs("Agent_0");
 
@@ -130,7 +130,7 @@ public class ImmutableResultsForAgentsTest {
 
     @Test
     public void testAllLogs() {
-        ImmutableResultsForAgents immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForAgents immutableResults = populatedImmutableResults();
 
         Map<String, Map<String, Map<String, List<Object>>>> allLogs = immutableResults.allLogs();
 
@@ -140,7 +140,7 @@ public class ImmutableResultsForAgentsTest {
 
     @Test
     public void testAllLogs_UnmodifiableAtEveryLevel() {
-        ImmutableResultsForAgents immutableResults = populatedImmutableResults();
+        ReadOnlyResultsForAgents immutableResults = populatedImmutableResults();
 
         Map<String, Map<String, Map<String, List<Object>>>> allLogs = immutableResults.allLogs();
 

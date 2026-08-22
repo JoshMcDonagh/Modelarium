@@ -1,9 +1,6 @@
 package modelarium.results.immutable;
 
-import modelarium.results.Results;
-import modelarium.results.ResultsForAgents;
-import modelarium.results.ResultsForEnvironment;
-import modelarium.results.mutable.MutableResults;
+import modelarium.results.mutable.Results;
 
 import java.nio.file.Path;
 
@@ -13,36 +10,34 @@ import java.nio.file.Path;
  * <p>This class wraps the mutable results the model built up during its run so that the run's agent-level and
  * environment-level logs can be inspected without being modifiable.
  */
-public final class ImmutableResults implements Results {
+public final class ReadOnlyResults {
     /** The mutable results associated with this immutable results */
-    private final MutableResults mutableVersion;
+    private final Results mutableVersion;
 
     /**
      * Constructs a new immutable results view of the specified mutable results.
      *
      * @param results the mutable results to provide a read-only view of
      */
-    public ImmutableResults(MutableResults results) {
+    public ReadOnlyResults(Results results) {
         mutableVersion = results;
     }
 
     /**
      * Returns the agent-level results of the model run.
      *
-     * @return the run's {@link ImmutableResultsForAgents} instance
+     * @return the run's {@link ReadOnlyResultsForAgents} instance
      */
-    @Override
-    public ResultsForAgents agents() {
+    public ReadOnlyResultsForAgents agents() {
         return mutableVersion.agents().getAsImmutable();
     }
 
     /**
      * Returns the environment-level results of the model run.
      *
-     * @return the run's {@link ImmutableResultsForEnvironment} instance
+     * @return the run's {@link ReadOnlyResultsForEnvironment} instance
      */
-    @Override
-    public ResultsForEnvironment environment() {
+    public ReadOnlyResultsForEnvironment environment() {
         return mutableVersion.environment().getAsImmutable();
     }
 
@@ -52,7 +47,6 @@ public final class ImmutableResults implements Results {
      * @param exportDir the directory to export the results to
      * @return the {@link Path} directory containing the exported results
      */
-    @Override
     public Path export(String exportDir) {
         return mutableVersion.export(exportDir);
     }

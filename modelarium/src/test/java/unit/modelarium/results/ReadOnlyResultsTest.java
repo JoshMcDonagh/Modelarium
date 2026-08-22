@@ -2,10 +2,10 @@ package unit.modelarium.results;
 
 import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.environments.Environment;
-import modelarium.results.immutable.ImmutableResults;
-import modelarium.results.immutable.ImmutableResultsForAgents;
-import modelarium.results.immutable.ImmutableResultsForEnvironment;
-import modelarium.results.mutable.MutableResults;
+import modelarium.results.immutable.ReadOnlyResults;
+import modelarium.results.immutable.ReadOnlyResultsForAgents;
+import modelarium.results.immutable.ReadOnlyResultsForEnvironment;
+import modelarium.results.mutable.Results;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -14,8 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static unit.modelarium.results.ResultsTestHelpers.*;
 
-public class ImmutableResultsTest {
-    private MutableResults populatedMutableResults() {
+public class ReadOnlyResultsTest {
+    private Results populatedMutableResults() {
         Agent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
         record(agent, "AttributeSet_0", "Property_0", 1.0);
         Environment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
@@ -26,23 +26,23 @@ public class ImmutableResultsTest {
 
     @Test
     public void testAgents_ReturnsImmutableWrapper() {
-        ImmutableResults immutableResults = new ImmutableResults(populatedMutableResults());
+        ReadOnlyResults immutableResults = new ReadOnlyResults(populatedMutableResults());
 
-        assertInstanceOf(ImmutableResultsForAgents.class, immutableResults.agents());
+        assertInstanceOf(ReadOnlyResultsForAgents.class, immutableResults.agents());
     }
 
     @Test
     public void testEnvironment_ReturnsImmutableWrapper() {
-        ImmutableResults immutableResults = new ImmutableResults(populatedMutableResults());
+        ReadOnlyResults immutableResults = new ReadOnlyResults(populatedMutableResults());
 
-        assertInstanceOf(ImmutableResultsForEnvironment.class, immutableResults.environment());
+        assertInstanceOf(ReadOnlyResultsForEnvironment.class, immutableResults.environment());
     }
 
     @Test
     public void testAgents_DelegatesToWrappedResults() {
-        MutableResults results = populatedMutableResults();
+        Results results = populatedMutableResults();
 
-        ImmutableResults immutableResults = new ImmutableResults(results);
+        ReadOnlyResults immutableResults = new ReadOnlyResults(results);
 
         assertEquals(results.agents().agentLogCount(), immutableResults.agents().agentLogCount());
         assertEquals(
@@ -53,9 +53,9 @@ public class ImmutableResultsTest {
 
     @Test
     public void testEnvironment_DelegatesToWrappedResults() {
-        MutableResults results = populatedMutableResults();
+        Results results = populatedMutableResults();
 
-        ImmutableResults immutableResults = new ImmutableResults(results);
+        ReadOnlyResults immutableResults = new ReadOnlyResults(results);
 
         assertEquals(results.environment().attributeSetLogCount(), immutableResults.environment().attributeSetLogCount());
         assertEquals(

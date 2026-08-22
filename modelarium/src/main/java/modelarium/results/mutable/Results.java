@@ -2,8 +2,7 @@ package modelarium.results.mutable;
 
 import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.agents.mutable.AgentSet;
-import modelarium.results.Results;
-import modelarium.results.immutable.ImmutableResults;
+import modelarium.results.immutable.ReadOnlyResults;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,13 +20,13 @@ import java.util.List;
  * workers produce, merging per-worker agent results together, and providing a read-only view of the results once
  * the run has completed.
  */
-public final class MutableResults implements Results {
+public final class Results {
 
     /** The agent-level results of the model run */
-    private MutableResultsForAgents agentsResults;
+    private ResultsForAgents agentsResults;
 
     /** The environment-level results of the model run */
-    private MutableResultsForEnvironment environmentResults;
+    private ResultsForEnvironment environmentResults;
 
     /** The names of all agents in the model */
     private final List<String> agentNames = new ArrayList<>();
@@ -39,12 +38,12 @@ public final class MutableResults implements Results {
     private boolean isEnvironmentAttributeSetDataConnected = false;
 
     /** The immutable results version of this mutable results */
-    private ImmutableResults immutableVersion = null;
+    private ReadOnlyResults immutableVersion = null;
 
     /**
      * Constructs a new, empty results container.
      */
-    public MutableResults() {}
+    public Results() {}
 
     /**
      * Stores the names of all agents in the model.
@@ -80,7 +79,7 @@ public final class MutableResults implements Results {
      *
      * @param agentsResults the raw agent results
      */
-    public void setAgentResults(MutableResultsForAgents agentsResults) {
+    public void setAgentResults(ResultsForAgents agentsResults) {
         this.agentsResults = agentsResults;
         if (agentsResults != null)
             isAgentAttributeSetDataConnected = true;
@@ -91,7 +90,7 @@ public final class MutableResults implements Results {
      *
      * @param environmentResults the raw environment results
      */
-    public void setEnvironmentResults(MutableResultsForEnvironment environmentResults) {
+    public void setEnvironmentResults(ResultsForEnvironment environmentResults) {
         this.environmentResults = environmentResults;
         if (environmentResults != null)
             isEnvironmentAttributeSetDataConnected = true;
@@ -100,20 +99,18 @@ public final class MutableResults implements Results {
     /**
      * Returns the agent-level results of the model run.
      *
-     * @return the run's {@link MutableResultsForAgents} instance
+     * @return the run's {@link ResultsForAgents} instance
      */
-    @Override
-    public MutableResultsForAgents agents() {
+    public ResultsForAgents agents() {
         return agentsResults;
     }
 
     /**
      * Returns the environment-level results of the model run.
      *
-     * @return the run's {@link MutableResultsForEnvironment} instance
+     * @return the run's {@link ResultsForEnvironment} instance
      */
-    @Override
-    public MutableResultsForEnvironment environment() {
+    public ResultsForEnvironment environment() {
         return environmentResults;
     }
 
@@ -123,7 +120,6 @@ public final class MutableResults implements Results {
      * @param exportDir the directory to export the results to
      * @return the {@link Path} directory containing the exported results
      */
-    @Override
     public Path export(String exportDir) {
         return export(Paths.get(exportDir).toAbsolutePath());
     }
@@ -134,7 +130,6 @@ public final class MutableResults implements Results {
      * @param exportPath the path directory to export the results to
      * @return the {@link Path} directory containing the exported results
      */
-    @Override
     public Path export(Path exportPath) {
         String exportFolderName =
                 "modelarium_results_export"
@@ -177,18 +172,18 @@ public final class MutableResults implements Results {
      *
      * @param other the results to merge into this one
      */
-    public void mergeAgentsWith(MutableResults other) {
+    public void mergeAgentsWith(Results other) {
         agentsResults.mergeWith(other.agentsResults);
     }
 
     /**
      * Returns a read-only view of these results.
      *
-     * @return a new {@link ImmutableResults} instance wrapping these results
+     * @return a new {@link ReadOnlyResults} instance wrapping these results
      */
-    public ImmutableResults getAsImmutable() {
+    public ReadOnlyResults getAsImmutable() {
         if (immutableVersion == null)
-            immutableVersion = new ImmutableResults(this);
+            immutableVersion = new ReadOnlyResults(this);
 
         return immutableVersion;
     }

@@ -16,7 +16,7 @@ import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.EnvironmentGenerator;
 import modelarium.entities.environments.generators.FunctionalEnvironmentGenerator;
-import modelarium.results.immutable.ImmutableResults;
+import modelarium.results.immutable.ReadOnlyResults;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -137,7 +137,7 @@ public class SyncedModelIntegrationTest {
         Model model = new Model(config);
         model.run();
 
-        ImmutableResults results = model.getResults();
+        ReadOnlyResults results = model.getResults();
         assertNotNull(results, "Results should not be null after a run.");
 
         // Check agent results: each agent should have `ticks` logged hunger values

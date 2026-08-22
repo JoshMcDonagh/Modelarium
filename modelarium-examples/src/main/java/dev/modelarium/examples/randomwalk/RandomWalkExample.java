@@ -10,7 +10,7 @@ import modelarium.entities.attributes.properties.functional.FunctionalAgentPrope
 import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.FunctionalEnvironmentGenerator;
-import modelarium.results.immutable.ImmutableResults;
+import modelarium.results.immutable.ReadOnlyResults;
 import modelarium.scheduler.InOrderScheduler;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public final class RandomWalkExample {
      * @param seed the seed for the model's random generator, making the run reproducible
      * @return the results of the completed run
      */
-    public static ImmutableResults run(int populationSize, int tickCount, long seed) {
+    public static ReadOnlyResults run(int populationSize, int tickCount, long seed) {
         AtomicInteger nextWalkerIndex = new AtomicInteger(0);
 
         Config config = Config.builder()
@@ -94,7 +94,7 @@ public final class RandomWalkExample {
         int populationSize = 50;
         int tickCount = 200;
 
-        ImmutableResults results = run(populationSize, tickCount, 42L);
+        ReadOnlyResults results = run(populationSize, tickCount, 42L);
 
         double meanFinalPosition = 0.0;
         for (int i = 0; i < populationSize; i++) {

@@ -20,9 +20,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.*;
-import static unit.modelarium.entities.immutable.attributes.ImmutableAttributeSetTestHelpers.*;
+import static unit.modelarium.entities.immutable.attributes.ReadOnlyAttributeSetTestHelpers.*;
 
-public class ImmutableAgentAttributeSetTest {
+public class ReadOnlyAgentAttributeSetTest {
     @Test
     public void testGetClonedAttribute() throws Throwable {
         int index = 7;

@@ -5,6 +5,7 @@ import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
+import modelarium.exceptions.AgentNotFoundException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -298,5 +299,80 @@ public class AgentSetTest {
         agentSet.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
 
         assertNotNull(agentSet.get("A").getAttributeSet("food").getLog());
+    }
+
+    @Test
+    public void testGet_MissingAgent_AgentNotFoundException() {
+        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A")));
+
+        AgentNotFoundException exception = assertThrows(
+                AgentNotFoundException.class,
+                () -> agentSet.get("missing")
+        );
+
+        assertEquals("No agent named 'missing' in set", exception.getMessage());
+    }
+
+    @Test
+    public void testGetAsList_ReturnsStructuralCopy() {
+        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A"), emptyAgent("B")));
+
+        List<Agent> returned = agentSet.getAsList();
+        returned.clear();
+
+        assertEquals(2, agentSet.size());
+        assertTrue(agentSet.doesAgentExist("A"));
+        assertTrue(agentSet.doesAgentExist("B"));
+    }
+
+    @Test
+    public void testClear_EmptiesListAndIndex() {
+        AgentSet agentSet = new AgentSet(List.of(emptyAgent("A"), emptyAgent("B")));
+
+        agentSet.clear();
+
+        assertTrue(agentSet.isEmpty());
+        assertEquals(0, agentSet.size());
+        assertFalse(agentSet.doesAgentExist("A"));
+        assertThrows(AgentNotFoundException.class, () -> agentSet.get("A"));
+    }
+
+    @Test
+    public void testGetFilteredAgents_ExcludesDeadAgentsEvenWhenPredicateMatches() {
+        Agent alive = emptyAgent("alive");
+        Agent dead = emptyAgent("dead");
+        dead.kill();
+        AgentSet agentSet = new AgentSet(List.of(alive, dead));
+
+        AgentSet filtered = agentSet.getFilteredAgents(agent -> true);
+
+        assertEquals(1, filtered.size());
+        assertSame(alive, filtered.get(0));
+    }
+
+    @Test
+    public void testAdd_ReplacingDeadAgentWithAliveVersion_PreservesDeadState() {
+        Agent original = emptyAgent("A");
+        original.kill();
+        Agent replacement = emptyAgent("A");
+        AgentSet agentSet = new AgentSet(List.of(original));
+
+        agentSet.add(replacement);
+
+        assertSame(replacement, agentSet.get("A"));
+        assertTrue(agentSet.get("A").isDead());
+    }
+
+    @Test
+    public void testDuplicate_IsShallowCopyOfAgents() {
+        Agent first = emptyAgent("A");
+        Agent second = emptyAgent("B");
+        AgentSet original = new AgentSet(List.of(first, second));
+
+        AgentSet duplicate = original.duplicate();
+
+        assertNotSame(original, duplicate);
+        assertSame(first, duplicate.get("A"));
+        assertSame(second, duplicate.get("B"));
     }
 }

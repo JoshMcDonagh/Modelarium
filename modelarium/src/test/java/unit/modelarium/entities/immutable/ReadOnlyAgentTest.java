@@ -9,10 +9,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static unit.modelarium.entities.immutable.ImmutableEntityTestHelpers.agentWithCounter;
-import static unit.modelarium.entities.immutable.ImmutableEntityTestHelpers.singlePropertyAgentSet;
+import static unit.modelarium.entities.immutable.ReadOnlyEntityTestHelpers.agentWithCounter;
+import static unit.modelarium.entities.immutable.ReadOnlyEntityTestHelpers.singlePropertyAgentSet;
 
-public class ImmutableAgentTest {
+public class ReadOnlyAgentTest {
     @Test
     public void testName() {
         Agent agent = agentWithCounter("Alice");

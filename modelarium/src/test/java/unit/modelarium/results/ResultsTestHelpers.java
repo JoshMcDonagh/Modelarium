@@ -13,9 +13,9 @@ import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
-import modelarium.results.mutable.MutableResults;
-import modelarium.results.mutable.MutableResultsForAgents;
-import modelarium.results.mutable.MutableResultsForEnvironment;
+import modelarium.results.mutable.Results;
+import modelarium.results.mutable.ResultsForAgents;
+import modelarium.results.mutable.ResultsForEnvironment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -112,16 +112,16 @@ class ResultsTestHelpers {
             entity.getAttributeSet(attributeSetName).getLog().record(attributeName, value);
     }
 
-    static MutableResultsForAgents agentResults(Agent... agents) {
-        return new MutableResultsForAgents(agentSet(agents));
+    static ResultsForAgents agentResults(Agent... agents) {
+        return new ResultsForAgents(agentSet(agents));
     }
 
-    static MutableResultsForEnvironment environmentResults(Environment environment) {
-        return new MutableResultsForEnvironment(environment);
+    static ResultsForEnvironment environmentResults(Environment environment) {
+        return new ResultsForEnvironment(environment);
     }
 
-    static MutableResults mutableResults(MutableResultsForAgents agentsResults, MutableResultsForEnvironment environmentResults) {
-        MutableResults results = new MutableResults();
+    static Results mutableResults(ResultsForAgents agentsResults, ResultsForEnvironment environmentResults) {
+        Results results = new Results();
         results.setAgentResults(agentsResults);
         results.setEnvironmentResults(environmentResults);
         return results;

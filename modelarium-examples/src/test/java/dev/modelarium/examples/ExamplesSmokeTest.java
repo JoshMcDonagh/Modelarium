@@ -2,7 +2,7 @@ package dev.modelarium.examples;
 
 import dev.modelarium.examples.multicore.CrossCoreInteractionExample;
 import dev.modelarium.examples.randomwalk.RandomWalkExample;
-import modelarium.results.immutable.ImmutableResults;
+import modelarium.results.immutable.ReadOnlyResults;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -23,7 +23,7 @@ class ExamplesSmokeTest {
         int populationSize = 4;
         int tickCount = 5;
 
-        ImmutableResults results = RandomWalkExample.run(populationSize, tickCount, 7L);
+        ReadOnlyResults results = RandomWalkExample.run(populationSize, tickCount, 7L);
 
         for (int i = 0; i < populationSize; i++) {
             List<Double> positions = results.agents().attributeLogs(
@@ -40,7 +40,7 @@ class ExamplesSmokeTest {
         int populationSize = 4;
         int tickCount = 6;
 
-        ImmutableResults results = CrossCoreInteractionExample.run(populationSize, tickCount, 7L);
+        ReadOnlyResults results = CrossCoreInteractionExample.run(populationSize, tickCount, 7L);
 
         for (int i = 0; i < populationSize; i++) {
             String agentName = "agent_" + i;

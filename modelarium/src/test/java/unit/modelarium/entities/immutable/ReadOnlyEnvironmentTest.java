@@ -5,9 +5,9 @@ import modelarium.entities.environments.ReadOnlyEnvironment;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static unit.modelarium.entities.immutable.ImmutableEntityTestHelpers.environmentWithTickCounter;
+import static unit.modelarium.entities.immutable.ReadOnlyEntityTestHelpers.environmentWithTickCounter;
 
-public class ImmutableEnvironmentTest {
+public class ReadOnlyEnvironmentTest {
     @Test
     public void testName() {
         Environment environment = environmentWithTickCounter();

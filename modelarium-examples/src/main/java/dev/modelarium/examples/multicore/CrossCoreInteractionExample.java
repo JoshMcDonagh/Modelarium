@@ -13,7 +13,7 @@ import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.FunctionalEnvironmentGenerator;
-import modelarium.results.immutable.ImmutableResults;
+import modelarium.results.immutable.ReadOnlyResults;
 import modelarium.scheduler.InOrderScheduler;
 
 import java.util.List;
@@ -61,7 +61,7 @@ public final class CrossCoreInteractionExample {
      * @param seed the seed for the model's random generator
      * @return the results of the completed run
      */
-    public static ImmutableResults run(int populationSize, int tickCount, long seed) {
+    public static ReadOnlyResults run(int populationSize, int tickCount, long seed) {
         if (populationSize % 2 != 0)
             throw new IllegalArgumentException("populationSize must be even so every partner is on the other core");
 
@@ -166,7 +166,7 @@ public final class CrossCoreInteractionExample {
         int populationSize = 10;
         int tickCount = 50;
 
-        ImmutableResults results = run(populationSize, tickCount, 42L);
+        ReadOnlyResults results = run(populationSize, tickCount, 42L);
 
         List<Double> partnerSums = results.agents().attributeLogs(
                 "agent_0", ATTRIBUTE_SET_NAME, PARTNER_SUM_PROPERTY_NAME, Double.class);

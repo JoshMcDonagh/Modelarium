@@ -6,8 +6,7 @@ import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
-import modelarium.results.ResultsForEnvironment;
-import modelarium.results.immutable.ImmutableResultsForEnvironment;
+import modelarium.results.immutable.ReadOnlyResultsForEnvironment;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,23 +18,23 @@ import java.util.Map;
 /**
  * A concrete results container for the simulation environment.
  *
- * <p>Extends {@link MutableResultsForEntities} to store and access recorded property
+ * <p>Extends {@link ResultsForEntities} to store and access recorded property
  * and event values specific to the environment, using its name to simplify queries.
  */
-public final class MutableResultsForEnvironment extends MutableResultsForEntities<EnvironmentSimulationContext, EnvironmentContext, MutableEnvironmentAttributeSet, AttributeSetLog<EnvironmentSimulationContext>> implements ResultsForEnvironment {
+public final class ResultsForEnvironment extends ResultsForEntities<EnvironmentSimulationContext, EnvironmentContext, MutableEnvironmentAttributeSet, AttributeSetLog<EnvironmentSimulationContext>> {
 
     /** The name of the environment used as a key for data access */
     private final String environmentName;
 
     /** The immutable version of this mutable environment-level results */
-    private ImmutableResultsForEnvironment immutableResultsForEnvironment = null;
+    private ReadOnlyResultsForEnvironment immutableResultsForEnvironment = null;
 
     /**
      * Constructs a results container for the given environment.
      *
      * @param environment the environment whose results are to be stored
      */
-    public MutableResultsForEnvironment(Environment environment) {
+    public ResultsForEnvironment(Environment environment) {
         super(environment);
         this.environmentName = environment.name();
     }
@@ -45,7 +44,6 @@ public final class MutableResultsForEnvironment extends MutableResultsForEntitie
      *
      * @return the environment's attribute set log count
      */
-    @Override
     public int attributeSetLogCount() {
         return entityAttributeSetLogCount(environmentName);
     }
@@ -56,7 +54,6 @@ public final class MutableResultsForEnvironment extends MutableResultsForEntitie
      * @param attributeSetName the name of the attribute set whose logs to count
      * @return the attribute set's attribute log count
      */
-    @Override
     public int attributeLogCount(String attributeSetName) {
         return entityAttributeSetAttributeLogCount(environmentName, attributeSetName);
     }
@@ -68,7 +65,6 @@ public final class MutableResultsForEnvironment extends MutableResultsForEntitie
      * @param attributeName the name of the attribute whose values to retrieve
      * @return the attribute's logged values, one per tick
      */
-    @Override
     public List<Object> attributeLogs(String attributeSetName, String attributeName) {
         return getLogsForEntityAttribute(environmentName, attributeSetName, attributeName);
     }
@@ -82,7 +78,6 @@ public final class MutableResultsForEnvironment extends MutableResultsForEntitie
      * @param <T> the type the logged values are returned as
      * @return the attribute's logged values, one per tick
      */
-    @Override
     public <T> List<T> attributeLogs(String attributeSetName, String attributeName, Class<T> type) {
         List<Object> raw = getLogsForEntityAttribute(environmentName, attributeSetName, attributeName);
         List<T> typed = new ArrayList<>(raw.size());
@@ -97,7 +92,6 @@ public final class MutableResultsForEnvironment extends MutableResultsForEntitie
      * @param attributeSetName the name of the attribute set whose logs to retrieve
      * @return a map from attribute name to that attribute's logged values
      */
-    @Override
     public Map<String, List<Object>> attributeSetLogs(String attributeSetName) {
         return getLogsForEntityAttributeSetAsMap(environmentName, attributeSetName);
     }
@@ -107,7 +101,6 @@ public final class MutableResultsForEnvironment extends MutableResultsForEntitie
      *
      * @return a map from attribute set name to a map from attribute name to that attribute's logged values
      */
-    @Override
     public Map<String, Map<String, List<Object>>> environmentLogs() {
         return getLogsForEntityAsMap(environmentName);
     }
@@ -115,11 +108,11 @@ public final class MutableResultsForEnvironment extends MutableResultsForEntitie
     /**
      * Returns a read-only view of these environment results.
      *
-     * @return a new {@link ImmutableResultsForEnvironment} instance wrapping these results
+     * @return a new {@link ReadOnlyResultsForEnvironment} instance wrapping these results
      */
-    public ImmutableResultsForEnvironment getAsImmutable() {
+    public ReadOnlyResultsForEnvironment getAsImmutable() {
         if (immutableResultsForEnvironment == null)
-            immutableResultsForEnvironment = new ImmutableResultsForEnvironment(this);
+            immutableResultsForEnvironment = new ReadOnlyResultsForEnvironment(this);
 
         return immutableResultsForEnvironment;
     }

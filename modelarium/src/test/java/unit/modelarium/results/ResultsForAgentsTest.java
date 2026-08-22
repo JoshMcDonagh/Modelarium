@@ -1,8 +1,8 @@
 package unit.modelarium.results;
 
 import modelarium.entities.agents.mutable.Agent;
-import modelarium.results.immutable.ImmutableResultsForAgents;
-import modelarium.results.mutable.MutableResultsForAgents;
+import modelarium.results.immutable.ReadOnlyResultsForAgents;
+import modelarium.results.mutable.ResultsForAgents;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -11,10 +11,10 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import static unit.modelarium.results.ResultsTestHelpers.*;
 
-public class MutableResultsForAgentsTest {
+public class ResultsForAgentsTest {
     @Test
     public void testAgentLogCount() {
-        MutableResultsForAgents results = agentResults(
+        ResultsForAgents results = agentResults(
                 agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0"),
                 agentWithLoggedProperty("Agent_1", "AttributeSet_0", "Property_0")
         );
@@ -30,7 +30,7 @@ public class MutableResultsForAgentsTest {
                 agentAttributeSet("Agent_0", "AttributeSet_1", "Property_1")
         );
 
-        MutableResultsForAgents results = agentResults(agent);
+        ResultsForAgents results = agentResults(agent);
 
         assertEquals(2, results.attributeSetLogCount("Agent_0"));
     }
@@ -42,7 +42,7 @@ public class MutableResultsForAgentsTest {
                 agentAttributeSet("Agent_0", "AttributeSet_0", "Property_0", "Property_1", "Property_2")
         );
 
-        MutableResultsForAgents results = agentResults(agent);
+        ResultsForAgents results = agentResults(agent);
 
         assertEquals(3, results.attributeLogCount("Agent_0", "AttributeSet_0"));
     }
@@ -52,7 +52,7 @@ public class MutableResultsForAgentsTest {
         Agent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
         record(agent, "AttributeSet_0", "Property_0", 1.0, 2.0, 3.0);
 
-        MutableResultsForAgents results = agentResults(agent);
+        ResultsForAgents results = agentResults(agent);
 
         List<Object> values = results.attributeLogs("Agent_0", "AttributeSet_0", "Property_0");
 
@@ -67,7 +67,7 @@ public class MutableResultsForAgentsTest {
         Agent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
         record(agent, "AttributeSet_0", "Property_0", 1.0, 2.0);
 
-        MutableResultsForAgents results = agentResults(agent);
+        ResultsForAgents results = agentResults(agent);
 
         List<Double> values = results.attributeLogs("Agent_0", "AttributeSet_0", "Property_0", Double.class);
 
@@ -79,7 +79,7 @@ public class MutableResultsForAgentsTest {
         Agent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
         record(agent, "AttributeSet_0", "Property_0", 1.0);
 
-        MutableResultsForAgents results = agentResults(agent);
+        ResultsForAgents results = agentResults(agent);
 
         assertThrows(
                 ClassCastException.class,
@@ -96,7 +96,7 @@ public class MutableResultsForAgentsTest {
         record(agent, "AttributeSet_0", "Property_0", 1.0, 2.0);
         record(agent, "AttributeSet_0", "Property_1", 3.0);
 
-        MutableResultsForAgents results = agentResults(agent);
+        ResultsForAgents results = agentResults(agent);
 
         Map<String, List<Object>> attributeSetLogs = results.attributeSetLogs("Agent_0", "AttributeSet_0");
 
@@ -115,7 +115,7 @@ public class MutableResultsForAgentsTest {
         record(agent, "AttributeSet_0", "Property_0", 1.0);
         record(agent, "AttributeSet_1", "Property_1", 2.0);
 
-        MutableResultsForAgents results = agentResults(agent);
+        ResultsForAgents results = agentResults(agent);
 
         Map<String, Map<String, List<Object>>> agentLogs = results.agentLogs("Agent_0");
 
@@ -131,7 +131,7 @@ public class MutableResultsForAgentsTest {
         record(agent0, "AttributeSet_0", "Property_0", 1.0);
         record(agent1, "AttributeSet_0", "Property_0", 2.0);
 
-        MutableResultsForAgents results = agentResults(agent0, agent1);
+        ResultsForAgents results = agentResults(agent0, agent1);
 
         Map<String, Map<String, Map<String, List<Object>>>> allLogs = results.allLogs();
 
@@ -147,8 +147,8 @@ public class MutableResultsForAgentsTest {
         record(agent0, "AttributeSet_0", "Property_0", 1.0);
         record(agent1, "AttributeSet_0", "Property_0", 2.0);
 
-        MutableResultsForAgents results = agentResults(agent0);
-        MutableResultsForAgents otherResults = agentResults(agent1);
+        ResultsForAgents results = agentResults(agent0);
+        ResultsForAgents otherResults = agentResults(agent1);
 
         results.mergeWith(otherResults);
 
@@ -161,7 +161,7 @@ public class MutableResultsForAgentsTest {
         Agent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
         record(agent, "AttributeSet_0", "Property_0", 1.0);
 
-        MutableResultsForAgents results = agentResults(agent);
+        ResultsForAgents results = agentResults(agent);
 
         results.disconnectDatabases();
 
@@ -174,9 +174,9 @@ public class MutableResultsForAgentsTest {
         Agent agent = agentWithLoggedProperty("Agent_0", "AttributeSet_0", "Property_0");
         record(agent, "AttributeSet_0", "Property_0", 1.0);
 
-        MutableResultsForAgents results = agentResults(agent);
+        ResultsForAgents results = agentResults(agent);
 
-        ImmutableResultsForAgents immutableResults = results.getAsImmutable();
+        ReadOnlyResultsForAgents immutableResults = results.getAsImmutable();
 
         assertEquals(results.agentLogCount(), immutableResults.agentLogCount());
         assertEquals(

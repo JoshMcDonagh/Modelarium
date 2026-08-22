@@ -16,7 +16,7 @@ import modelarium.entities.environments.generators.FunctionalEnvironmentGenerato
 import modelarium.exceptions.AgentNotFoundException;
 import modelarium.exceptions.CoordinatorErrorException;
 import modelarium.exceptions.ModelRunException;
-import modelarium.results.immutable.ImmutableResults;
+import modelarium.results.immutable.ReadOnlyResults;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -195,7 +195,7 @@ public class AgentInteractionIntegrationTest {
         Model model = new Model(config);
         model.run();
 
-        ImmutableResults results = model.getResults();
+        ReadOnlyResults results = model.getResults();
         List<Double> observed = results.agents().attributeLogs("agent_1", "observation", "observed", Double.class);
 
         assertEquals(10, observed.size(), "One observation should be logged per tick.");
@@ -223,7 +223,7 @@ public class AgentInteractionIntegrationTest {
         Model model = new Model(config);
         model.run();
 
-        ImmutableResults results = model.getResults();
+        ReadOnlyResults results = model.getResults();
         List<Integer> counts = results.agents().attributeLogs("agent_0", "census", "count", Integer.class);
 
         assertEquals(10, counts.size(), "One population count should be logged per tick.");
@@ -246,7 +246,7 @@ public class AgentInteractionIntegrationTest {
         Model model = new Model(config);
         model.run();
 
-        ImmutableResults results = model.getResults();
+        ReadOnlyResults results = model.getResults();
         List<Integer> counts = results.agents().attributeLogs("agent_0", "census", "count", Integer.class);
 
         assertEquals(10, counts.size());

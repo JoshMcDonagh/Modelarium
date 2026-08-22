@@ -11,7 +11,7 @@ import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.FunctionalEnvironmentGenerator;
-import modelarium.results.immutable.ImmutableResults;
+import modelarium.results.immutable.ReadOnlyResults;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.Test;
 
@@ -86,7 +86,7 @@ public class UnsyncedModelIntegrationTest {
         Model model = new Model(config);
         model.run();
 
-        ImmutableResults results = model.getResults();
+        ReadOnlyResults results = model.getResults();
         assertNotNull(results);
 
         // Each agent should have `ticks` logged values
@@ -135,7 +135,7 @@ public class UnsyncedModelIntegrationTest {
         Model model = new Model(config);
         assertDoesNotThrow(model::run, "Single-thread unsynced should complete without errors.");
 
-        ImmutableResults results = model.getResults();
+        ReadOnlyResults results = model.getResults();
         List<Integer> log = results.agents().attributeLogs("a_0", "s", "steps", Integer.class);
         assertEquals(3, log.size());
     }

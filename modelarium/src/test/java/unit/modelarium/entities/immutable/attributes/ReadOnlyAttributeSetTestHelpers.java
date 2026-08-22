@@ -28,8 +28,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ImmutableAttributeSetTestHelpers {
-    private ImmutableAttributeSetTestHelpers() {}
+class ReadOnlyAttributeSetTestHelpers {
+    private ReadOnlyAttributeSetTestHelpers() {}
 
     static <T extends MutableAttributeSet<?,?>> T makeAttributeSet(
             Class<T> attributeSetClass,

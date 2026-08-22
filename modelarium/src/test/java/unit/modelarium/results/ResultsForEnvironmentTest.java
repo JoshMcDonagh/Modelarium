@@ -1,8 +1,8 @@
 package unit.modelarium.results;
 
 import modelarium.entities.environments.Environment;
-import modelarium.results.immutable.ImmutableResultsForEnvironment;
-import modelarium.results.mutable.MutableResultsForEnvironment;
+import modelarium.results.immutable.ReadOnlyResultsForEnvironment;
+import modelarium.results.mutable.ResultsForEnvironment;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import static unit.modelarium.results.ResultsTestHelpers.*;
 
-public class MutableResultsForEnvironmentTest {
+public class ResultsForEnvironmentTest {
     @Test
     public void testAttributeSetLogCount() {
         Environment environment = environmentWithMemoryLogs(
@@ -20,7 +20,7 @@ public class MutableResultsForEnvironmentTest {
                 environmentAttributeSet("Environment_0", "AttributeSet_1", "Property_1")
         );
 
-        MutableResultsForEnvironment results = environmentResults(environment);
+        ResultsForEnvironment results = environmentResults(environment);
 
         assertEquals(2, results.attributeSetLogCount());
     }
@@ -32,7 +32,7 @@ public class MutableResultsForEnvironmentTest {
                 environmentAttributeSet("Environment_0", "AttributeSet_0", "Property_0", "Property_1", "Property_2")
         );
 
-        MutableResultsForEnvironment results = environmentResults(environment);
+        ResultsForEnvironment results = environmentResults(environment);
 
         assertEquals(3, results.attributeLogCount("AttributeSet_0"));
     }
@@ -42,7 +42,7 @@ public class MutableResultsForEnvironmentTest {
         Environment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
         record(environment, "AttributeSet_0", "Property_0", 1, 2, 3);
 
-        MutableResultsForEnvironment results = environmentResults(environment);
+        ResultsForEnvironment results = environmentResults(environment);
 
         List<Object> values = results.attributeLogs("AttributeSet_0", "Property_0");
 
@@ -57,7 +57,7 @@ public class MutableResultsForEnvironmentTest {
         Environment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
         record(environment, "AttributeSet_0", "Property_0", 1, 2);
 
-        MutableResultsForEnvironment results = environmentResults(environment);
+        ResultsForEnvironment results = environmentResults(environment);
 
         List<Integer> values = results.attributeLogs("AttributeSet_0", "Property_0", Integer.class);
 
@@ -69,7 +69,7 @@ public class MutableResultsForEnvironmentTest {
         Environment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
         record(environment, "AttributeSet_0", "Property_0", 1);
 
-        MutableResultsForEnvironment results = environmentResults(environment);
+        ResultsForEnvironment results = environmentResults(environment);
 
         assertThrows(
                 ClassCastException.class,
@@ -86,7 +86,7 @@ public class MutableResultsForEnvironmentTest {
         record(environment, "AttributeSet_0", "Property_0", 1, 2);
         record(environment, "AttributeSet_0", "Property_1", 3);
 
-        MutableResultsForEnvironment results = environmentResults(environment);
+        ResultsForEnvironment results = environmentResults(environment);
 
         Map<String, List<Object>> attributeSetLogs = results.attributeSetLogs("AttributeSet_0");
 
@@ -105,7 +105,7 @@ public class MutableResultsForEnvironmentTest {
         record(environment, "AttributeSet_0", "Property_0", 1);
         record(environment, "AttributeSet_1", "Property_1", 2);
 
-        MutableResultsForEnvironment results = environmentResults(environment);
+        ResultsForEnvironment results = environmentResults(environment);
 
         Map<String, Map<String, List<Object>>> environmentLogs = results.environmentLogs();
 
@@ -119,7 +119,7 @@ public class MutableResultsForEnvironmentTest {
         Environment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
         record(environment, "AttributeSet_0", "Property_0", 1);
 
-        MutableResultsForEnvironment results = environmentResults(environment);
+        ResultsForEnvironment results = environmentResults(environment);
 
         results.disconnectDatabases();
 
@@ -131,9 +131,9 @@ public class MutableResultsForEnvironmentTest {
         Environment environment = environmentWithLoggedProperty("Environment_0", "AttributeSet_0", "Property_0");
         record(environment, "AttributeSet_0", "Property_0", 1);
 
-        MutableResultsForEnvironment results = environmentResults(environment);
+        ResultsForEnvironment results = environmentResults(environment);
 
-        ImmutableResultsForEnvironment immutableResults = results.getAsImmutable();
+        ReadOnlyResultsForEnvironment immutableResults = results.getAsImmutable();
 
         assertEquals(results.attributeSetLogCount(), immutableResults.attributeSetLogCount());
         assertEquals(

@@ -13,8 +13,8 @@ import modelarium.entities.environments.Environment;
 
 import java.util.List;
 
-class ImmutableEntityTestHelpers {
-    private ImmutableEntityTestHelpers() {}
+class ReadOnlyEntityTestHelpers {
+    private ReadOnlyEntityTestHelpers() {}
 
     static Agent emptyAgent(String name) {
         return new Agent(name, List.of());

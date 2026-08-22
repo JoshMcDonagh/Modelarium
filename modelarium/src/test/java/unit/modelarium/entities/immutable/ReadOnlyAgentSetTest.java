@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.SplittableRandom;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static unit.modelarium.entities.immutable.ImmutableEntityTestHelpers.emptyAgent;
+import static unit.modelarium.entities.immutable.ReadOnlyEntityTestHelpers.emptyAgent;
 
 public class ReadOnlyAgentSetTest {
     @Test

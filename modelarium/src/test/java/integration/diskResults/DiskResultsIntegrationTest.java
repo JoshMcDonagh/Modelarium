@@ -17,7 +17,7 @@ import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.EnvironmentGenerator;
 import modelarium.entities.logging.databases.factories.DiskBasedAttributeSetLogDatabaseFactory;
-import modelarium.results.immutable.ImmutableResults;
+import modelarium.results.immutable.ReadOnlyResults;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -153,7 +153,7 @@ public class DiskResultsIntegrationTest {
         Model model = new Model(config);
         model.run();
 
-        ImmutableResults results = model.getResults();
+        ReadOnlyResults results = model.getResults();
 
         assertEquals(population, results.agents().agentLogCount(),
                 "Every agent should have a complete log, even with an uneven split.");

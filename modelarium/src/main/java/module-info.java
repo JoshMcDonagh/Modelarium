@@ -18,7 +18,6 @@ module modelarium {
     exports modelarium.entities.logging.databases.factories;
     exports modelarium.exceptions;
     exports modelarium.internal;
-    exports modelarium.results;
     exports modelarium.results.immutable;
     exports modelarium.scheduler;
 
