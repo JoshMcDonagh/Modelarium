@@ -1,4 +1,4 @@
-package unit.modelarium.scheduler;
+package unit.modelarium.scheduler.functional;
 
 import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.agents.mutable.AgentSet;

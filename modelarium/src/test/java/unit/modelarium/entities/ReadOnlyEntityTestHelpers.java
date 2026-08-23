@@ -1,4 +1,4 @@
-package unit.modelarium.entities.immutable;
+package unit.modelarium.entities;
 
 import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.attributes.Attribute;
@@ -13,10 +13,10 @@ import modelarium.entities.environments.Environment;
 
 import java.util.List;
 
-class ReadOnlyEntityTestHelpers {
+public class ReadOnlyEntityTestHelpers {
     private ReadOnlyEntityTestHelpers() {}
 
-    static Agent emptyAgent(String name) {
+    public static Agent emptyAgent(String name) {
         return new Agent(name, List.of());
     }
 
@@ -67,19 +67,19 @@ class ReadOnlyEntityTestHelpers {
     }
 
     @SuppressWarnings("unchecked")
-    static MutableAgentAttributeSet singlePropertyAgentSet(String ownerName, String attributeSetName, String propertyName) {
+    public static MutableAgentAttributeSet singlePropertyAgentSet(String ownerName, String attributeSetName, String propertyName) {
         return new MutableAgentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(new AgentCounterProperty(propertyName))
         );
     }
 
-    static Agent agentWithCounter(String name) {
+    public static Agent agentWithCounter(String name) {
         return new Agent(name, List.of(singlePropertyAgentSet(name, "stats", "counter")));
     }
 
     @SuppressWarnings("unchecked")
-    static Environment environmentWithTickCounter() {
+    public static Environment environmentWithTickCounter() {
         MutableEnvironmentAttributeSet attributeSet = new MutableEnvironmentAttributeSet(
                 "timing",
                 (List<Attribute>) (List<?>) List.of(new EnvironmentTickProperty("envTick"))

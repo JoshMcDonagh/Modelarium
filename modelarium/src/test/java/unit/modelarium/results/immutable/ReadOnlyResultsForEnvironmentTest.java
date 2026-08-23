@@ -1,4 +1,4 @@
-package unit.modelarium.results;
+package unit.modelarium.results.immutable;
 
 import modelarium.entities.environments.Environment;
 import modelarium.results.immutable.ReadOnlyResultsForEnvironment;

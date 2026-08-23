@@ -6,14 +6,14 @@ import modelarium.entities.environments.ReadOnlyEnvironment;
 
 import static org.mockito.Mockito.mock;
 
-class SchedulerTestHelpers {
+public class SchedulerTestHelpers {
     private SchedulerTestHelpers() {}
 
-    static ImmutableClock immutableClock() {
+    public static ImmutableClock immutableClock() {
         return new ImmutableClock(new MutableClock(10));
     }
 
-    static ReadOnlyEnvironment immutableEnvironment() {
+    public static ReadOnlyEnvironment immutableEnvironment() {
         return mock(ReadOnlyEnvironment.class);
     }
 }

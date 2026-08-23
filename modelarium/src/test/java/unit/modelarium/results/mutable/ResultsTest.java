@@ -1,4 +1,4 @@
-package unit.modelarium.results;
+package unit.modelarium.results.mutable;
 
 import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.environments.Environment;

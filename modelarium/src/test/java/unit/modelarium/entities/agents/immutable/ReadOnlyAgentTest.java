@@ -1,4 +1,4 @@
-package unit.modelarium.entities.immutable;
+package unit.modelarium.entities.agents.immutable;
 
 import modelarium.entities.agents.immutable.ReadOnlyAgent;
 import modelarium.entities.agents.mutable.Agent;
@@ -9,8 +9,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static unit.modelarium.entities.immutable.ReadOnlyEntityTestHelpers.agentWithCounter;
-import static unit.modelarium.entities.immutable.ReadOnlyEntityTestHelpers.singlePropertyAgentSet;
+import static unit.modelarium.entities.ReadOnlyEntityTestHelpers.agentWithCounter;
+import static unit.modelarium.entities.ReadOnlyEntityTestHelpers.singlePropertyAgentSet;
 
 public class ReadOnlyAgentTest {
     @Test

@@ -1,4 +1,4 @@
-package unit.modelarium.entities.immutable.attributes;
+package unit.modelarium.entities.attributes.sets.immutable;
 
 import modelarium.entities.attributes.AgentAttribute;
 import modelarium.entities.attributes.Attribute;
@@ -20,7 +20,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.*;
-import static unit.modelarium.entities.immutable.attributes.ReadOnlyAttributeSetTestHelpers.*;
+import static unit.modelarium.entities.attributes.sets.immutable.ReadOnlyAttributeSetTestHelpers.*;
 
 public class ReadOnlyAgentAttributeSetTest {
     @Test

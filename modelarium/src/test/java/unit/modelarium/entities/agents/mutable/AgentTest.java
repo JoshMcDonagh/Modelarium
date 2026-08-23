@@ -1,4 +1,4 @@
-package unit.modelarium.entities.agents;
+package unit.modelarium.entities.agents.mutable;
 
 import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.attributes.Attribute;
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static unit.modelarium.entities.agents.AgentTestHelpers.*;
+import static unit.modelarium.entities.agents.mutable.AgentTestHelpers.*;
 
 public class AgentTest {
     @Test

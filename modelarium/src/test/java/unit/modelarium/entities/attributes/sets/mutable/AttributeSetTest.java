@@ -1,4 +1,4 @@
-package unit.modelarium.entities.attributes;
+package unit.modelarium.entities.attributes.sets.mutable;
 
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static unit.modelarium.entities.attributes.AttributeTestHelpers.*;
+import static unit.modelarium.entities.attributes.sets.mutable.AttributeTestHelpers.*;
 
 public class AttributeSetTest {
     @Test

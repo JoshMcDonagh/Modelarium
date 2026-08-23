@@ -1,4 +1,4 @@
-package unit.modelarium.entities.agents;
+package unit.modelarium.entities.agents.mutable;
 
 import com.rits.cloning.Cloner;
 import modelarium.entities.agents.mutable.Agent;
@@ -12,13 +12,13 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static unit.modelarium.entities.agents.AgentTestHelpers.*;
+import static unit.modelarium.entities.agents.mutable.AgentTestHelpers.*;
 
 public class AgentSetTest {
     @BeforeAll
     static void openForCloning() {
         AgentSetTest.class.getModule().addOpens(
-                "unit.modelarium.entities.agents",
+                "unit.modelarium.entities.agents.mutable",
                 Cloner.class.getModule()
         );
     }

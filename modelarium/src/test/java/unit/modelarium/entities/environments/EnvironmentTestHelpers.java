@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.SplittableRandom;
 import java.util.random.RandomGenerator;
 
-class EnvironmentTestHelpers {
+public class EnvironmentTestHelpers {
     private EnvironmentTestHelpers() {}
 
-    static Environment emptyEnvironment() {
+    public static Environment emptyEnvironment() {
         return new Environment("env", List.of());
     }
 
@@ -63,7 +63,7 @@ class EnvironmentTestHelpers {
         return new MutableEnvironmentAttributeSet(attributeSetName, List.of());
     }
 
-    static DefaultAgentGenerator agentGenerator() {
+    public static DefaultAgentGenerator agentGenerator() {
         return new DefaultAgentGenerator() {
             private int index = 0;
 
@@ -74,7 +74,7 @@ class EnvironmentTestHelpers {
         };
     }
 
-    static EnvironmentGenerator environmentGenerator() {
+    public static EnvironmentGenerator environmentGenerator() {
         return new EnvironmentGenerator() {
             @Override
             public Environment generateEnvironment(Config config, RandomGenerator random) {
@@ -83,7 +83,7 @@ class EnvironmentTestHelpers {
         };
     }
 
-    static Config syncedConfig(int populationSize, int tickCount, int threadCount) {
+    public static Config syncedConfig(int populationSize, int tickCount, int threadCount) {
         return Config.builder()
                 .populationSize(populationSize)
                 .tickCount(tickCount)

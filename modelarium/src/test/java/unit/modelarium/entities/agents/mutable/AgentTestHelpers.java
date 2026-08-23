@@ -1,4 +1,4 @@
-package unit.modelarium.entities.agents;
+package unit.modelarium.entities.agents.mutable;
 
 import modelarium.Config;
 import modelarium.clock.MutableClock;

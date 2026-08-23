@@ -1,4 +1,4 @@
-package unit.modelarium.entities.environments;
+package unit.modelarium.entities.environments.generators;
 
 import modelarium.Config;
 import modelarium.entities.environments.Environment;

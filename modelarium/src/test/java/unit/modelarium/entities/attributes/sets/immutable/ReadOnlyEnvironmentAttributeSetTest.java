@@ -1,4 +1,4 @@
-package unit.modelarium.entities.immutable.attributes;
+package unit.modelarium.entities.attributes.sets.immutable;
 
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.EnvironmentAttribute;
@@ -19,7 +19,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static unit.modelarium.entities.immutable.attributes.ReadOnlyAttributeSetTestHelpers.*;
+import static unit.modelarium.entities.attributes.sets.immutable.ReadOnlyAttributeSetTestHelpers.*;
 
 public class ReadOnlyEnvironmentAttributeSetTest {
     @Test

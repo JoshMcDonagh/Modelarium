@@ -1,4 +1,4 @@
-package unit.modelarium.entities.immutable.attributes;
+package unit.modelarium.entities.attributes.sets.immutable;
 
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;

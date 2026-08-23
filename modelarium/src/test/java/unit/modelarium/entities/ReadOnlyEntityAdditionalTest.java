@@ -1,4 +1,4 @@
-package unit.modelarium.entities.immutable;
+package unit.modelarium.entities;
 
 import com.rits.cloning.Cloner;
 import modelarium.entities.agents.immutable.ReadOnlyAgent;
@@ -30,7 +30,7 @@ public class ReadOnlyEntityAdditionalTest {
     @BeforeAll
     static void openForCloning() {
         ReadOnlyEntityAdditionalTest.class.getModule().addOpens(
-                "unit.modelarium.entities.immutable",
+                "unit.modelarium.entities",
                 Cloner.class.getModule()
         );
     }

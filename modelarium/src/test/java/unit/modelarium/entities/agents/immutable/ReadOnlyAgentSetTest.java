@@ -1,4 +1,4 @@
-package unit.modelarium.entities.immutable;
+package unit.modelarium.entities.agents.immutable;
 
 import modelarium.entities.agents.immutable.ReadOnlyAgent;
 import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.SplittableRandom;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static unit.modelarium.entities.immutable.ReadOnlyEntityTestHelpers.emptyAgent;
+import static unit.modelarium.entities.ReadOnlyEntityTestHelpers.emptyAgent;
 
 public class ReadOnlyAgentSetTest {
     @Test

@@ -1,11 +1,11 @@
-package unit.modelarium.entities.immutable;
+package unit.modelarium.entities.environments;
 
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.ReadOnlyEnvironment;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static unit.modelarium.entities.immutable.ReadOnlyEntityTestHelpers.environmentWithTickCounter;
+import static unit.modelarium.entities.ReadOnlyEntityTestHelpers.environmentWithTickCounter;
 
 public class ReadOnlyEnvironmentTest {
     @Test
