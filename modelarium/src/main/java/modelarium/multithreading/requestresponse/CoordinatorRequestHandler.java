@@ -208,6 +208,12 @@ public abstract class CoordinatorRequestHandler {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
+        private AgentSet agentsKilledByEnvironment(AgentSet original, AgentSet modified) {
+            return original.getFilteredAgents(
+                    agent -> modified.doesAgentExist(agent.name()) && !agent.isDead() && modified.get(agent.name()).isDead()
+            );
+        }
+
         /**
          * Records the requesting worker as waiting at the post-update barrier, and once every worker has arrived,
          * runs the environment for the tick and releases all waiting workers.
@@ -219,7 +225,7 @@ public abstract class CoordinatorRequestHandler {
             getWorkersWaiting().add(request.getRequester());
             if (getWorkersWaiting().size() == getConfig().threadCount()) {
                 getEnvironment().run();
-                getGlobalAgentSet().update(getEnvironment().context().getLocalAgentSet(), true);
+                getGlobalAgentSet().update(agentsKilledByEnvironment(getGlobalAgentSet(), getEnvironment().context().getLocalAgentSet()), true);
                 getEnvironment().context().getLocalAgentSet().update(getGlobalAgentSet(), true);
 
                 for (String worker : getWorkersWaiting())
