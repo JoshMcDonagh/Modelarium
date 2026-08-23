@@ -1,11 +1,10 @@
-package dev.modelarium.examples.sirbasic.entities.agents.attributes.sir;
+package dev.modelarium.examples.sir.entities.agents.attributes.sir;
 
-import dev.modelarium.examples.sirbasic.config.SIRSettings;
-import dev.modelarium.examples.sirbasic.config.SettingsLoader;
-import dev.modelarium.examples.sirbasic.entities.agents.attributes.location.Coordinates;
+import dev.modelarium.examples.sir.config.SIRSettings;
+import dev.modelarium.examples.sir.config.SettingsLoader;
+import dev.modelarium.examples.sir.entities.agents.attributes.location.Coordinates;
 import modelarium.entities.agents.immutable.ReadOnlyAgent;
 import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
-import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.contexts.AgentContext;

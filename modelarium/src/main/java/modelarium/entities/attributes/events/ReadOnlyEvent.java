@@ -14,6 +14,16 @@ public final class ReadOnlyEvent extends ReadOnlyAttribute<Event<?>> {
     }
 
     /**
+     * Returns the string representation of the event's triggered status.
+     *
+     * @return the event's triggered status as a string
+     */
+    @Override
+    public String toString() {
+        return getMutableAttribute().toString();
+    }
+
+    /**
      * Returns whether this event's trigger condition is currently met.
      *
      * @return true if the event is triggered, false otherwise

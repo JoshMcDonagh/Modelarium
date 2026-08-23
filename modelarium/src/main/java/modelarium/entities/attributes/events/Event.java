@@ -3,6 +3,7 @@ package modelarium.entities.attributes.events;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
 import modelarium.entities.contexts.Context;
+import modelarium.utils.Cloners;
 
 /**
  * Abstract class for representing an attribute whose behaviour only runs when a trigger condition is met.
@@ -25,6 +26,18 @@ public sealed abstract class Event<C extends Context> extends AttributeBase<C> p
      */
     Event(String name, boolean isLogged, AttributeAccessLevel accessLevel) {
         super(name, isLogged, accessLevel);
+    }
+
+    /**
+     * Returns the string representation of the event's triggered status.
+     *
+     * @return the event's triggered status as a string
+     */
+    @Override
+    public String toString() {
+        if (Cloners.standard().deepClone(this).isTriggered())
+            return "triggered";
+        return "not triggered";
     }
 
     /**

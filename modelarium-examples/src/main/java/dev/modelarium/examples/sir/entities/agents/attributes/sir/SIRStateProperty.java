@@ -1,4 +1,4 @@
-package dev.modelarium.examples.sirbasic.entities.agents.attributes.sir;
+package dev.modelarium.examples.sir.entities.agents.attributes.sir;
 
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;

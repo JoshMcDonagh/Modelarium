@@ -1,14 +1,14 @@
-package dev.modelarium.examples.sirbasic;
+package dev.modelarium.examples.sir;
 
-import dev.modelarium.examples.sirbasic.config.SIRSettings;
-import dev.modelarium.examples.sirbasic.config.SettingsLoader;
-import dev.modelarium.examples.sirbasic.entities.agents.SIRAgentGenerator;
-import dev.modelarium.examples.sirbasic.entities.environment.SIREnvironmentGenerator;
+import dev.modelarium.examples.sir.config.SIRSettings;
+import dev.modelarium.examples.sir.config.SettingsLoader;
+import dev.modelarium.examples.sir.entities.agents.SIRAgentGenerator;
+import dev.modelarium.examples.sir.entities.environment.SIREnvironmentGenerator;
 import modelarium.Config;
 import modelarium.Model;
 import modelarium.scheduler.RandomOrderScheduler;
 
-public class SIRBasicExample {
+public class SIRMain {
     public static void main(String[] args) {
         SIRSettings sirSettings = SettingsLoader.loadSIRConfig("dev/modelarium/examples/sirbasic/sir-config.json");
 

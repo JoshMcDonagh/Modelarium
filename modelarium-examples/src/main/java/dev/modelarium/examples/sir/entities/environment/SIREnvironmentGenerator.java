@@ -1,9 +1,9 @@
-package dev.modelarium.examples.sirbasic.entities.environment;
+package dev.modelarium.examples.sir.entities.environment;
 
-import dev.modelarium.examples.sirbasic.config.SIRSettings;
-import dev.modelarium.examples.sirbasic.config.SettingsLoader;
-import dev.modelarium.examples.sirbasic.entities.environment.attributes.geography.HeightProperty;
-import dev.modelarium.examples.sirbasic.entities.environment.attributes.geography.WidthProperty;
+import dev.modelarium.examples.sir.config.SIRSettings;
+import dev.modelarium.examples.sir.config.SettingsLoader;
+import dev.modelarium.examples.sir.entities.environment.attributes.geography.HeightProperty;
+import dev.modelarium.examples.sir.entities.environment.attributes.geography.WidthProperty;
 import modelarium.Config;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;

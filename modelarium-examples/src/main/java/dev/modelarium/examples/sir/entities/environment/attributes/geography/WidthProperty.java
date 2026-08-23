@@ -1,4 +1,4 @@
-package dev.modelarium.examples.sirbasic.entities.environment.attributes.geography;
+package dev.modelarium.examples.sir.entities.environment.attributes.geography;
 
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.EnvironmentProperty;

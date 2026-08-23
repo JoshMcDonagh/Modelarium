@@ -1,4 +1,4 @@
-package dev.modelarium.examples.sirbasic.config;
+package dev.modelarium.examples.sir.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

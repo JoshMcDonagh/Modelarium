@@ -1,6 +1,6 @@
-package dev.modelarium.examples.sirbasic.entities.agents.attributes.location;
+package dev.modelarium.examples.sir.entities.agents.attributes.location;
 
-import dev.modelarium.examples.sirbasic.config.SettingsLoader;
+import dev.modelarium.examples.sir.config.SettingsLoader;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.sets.immutable.ImmutableEnvironmentAttributeSet;

@@ -3,6 +3,7 @@ package modelarium.entities.attributes.properties;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
 import modelarium.entities.contexts.Context;
+import modelarium.utils.Cloners;
 
 /**
  * Abstract class for representing an attribute that carries a typed value.
@@ -32,6 +33,16 @@ public sealed abstract class Property<T,C extends Context> extends AttributeBase
     Property(String name, boolean isLogged, AttributeAccessLevel accessLevel, Class<T> type) {
         super(name, isLogged, accessLevel);
         this.type = type;
+    }
+
+    /**
+     * Returns the string representation of the property value.
+     *
+     * @return the property's value as a string
+     */
+    @Override
+    public String toString() {
+        return Cloners.standard().deepClone(this).get().toString();
     }
 
     /**

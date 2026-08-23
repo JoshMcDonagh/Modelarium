@@ -1,7 +1,7 @@
 {
   "modelSettings": {
     "numOfCores": 6,
-    "numOfTicks": 100000,
+    "numOfTicks": 1000,
     "numOfWarmUpTicks": 0
   },
 

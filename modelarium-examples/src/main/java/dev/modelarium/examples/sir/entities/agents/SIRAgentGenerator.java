@@ -1,13 +1,13 @@
-package dev.modelarium.examples.sirbasic.entities.agents;
+package dev.modelarium.examples.sir.entities.agents;
 
-import dev.modelarium.examples.sirbasic.config.SIRSettings;
-import dev.modelarium.examples.sirbasic.config.SettingsLoader;
-import dev.modelarium.examples.sirbasic.entities.agents.attributes.location.Coordinates;
-import dev.modelarium.examples.sirbasic.entities.agents.attributes.location.LocationProperty;
-import dev.modelarium.examples.sirbasic.entities.agents.attributes.sir.InfectedEvent;
-import dev.modelarium.examples.sirbasic.entities.agents.attributes.sir.RecoveredEvent;
-import dev.modelarium.examples.sirbasic.entities.agents.attributes.sir.SIRState;
-import dev.modelarium.examples.sirbasic.entities.agents.attributes.sir.SIRStateProperty;
+import dev.modelarium.examples.sir.config.SIRSettings;
+import dev.modelarium.examples.sir.config.SettingsLoader;
+import dev.modelarium.examples.sir.entities.agents.attributes.location.Coordinates;
+import dev.modelarium.examples.sir.entities.agents.attributes.location.LocationProperty;
+import dev.modelarium.examples.sir.entities.agents.attributes.sir.InfectedEvent;
+import dev.modelarium.examples.sir.entities.agents.attributes.sir.RecoveredEvent;
+import dev.modelarium.examples.sir.entities.agents.attributes.sir.SIRState;
+import dev.modelarium.examples.sir.entities.agents.attributes.sir.SIRStateProperty;
 import modelarium.Config;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
 import modelarium.entities.agents.mutable.Agent;

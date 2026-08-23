@@ -1,4 +1,4 @@
-package dev.modelarium.examples.sirbasic.entities.agents.attributes.location;
+package dev.modelarium.examples.sir.entities.agents.attributes.location;
 
 import java.util.random.RandomGenerator;
 
