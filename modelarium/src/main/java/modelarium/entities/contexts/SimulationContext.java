@@ -154,6 +154,15 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     }
 
     /**
+     * Returns the entity's local agent set.
+     *
+     * @return the local agent set
+     */
+    protected AgentSet localAgentSet() {
+        return localAgentSet;
+    }
+
+    /**
      * Returns the entity this context belongs to.
      *
      * @return the owning entity

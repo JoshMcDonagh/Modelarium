@@ -10,7 +10,7 @@ import modelarium.scheduler.RandomOrderScheduler;
 
 public class SIRMain {
     public static void main(String[] args) {
-        SIRSettings sirSettings = SettingsLoader.loadSIRConfig("dev/modelarium/examples/sirbasic/sir-config.json");
+        SIRSettings sirSettings = SettingsLoader.loadSIRConfig("dev/modelarium/examples/sir/sir-config.json");
 
         Config config = Config
                 .builder()

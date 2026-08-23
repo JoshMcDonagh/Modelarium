@@ -5,6 +5,7 @@ import modelarium.clock.MutableClock;
 import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.environments.Environment;
 import modelarium.multithreading.requestresponse.*;
+import modelarium.utils.Cloners;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +55,7 @@ public class CoordinatorThread implements Runnable {
      * @param config global model settings
      * @param environment the shared simulation environment
      * @param requestResponseController the controller managing request/response queues
+     * @param sharedClock the clock used to keep a track of time passing in the model
      */
     public CoordinatorThread(String name,
                              Config config,
@@ -71,14 +73,15 @@ public class CoordinatorThread implements Runnable {
      * @param config global model settings
      * @param environment the shared simulation environment
      * @param requestResponseController the controller managing request/response queues
-     * @param globalAgentSet the global agent set for the whole model
+     * @param sharedClock the clock used to keep a track of time passing in the model
+     * @param predefinedGlobalAgentSet the pre-defined agent set instance to use as the global agent set
      */
     public CoordinatorThread(String name,
                              Config config,
                              Environment environment,
                              RequestResponseController requestResponseController,
                              MutableClock sharedClock,
-                             AgentSet globalAgentSet,
+                             AgentSet predefinedGlobalAgentSet,
                              Map<String, String> agentThreadMap
     ) {
         this.threadName = name;
@@ -86,7 +89,7 @@ public class CoordinatorThread implements Runnable {
         this.environment = environment;
         this.requestResponseController = requestResponseController;
         this.sharedClock = sharedClock;
-        this.predefinedGlobalAgentSet = globalAgentSet;
+        this.predefinedGlobalAgentSet = predefinedGlobalAgentSet;
         this.agentThreadMap = agentThreadMap;
     }
 

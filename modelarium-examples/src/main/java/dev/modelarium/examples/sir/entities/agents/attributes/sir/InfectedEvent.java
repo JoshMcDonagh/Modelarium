@@ -23,7 +23,7 @@ public class InfectedEvent extends AgentEvent {
 
     public InfectedEvent() {
         super("infected", false, AttributeAccessLevel.PRIVATE);
-        SIRSettings sirSettings = SettingsLoader.loadSIRConfig("dev/modelarium/examples/sirbasic/sir-config.json");
+        SIRSettings sirSettings = SettingsLoader.loadSIRConfig("dev/modelarium/examples/sir/sir-config.json");
         infectionProbabilityPerContact = sirSettings.disease().infectionProbabilityPerContact();
         contactDistance = sirSettings.movement().contactDistance();
     }

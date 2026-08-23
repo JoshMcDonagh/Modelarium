@@ -6,15 +6,18 @@ import modelarium.entities.agents.immutable.ReadOnlyAgent;
 import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
 import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.agents.mutable.AgentSet;
+import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.ReadOnlyEnvironment;
 import modelarium.multithreading.requestresponse.*;
+import modelarium.utils.Cloners;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 import static unit.modelarium.multithreading.requestresponse.RequestResponseTestHelpers.syncedConfig;
 
 public class CoordinatorRequestHandlerTest {
@@ -226,7 +229,10 @@ public class CoordinatorRequestHandlerTest {
     private static Fixture fixture(AgentSet agentSet, int threadCount) {
         Config config = syncedConfig(Math.max(1, agentSet.size()), 10, threadCount);
         RequestResponseController controller = new RequestResponseController(config);
-        Environment environment = new Environment("environment", List.of());
+        Environment environment = spy(new Environment("environment", List.of()));
+        EnvironmentSimulationContext environmentSimulationContext = mock(EnvironmentSimulationContext.class);
+        doReturn(environmentSimulationContext).when(environment).context();
+        when(environmentSimulationContext.getLocalAgentSet()).thenReturn(Cloners.standard().deepClone(agentSet));
         MutableClock clock = new MutableClock(config.tickCount());
         return new Fixture(config, controller, agentSet, environment, clock);
     }

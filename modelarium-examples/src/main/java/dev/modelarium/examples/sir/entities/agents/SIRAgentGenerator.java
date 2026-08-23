@@ -26,7 +26,7 @@ public class SIRAgentGenerator extends DefaultAgentGenerator {
     private final SIRSettings sirSettings;
 
     public SIRAgentGenerator() {
-        sirSettings = SettingsLoader.loadSIRConfig("dev/modelarium/examples/sirbasic/sir-config.json");
+        sirSettings = SettingsLoader.loadSIRConfig("dev/modelarium/examples/sir/sir-config.json");
     }
 
     @Override

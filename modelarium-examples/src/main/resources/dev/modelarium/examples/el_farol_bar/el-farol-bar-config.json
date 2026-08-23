@@ -1,0 +1,21 @@
+{
+  "modelSettings": {
+    "numOfCores": 2,
+    "numOfWeeks": 100,
+    "summaryBurnInWeeks": 20,
+    "seed": 1994
+  },
+
+  "bar": {
+    "crowdingThreshold": 60
+  },
+
+  "agents": {
+    "populationSize": 100,
+    "predictorsPerAgent": 12
+  },
+
+  "prediction": {
+    "initialAttendanceHistory": [44, 78, 56, 15, 23, 67, 84, 34, 45, 76, 40, 56, 22, 35]
+  }
+}

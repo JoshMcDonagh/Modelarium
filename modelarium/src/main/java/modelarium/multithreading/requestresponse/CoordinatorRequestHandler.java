@@ -219,6 +219,7 @@ public abstract class CoordinatorRequestHandler {
             getWorkersWaiting().add(request.getRequester());
             if (getWorkersWaiting().size() == getConfig().threadCount()) {
                 getEnvironment().run();
+                getGlobalAgentSet().update(getEnvironment().context().getLocalAgentSet(), true);
 
                 for (String worker : getWorkersWaiting())
                     getResponseQueue(worker).put(new Response(getThreadName(), worker, ResponseType.ALL_WORKERS_UPDATE_COORDINATOR, null));

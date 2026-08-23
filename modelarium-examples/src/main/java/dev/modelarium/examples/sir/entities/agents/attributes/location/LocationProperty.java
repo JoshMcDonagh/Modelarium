@@ -16,7 +16,7 @@ public class LocationProperty extends AgentProperty<Coordinates> {
     public LocationProperty() {
         super("location", true, AttributeAccessLevel.PUBLIC, Coordinates.class);
         movementProbabilityPerTick = SettingsLoader
-                .loadSIRConfig("dev/modelarium/examples/sirbasic/sir-config.json")
+                .loadSIRConfig("dev/modelarium/examples/sir/sir-config.json")
                 .movement()
                 .probabilityPerTick();
     }
