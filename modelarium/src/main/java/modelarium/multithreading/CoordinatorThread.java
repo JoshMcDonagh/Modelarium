@@ -116,6 +116,8 @@ public class CoordinatorThread implements Runnable {
                 new CoordinatorRequestHandler.AllWorkersFinishTick(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
         requestHandlerMap.put(RequestType.ALL_WORKERS_UPDATE_COORDINATOR,
                 new CoordinatorRequestHandler.AllWorkersUpdateCoordinator(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
+        requestHandlerMap.put(RequestType.CURRENT_POPULATION_SIZE_ACCESS,
+                new CoordinatorRequestHandler.CurrentPopulationSizeFromCoordinatorAccess(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
         requestHandlerMap.put(RequestType.AGENT_ACCESS,
                 new CoordinatorRequestHandler.AgentAccess(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
         requestHandlerMap.put(RequestType.UPDATE_COORDINATOR_AGENTS,

@@ -10,6 +10,7 @@ import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSe
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.ReadOnlyEnvironment;
 import modelarium.exceptions.AgentNotFoundException;
+import modelarium.exceptions.SimulationInterruptedException;
 import modelarium.internal.Internal;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 
@@ -101,6 +102,16 @@ public final class EnvironmentSimulationContext extends SimulationContext implem
     @Override
     public ReadOnlyEnvironment getEnvironment() {
         throw new UnsupportedOperationException("Context requester is already an Environment - use 'getThisEntity()' instead");
+    }
+
+    /**
+     * Returns the model's current population size.
+     *
+     * @return the current population size as an int
+     */
+    @Override
+    public int getCurrentPopulationSize() {
+        return getLocalAgentSet().size();
     }
 
     /**

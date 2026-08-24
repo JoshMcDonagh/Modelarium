@@ -19,6 +19,11 @@ public enum RequestType {
     ALL_WORKERS_UPDATE_COORDINATOR,
 
     /**
+     * Request to access the current population size of entire the model.
+     */
+    CURRENT_POPULATION_SIZE_ACCESS,
+
+    /**
      * Request to access a specific agent from another thread or core.
      */
     AGENT_ACCESS,

@@ -238,6 +238,35 @@ public abstract class CoordinatorRequestHandler {
     }
 
     /**
+     * Provides access to the entire model's current population size.
+     */
+    public static class CurrentPopulationSizeFromCoordinatorAccess extends CoordinatorRequestHandler {
+        /**
+         * Constructs a new handler for the {@link RequestType#CURRENT_POPULATION_SIZE_ACCESS} request type.
+         *
+         * @param threadName the name of the co-ordinator thread this handler belongs to
+         * @param settings global model settings
+         * @param requestResponseController the controller managing request/response queues
+         * @param globalAgentSet the global set of all agents in the model
+         * @param environment the environment shared across all workers
+         * @param sharedClock the clock used to synchronise the entities and cores in the model
+         */
+        public CurrentPopulationSizeFromCoordinatorAccess(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
+            super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
+        }
+
+        /**
+         * Retrieves the current population size from the global agent set and sends it back to the requester.
+         *
+         * @param request the request to handle
+         */
+        @Override
+        public void handleRequest(Request request) throws InterruptedException {
+            getResponseQueue(request.getRequester()).put(new Response(getThreadName(), request.getRequester(), ResponseType.CURRENT_POPULATION_SIZE_ACCESS, getGlobalAgentSet().size()));
+        }
+    }
+
+    /**
      * Provides access to an individual agent by name.
      */
     public static class AgentAccess extends CoordinatorRequestHandler {

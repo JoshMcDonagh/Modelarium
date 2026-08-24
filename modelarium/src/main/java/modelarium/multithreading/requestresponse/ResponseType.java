@@ -19,6 +19,11 @@ public enum ResponseType {
     ALL_WORKERS_UPDATE_COORDINATOR,
 
     /**
+     * Response to a request for accessing the current population size of entire the model.
+     */
+    CURRENT_POPULATION_SIZE_ACCESS,
+
+    /**
      * Response to a request for accessing a specific agent from another thread.
      */
     AGENT_ACCESS,

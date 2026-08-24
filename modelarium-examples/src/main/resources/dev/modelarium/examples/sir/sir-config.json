@@ -6,15 +6,15 @@
   },
 
   "initialStates": {
-    "S": 99000,
-    "I": 1000,
+    "S": 9900,
+    "I": 100,
     "R": 0
   },
 
   "environment": {
     "area": {
-      "width": 3540,
-      "height": 3540
+      "width": 300,
+      "height": 300
     }
   },
 

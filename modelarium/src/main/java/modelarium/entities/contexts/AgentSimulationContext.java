@@ -84,41 +84,4 @@ public final class AgentSimulationContext extends SimulationContext implements A
         // noinspection unchecked
         return (AttributeBase<AgentSimulationContext>) attribute();
     }
-
-    /**
-     * Returns the model's environment.
-     *
-     * <p>If the model's threads are not synchronised, the core's local environment is returned. Otherwise the
-     * environment is taken from the cache if present, or requested from the co-ordinator and cached for the
-     * remainder of the tick.
-     *
-     * @return a read-only view of the model's {@link Environment}
-     */
-    @Override
-    public ReadOnlyEnvironment getEnvironment() {
-        if (!config().areThreadsSynced())
-            return new ReadOnlyEnvironment(localEnvironment);
-
-        // Return cached environment if available
-        if (cache().doesEnvironmentExist())
-            return cache().getEnvironment();
-
-        // Request environment from coordinator
-        ReadOnlyEnvironment requestedEnvironment;
-        try {
-            requestedEnvironment = requestResponseInterface().getEnvironmentFromCoordinator(entity().name());
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new SimulationInterruptedException("Interrupted while fetching environment requested by '"
-                    + entity().name() + "'", e);
-        } catch (CoordinatorTimeoutException | CoordinatorErrorException e) {
-            throw new EnvironmentNotFoundException("Environment requested by '" + entity().name()
-                    + "' could not be found", e);
-        }
-
-        // Cache the result
-        cache().addEnvironment(requestedEnvironment);
-
-        return requestedEnvironment;
-    }
 }

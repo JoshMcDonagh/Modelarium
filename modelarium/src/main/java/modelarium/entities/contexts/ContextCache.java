@@ -16,13 +16,15 @@ import java.util.function.Predicate;
  * cleared by the worker at the end of every tick so that stale state does not carry over.
  */
 public class ContextCache {
-
     /** List of previously applied agent filters (for caching filtered sets) */
     private final IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredAgentsCache = new IdentityHashMap<>();
 
     /** The individually retrieved agents cached during the current tick */
     private final List<ReadOnlyAgent> individualAgentCacheList = new ArrayList<>();;
     private final Map<String, Integer> individualAgentCacheMap = new HashMap<>();
+
+    /** The population size cached during the current tick, or null if it has not been retrieved */
+    private Integer currentPopulationSize = null;
 
     /** The environment cached during the current tick, or null if it has not been retrieved */
     private ReadOnlyEnvironment environment = null;
@@ -40,6 +42,7 @@ public class ContextCache {
         filteredAgentsCache.clear();
         individualAgentCacheList.clear();
         individualAgentCacheMap.clear();
+        currentPopulationSize = null;
         environment = null;
     }
 
@@ -101,6 +104,33 @@ public class ContextCache {
     public void addAgent(ReadOnlyAgent agent) {
         individualAgentCacheMap.put(agent.name(), individualAgentCacheList.size());
         individualAgentCacheList.add(agent);
+    }
+
+    /**
+     * Returns whether the current population size has been cached.
+     *
+     * @return true if the current population size is cached, false otherwise
+     */
+    public boolean doesCurrentPopulationSizeExist() {
+        return currentPopulationSize != null;
+    }
+
+    /**
+     * Retrieves the cached current population size.
+     *
+     * @return the cached current population size as an int
+     */
+    public int getCurrentPopulationSize() {
+        return currentPopulationSize;
+    }
+
+    /**
+     * Caches the current population size.
+     *
+     * @param currentPopulationSize the current population size to cache
+     */
+    public void addCurrentPopulationSize(int currentPopulationSize) {
+        this.currentPopulationSize = currentPopulationSize;
     }
 
     /**

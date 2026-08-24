@@ -238,11 +238,40 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     public abstract AttributeBase<?> getThisAttribute();
 
     /**
-     * Returns the model's environment. Must be implemented by subclasses.
+     * Returns the model's environment.
      *
-     * @return a read-only view of the model's environment
+     * <p>If the model's threads are not synchronised, the core's local environment is returned. Otherwise, the
+     * environment is taken from the cache if present, or requested from the co-ordinator and cached for the
+     * remainder of the tick.
+     *
+     * @return a read-only view of the model's {@link Environment}
      */
-    public abstract ReadOnlyEnvironment getEnvironment();
+    public ReadOnlyEnvironment getEnvironment() {
+        if (!config.areThreadsSynced())
+            return new ReadOnlyEnvironment(localEnvironment);
+
+        // Return cached environment if available
+        if (cache.doesEnvironmentExist())
+            return cache.getEnvironment();
+
+        // Request environment from coordinator
+        ReadOnlyEnvironment requestedEnvironment;
+        try {
+            requestedEnvironment = requestResponseInterface.getEnvironmentFromCoordinator(entity.name());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new SimulationInterruptedException("Interrupted while fetching environment requested by '"
+                    + entity.name() + "'", e);
+        } catch (CoordinatorTimeoutException | CoordinatorErrorException e) {
+            throw new EnvironmentNotFoundException("Environment requested by '" + entity.name()
+                    + "' could not be found", e);
+        }
+
+        // Cache the result
+        cache.addEnvironment(requestedEnvironment);
+
+        return requestedEnvironment;
+    }
 
     /**
      * Creates and sets a simulation context for a newly added agent, sharing this context's resources.
@@ -340,6 +369,32 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     }
 
     /**
+     * Returns the model's current population size.
+     *
+     * <p>The current population size is looked up in the cache. If it hasn't been cached, the value is requested
+     * from the co-ordinator and then cached. If the model's threads are unsynchronised, the local current population size is
+     * returned instead.</p>
+     *
+     * @return the current population size as an int
+     */
+    public int getCurrentPopulationSize() {
+        if (!config.areThreadsSynced())
+            return localAgentSet.size();
+
+        if (cache.doesCurrentPopulationSizeExist())
+            return cache.getCurrentPopulationSize();
+
+        try{
+            int currentPopulationSize = requestResponseInterface.getCurrentPopulationSizeFromCoordinator(entity.name());
+            cache.addCurrentPopulationSize(currentPopulationSize);
+            return currentPopulationSize;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new SimulationInterruptedException("Interrupted while fetching the current population size", e);
+        }
+    }
+
+    /**
      * Retrieves an agent by name, whether it lives on this core or (in a synchronised model) on another core.
      *
      * <p>The agent is looked up in the local agent set first, then in the cache, and finally requested from the
@@ -368,7 +423,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
             ReadOnlyAgent requestedAgent = requestResponseInterface.getAgentFromCoordinator(entity.name(), targetAgentName);
             if (requestedAgent.isDead())
                 throw new AgentIsDeadException("Agent '" + targetAgentName + "' requested by '" + entity.name()
-                        + "' is dead and not accssible");
+                        + "' is dead and not accessible");
             cache.addAgent(requestedAgent);
             return requestedAgent;
         } catch (InterruptedException e) {

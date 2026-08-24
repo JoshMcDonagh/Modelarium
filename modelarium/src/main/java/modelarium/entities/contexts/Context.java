@@ -34,7 +34,14 @@ public sealed interface Context permits SimulationContext, EntityContext {
     boolean doesAgentExistInThisCore(String agentName);
 
     /**
-     * Retrieves an agent by name, whether it lives on this core or (in a synchronised model) on another core.
+     * Returns the model's current population size.
+     *
+     * @return the current population size as an int
+     */
+    int getCurrentPopulationSize();
+
+    /**
+     * Retrieves an agent by name.
      *
      * @param targetAgentName the name of the agent to retrieve
      * @return a read-only view of the requested agent
@@ -42,8 +49,7 @@ public sealed interface Context permits SimulationContext, EntityContext {
     ReadOnlyAgent getAgent(String targetAgentName);
 
     /**
-     * Retrieves the agents matching a filter, drawn from the whole population in a synchronised model or from this
-     * core's local agents otherwise.
+     * Retrieves the agents matching a filter.
      *
      * @param filter a predicate to apply to each agent
      * @return a read-only view of the matching agents

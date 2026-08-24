@@ -148,37 +148,48 @@ public class RequestResponseInterface {
     }
 
     /**
+     * Requests the current population size of the entire model from the coordinator.
+     *
+     * @param requesterEntityName the name of the requesting entity
+     * @return the current population size integer returned by the coordinator
+     */
+    public int getCurrentPopulationSizeFromCoordinator(String requesterEntityName) throws InterruptedException {
+        Request request = new Request(requesterEntityName, null, RequestType.CURRENT_POPULATION_SIZE_ACCESS, null);
+        return (int) sendAndAwait(request, ResponseType.CURRENT_POPULATION_SIZE_ACCESS);
+    }
+
+    /**
      * Requests a specific agent from the coordinator.
      *
-     * @param requesterAgentName the name of the requesting agent
+     * @param requesterEntityName the name of the requesting entity
      * @param targetAgentName the name of the agent to retrieve
      * @return the {@link ReadOnlyAgent} instance returned by the coordinator
      */
-    public ReadOnlyAgent getAgentFromCoordinator(String requesterAgentName, String targetAgentName) throws InterruptedException {
-        Request request = new Request(requesterAgentName, null, RequestType.AGENT_ACCESS, targetAgentName);
+    public ReadOnlyAgent getAgentFromCoordinator(String requesterEntityName, String targetAgentName) throws InterruptedException {
+        Request request = new Request(requesterEntityName, null, RequestType.AGENT_ACCESS, targetAgentName);
         return (ReadOnlyAgent) sendAndAwait(request, ResponseType.AGENT_ACCESS);
     }
 
     /**
      * Requests a filtered subset of agents from the coordinator.
      *
-     * @param requesterAgentName the name of the requester
+     * @param requesterEntityName the name of the requester
      * @param agentFilter a predicate to apply to the global agent set
      * @return an {@link ReadOnlyAgentSet} containing matching agents
      */
-    public ReadOnlyAgentSet getFilteredAgentsFromCoordinator(String requesterAgentName, Predicate<ReadOnlyAgent> agentFilter) throws InterruptedException {
-        Request request = new Request(requesterAgentName, null, RequestType.FILTERED_AGENTS_ACCESS, agentFilter);
+    public ReadOnlyAgentSet getFilteredAgentsFromCoordinator(String requesterEntityName, Predicate<ReadOnlyAgent> agentFilter) throws InterruptedException {
+        Request request = new Request(requesterEntityName, null, RequestType.FILTERED_AGENTS_ACCESS, agentFilter);
         return (ReadOnlyAgentSet) sendAndAwait(request, ResponseType.FILTERED_AGENTS_ACCESS);
     }
 
     /**
      * Requests the current environment state from the coordinator.
      *
-     * @param requesterAgentName the requesting agent's name
+     * @param requesterEntityName the requesting entity's name
      * @return the current {@link ReadOnlyEnvironment} instance
      */
-    public ReadOnlyEnvironment getEnvironmentFromCoordinator(String requesterAgentName) throws InterruptedException {
-        Request request = new Request(requesterAgentName, null, RequestType.ENVIRONMENT_ATTRIBUTES_ACCESS, null);
+    public ReadOnlyEnvironment getEnvironmentFromCoordinator(String requesterEntityName) throws InterruptedException {
+        Request request = new Request(requesterEntityName, null, RequestType.ENVIRONMENT_ATTRIBUTES_ACCESS, null);
         return (ReadOnlyEnvironment) sendAndAwait(request, ResponseType.ENVIRONMENT_ATTRIBUTES_ACCESS);
     }
 
