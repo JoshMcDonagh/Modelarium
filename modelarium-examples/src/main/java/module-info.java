@@ -7,4 +7,10 @@
 module modelarium.examples {
     requires modelarium;
     requires com.fasterxml.jackson.databind;
+
+    opens dev.modelarium.examples.sir.config
+            to com.fasterxml.jackson.databind;
+
+    opens dev.modelarium.examples.el_farol_bar.config
+            to com.fasterxml.jackson.databind;
 }
