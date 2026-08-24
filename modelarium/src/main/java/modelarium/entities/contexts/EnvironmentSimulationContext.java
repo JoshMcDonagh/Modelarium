@@ -10,7 +10,6 @@ import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSe
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.ReadOnlyEnvironment;
 import modelarium.exceptions.AgentNotFoundException;
-import modelarium.exceptions.SimulationInterruptedException;
 import modelarium.internal.Internal;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 

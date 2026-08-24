@@ -3,7 +3,6 @@ package modelarium.multithreading.requestresponse;
 import modelarium.Config;
 import modelarium.clock.MutableClock;
 import modelarium.entities.agents.immutable.ReadOnlyAgent;
-import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
 import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.ReadOnlyEnvironment;
@@ -11,7 +10,6 @@ import modelarium.entities.environments.ReadOnlyEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
-import java.util.function.Predicate;
 
 /**
  * Abstract class for handling a single type of request sent to the co-ordinator by worker threads.

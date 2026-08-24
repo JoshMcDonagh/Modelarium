@@ -29,6 +29,6 @@ public class SIRMain {
 
         model.run();
 
-        model.getResults().export("modelarium-examples/output");
+        model.getResults().export("modelarium-examples/output/sir");
     }
 }

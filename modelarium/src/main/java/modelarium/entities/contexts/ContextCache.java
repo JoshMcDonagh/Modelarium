@@ -2,7 +2,6 @@ package modelarium.entities.contexts;
 
 import modelarium.entities.agents.immutable.ReadOnlyAgent;
 import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
-import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.environments.ReadOnlyEnvironment;
 import modelarium.internal.Internal;
 

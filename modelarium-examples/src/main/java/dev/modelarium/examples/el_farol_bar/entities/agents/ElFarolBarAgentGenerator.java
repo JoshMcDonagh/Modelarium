@@ -1,11 +1,7 @@
 package dev.modelarium.examples.el_farol_bar.entities.agents;
 
 import dev.modelarium.examples.el_farol_bar.config.ElFarolBarSettings;
-import dev.modelarium.examples.el_farol_bar.entities.agents.attributes.decision.ActivePredictorProperty;
-import dev.modelarium.examples.el_farol_bar.entities.agents.attributes.decision.AttendingProperty;
-import dev.modelarium.examples.el_farol_bar.entities.agents.attributes.decision.LastObservedAttendanceProperty;
-import dev.modelarium.examples.el_farol_bar.entities.agents.attributes.decision.MakeAttendanceDecisionRoutine;
-import dev.modelarium.examples.el_farol_bar.entities.agents.attributes.decision.PredictedAttendanceProperty;
+import dev.modelarium.examples.el_farol_bar.entities.agents.attributes.decision.*;
 import dev.modelarium.examples.el_farol_bar.entities.agents.prediction.AttendancePredictor;
 import dev.modelarium.examples.el_farol_bar.entities.agents.prediction.FocalPredictorFactory;
 import modelarium.Config;

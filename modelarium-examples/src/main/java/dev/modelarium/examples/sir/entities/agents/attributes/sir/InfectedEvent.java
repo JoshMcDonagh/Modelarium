@@ -12,6 +12,14 @@ import modelarium.entities.contexts.AgentContext;
 import java.util.function.Predicate;
 
 public class InfectedEvent extends AgentEvent {
+    private static final Predicate<ReadOnlyAgent> INFECTIOUS_ONLY = agent -> {
+        SIRState sirState = (SIRState) agent
+                .getProperty("sir", "sir_state")
+                .get();
+
+        return sirState == SIRState.INFECTIOUS;
+    };
+
     private static double euclideanDistance(Coordinates coordinates1, Coordinates coordinates2) {
         double dx = coordinates2.getX() - coordinates1.getX();
         double dy = coordinates2.getY() - coordinates1.getY();
@@ -43,27 +51,27 @@ public class InfectedEvent extends AgentEvent {
                 .getProperty("location", "location")
                 .get();
 
-        Predicate<ReadOnlyAgent> nearbyAndInfectiousOnly = agent -> {
-            Coordinates otherCoordinates = (Coordinates) agent
-                    .getProperty("location", "location")
-                    .get();
+        ReadOnlyAgentSet infectiousAgents =
+                context.getFilteredAgents(INFECTIOUS_ONLY);
 
-            if (euclideanDistance(coordinates, otherCoordinates) > contactDistance)
-                return false;
+        for (ReadOnlyAgent infectiousAgent : infectiousAgents) {
+            Coordinates infectiousAgentCoordinates =
+                    (Coordinates) infectiousAgent
+                            .getProperty("location", "location")
+                            .get();
 
-            SIRState otherSirState = (SIRState) agent
-                    .getProperty("sir", "sir_state")
-                    .get();
+            if (euclideanDistance(
+                    coordinates,
+                    infectiousAgentCoordinates
+            ) <= contactDistance) {
+                return context
+                        .getRandom()
+                        .nextDouble(0.0, 1.0)
+                        < infectionProbabilityPerContact;
+            }
+        }
 
-            return otherSirState == SIRState.INFECTIOUS;
-        };
-
-        ReadOnlyAgentSet otherAgentsNearby = context.getFilteredAgents(nearbyAndInfectiousOnly);
-
-        if (otherAgentsNearby.isEmpty())
-            return false;
-
-        return context.getRandom().nextDouble(0.0, 1.0) < infectionProbabilityPerContact;
+        return false;
     }
 
     @Override

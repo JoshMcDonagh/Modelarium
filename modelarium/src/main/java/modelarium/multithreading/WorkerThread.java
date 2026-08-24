@@ -116,10 +116,6 @@ public class WorkerThread implements Callable<Results> {
 
         RequestResponseInterface requestResponseInterface = requestResponseController.getInterface(threadName);
 
-        // Initial broadcast of agent state to coordinator
-        if (config.areThreadsSynced())
-            requestResponseInterface.updateCoordinatorAgents(agentsInThread);
-
         // Simulation main loop
         while (!clock.isFinished()) {
             config.scheduler().runTick(
@@ -129,6 +125,15 @@ public class WorkerThread implements Callable<Results> {
                     agentsInThread,
                     randomGenerator
             );
+
+            for (Agent agent : agentsInThread) {
+                agentsInThread.update(agent.getAddedAgents(), true);
+
+                for (String agentName : agent.getKilledAgentNames())
+                    agentsInThread.get(agentName).kill();
+
+                agent.updateLocalAgentSet(agentsInThread);
+            }
 
             if (config.areThreadsSynced()) {
                 requestResponseInterface.waitUntilAllWorkersFinishTick();

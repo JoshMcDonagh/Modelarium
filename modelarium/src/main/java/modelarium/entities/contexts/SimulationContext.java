@@ -70,6 +70,12 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     /** The attribute currently being run on the owning entity */
     private AttributeBase<?> attribute = null;
 
+    /** Agent set for tracking agents added by this context's entity */
+    private final AgentSet addedAgents = new AgentSet();
+
+    /** List of agent names killed by this context's entity */
+    private final List<String> killedAgentNames = new ArrayList<>();
+
     /**
      * Constructs a new simulation context for the given entity.
      *
@@ -151,6 +157,19 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     @Internal
     public void setCurrentAttribute(AttributeBase<?> attribute) {
         this.attribute = attribute;
+    }
+
+
+    /**
+     * Updates the entity's local agent set.
+     *
+     * @param agentSet the agent set to update the local agent set with
+     */
+    @Internal
+    public void updateLocalAgentSet(AgentSet agentSet) {
+        localAgentSet.update(agentSet, true);
+        addedAgents.clear();
+        killedAgentNames.clear();
     }
 
     /**
@@ -318,6 +337,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     public void addAgent(Agent agent) {
         createAgentContext(agent);
         localAgentSet.add(agent);
+        addedAgents.add(agent);
     }
 
     /**
@@ -329,6 +349,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     public void addAgents(AgentSet agentSet) {
         createAgentContexts(agentSet);
         localAgentSet.add(agentSet);
+        addedAgents.add(agentSet);
     }
 
     /**
@@ -339,6 +360,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     public void addAgents(List<Agent> agentList) {
         createAgentContexts(agentList);
         localAgentSet.add(agentList);
+        addedAgents.add(agentList);
     }
 
     /**
@@ -476,6 +498,8 @@ public sealed abstract class SimulationContext implements Context permits AgentS
                             entity.name()
                     );
                     cache.addGlobalAgentSet(globalAgentSet);
+
+
                     filteredAgentSet = globalAgentSet.getFilteredAgents(filter, includeDeadAgents);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -510,6 +534,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
             if (!doesAgentExistInThisCore(agentName))
                 throw new AgentNotFoundException("Agent '" + agentName + "' requested by '" + entity.name() + "' not found in this thread (threads are not synced)");
             localAgentSet.get(agentName).kill();
+            killedAgentNames.add(agentName);
             return;
         }
 
@@ -545,8 +570,10 @@ public sealed abstract class SimulationContext implements Context permits AgentS
                             + "' not found in this thread (threads are not synced)");
             }
 
-            for (String agentName : agentNames)
+            for (String agentName : agentNames) {
                 localAgentSet.get(agentName).kill();
+                killedAgentNames.add(agentName);
+            }
             return;
         }
 
@@ -571,5 +598,15 @@ public sealed abstract class SimulationContext implements Context permits AgentS
         for (ReadOnlyAgent agent : agentSet)
             agentNames.add(agent.name());
         killAgents(agentNames);
+    }
+
+    @Internal
+    public AgentSet getAddedAgents() {
+        return addedAgents;
+    }
+
+    @Internal
+    public List<String> getKilledAgentNames() {
+        return killedAgentNames;
     }
 }

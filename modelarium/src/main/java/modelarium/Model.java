@@ -120,6 +120,15 @@ public class Model {
         );
     }
 
+    private AgentSet createGlobalAgentSet(List<AgentSet> agentsForEachCore) {
+        AgentSet globalAgentSet = new AgentSet();
+
+        for (AgentSet agentSet : agentsForEachCore)
+            globalAgentSet.addDeepCopy(agentSet);
+
+        return globalAgentSet;
+    }
+
     /**
      * Creates and starts the model's co-ordinator thread using {@link CoordinatorThread}.
      *
@@ -132,14 +141,17 @@ public class Model {
     private CoordinatorHandle launchCoordinator(
             Environment environment,
             RequestResponseController requestResponseController,
-            MutableClock sharedClock
+            MutableClock sharedClock,
+            AgentSet globalAgentSet
     ) {
         CoordinatorThread coordinator = new CoordinatorThread(
                 String.valueOf(config.threadCount()),
                 config,
                 environment,
                 requestResponseController,
-                sharedClock
+                sharedClock,
+                globalAgentSet,
+                null
         );
 
         Thread coordinatorThread = new Thread(coordinator);
@@ -246,6 +258,12 @@ public class Model {
         List<AgentSet> agentsForEachCore = generateAgentsForEachCoreAsList(randomGenerator);
         Environment environment = generateEnvironment(randomGenerator);
 
+        AgentSet globalAgentSet = null;
+
+        // Generate the global agent set
+        if (config.areThreadsSynced())
+            globalAgentSet = createGlobalAgentSet(agentsForEachCore);
+
         // Updates the results container with the agents in the model
         setupResultsContainer(agentsForEachCore);
 
@@ -262,7 +280,7 @@ public class Model {
         // If threads are synchronised, create the coordinator thread
         CoordinatorHandle coordinatorHandle = null;
         if (config.areThreadsSynced())
-            coordinatorHandle = launchCoordinator(environment, requestResponseController, sharedClock);
+            coordinatorHandle = launchCoordinator(environment, requestResponseController, sharedClock, globalAgentSet);
 
         try {
             // Create the worker threads

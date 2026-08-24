@@ -14,6 +14,7 @@ import modelarium.entities.logging.EntityLog;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 import modelarium.internal.Internal;
 import modelarium.multithreading.requestresponse.RequestResponseController;
+import modelarium.utils.Cloners;
 
 import java.util.HashMap;
 import java.util.List;
@@ -123,7 +124,7 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
             throw new IllegalStateException("Context already created");
 
         context = makeContextInstance(
-                agentSet,
+                Cloners.standard().deepClone(agentSet),
                 config,
                 contextCache,
                 clock,
@@ -134,6 +135,26 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
 
         for (AS attributeSet : attributeSetList)
             attributeSet.setContext(context);
+    }
+
+    /**
+     * Updates the entity's local agent set.
+     *
+     * @param agentSet the local agent set the context will be updated with
+     */
+    @Internal
+    public void updateLocalAgentSet(AgentSet agentSet) {
+        context.updateLocalAgentSet(agentSet);
+    }
+
+    @Internal
+    public AgentSet getAddedAgents() {
+        return context.getAddedAgents();
+    }
+
+    @Internal
+    public List<String> getKilledAgentNames() {
+        return context.getKilledAgentNames();
     }
 
     /**

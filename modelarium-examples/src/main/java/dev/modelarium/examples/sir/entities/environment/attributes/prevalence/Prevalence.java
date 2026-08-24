@@ -2,11 +2,10 @@ package dev.modelarium.examples.sir.entities.environment.attributes.prevalence;
 
 import dev.modelarium.examples.sir.entities.agents.attributes.sir.SIRState;
 import modelarium.entities.contexts.EnvironmentContext;
-import modelarium.entities.contexts.EnvironmentSimulationContext;
 
 public class Prevalence {
-    private int numberOfInfected;
-    private double infectedPercentage;
+    private int numberOfInfected = 0;
+    private double infectedPercentage = 0;
 
     void update(EnvironmentContext context) {
         int currentPopulationSize = context.getCurrentPopulationSize();

@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
 
 /**
  * Provides a per-thread interface for sending requests to and receiving responses from

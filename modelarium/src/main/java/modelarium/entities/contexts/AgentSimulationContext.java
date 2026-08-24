@@ -7,11 +7,6 @@ import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
 import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
 import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.ReadOnlyEnvironment;
-import modelarium.exceptions.CoordinatorErrorException;
-import modelarium.exceptions.CoordinatorTimeoutException;
-import modelarium.exceptions.EnvironmentNotFoundException;
-import modelarium.exceptions.SimulationInterruptedException;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 
 import java.util.random.RandomGenerator;

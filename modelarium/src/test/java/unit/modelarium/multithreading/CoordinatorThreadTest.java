@@ -7,11 +7,7 @@ import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.environments.Environment;
 import modelarium.multithreading.CoordinatorThread;
-import modelarium.multithreading.requestresponse.Request;
-import modelarium.multithreading.requestresponse.RequestResponseController;
-import modelarium.multithreading.requestresponse.RequestType;
-import modelarium.multithreading.requestresponse.Response;
-import modelarium.multithreading.requestresponse.ResponseType;
+import modelarium.multithreading.requestresponse.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
