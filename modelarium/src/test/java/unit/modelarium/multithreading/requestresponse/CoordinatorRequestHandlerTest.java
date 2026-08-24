@@ -125,24 +125,6 @@ public class CoordinatorRequestHandlerTest {
     }
 
     @Test
-    public void testFilteredAgentsAccess_ExcludesDeadAgents() throws InterruptedException {
-        Agent alive = new Agent("alive", List.of());
-        Agent dead = new Agent("dead", List.of());
-        dead.kill();
-        Fixture fixture = fixture(new AgentSet(List.of(alive, dead)), 2);
-        CoordinatorRequestHandler.FilteredAgentsAccess handler = new CoordinatorRequestHandler.FilteredAgentsAccess(
-                "coordinator", fixture.config, fixture.controller, fixture.agents, fixture.environment, fixture.clock
-        );
-        Predicate<ReadOnlyAgent> includeAll = agent -> true;
-
-        handler.handleRequest(new Request("worker", null, RequestType.FILTERED_AGENTS_ACCESS, includeAll));
-
-        ReadOnlyAgentSet returned = (ReadOnlyAgentSet) fixture.controller.getResponseQueue("worker").take().getPayload();
-        assertEquals(1, returned.size());
-        assertEquals("alive", returned.get(0).name());
-    }
-
-    @Test
     public void testEnvironmentAttributesAccess_ReturnsReadOnlyEnvironment() throws InterruptedException {
         Fixture fixture = fixture(2);
         CoordinatorRequestHandler.EnvironmentAttributesAccess handler =

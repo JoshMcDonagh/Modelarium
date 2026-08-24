@@ -29,9 +29,9 @@ public enum ResponseType {
     AGENT_ACCESS,
 
     /**
-     * Response containing a filtered set of agents based on a predicate.
+     * Response containing the global agent set.
      */
-    FILTERED_AGENTS_ACCESS,
+    AGENT_SET_ACCESS,
 
     /**
      * Response containing the current state of environment attributes.

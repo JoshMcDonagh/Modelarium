@@ -19,9 +19,18 @@ public class ContextCache {
     /** List of previously applied agent filters (for caching filtered sets) */
     private final IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredAgentsCache = new IdentityHashMap<>();
 
+    /** List of previously applied living-only agent filters (for caching filtered sets) */
+    private final IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredLivingOnlyAgentsCache = new IdentityHashMap<>();
+
     /** The individually retrieved agents cached during the current tick */
     private final List<ReadOnlyAgent> individualAgentCacheList = new ArrayList<>();;
     private final Map<String, Integer> individualAgentCacheMap = new HashMap<>();
+
+    /** The global agent set */
+    private ReadOnlyAgentSet globalAgentSet = null;
+
+    /** The agent set containing only living agents */
+    private ReadOnlyAgentSet livingAgentSet = null;
 
     /** The population size cached during the current tick, or null if it has not been retrieved */
     private Integer currentPopulationSize = null;
@@ -42,8 +51,94 @@ public class ContextCache {
         filteredAgentsCache.clear();
         individualAgentCacheList.clear();
         individualAgentCacheMap.clear();
+        globalAgentSet = null;
+        livingAgentSet = null;
         currentPopulationSize = null;
         environment = null;
+    }
+
+    /**
+     * Returns whether the living agent set has been cached.
+     *
+     * @return true if the living agent set has been cached.
+     */
+    public boolean doesLivingAgentSetExist() {
+        return livingAgentSet != null;
+    }
+
+    /**
+     * Caches the living agent set.
+     *
+     * @param livingAgentSet the living agent set to cache
+     */
+    public void addLivingAgentSet(ReadOnlyAgentSet livingAgentSet) {
+        this.livingAgentSet = livingAgentSet;
+    }
+
+    /**
+     * Retrieves the cached living agent set.
+     *
+     * @return the cached {@link ReadOnlyAgentSet} for the living agent set, or null if none is cached
+     */
+    public ReadOnlyAgentSet getLivingAgentSet() {
+        return livingAgentSet;
+    }
+
+    /**
+     * Returns whether the global agent set has been cached.
+     *
+     * @return true if the global agent sent is cached, otherwise false
+     */
+    public boolean doesGlobalAgentSetExist() {
+        return globalAgentSet != null;
+    }
+
+    /**
+     * Caches the global agent set.
+     *
+     * @param globalAgentSet the global agent set to cache
+     */
+    public void addGlobalAgentSet(ReadOnlyAgentSet globalAgentSet) {
+        this.globalAgentSet = globalAgentSet;
+    }
+
+    /**
+     * Retrieves the cached global agent set.
+     *
+     * @return the cached {@link ReadOnlyAgentSet} for the global agent set, or null if none is cached
+     */
+    public ReadOnlyAgentSet getGlobalAgentSet() {
+        return globalAgentSet;
+    }
+
+    /**
+     * Returns whether a living-only filtered agent set has been cached for the given filter.
+     *
+     * @param agentFilter the filter to check for
+     * @return true if a result is cached for the filter, false otherwise
+     */
+    public boolean doesLivingOnlyAgentFilterExist(Predicate<ReadOnlyAgent> agentFilter) {
+        return filteredLivingOnlyAgentsCache.containsKey(agentFilter);
+    }
+
+    /**
+     * Caches the living-only agents matching a filter.
+     *
+     * @param agentFilter the filter the agents were matched against
+     * @param results the agents matching the filter
+     */
+    public void addLivingOnlyFilteredAgents(Predicate<ReadOnlyAgent> agentFilter, ReadOnlyAgentSet results) {
+        filteredLivingOnlyAgentsCache.put(agentFilter, results);
+    }
+
+    /**
+     * Retrieves the cached living-only agents matching a filter.
+     *
+     * @param agentFilter the filter the agents were matched against
+     * @return the cached {@link ReadOnlyAgentSet} for the filter, or null if none is cached
+     */
+    public ReadOnlyAgentSet getLivingOnlyFilteredAgents(Predicate<ReadOnlyAgent> agentFilter) {
+        return filteredLivingOnlyAgentsCache.get(agentFilter);
     }
 
     /**
@@ -70,7 +165,7 @@ public class ContextCache {
      * Retrieves the cached agents matching a filter.
      *
      * @param agentFilter the filter the agents were matched against
-     * @return the cached {@link AgentSet} for the filter, or null if none is cached
+     * @return the cached {@link ReadOnlyAgentSet} for the filter, or null if none is cached
      */
     public ReadOnlyAgentSet getFilteredAgents(Predicate<ReadOnlyAgent> agentFilter) {
         return filteredAgentsCache.get(agentFilter);

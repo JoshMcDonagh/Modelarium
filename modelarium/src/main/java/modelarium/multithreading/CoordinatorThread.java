@@ -5,7 +5,6 @@ import modelarium.clock.MutableClock;
 import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.environments.Environment;
 import modelarium.multithreading.requestresponse.*;
-import modelarium.utils.Cloners;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -122,8 +121,8 @@ public class CoordinatorThread implements Runnable {
                 new CoordinatorRequestHandler.AgentAccess(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
         requestHandlerMap.put(RequestType.UPDATE_COORDINATOR_AGENTS,
                 new CoordinatorRequestHandler.UpdateCoordinatorAgents(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
-        requestHandlerMap.put(RequestType.FILTERED_AGENTS_ACCESS,
-                new CoordinatorRequestHandler.FilteredAgentsAccess(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
+        requestHandlerMap.put(RequestType.AGENT_SET_ACCESS,
+                new CoordinatorRequestHandler.GlobalAgentSetAccess(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
         requestHandlerMap.put(RequestType.ENVIRONMENT_ATTRIBUTES_ACCESS,
                 new CoordinatorRequestHandler.EnvironmentAttributesAccess(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock));
         requestHandlerMap.put(RequestType.KILL_AGENT,

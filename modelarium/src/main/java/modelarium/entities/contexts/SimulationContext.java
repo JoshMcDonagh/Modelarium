@@ -436,7 +436,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     }
 
     /**
-     * Retrieves the agents matching a filter, drawn from the whole population in a synchronised model or from this
+     * Retrieves the agents (excluding dead agents) matching a filter, drawn from the whole population in a synchronised model or from this
      * core's local agents otherwise.
      *
      * <p>Filter results are cached for the remainder of the tick, keyed by the filter instance itself.
@@ -445,27 +445,64 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * @return a read-only view of the matching agents
      */
     public ReadOnlyAgentSet getFilteredAgents(Predicate<ReadOnlyAgent> filter) {
-        // Return cached filtered result if available
-        if (cache.doesAgentFilterExist(filter))
+        return getFilteredAgents(filter, false);
+    }
+
+    /**
+     * Retrieves the agents matching a filter, drawn from the whole population in a synchronised model or from this
+     * core's local agents otherwise.
+     *
+     * <p>Filter results are cached for the remainder of the tick, keyed by the filter instance itself.
+     *
+     * @param filter a predicate to apply to each agent
+     * @param includeDeadAgents a boolean which determines if the filtered agents should include the dead agents or not
+     * @return a read-only view of the matching agents
+     */
+    public ReadOnlyAgentSet getFilteredAgents(Predicate<ReadOnlyAgent> filter, boolean includeDeadAgents) {
+        if (includeDeadAgents && cache.doesAgentFilterExist(filter))
             return cache.getFilteredAgents(filter);
+
+        if (!includeDeadAgents && cache.doesLivingOnlyAgentFilterExist(filter))
+            return cache.getLivingOnlyFilteredAgents(filter);
 
         ReadOnlyAgentSet filteredAgentSet;
 
         if (config.areThreadsSynced()) {
-            // Request filtered agents from the coordinator
-            try {
-                filteredAgentSet = requestResponseInterface.getFilteredAgentsFromCoordinator(entity.name(), filter);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new SimulationInterruptedException("Interrupted while retrieving filtered agents requested by " +
-                        "'" + entity.name() + "'", e);
-            } catch (CoordinatorTimeoutException | CoordinatorErrorException e) {
-                throw new AgentNotFoundException("Failed to retrieve filtered agents requested by '" + entity.name()
-                        + "' from the coordinator", e);
+            if (includeDeadAgents && cache.doesGlobalAgentSetExist()) {
+                filteredAgentSet = cache.getGlobalAgentSet().getFilteredAgents(filter);
+            } else if (!includeDeadAgents && cache.doesLivingAgentSetExist()) {
+                filteredAgentSet = cache.getLivingAgentSet().getFilteredAgents(filter);
+            } else {
+                try {
+                    ReadOnlyAgentSet globalAgentSet = requestResponseInterface.getGlobalAgentSetFromCoordinator(
+                            entity.name()
+                    );
+                    cache.addGlobalAgentSet(globalAgentSet);
+
+                    if (!includeDeadAgents) {
+                        globalAgentSet = globalAgentSet.getFilteredAgents(agent -> !agent.isDead());
+                        cache.addLivingAgentSet(globalAgentSet);
+                    }
+
+                    filteredAgentSet = globalAgentSet.getFilteredAgents(filter);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new SimulationInterruptedException("Interrupted while retrieving filtered agents requested by " +
+                            "'" + entity.name() + "'", e);
+                } catch (CoordinatorTimeoutException | CoordinatorErrorException e) {
+                    throw new AgentNotFoundException("Failed to retrieve filtered agents requested by '" + entity.name()
+                            + "' from the coordinator", e);
+                }
             }
+
         } else {
-            // Use only local agent set
-            filteredAgentSet = localAgentSet.getFilteredAgents(filter).getAsImmutable();
+            if (includeDeadAgents) {
+                filteredAgentSet = localAgentSet.getFilteredAgents(filter).getAsImmutable();
+            } else {
+                ReadOnlyAgentSet livingOnlyAgentSet = localAgentSet.getFilteredAgents(agent -> !agent.isDead()).getAsImmutable();
+                cache.addLivingAgentSet(livingOnlyAgentSet);
+                filteredAgentSet = livingOnlyAgentSet.getFilteredAgents(filter);
+            }
         }
 
         // Cache the result for future access

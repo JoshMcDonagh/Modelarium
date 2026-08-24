@@ -29,9 +29,9 @@ public enum RequestType {
     AGENT_ACCESS,
 
     /**
-     * Request to access a subset of agents based on a filter predicate.
+     * Request to access the global agent set.
      */
-    FILTERED_AGENTS_ACCESS,
+    AGENT_SET_ACCESS,
 
     /**
      * Request to retrieve the current state of the environment's attributes.

@@ -345,12 +345,12 @@ public abstract class CoordinatorRequestHandler {
     }
 
     /**
-     * Provides access to a filtered subset of the global agent set.
+     * Provides access to the global agent set.
      */
-    public static class FilteredAgentsAccess extends CoordinatorRequestHandler {
+    public static class GlobalAgentSetAccess extends CoordinatorRequestHandler {
 
         /**
-         * Constructs a new handler for the {@link RequestType#FILTERED_AGENTS_ACCESS} request type.
+         * Constructs a new handler for the {@link RequestType#AGENT_SET_ACCESS} request type.
          *
          * @param threadName the name of the co-ordinator thread this handler belongs to
          * @param settings global model settings
@@ -359,32 +359,22 @@ public abstract class CoordinatorRequestHandler {
          * @param environment the environment shared across all workers
          * @param sharedClock the clock used to synchronise the entities and cores in the model
          */
-        public FilteredAgentsAccess(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
+        public GlobalAgentSetAccess(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
         /**
-         * Applies the predicate carried by the request's payload to the global agent set and sends the matching
-         * agents back to the requester.
+         * Gets the global agent set and sends it to the requester.
          *
          * @param request the request to handle
          */
-        @SuppressWarnings("unchecked")
         @Override
         public void handleRequest(Request request) throws InterruptedException {
-            Object payload = request.getPayload();
-            if (!(payload instanceof Predicate<?>)) {
-                throw new IllegalArgumentException("FILTERED_AGENTS_ACCESS payload must be a Predicate<Agent> (got: "
-                        + (payload == null ? "null" : payload.getClass().getName()) + ")"
-                );
-            }
-            Predicate<ReadOnlyAgent> filter = (Predicate<ReadOnlyAgent>) payload;
-            ReadOnlyAgentSet filtered = getGlobalAgentSet().getFilteredAgents(filter).getAsImmutable();
             getResponseQueue(request.getRequester()).put(new Response(
                     getThreadName(),
                     request.getRequester(),
-                    ResponseType.FILTERED_AGENTS_ACCESS,
-                    filtered));
+                    ResponseType.AGENT_SET_ACCESS,
+                    getGlobalAgentSet().getAsImmutable()));
         }
     }
 

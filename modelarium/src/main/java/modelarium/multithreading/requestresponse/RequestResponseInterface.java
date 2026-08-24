@@ -171,15 +171,14 @@ public class RequestResponseInterface {
     }
 
     /**
-     * Requests a filtered subset of agents from the coordinator.
+     * Requests the global agent set from the coordinator.
      *
      * @param requesterEntityName the name of the requester
-     * @param agentFilter a predicate to apply to the global agent set
-     * @return an {@link ReadOnlyAgentSet} containing matching agents
+     * @return an {@link ReadOnlyAgentSet} containing the global agent set
      */
-    public ReadOnlyAgentSet getFilteredAgentsFromCoordinator(String requesterEntityName, Predicate<ReadOnlyAgent> agentFilter) throws InterruptedException {
-        Request request = new Request(requesterEntityName, null, RequestType.FILTERED_AGENTS_ACCESS, agentFilter);
-        return (ReadOnlyAgentSet) sendAndAwait(request, ResponseType.FILTERED_AGENTS_ACCESS);
+    public ReadOnlyAgentSet getGlobalAgentSetFromCoordinator(String requesterEntityName) throws InterruptedException {
+        Request request = new Request(requesterEntityName, null, RequestType.AGENT_SET_ACCESS, null);
+        return (ReadOnlyAgentSet) sendAndAwait(request, ResponseType.AGENT_SET_ACCESS);
     }
 
     /**

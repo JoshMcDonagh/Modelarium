@@ -170,26 +170,25 @@ public class RequestResponseInterfaceTest {
 
 
     @Test
-    public void testGetFilteredAgentsFromCoordinator_ReturnsPayloadAndBuildsCorrectRequest() throws InterruptedException {
+    public void testGetGlobalAgentSetFromCoordinator_ReturnsPayloadAndBuildsCorrectRequest() throws InterruptedException {
         Config config = config(true, Duration.ofSeconds(1));
         RequestResponseController controller = new RequestResponseController(config);
         RequestResponseInterface requestResponseInterface = controller.getInterface("worker");
         AgentSet agents = new AgentSet(List.of(new Agent("A", List.of())));
         var expected = agents.getAsImmutable();
-        java.util.function.Predicate<ReadOnlyAgent> filter = agent -> true;
         controller.getResponseQueue("worker").put(new Response(
                 "coordinator",
                 "worker",
-                ResponseType.FILTERED_AGENTS_ACCESS,
+                ResponseType.AGENT_SET_ACCESS,
                 expected
         ));
 
-        var actual = requestResponseInterface.getFilteredAgentsFromCoordinator("worker", filter);
+        var actual = requestResponseInterface.getGlobalAgentSetFromCoordinator("worker");
 
         assertSame(expected, actual);
         Request request = controller.getRequestQueue().take();
-        assertEquals(RequestType.FILTERED_AGENTS_ACCESS, request.getRequestType());
-        assertSame(filter, request.getPayload());
+        assertEquals(RequestType.AGENT_SET_ACCESS, request.getRequestType());
+        assertNull(request.getPayload());
     }
 
     @Test
