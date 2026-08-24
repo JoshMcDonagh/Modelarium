@@ -14,7 +14,6 @@ import modelarium.utils.Cloners;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -122,6 +121,28 @@ public class CoordinatorRequestHandlerTest {
                 IllegalArgumentException.class,
                 () -> handler.handleRequest(new Request("worker", null, RequestType.AGENT_ACCESS, 123))
         );
+    }
+
+    @Test
+    public void testGlobalAgentSetAccess_ReturnsEntireReadOnlyGlobalSetIncludingDeadAgents() throws InterruptedException {
+        Agent alive = new Agent("alive", List.of());
+        Agent dead = new Agent("dead", List.of());
+        dead.kill();
+        Fixture fixture = fixture(new AgentSet(List.of(alive, dead)), 2);
+        CoordinatorRequestHandler.GlobalAgentSetAccess handler =
+                new CoordinatorRequestHandler.GlobalAgentSetAccess(
+                        "coordinator", fixture.config, fixture.controller, fixture.agents, fixture.environment, fixture.clock
+                );
+
+        handler.handleRequest(new Request("worker", null, RequestType.AGENT_SET_ACCESS, null));
+
+        Response response = fixture.controller.getResponseQueue("worker").take();
+        assertEquals(ResponseType.AGENT_SET_ACCESS, response.getResponseType());
+        assertSame(fixture.agents.getAsImmutable(), response.getPayload());
+        ReadOnlyAgentSet returned = (ReadOnlyAgentSet) response.getPayload();
+        assertEquals(2, returned.size());
+        assertFalse(returned.get("alive").isDead());
+        assertTrue(returned.get("dead").isDead());
     }
 
     @Test

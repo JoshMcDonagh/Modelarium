@@ -131,14 +131,27 @@ public final class EnvironmentSimulationContext extends SimulationContext implem
     }
 
     /**
-     * Retrieves the agents matching a filter.
+     * Retrieves the living-only agents matching a filter.
      *
      * @param filter a predicate to apply to each agent
-     * @return a read-only view of the matching agents
+     * @return a new {@link ReadOnlyAgentSet} containing the matching agents
      */
     @Override
     public ReadOnlyAgentSet getFilteredAgents(Predicate<ReadOnlyAgent> filter) {
         return localAgentSet().getFilteredAgents(filter).getAsImmutable();
+    }
+
+    /**
+     * Returns an agents matching a filter
+     *
+     * @param agentFilter a predicate to apply to each agent
+     * @param includeDeadAgents a boolean which determines if dead agents are to be included in the output agent set or
+     *                          not
+     * @return a new {@link ReadOnlyAgentSet} containing only matching agents
+     */
+    @Override
+    public ReadOnlyAgentSet getFilteredAgents(Predicate<ReadOnlyAgent> agentFilter, boolean includeDeadAgents) {
+        return localAgentSet().getFilteredAgents(agentFilter, includeDeadAgents).getAsImmutable();
     }
 
     /**

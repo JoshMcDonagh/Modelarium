@@ -2,6 +2,7 @@ package unit.modelarium.entities.agents.immutable;
 
 import modelarium.entities.agents.immutable.ReadOnlyAgent;
 import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
+import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.agents.mutable.AgentSet;
 import org.junit.jupiter.api.Test;
 
@@ -89,6 +90,20 @@ public class ReadOnlyAgentSetTest {
         assertTrue(names.contains("keep_0"));
         assertTrue(names.contains("keep_1"));
         assertFalse(names.contains("drop_0"));
+    }
+
+    @Test
+    public void testGetFilteredAgents_IncludeDeadAgentsTrue_IncludesMatchingDeadAgents() {
+        Agent alive = emptyAgent("alive");
+        Agent dead = emptyAgent("dead");
+        dead.kill();
+        ReadOnlyAgentSet immutableAgentSet = new AgentSet(List.of(alive, dead)).getAsImmutable();
+
+        ReadOnlyAgentSet filtered = immutableAgentSet.getFilteredAgents(agent -> true, true);
+
+        assertEquals(2, filtered.size());
+        assertFalse(filtered.get("alive").isDead());
+        assertTrue(filtered.get("dead").isDead());
     }
 
     @Test

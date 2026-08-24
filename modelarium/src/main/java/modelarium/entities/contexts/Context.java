@@ -49,12 +49,22 @@ public sealed interface Context permits SimulationContext, EntityContext {
     ReadOnlyAgent getAgent(String targetAgentName);
 
     /**
-     * Retrieves the agents matching a filter.
+     * Retrieves the living-only agents matching a filter.
      *
      * @param filter a predicate to apply to each agent
-     * @return a read-only view of the matching agents
+     * @return a new {@link ReadOnlyAgentSet} containing the matching agents
      */
     ReadOnlyAgentSet getFilteredAgents(Predicate<ReadOnlyAgent> filter);
+
+    /**
+     * Returns an agents matching a filter
+     *
+     * @param agentFilter a predicate to apply to each agent
+     * @param includeDeadAgents a boolean which determines if dead agents are to be included in the output agent set or
+     *                          not
+     * @return a new {@link ReadOnlyAgentSet} containing only matching agents
+     */
+    ReadOnlyAgentSet getFilteredAgents(Predicate<ReadOnlyAgent> agentFilter, boolean includeDeadAgents);
 
     /**
      * Returns the random generator this model element can use.

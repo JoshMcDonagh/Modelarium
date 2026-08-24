@@ -249,23 +249,36 @@ public final class AgentSet implements Iterable<Agent> {
     }
 
     /**
-     * Returns a filtered view of the agent set.
+     * Returns a living-only filtered view of the agent set.
      *
      * @param agentFilter a predicate to apply to each agent
      * @return a new {@link AgentSet} containing only matching agents
      */
     public AgentSet getFilteredAgents(Predicate<ReadOnlyAgent> agentFilter) {
+        return getFilteredAgents(agentFilter, false);
+    }
+
+    /**
+     * Returns a filtered view of the agent set.
+     *
+     * @param agentFilter a predicate to apply to each agent
+     * @param includeDeadAgents a boolean which determines if dead agents are to be included in the output agent set or
+     *                          not
+     * @return a new {@link AgentSet} containing only matching agents
+     */
+    public AgentSet getFilteredAgents(Predicate<ReadOnlyAgent> agentFilter, boolean includeDeadAgents) {
         List<Agent> filteredAgents = new ArrayList<>();
 
         for (Agent agent : agentList) {
-            if (agentFilter.test(agent.getAsImmutable()) && !agent.isDead())
+            if (!includeDeadAgents && agent.isDead())
+                continue;
+
+            if (agentFilter.test(agent.getAsImmutable()))
                 filteredAgents.add(agent);
         }
 
         return new AgentSet(filteredAgents);
     }
-
-
 
     /**
      * Returns a randomised iterator over the agents in this set.

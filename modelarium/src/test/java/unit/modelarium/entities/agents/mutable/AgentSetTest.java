@@ -351,6 +351,20 @@ public class AgentSetTest {
     }
 
     @Test
+    public void testGetFilteredAgents_IncludeDeadAgentsTrue_IncludesMatchingDeadAgents() {
+        Agent alive = emptyAgent("alive");
+        Agent dead = emptyAgent("dead");
+        dead.kill();
+        AgentSet agentSet = new AgentSet(List.of(alive, dead));
+
+        AgentSet filtered = agentSet.getFilteredAgents(agent -> true, true);
+
+        assertEquals(2, filtered.size());
+        assertSame(alive, filtered.get("alive"));
+        assertSame(dead, filtered.get("dead"));
+    }
+
+    @Test
     public void testAdd_ReplacingDeadAgentWithAliveVersion_PreservesDeadState() {
         Agent original = emptyAgent("A");
         original.kill();

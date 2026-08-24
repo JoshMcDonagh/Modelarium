@@ -29,9 +29,6 @@ public class ContextCache {
     /** The global agent set */
     private ReadOnlyAgentSet globalAgentSet = null;
 
-    /** The agent set containing only living agents */
-    private ReadOnlyAgentSet livingAgentSet = null;
-
     /** The population size cached during the current tick, or null if it has not been retrieved */
     private Integer currentPopulationSize = null;
 
@@ -49,39 +46,12 @@ public class ContextCache {
      */
     public void clear() {
         filteredAgentsCache.clear();
+        filteredLivingOnlyAgentsCache.clear();
         individualAgentCacheList.clear();
         individualAgentCacheMap.clear();
         globalAgentSet = null;
-        livingAgentSet = null;
         currentPopulationSize = null;
         environment = null;
-    }
-
-    /**
-     * Returns whether the living agent set has been cached.
-     *
-     * @return true if the living agent set has been cached.
-     */
-    public boolean doesLivingAgentSetExist() {
-        return livingAgentSet != null;
-    }
-
-    /**
-     * Caches the living agent set.
-     *
-     * @param livingAgentSet the living agent set to cache
-     */
-    public void addLivingAgentSet(ReadOnlyAgentSet livingAgentSet) {
-        this.livingAgentSet = livingAgentSet;
-    }
-
-    /**
-     * Retrieves the cached living agent set.
-     *
-     * @return the cached {@link ReadOnlyAgentSet} for the living agent set, or null if none is cached
-     */
-    public ReadOnlyAgentSet getLivingAgentSet() {
-        return livingAgentSet;
     }
 
     /**

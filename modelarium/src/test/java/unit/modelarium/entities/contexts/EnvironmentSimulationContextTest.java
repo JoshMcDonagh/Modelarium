@@ -3,15 +3,18 @@ package unit.modelarium.entities.contexts;
 import modelarium.Config;
 import modelarium.clock.MutableClock;
 import modelarium.entities.agents.immutable.ReadOnlyAgent;
+import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
 import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
 import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.environments.Environment;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.SplittableRandom;
 import java.util.function.Predicate;
 
@@ -165,5 +168,25 @@ public class EnvironmentSimulationContextTest {
         );
 
         assertSetsContainSameAgents(agentSet, context.getFilteredAgents(filter));
+    }
+
+    @Test
+    public void testGetFilteredAgents_IncludeDeadAgentsTrue_IncludesDeadAgentsAndRemainsLocalWhenSynced() throws Exception {
+        Config config = syncedConfig(2, 10, 1);
+        Agent alive = emptyAgent("alive");
+        Agent dead = emptyAgent("dead");
+        dead.kill();
+        AgentSet agentSet = new AgentSet(List.of(alive, dead));
+        EnvironmentContext context = simulationContextWithAgentSet(
+                EnvironmentSimulationContext.class,
+                config,
+                agentSet
+        );
+
+        ReadOnlyAgentSet result = context.getFilteredAgents(agent -> true, true);
+
+        assertEquals(2, result.size());
+        assertFalse(result.get("alive").isDead());
+        assertTrue(result.get("dead").isDead());
     }
 }

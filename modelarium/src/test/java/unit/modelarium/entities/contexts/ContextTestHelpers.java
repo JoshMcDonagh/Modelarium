@@ -492,13 +492,20 @@ class ContextTestHelpers {
             throw new IllegalArgumentException("'" + contextClass.getName() + "' is not supported");
         }
 
+        setRequestResponseInterface(context, mockRequestResponseInterface);
+
+        return context;
+    }
+
+    static void setRequestResponseInterface(
+            SimulationContext context,
+            RequestResponseInterface requestResponseInterface
+    ) throws NoSuchFieldException, IllegalAccessException {
         Field requestResponseInterfaceField = SimulationContext.class.getDeclaredField(
                 "requestResponseInterface"
         );
         requestResponseInterfaceField.setAccessible(true);
-        requestResponseInterfaceField.set(context, mockRequestResponseInterface);
-
-        return context;
+        requestResponseInterfaceField.set(context, requestResponseInterface);
     }
 
     static <C extends SimulationContext, T, E extends Entity<?,?,?,?>> C generateContextWhereRequestResponseInterfaceMethodReturns(

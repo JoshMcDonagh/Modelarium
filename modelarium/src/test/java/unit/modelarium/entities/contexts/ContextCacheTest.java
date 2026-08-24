@@ -2,336 +2,139 @@ package unit.modelarium.entities.contexts;
 
 import modelarium.entities.agents.immutable.ReadOnlyAgent;
 import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.contexts.ContextCache;
-import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.ReadOnlyEnvironment;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static unit.modelarium.entities.contexts.ContextTestHelpers.*;
 
 public class ContextCacheTest {
-    private Map<String, Integer> getAgentIndexMap(ReadOnlyAgentSet individualAgentCache) throws NoSuchFieldException, IllegalAccessException {
-        Field mutableVersionField = ReadOnlyAgentSet.class.getDeclaredField("mutableVersion");
-        mutableVersionField.setAccessible(true);
-        AgentSet mutableAgentSet = (AgentSet) mutableVersionField.get(individualAgentCache);
-
-        Field agentIndexMapField = AgentSet.class.getDeclaredField("agentIndexMap");
-        agentIndexMapField.setAccessible(true);
-        return (Map<String, Integer>) agentIndexMapField.get(mutableAgentSet);
-    }
-
-    private ContextCache createContextCache(
-            ReadOnlyAgentSet individualAgentCache,
-            IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredAgentsCache,
-            ReadOnlyEnvironment environment
-    ) throws NoSuchFieldException, IllegalAccessException {
-        ContextCache cache = new ContextCache();
-
-        Field individualAgentCacheListField = ContextCache.class.getDeclaredField("individualAgentCacheList");
-        individualAgentCacheListField.setAccessible(true);
-        individualAgentCacheListField.set(cache, individualAgentCache.getAsList());
-
-        Field individualAgentCacheMapField = ContextCache.class.getDeclaredField("individualAgentCacheMap");
-        individualAgentCacheMapField.setAccessible(true);
-        individualAgentCacheMapField.set(cache, getAgentIndexMap(individualAgentCache));
-
-        Field filteredAgentsCacheField = ContextCache.class.getDeclaredField("filteredAgentsCache");
-        filteredAgentsCacheField.setAccessible(true);
-        filteredAgentsCacheField.set(cache, filteredAgentsCache);
-
-        Field environmentField = ContextCache.class.getDeclaredField("environment");
-        environmentField.setAccessible(true);
-        environmentField.set(cache, environment);
-
-        return cache;
-    }
-
-    private List<ReadOnlyAgent> getIndividualAgentCacheList(ContextCache cache) throws NoSuchFieldException, IllegalAccessException {
-        Field individualAgentCacheListField = ContextCache.class.getDeclaredField("individualAgentCacheList");
-        individualAgentCacheListField.setAccessible(true);
-        return (List<ReadOnlyAgent>) individualAgentCacheListField.get(cache);
-    }
-
-    private Map<String, Integer> getIndividualAgentCacheMap(ContextCache cache) throws NoSuchFieldException, IllegalAccessException {
-        Field individualAgentCacheMapField = ContextCache.class.getDeclaredField("individualAgentCacheMap");
-        individualAgentCacheMapField.setAccessible(true);
-        return (Map<String, Integer>) individualAgentCacheMapField.get(cache);
-    }
-
-    private IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> getFilteredAgentsCache(ContextCache contextCache) throws NoSuchFieldException, IllegalAccessException {
-        Field filteredAgentsCacheField = ContextCache.class.getDeclaredField("filteredAgentsCache");
-        filteredAgentsCacheField.setAccessible(true);
-        return (IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet>) filteredAgentsCacheField.get(contextCache);
-    }
-
-    private ReadOnlyEnvironment getEnvironment(ContextCache contextCache) throws NoSuchFieldException, IllegalAccessException {
-        Field environmentField = ContextCache.class.getDeclaredField("environment");
-        environmentField.setAccessible(true);
-        return (ReadOnlyEnvironment) environmentField.get(contextCache);
-    }
 
     @Test
-    public void testClear() throws NoSuchFieldException, IllegalAccessException {
-        ReadOnlyAgentSet individualAgentCache = agentSetOfSize(20).getAsImmutable();
-        IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredAgentsCache = new IdentityHashMap<>();
-        filteredAgentsCache.put(a -> true, individualAgentCache);
-        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, agentSetOfSize(5).getAsImmutable());
-        Environment environment = emptyEnvironment();
+    public void testClear_ClearsAllCachedValues() {
+        ContextCache cache = new ContextCache();
+        Predicate<ReadOnlyAgent> allAgentsFilter = agent -> true;
+        Predicate<ReadOnlyAgent> livingAgentsFilter = agent -> true;
+        ReadOnlyAgentSet globalAgentSet = agentSetOfSize(4).getAsImmutable();
+        ReadOnlyAgentSet livingAgentSet = agentSetOfSize(3).getAsImmutable();
+        ReadOnlyEnvironment environment = emptyEnvironment().getAsImmutable();
+        ReadOnlyAgent individualAgent = emptyAgent("cached").getAsImmutable();
 
-        ContextCache cache = createContextCache(
-                individualAgentCache,
-                filteredAgentsCache,
-                environment.getAsImmutable()
-        );
+        cache.addFilteredAgents(allAgentsFilter, globalAgentSet);
+        cache.addLivingOnlyFilteredAgents(livingAgentsFilter, livingAgentSet);
+        cache.addGlobalAgentSet(globalAgentSet);
+        cache.addAgent(individualAgent);
+        cache.addCurrentPopulationSize(4);
+        cache.addEnvironment(environment);
 
         cache.clear();
 
-        assertTrue(getIndividualAgentCacheList(cache).isEmpty());
-        assertTrue(getIndividualAgentCacheMap(cache).isEmpty());
-        assertTrue(getFilteredAgentsCache(cache).isEmpty());
-        assertNull(getEnvironment(cache));
+        assertFalse(cache.doesAgentFilterExist(allAgentsFilter));
+        assertFalse(cache.doesLivingOnlyAgentFilterExist(livingAgentsFilter));
+        assertFalse(cache.doesGlobalAgentSetExist());
+        assertFalse(cache.doesAgentExist(individualAgent.name()));
+        assertFalse(cache.doesCurrentPopulationSizeExist());
+        assertFalse(cache.doesEnvironmentExist());
+        assertNull(cache.getGlobalAgentSet());
+        assertNull(cache.getEnvironment());
     }
 
     @Test
-    public void testDoesAgentFilterExistTrue() throws NoSuchFieldException, IllegalAccessException {
-        Predicate<ReadOnlyAgent> filter = a -> a.attributeSetCount() > 4;
+    public void testGlobalAgentSetCache_AddGetAndExists() {
+        ContextCache cache = new ContextCache();
+        ReadOnlyAgentSet agentSet = agentSetOfSize(5).getAsImmutable();
 
-        IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredAgentsCache = new IdentityHashMap<>();
-        filteredAgentsCache.put(filter, agentSetOfSize(5).getAsImmutable());
-        filteredAgentsCache.put(a -> true, agentSetOfSize(20).getAsImmutable());
-
-        ContextCache cache = createContextCache(
-                agentSetOfSize(20).getAsImmutable(),
-                filteredAgentsCache,
-                emptyEnvironment().getAsImmutable()
-        );
-
-        assertTrue(cache.doesAgentFilterExist(filter));
+        assertFalse(cache.doesGlobalAgentSetExist());
+        cache.addGlobalAgentSet(agentSet);
+        assertTrue(cache.doesGlobalAgentSetExist());
+        assertSame(agentSet, cache.getGlobalAgentSet());
     }
 
     @Test
-    public void testDoesAgentFilterExistFalse() throws NoSuchFieldException, IllegalAccessException {
-        Predicate<ReadOnlyAgent> filter = a -> a.attributeSetCount() > 4;
-
-        IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredAgentsCache = new IdentityHashMap<>();
-        filteredAgentsCache.put(a -> true, agentSetOfSize(20).getAsImmutable());
-
-        ContextCache cache = createContextCache(
-                agentSetOfSize(20).getAsImmutable(),
-                filteredAgentsCache,
-                emptyEnvironment().getAsImmutable()
-        );
+    public void testFilteredAgentsCache_AddGetAndExists() {
+        ContextCache cache = new ContextCache();
+        Predicate<ReadOnlyAgent> filter = agent -> true;
+        ReadOnlyAgentSet results = agentSetOfSize(5).getAsImmutable();
 
         assertFalse(cache.doesAgentFilterExist(filter));
-    }
-
-    @Test
-    public void testAddFilteredAgents() throws NoSuchFieldException, IllegalAccessException {
-        Predicate<ReadOnlyAgent> filter = a -> a.attributeSetCount() > 4;
-        ReadOnlyAgentSet results = agentSetOfSize(5).getAsImmutable();
-
-        IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredAgentsCache = new IdentityHashMap<>();
-        filteredAgentsCache.put(a -> true, agentSetOfSize(20).getAsImmutable());
-
-        ContextCache cache = createContextCache(
-                agentSetOfSize(20).getAsImmutable(),
-                filteredAgentsCache,
-                emptyEnvironment().getAsImmutable()
-        );
-
         cache.addFilteredAgents(filter, results);
-
-        IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredAgents = getFilteredAgentsCache(cache);
-
-        assertTrue(filteredAgents.containsKey(filter));
-        assertTrue(filteredAgents.containsValue(results));
-        assertEquals(results, filteredAgents.get(filter));
+        assertTrue(cache.doesAgentFilterExist(filter));
+        assertSame(results, cache.getFilteredAgents(filter));
     }
 
     @Test
-    public void testGetFilteredAgents() throws NoSuchFieldException, IllegalAccessException {
-        Predicate<ReadOnlyAgent> filter = a -> a.attributeSetCount() > 4;
+    public void testLivingOnlyFilteredAgentsCache_AddGetAndExists() {
+        ContextCache cache = new ContextCache();
+        Predicate<ReadOnlyAgent> filter = agent -> true;
         ReadOnlyAgentSet results = agentSetOfSize(5).getAsImmutable();
 
-        IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredAgentsCache = new IdentityHashMap<>();
-        filteredAgentsCache.put(filter, results);
-        filteredAgentsCache.put(a -> true, agentSetOfSize(20).getAsImmutable());
-
-        ContextCache cache = createContextCache(
-                agentSetOfSize(20).getAsImmutable(),
-                filteredAgentsCache,
-                emptyEnvironment().getAsImmutable()
-        );
-
-        ReadOnlyAgentSet returnedAgents = cache.getFilteredAgents(filter);
-
-        assertEquals(results, returnedAgents);
+        assertFalse(cache.doesLivingOnlyAgentFilterExist(filter));
+        cache.addLivingOnlyFilteredAgents(filter, results);
+        assertTrue(cache.doesLivingOnlyAgentFilterExist(filter));
+        assertSame(results, cache.getLivingOnlyFilteredAgents(filter));
     }
 
     @Test
-    public void testDoesAgentExistTrue() throws NoSuchFieldException, IllegalAccessException {
-        String agentName = "Steve";
+    public void testFilteredCaches_AreSeparateForSamePredicate() {
+        ContextCache cache = new ContextCache();
+        Predicate<ReadOnlyAgent> filter = agent -> true;
+        ReadOnlyAgentSet includingDead = agentSetOfSize(5).getAsImmutable();
+        ReadOnlyAgentSet livingOnly = agentSetOfSize(4).getAsImmutable();
 
-        AgentSet individualAgentCache = agentSetOfSize(20);
-        individualAgentCache.add(emptyAgent(agentName));
-        IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredAgentsCache = new IdentityHashMap<>();
-        filteredAgentsCache.put(a -> true, individualAgentCache.getAsImmutable());
-        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, agentSetOfSize(5).getAsImmutable());
-        Environment environment = emptyEnvironment();
+        cache.addFilteredAgents(filter, includingDead);
+        cache.addLivingOnlyFilteredAgents(filter, livingOnly);
 
-        ContextCache cache = createContextCache(
-                individualAgentCache.getAsImmutable(),
-                filteredAgentsCache,
-                environment.getAsImmutable()
-        );
-
-        assertTrue(cache.doesAgentExist(agentName));
+        assertSame(includingDead, cache.getFilteredAgents(filter));
+        assertSame(livingOnly, cache.getLivingOnlyFilteredAgents(filter));
     }
 
     @Test
-    public void testDoesAgentExistFalse() throws NoSuchFieldException, IllegalAccessException {
-        String agentName = "Steve";
+    public void testFilteredCaches_UsePredicateIdentity() {
+        ContextCache cache = new ContextCache();
+        Predicate<ReadOnlyAgent> cachedFilter = agent -> true;
+        Predicate<ReadOnlyAgent> equivalentButDifferentFilter = agent -> true;
 
-        ReadOnlyAgentSet individualAgentCache = agentSetOfSize(20).getAsImmutable();
-        IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredAgentsCache = new IdentityHashMap<>();
-        filteredAgentsCache.put(a -> true, individualAgentCache);
-        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, agentSetOfSize(5).getAsImmutable());
-        Environment environment = emptyEnvironment();
+        cache.addFilteredAgents(cachedFilter, agentSetOfSize(2).getAsImmutable());
+        cache.addLivingOnlyFilteredAgents(cachedFilter, agentSetOfSize(2).getAsImmutable());
 
-        ContextCache cache = createContextCache(
-                individualAgentCache,
-                filteredAgentsCache,
-                environment.getAsImmutable()
-        );
-
-        assertFalse(cache.doesAgentExist(agentName));
+        assertTrue(cache.doesAgentFilterExist(cachedFilter));
+        assertTrue(cache.doesLivingOnlyAgentFilterExist(cachedFilter));
+        assertFalse(cache.doesAgentFilterExist(equivalentButDifferentFilter));
+        assertFalse(cache.doesLivingOnlyAgentFilterExist(equivalentButDifferentFilter));
     }
 
     @Test
-    public void testGetAgent() throws NoSuchFieldException, IllegalAccessException {
-        String agentName = "Steve";
+    public void testIndividualAgentCache_AddGetAndExists() {
+        ContextCache cache = new ContextCache();
+        ReadOnlyAgent agent = emptyAgent("Steve").getAsImmutable();
 
-        AgentSet individualAgentCache = agentSetOfSize(20);
-        Agent agent = emptyAgent(agentName);
-        individualAgentCache.add(agent);
-        IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredAgentsCache = new IdentityHashMap<>();
-        filteredAgentsCache.put(a -> true, individualAgentCache.getAsImmutable());
-        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, agentSetOfSize(5).getAsImmutable());
-        Environment environment = emptyEnvironment();
-
-        ContextCache cache = createContextCache(
-                individualAgentCache.getAsImmutable(),
-                filteredAgentsCache,
-                environment.getAsImmutable()
-        );
-
-        assertSame(agent.getAsImmutable(), cache.getAgent(agentName));
-    }
-
-    @Test
-    public void testAddAgent() throws NoSuchFieldException, IllegalAccessException {
-        int populationSize = 20;
-        ReadOnlyAgentSet individualAgentCache = agentSetOfSize(populationSize).getAsImmutable();
-        IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredAgentsCache = new IdentityHashMap<>();
-        filteredAgentsCache.put(a -> true, individualAgentCache);
-        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, agentSetOfSize(5).getAsImmutable());
-        Environment environment = emptyEnvironment();
-
-        ContextCache cache = createContextCache(
-                individualAgentCache,
-                filteredAgentsCache,
-                environment.getAsImmutable()
-        );
-
-        String agentName = "Mary";
-        ReadOnlyAgent agent = emptyAgent(agentName).getAsImmutable();
-
+        assertFalse(cache.doesAgentExist(agent.name()));
         cache.addAgent(agent);
-
-        List<ReadOnlyAgent> resultingIndividualAgentCacheList = getIndividualAgentCacheList(cache);
-        Map<String, Integer> resultingIndividualAgentCacheMap = getIndividualAgentCacheMap(cache);
-
-        assertEquals(populationSize + 1, resultingIndividualAgentCacheList.size());
-        assertTrue(resultingIndividualAgentCacheMap.containsKey(agentName));
-        assertSame(agent, resultingIndividualAgentCacheList.get(resultingIndividualAgentCacheMap.get(agentName)));
+        assertTrue(cache.doesAgentExist(agent.name()));
+        assertSame(agent, cache.getAgent(agent.name()));
     }
 
     @Test
-    public void testDoesEnvironmentExistTrue() throws NoSuchFieldException, IllegalAccessException {
-        ReadOnlyAgentSet individualAgentCache = agentSetOfSize(20).getAsImmutable();
-        IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredAgentsCache = new IdentityHashMap<>();
-        filteredAgentsCache.put(a -> true, individualAgentCache);
-        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, agentSetOfSize(5).getAsImmutable());
-        Environment environment = emptyEnvironment();
+    public void testCurrentPopulationSizeCache_AddGetAndExists() {
+        ContextCache cache = new ContextCache();
 
-        ContextCache cache = createContextCache(
-                individualAgentCache,
-                filteredAgentsCache,
-                environment.getAsImmutable()
-        );
-
-        assertTrue(cache.doesEnvironmentExist());
+        assertFalse(cache.doesCurrentPopulationSizeExist());
+        cache.addCurrentPopulationSize(17);
+        assertTrue(cache.doesCurrentPopulationSizeExist());
+        assertEquals(17, cache.getCurrentPopulationSize());
     }
 
     @Test
-    public void testDoesEnvironmentExistFalse() throws NoSuchFieldException, IllegalAccessException {
-        ReadOnlyAgentSet individualAgentCache = agentSetOfSize(20).getAsImmutable();
-        IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredAgentsCache = new IdentityHashMap<>();
-        filteredAgentsCache.put(a -> true, individualAgentCache);
-        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, agentSetOfSize(5).getAsImmutable());
-
-        ContextCache cache = createContextCache(
-                individualAgentCache,
-                filteredAgentsCache,
-                null
-        );
-
-        assertFalse(cache.doesEnvironmentExist());
-    }
-
-    @Test
-    public void testGetEnvironment() throws NoSuchFieldException, IllegalAccessException {
-        ReadOnlyAgentSet individualAgentCache = agentSetOfSize(20).getAsImmutable();
-        IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredAgentsCache = new IdentityHashMap<>();
-        filteredAgentsCache.put(a -> true, individualAgentCache);
-        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, agentSetOfSize(5).getAsImmutable());
-        Environment environment = emptyEnvironment();
-
-        ContextCache cache = createContextCache(
-                individualAgentCache,
-                filteredAgentsCache,
-                environment.getAsImmutable()
-        );
-
-        assertSame(environment.getAsImmutable(), cache.getEnvironment());
-    }
-
-    @Test
-    public void testAddEnvironment() throws NoSuchFieldException, IllegalAccessException {
-        ReadOnlyAgentSet individualAgentCache = agentSetOfSize(20).getAsImmutable();
-        IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredAgentsCache = new IdentityHashMap<>();
-        filteredAgentsCache.put(a -> true, individualAgentCache);
-        filteredAgentsCache.put(a -> a.attributeSetCount() > 4, agentSetOfSize(5).getAsImmutable());
-
-        ContextCache cache = createContextCache(
-                individualAgentCache,
-                filteredAgentsCache,
-                null
-        );
-
+    public void testEnvironmentCache_AddGetAndExists() {
+        ContextCache cache = new ContextCache();
         ReadOnlyEnvironment environment = emptyEnvironment().getAsImmutable();
 
+        assertFalse(cache.doesEnvironmentExist());
         cache.addEnvironment(environment);
-
-        assertSame(environment, getEnvironment(cache));
+        assertTrue(cache.doesEnvironmentExist());
+        assertSame(environment, cache.getEnvironment());
     }
 }

@@ -228,8 +228,8 @@ public class AgentInteractionIntegrationTest {
 
         assertEquals(10, counts.size(), "One population count should be logged per tick.");
         // Once every worker's initial broadcast has been processed, a synchronised
-        // filter is answered from the coordinator's global agent set and therefore
-        // sees the entire population, not just this core's share.
+        // worker obtains the coordinator's global agent set and applies the filter locally,
+        // so it sees the entire population rather than just this core's share.
         for (int tick = (int) FIRST_STABLE_TICK; tick < counts.size(); tick++)
             assertEquals(population, counts.get(tick),
                     "A synchronised filter should see the whole population.");

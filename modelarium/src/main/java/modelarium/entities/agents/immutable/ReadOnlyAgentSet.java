@@ -94,13 +94,25 @@ public final class ReadOnlyAgentSet implements Iterable<ReadOnlyAgent> {
     }
 
     /**
-     * Returns a filtered view of the agent set.
+     * Returns a living-only filtered view of the agent set.
      *
      * @param agentFilter a predicate to apply to each agent
      * @return a new {@link ReadOnlyAgentSet} containing only matching agents
      */
     public ReadOnlyAgentSet getFilteredAgents(Predicate<ReadOnlyAgent> agentFilter) {
         return mutableVersion.getFilteredAgents(agentFilter).getAsImmutable();
+    }
+
+    /**
+     * Returns a filtered view of the agent set.
+     *
+     * @param agentFilter a predicate to apply to each agent
+     * @param includeDeadAgents a boolean which determines if dead agents are to be included in the output agent set or
+     *                          not
+     * @return a new {@link ReadOnlyAgentSet} containing only matching agents
+     */
+    public ReadOnlyAgentSet getFilteredAgents(Predicate<ReadOnlyAgent> agentFilter, boolean includeDeadAgents) {
+        return mutableVersion.getFilteredAgents(agentFilter, includeDeadAgents).getAsImmutable();
     }
 
     /**

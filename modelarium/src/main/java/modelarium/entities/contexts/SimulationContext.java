@@ -468,23 +468,15 @@ public sealed abstract class SimulationContext implements Context permits AgentS
         ReadOnlyAgentSet filteredAgentSet;
 
         if (config.areThreadsSynced()) {
-            if (includeDeadAgents && cache.doesGlobalAgentSetExist()) {
-                filteredAgentSet = cache.getGlobalAgentSet().getFilteredAgents(filter);
-            } else if (!includeDeadAgents && cache.doesLivingAgentSetExist()) {
-                filteredAgentSet = cache.getLivingAgentSet().getFilteredAgents(filter);
+            if (cache.doesGlobalAgentSetExist()) {
+                filteredAgentSet = cache.getGlobalAgentSet().getFilteredAgents(filter, includeDeadAgents);
             } else {
                 try {
                     ReadOnlyAgentSet globalAgentSet = requestResponseInterface.getGlobalAgentSetFromCoordinator(
                             entity.name()
                     );
                     cache.addGlobalAgentSet(globalAgentSet);
-
-                    if (!includeDeadAgents) {
-                        globalAgentSet = globalAgentSet.getFilteredAgents(agent -> !agent.isDead());
-                        cache.addLivingAgentSet(globalAgentSet);
-                    }
-
-                    filteredAgentSet = globalAgentSet.getFilteredAgents(filter);
+                    filteredAgentSet = globalAgentSet.getFilteredAgents(filter, includeDeadAgents);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     throw new SimulationInterruptedException("Interrupted while retrieving filtered agents requested by " +
@@ -496,17 +488,14 @@ public sealed abstract class SimulationContext implements Context permits AgentS
             }
 
         } else {
-            if (includeDeadAgents) {
-                filteredAgentSet = localAgentSet.getFilteredAgents(filter).getAsImmutable();
-            } else {
-                ReadOnlyAgentSet livingOnlyAgentSet = localAgentSet.getFilteredAgents(agent -> !agent.isDead()).getAsImmutable();
-                cache.addLivingAgentSet(livingOnlyAgentSet);
-                filteredAgentSet = livingOnlyAgentSet.getFilteredAgents(filter);
-            }
+            filteredAgentSet = localAgentSet.getFilteredAgents(filter, includeDeadAgents).getAsImmutable();
         }
 
         // Cache the result for future access
-        cache.addFilteredAgents(filter, filteredAgentSet);
+        if (includeDeadAgents)
+            cache.addFilteredAgents(filter, filteredAgentSet);
+        else
+            cache.addLivingOnlyFilteredAgents(filter, filteredAgentSet);
 
         return filteredAgentSet;
     }

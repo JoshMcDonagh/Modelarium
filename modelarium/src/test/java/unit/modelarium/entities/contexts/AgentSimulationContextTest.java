@@ -27,6 +27,8 @@ import java.util.function.Predicate;
 import java.util.random.RandomGenerator;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 import static unit.modelarium.entities.contexts.ContextTestHelpers.*;
 
 public class AgentSimulationContextTest {
@@ -407,13 +409,13 @@ public class AgentSimulationContextTest {
     }
 
     @Test
-    public void testGetFilteredAgents_IsCached() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+    public void testGetFilteredAgents_Default_UsesLivingOnlyFilteredCache() throws Exception {
         int populationSize = 7;
         Config config = syncedConfig(populationSize, 10, 1);
-        ReadOnlyAgentSet agentSet = agentSetOfSize(populationSize).getAsImmutable();
+        ReadOnlyAgentSet cachedResult = agentSetOfSize(populationSize).getAsImmutable();
         ContextCache cache = contextCache();
-        Predicate<ReadOnlyAgent> filter = a -> true;
-        cache.addFilteredAgents(filter, agentSet);
+        Predicate<ReadOnlyAgent> filter = agent -> true;
+        cache.addLivingOnlyFilteredAgents(filter, cachedResult);
         AgentSimulationContext context = simulationContextWithCache(
                 AgentSimulationContext.class,
                 config,
@@ -422,41 +424,137 @@ public class AgentSimulationContextTest {
 
         ReadOnlyAgentSet filteredAgentSet = context.getFilteredAgents(filter);
 
-        assertSame(agentSet, filteredAgentSet);
+        assertSame(cachedResult, filteredAgentSet);
     }
 
     @Test
-    public void testGetFilteredAgents_ThreadsSynced() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+    public void testGetFilteredAgents_IncludeDeadAgents_UsesAllAgentsFilteredCache() throws Exception {
         int populationSize = 7;
         Config config = syncedConfig(populationSize, 10, 1);
-        Agent thisAgent = emptyAgent("Greg");
-        AgentSet agentSet = agentSetOfSize(populationSize - 1);
-        agentSet.add(thisAgent);
-        Predicate<ReadOnlyAgent> filter = a -> true;
-
-        AgentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodReturns(
+        ReadOnlyAgentSet cachedResult = agentSetOfSize(populationSize).getAsImmutable();
+        ContextCache cache = contextCache();
+        Predicate<ReadOnlyAgent> filter = agent -> true;
+        cache.addFilteredAgents(filter, cachedResult);
+        AgentSimulationContext context = simulationContextWithCache(
                 AgentSimulationContext.class,
-                agentSet.getAsImmutable(),
-                "getFilteredAgentsFromCoordinator",
-                new Class<?>[]{String.class, Predicate.class},
                 config,
-                thisAgent
+                cache
         );
 
-        assertSame(agentSet.getAsImmutable(), context.getFilteredAgents(filter));
+        ReadOnlyAgentSet filteredAgentSet = context.getFilteredAgents(filter, true);
+
+        assertSame(cachedResult, filteredAgentSet);
     }
 
     @Test
-    public void testGetFilteredAgents_ThreadsSynced_SimulationInterruptedException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
+    public void testGetFilteredAgents_ThreadsSynced_RequestsGlobalSetAndFiltersLocally() throws Exception {
+        Config config = syncedConfig(3, 10, 1);
+        Agent keep = emptyAgent("keep");
+        Agent drop = emptyAgent("drop");
+        Agent deadKeep = emptyAgent("keep_dead");
+        deadKeep.kill();
+        ReadOnlyAgentSet globalAgentSet = new AgentSet(List.of(keep, drop, deadKeep)).getAsImmutable();
+        ContextCache cache = contextCache();
+        AgentSimulationContext context = simulationContextWithCache(AgentSimulationContext.class, config, cache);
+        RequestResponseInterface requestResponseInterface = mock(RequestResponseInterface.class);
+        when(requestResponseInterface.getGlobalAgentSetFromCoordinator(anyString())).thenReturn(globalAgentSet);
+        setRequestResponseInterface(context, requestResponseInterface);
+        Predicate<ReadOnlyAgent> filter = agent -> agent.name().startsWith("keep");
+
+        ReadOnlyAgentSet result = context.getFilteredAgents(filter);
+
+        assertEquals(1, result.size());
+        assertEquals("keep", result.get(0).name());
+        assertSame(globalAgentSet, cache.getGlobalAgentSet());
+        assertTrue(cache.doesLivingOnlyAgentFilterExist(filter));
+        assertFalse(cache.doesAgentFilterExist(filter));
+        verify(requestResponseInterface, times(1)).getGlobalAgentSetFromCoordinator(anyString());
+    }
+
+    @Test
+    public void testGetFilteredAgents_ThreadsSynced_IncludeDeadAgentsTrue_IncludesMatchingDeadAgents() throws Exception {
+        Config config = syncedConfig(2, 10, 1);
+        Agent alive = emptyAgent("match_alive");
+        Agent dead = emptyAgent("match_dead");
+        dead.kill();
+        ReadOnlyAgentSet globalAgentSet = new AgentSet(List.of(alive, dead)).getAsImmutable();
+        ContextCache cache = contextCache();
+        AgentSimulationContext context = simulationContextWithCache(AgentSimulationContext.class, config, cache);
+        RequestResponseInterface requestResponseInterface = mock(RequestResponseInterface.class);
+        when(requestResponseInterface.getGlobalAgentSetFromCoordinator(anyString())).thenReturn(globalAgentSet);
+        setRequestResponseInterface(context, requestResponseInterface);
+        Predicate<ReadOnlyAgent> filter = agent -> agent.name().startsWith("match");
+
+        ReadOnlyAgentSet result = context.getFilteredAgents(filter, true);
+
+        assertEquals(2, result.size());
+        assertFalse(result.get("match_alive").isDead());
+        assertTrue(result.get("match_dead").isDead());
+        assertTrue(cache.doesAgentFilterExist(filter));
+        assertFalse(cache.doesLivingOnlyAgentFilterExist(filter));
+        verify(requestResponseInterface, times(1)).getGlobalAgentSetFromCoordinator(anyString());
+    }
+
+    @Test
+    public void testGetFilteredAgents_ThreadsSynced_ReusesGlobalAgentSetForDifferentFilters() throws Exception {
+        Config config = syncedConfig(3, 10, 1);
+        Agent first = emptyAgent("first");
+        Agent second = emptyAgent("second");
+        Agent dead = emptyAgent("dead");
+        dead.kill();
+        ReadOnlyAgentSet globalAgentSet = new AgentSet(List.of(first, second, dead)).getAsImmutable();
+        ContextCache cache = contextCache();
+        AgentSimulationContext context = simulationContextWithCache(AgentSimulationContext.class, config, cache);
+        RequestResponseInterface requestResponseInterface = mock(RequestResponseInterface.class);
+        when(requestResponseInterface.getGlobalAgentSetFromCoordinator(anyString())).thenReturn(globalAgentSet);
+        setRequestResponseInterface(context, requestResponseInterface);
+
+        ReadOnlyAgentSet firstResult = context.getFilteredAgents(agent -> agent.name().equals("first"), true);
+        ReadOnlyAgentSet secondResult = context.getFilteredAgents(agent -> agent.name().equals("second"));
+
+        assertEquals(1, firstResult.size());
+        assertEquals("first", firstResult.get(0).name());
+        assertEquals(1, secondResult.size());
+        assertEquals("second", secondResult.get(0).name());
+        assertTrue(cache.doesGlobalAgentSetExist());
+        verify(requestResponseInterface, times(1)).getGlobalAgentSetFromCoordinator(anyString());
+    }
+
+    @Test
+    public void testGetFilteredAgents_ThreadsSynced_SamePredicateCachesDeadAndLivingResultsSeparately() throws Exception {
+        Config config = syncedConfig(2, 10, 1);
+        Agent alive = emptyAgent("alive");
+        Agent dead = emptyAgent("dead");
+        dead.kill();
+        ReadOnlyAgentSet globalAgentSet = new AgentSet(List.of(alive, dead)).getAsImmutable();
+        ContextCache cache = contextCache();
+        AgentSimulationContext context = simulationContextWithCache(AgentSimulationContext.class, config, cache);
+        RequestResponseInterface requestResponseInterface = mock(RequestResponseInterface.class);
+        when(requestResponseInterface.getGlobalAgentSetFromCoordinator(anyString())).thenReturn(globalAgentSet);
+        setRequestResponseInterface(context, requestResponseInterface);
+        Predicate<ReadOnlyAgent> filter = agent -> true;
+
+        ReadOnlyAgentSet livingOnly = context.getFilteredAgents(filter);
+        ReadOnlyAgentSet includingDead = context.getFilteredAgents(filter, true);
+
+        assertEquals(1, livingOnly.size());
+        assertEquals(2, includingDead.size());
+        assertSame(livingOnly, cache.getLivingOnlyFilteredAgents(filter));
+        assertSame(includingDead, cache.getFilteredAgents(filter));
+        verify(requestResponseInterface, times(1)).getGlobalAgentSetFromCoordinator(anyString());
+    }
+
+    @Test
+    public void testGetFilteredAgents_ThreadsSynced_SimulationInterruptedException() throws Exception {
         Config config = syncedConfig(2, 10, 1);
         Agent thisAgent = emptyAgent("Greg");
-        Predicate<ReadOnlyAgent> filter = a -> true;
+        Predicate<ReadOnlyAgent> filter = agent -> true;
 
         AgentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
                 AgentSimulationContext.class,
                 InterruptedException.class,
-                "getFilteredAgentsFromCoordinator",
-                new Class<?>[]{String.class, Predicate.class},
+                "getGlobalAgentSetFromCoordinator",
+                new Class<?>[]{String.class},
                 config,
                 thisAgent
         );
@@ -464,22 +562,22 @@ public class AgentSimulationContextTest {
         assertCorrectExceptionThrown(
                 SimulationInterruptedException.class,
                 () -> context.getFilteredAgents(filter),
-                "Interrupted while retrieving filtered agents requested by " + "'" + thisAgent.name() + "'",
+                "Interrupted while retrieving filtered agents requested by '" + thisAgent.name() + "'",
                 InterruptedException.class
         );
     }
 
     @Test
-    public void testGetFilteredAgents_ThreadsSynced_AgentNotFoundException_CoordinatorTimeoutException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
+    public void testGetFilteredAgents_ThreadsSynced_AgentNotFoundException_CoordinatorTimeoutException() throws Exception {
         Config config = syncedConfig(2, 10, 1);
         Agent thisAgent = emptyAgent("Greg");
-        Predicate<ReadOnlyAgent> filter = a -> true;
+        Predicate<ReadOnlyAgent> filter = agent -> true;
 
         AgentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
                 AgentSimulationContext.class,
                 CoordinatorTimeoutException.class,
-                "getFilteredAgentsFromCoordinator",
-                new Class<?>[]{String.class, Predicate.class},
+                "getGlobalAgentSetFromCoordinator",
+                new Class<?>[]{String.class},
                 config,
                 thisAgent
         );
@@ -493,16 +591,16 @@ public class AgentSimulationContextTest {
     }
 
     @Test
-    public void testGetFilteredAgents_ThreadsSynced_AgentNotFoundException_CoordinatorErrorException() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
+    public void testGetFilteredAgents_ThreadsSynced_AgentNotFoundException_CoordinatorErrorException() throws Exception {
         Config config = syncedConfig(2, 10, 1);
         Agent thisAgent = emptyAgent("Greg");
-        Predicate<ReadOnlyAgent> filter = a -> true;
+        Predicate<ReadOnlyAgent> filter = agent -> true;
 
         AgentSimulationContext context = generateContextWhereRequestResponseInterfaceMethodThrows(
                 AgentSimulationContext.class,
                 CoordinatorErrorException.class,
-                "getFilteredAgentsFromCoordinator",
-                new Class<?>[]{String.class, Predicate.class},
+                "getGlobalAgentSetFromCoordinator",
+                new Class<?>[]{String.class},
                 config,
                 thisAgent
         );
@@ -516,19 +614,42 @@ public class AgentSimulationContextTest {
     }
 
     @Test
-    public void testGetFilteredAgents_ThreadsUnsynced() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
-        int populationSize = 20;
-        Config config = unsyncedConfig(populationSize, 10, 1);
-        AgentSet agentSet = agentSetOfSize(populationSize);
-        Predicate<ReadOnlyAgent> filter = a -> true;
-
+    public void testGetFilteredAgents_ThreadsUnsynced_DefaultExcludesDeadAgents() throws Exception {
+        Config config = unsyncedConfig(2, 10, 1);
+        Agent alive = emptyAgent("alive");
+        Agent dead = emptyAgent("dead");
+        dead.kill();
+        AgentSet localAgentSet = new AgentSet(List.of(alive, dead));
         AgentSimulationContext context = simulationContextWithAgentSet(
                 AgentSimulationContext.class,
                 config,
-                agentSet
+                localAgentSet
         );
 
-        assertSetsContainSameAgents(agentSet, context.getFilteredAgents(filter));
+        ReadOnlyAgentSet result = context.getFilteredAgents(agent -> true);
+
+        assertEquals(1, result.size());
+        assertEquals("alive", result.get(0).name());
+    }
+
+    @Test
+    public void testGetFilteredAgents_ThreadsUnsynced_IncludeDeadAgentsTrueIncludesDeadAgents() throws Exception {
+        Config config = unsyncedConfig(2, 10, 1);
+        Agent alive = emptyAgent("alive");
+        Agent dead = emptyAgent("dead");
+        dead.kill();
+        AgentSet localAgentSet = new AgentSet(List.of(alive, dead));
+        AgentSimulationContext context = simulationContextWithAgentSet(
+                AgentSimulationContext.class,
+                config,
+                localAgentSet
+        );
+
+        ReadOnlyAgentSet result = context.getFilteredAgents(agent -> true, true);
+
+        assertEquals(2, result.size());
+        assertFalse(result.get("alive").isDead());
+        assertTrue(result.get("dead").isDead());
     }
 
 
