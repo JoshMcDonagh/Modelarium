@@ -131,13 +131,28 @@ public class WorkerThread implements Callable<Results> {
             for (Agent agent : agentsInThread) {
                 agentsToAdd.add(agent.getAddedAgents());
                 agentsToKill.addAll(agent.getKilledAgentNames());
+
+                agent.clearPendingAgentChanges();
             }
 
             agentsInThread.update(agentsToAdd, true);
+
+            for (Agent addedAgent : agentsToAdd) {
+                Agent installedAgent = agentsInThread.get(addedAgent.name());
+
+                installedAgent.createContext(
+                        visibleAgents,
+                        config,
+                        cache,
+                        clock,
+                        requestResponseController,
+                        localEnvironment,
+                        randomGenerator
+                );
+            }
+
             for (String agentName : agentsToKill)
                 agentsInThread.get(agentName).kill();
-
-            visibleAgents.update(agentsInThread, true);
 
             if (config.areThreadsSynced()) {
                 requestResponseInterface.waitUntilAllWorkersFinishTick();
@@ -146,6 +161,8 @@ public class WorkerThread implements Callable<Results> {
             } else {
                 clock.triggerTick();
             }
+
+            visibleAgents.update(agentsInThread, true);
 
             cache.clear();
         }

@@ -310,32 +310,11 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     }
 
     /**
-     * Creates and sets a simulation context for each agent in an agent set.
-     *
-     * @param agentSet the agents to create contexts for
-     */
-    private void createAgentContexts(AgentSet agentSet) {
-        for (Agent agent : agentSet)
-            createAgentContext(agent);
-    }
-
-    /**
-     * Creates and sets a simulation context for each agent in a list.
-     *
-     * @param agentList the agents to create contexts for
-     */
-    private void createAgentContexts(List<Agent> agentList) {
-        for (Agent agent : agentList)
-            createAgentContext(agent);
-    }
-
-    /**
      * Adds an agent to the current core's local agent set, creating the context the agent needs to run.
      *
      * @param agent the agent to add
      */
     public void addAgent(Agent agent) {
-        createAgentContext(agent);
         addedAgents.add(agent);
     }
 
@@ -346,7 +325,6 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * @param agentSet the agents to add
      */
     public void addAgents(AgentSet agentSet) {
-        createAgentContexts(agentSet);
         addedAgents.add(agentSet);
     }
 
@@ -356,35 +334,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * @param agentList the agents to add
      */
     public void addAgents(List<Agent> agentList) {
-        createAgentContexts(agentList);
         addedAgents.add(agentList);
-    }
-
-    /**
-     * Adds a deep copy of an agent to the current core's local agent set.
-     *
-     * @param agent the agent to deep clone and add
-     */
-    public void addAgentDeepCopy(Agent agent) {
-        addAgent(Cloners.standard().deepClone(agent));
-    }
-
-    /**
-     * Adds a deep copy of each agent in an agent set to the current core's local agent set.
-     *
-     * @param agentSet the agents to deep clone and add
-     */
-    public void addAgentsDeepCopy(AgentSet agentSet) {
-        addAgents(Cloners.standard().deepClone(agentSet));
-    }
-
-    /**
-     * Adds a deep copy of each agent in a list to the current core's local agent set.
-     *
-     * @param agentList the agents to deep clone and add
-     */
-    public void addAgentsDeepCopy(List<Agent> agentList) {
-        addAgents(Cloners.standard().deepClone(agentList));
     }
 
     /**
@@ -527,8 +477,6 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * @param agentName the agent's name as a string
      */
     public void killAgent(String agentName) {
-        if (!doesAgentExistInThisCore(agentName))
-            throw new AgentNotFoundException("Agent '" + agentName + "' requested by '" + entity.name() + "' not found in this thread (threads are not synced)");
         killedAgentNames.add(agentName);
     }
 
@@ -547,11 +495,6 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * @param agentNames the list of names of agents to kill
      */
     public void killAgents(List<String> agentNames) {
-        for (String agentName : agentNames) {
-            if (!doesAgentExistInThisCore(agentName))
-                throw new AgentNotFoundException("Agent '" + agentName + "' requested by '" + entity.name()
-                        + "' not found in this thread (threads are not synced)");
-        }
         killedAgentNames.addAll(agentNames);
     }
 
@@ -575,5 +518,11 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     @Internal
     public List<String> getKilledAgentNames() {
         return killedAgentNames;
+    }
+
+    @Internal
+    public void clearPendingAgentChanges() {
+        addedAgents.clear();
+        killedAgentNames.clear();
     }
 }

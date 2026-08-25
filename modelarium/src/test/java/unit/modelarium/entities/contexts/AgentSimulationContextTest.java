@@ -705,50 +705,6 @@ public class AgentSimulationContextTest {
         assertTrue(context.doesAgentExistInThisCore("agent_2"));
     }
 
-    @Test
-    public void testAddAgentDeepCopy() throws ReflectiveOperationException {
-        Config config = unsyncedConfig(1, 1, 1);
-        AgentSet agentSet = agentSet(emptyAgent("agent_0"));
-
-        AgentSimulationContext context = simulationContextWithAgentSet(
-                AgentSimulationContext.class,
-                config,
-                agentSet
-        );
-
-        Agent newAgent = new Agent("agent_1", List.of(singlePropertyAgentSet("agent_1", "food", "hunger")));
-        context.addAgentDeepCopy(newAgent);
-
-        assertTrue(context.doesAgentExistInThisCore("agent_1"));
-        Agent stored = getMutableFromImmutable(context.getAgent("agent_1"));
-        assertNotSame(newAgent, stored);
-        assertEquals("agent_1", stored.name());
-    }
-
-    @Test
-    public void testAddAgentsDeepCopy_WithList() throws ReflectiveOperationException {
-        AgentSimulationContext context = simulationContextWithAgentSet(
-                AgentSimulationContext.class, unsyncedConfig(1, 1, 1), agentSet(emptyAgent("agent_0")));
-        Agent newAgent = emptyAgent("agent_1");
-
-        context.addAgentsDeepCopy(List.of(newAgent));
-
-        assertTrue(context.doesAgentExistInThisCore("agent_1"));
-        assertNotSame(newAgent, getMutableFromImmutable(context.getAgent("agent_1")));
-    }
-
-    @Test
-    public void testAddAgentsDeepCopy_WithAgentSet() throws ReflectiveOperationException {
-        AgentSimulationContext context = simulationContextWithAgentSet(
-                AgentSimulationContext.class, unsyncedConfig(1, 1, 1), agentSet(emptyAgent("agent_0")));
-        Agent newAgent = emptyAgent("agent_1");
-
-        context.addAgentsDeepCopy(agentSet(newAgent));
-
-        assertTrue(context.doesAgentExistInThisCore("agent_1"));
-        assertNotSame(newAgent, getMutableFromImmutable(context.getAgent("agent_1")));
-    }
-
     private static Config config(boolean synced, int populationSize) {
         return Config.builder()
                 .populationSize(populationSize)

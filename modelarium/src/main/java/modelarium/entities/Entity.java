@@ -241,4 +241,9 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
      * @return the new {@link ReadOnlyEntity} instance
      */
     public abstract ReadOnlyEntity<SC,C,AS,ASL> getAsImmutable();
+
+    @Internal
+    public void clearPendingAgentChanges() {
+        context.clearPendingAgentChanges();
+    }
 }
