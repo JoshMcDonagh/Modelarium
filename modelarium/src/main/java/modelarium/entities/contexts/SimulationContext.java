@@ -336,7 +336,6 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      */
     public void addAgent(Agent agent) {
         createAgentContext(agent);
-        localAgentSet.add(agent);
         addedAgents.add(agent);
     }
 
@@ -348,7 +347,6 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      */
     public void addAgents(AgentSet agentSet) {
         createAgentContexts(agentSet);
-        localAgentSet.add(agentSet);
         addedAgents.add(agentSet);
     }
 
@@ -359,7 +357,6 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      */
     public void addAgents(List<Agent> agentList) {
         createAgentContexts(agentList);
-        localAgentSet.add(agentList);
         addedAgents.add(agentList);
     }
 
@@ -530,22 +527,9 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * @param agentName the agent's name as a string
      */
     public void killAgent(String agentName) {
-        if (!config.areThreadsSynced()) {
-            if (!doesAgentExistInThisCore(agentName))
-                throw new AgentNotFoundException("Agent '" + agentName + "' requested by '" + entity.name() + "' not found in this thread (threads are not synced)");
-            localAgentSet.get(agentName).kill();
-            killedAgentNames.add(agentName);
-            return;
-        }
-
-        try {
-            requestResponseInterface.killCoordinatorAgent(agentName);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new SimulationInterruptedException("Interrupted while killing agent '" + agentName + "'", e);
-        } catch (CoordinatorTimeoutException | CoordinatorErrorException e) {
-            throw new AgentNotFoundException("Failed to kill agent '" + agentName + "'", e);
-        }
+        if (!doesAgentExistInThisCore(agentName))
+            throw new AgentNotFoundException("Agent '" + agentName + "' requested by '" + entity.name() + "' not found in this thread (threads are not synced)");
+        killedAgentNames.add(agentName);
     }
 
     /**
@@ -563,29 +547,12 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * @param agentNames the list of names of agents to kill
      */
     public void killAgents(List<String> agentNames) {
-        if (!config.areThreadsSynced()) {
-            for (String agentName : agentNames) {
-                if (!doesAgentExistInThisCore(agentName))
-                    throw new AgentNotFoundException("Agent '" + agentName + "' requested by '" + entity.name()
-                            + "' not found in this thread (threads are not synced)");
-            }
-
-            for (String agentName : agentNames) {
-                localAgentSet.get(agentName).kill();
-                killedAgentNames.add(agentName);
-            }
-            return;
+        for (String agentName : agentNames) {
+            if (!doesAgentExistInThisCore(agentName))
+                throw new AgentNotFoundException("Agent '" + agentName + "' requested by '" + entity.name()
+                        + "' not found in this thread (threads are not synced)");
         }
-
-        try {
-            requestResponseInterface.killCoordinatorAgents(agentNames);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new SimulationInterruptedException("Interrupted while killing agents requested by '"
-                    + entity.name() + "'", e);
-        } catch (CoordinatorTimeoutException | CoordinatorErrorException e) {
-            throw new AgentNotFoundException("Failed to kill agents  requested by '" + entity.name() + "'", e);
-        }
+        killedAgentNames.addAll(agentNames);
     }
 
     /**

@@ -124,7 +124,7 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
             throw new IllegalStateException("Context already created");
 
         context = makeContextInstance(
-                Cloners.standard().deepClone(agentSet),
+                agentSet,
                 config,
                 contextCache,
                 clock,

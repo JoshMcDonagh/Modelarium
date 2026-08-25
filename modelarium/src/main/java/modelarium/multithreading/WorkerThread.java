@@ -14,6 +14,8 @@ import modelarium.results.mutable.Results;
 import modelarium.results.mutable.ResultsForAgents;
 import modelarium.utils.Cloners;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.random.RandomGenerator;
@@ -46,9 +48,6 @@ public class WorkerThread implements Callable<Results> {
     /** The clock shared with the co-ordinator and other workers, or null if threads are not synchronised */
     private final MutableClock sharedClock;
 
-    /** A duplicate of the agent set to allow for safe merging during synchronisation */
-    private final AgentSet updatedAgents;
-
     /** The splittable random generator this worker and its agents can use */
     private final RandomGenerator randomGenerator;
 
@@ -77,7 +76,6 @@ public class WorkerThread implements Callable<Results> {
         this.environment = environment;
         this.agentsInThread = Objects.requireNonNull(agentsInThread, "agents");
         this.sharedClock = sharedClock;
-        this.updatedAgents = this.agentsInThread.duplicate();
         this.randomGenerator = Objects.requireNonNull(randomGenerator, "randomGenerator");
     }
 
@@ -94,14 +92,15 @@ public class WorkerThread implements Callable<Results> {
         MutableClock clock = Objects.requireNonNullElseGet(sharedClock, () -> new MutableClock(config.tickCount()));
         ContextCache cache = new ContextCache();
 
+        AgentSet visibleAgents = Cloners.standard().deepClone(agentsInThread);
+
+        Environment localEnvironment = null;
+        if (config.areThreadsSynced())
+            localEnvironment = Cloners.standard().deepClone(environment);
+
         for (Agent agent : agentsInThread) {
-            Environment localEnvironment = null;
-
-            if (config.areThreadsSynced())
-                localEnvironment = Cloners.standard().deepClone(environment);
-
             agent.createContext(
-                    agentsInThread,
+                    visibleAgents,
                     config,
                     cache,
                     clock,
@@ -126,18 +125,22 @@ public class WorkerThread implements Callable<Results> {
                     randomGenerator
             );
 
+            AgentSet agentsToAdd = new AgentSet();
+            List<String> agentsToKill = new ArrayList<>();
+
             for (Agent agent : agentsInThread) {
-                agentsInThread.update(agent.getAddedAgents(), true);
-
-                for (String agentName : agent.getKilledAgentNames())
-                    agentsInThread.get(agentName).kill();
-
-                agent.updateLocalAgentSet(agentsInThread);
+                agentsToAdd.add(agent.getAddedAgents());
+                agentsToKill.addAll(agent.getKilledAgentNames());
             }
+
+            agentsInThread.update(agentsToAdd, true);
+            for (String agentName : agentsToKill)
+                agentsInThread.get(agentName).kill();
+
+            visibleAgents.update(agentsInThread, true);
 
             if (config.areThreadsSynced()) {
                 requestResponseInterface.waitUntilAllWorkersFinishTick();
-                agentsInThread.add(updatedAgents); // Merge agent updates
                 requestResponseInterface.updateCoordinatorAgents(agentsInThread);
                 requestResponseInterface.waitUntilAllWorkersUpdateCoordinator();
             } else {
