@@ -10,5 +10,5 @@ import modelarium.entities.attributes.routines.AgentRoutine;
  * <p>This interface is implemented by the agent-flavoured attribute types: {@link AgentEvent}, {@link AgentProperty}
  * and {@link AgentRoutine}.
  */
-public sealed interface AgentAttribute extends Attribute permits AgentEvent, AgentProperty, AgentRoutine {
+public non-sealed interface AgentAttribute extends Attribute {
 }

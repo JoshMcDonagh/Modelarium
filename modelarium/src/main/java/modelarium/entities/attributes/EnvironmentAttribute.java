@@ -10,5 +10,5 @@ import modelarium.entities.attributes.routines.EnvironmentRoutine;
  * <p>This interface is implemented by the environment-flavoured attribute types: {@link EnvironmentEvent},
  * {@link EnvironmentProperty} and {@link EnvironmentRoutine}.
  */
-public sealed interface EnvironmentAttribute extends Attribute permits EnvironmentEvent, EnvironmentProperty, EnvironmentRoutine {
+public non-sealed interface EnvironmentAttribute extends Attribute {
 }
