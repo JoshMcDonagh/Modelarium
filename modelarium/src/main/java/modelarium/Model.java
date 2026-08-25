@@ -13,6 +13,7 @@ import modelarium.results.immutable.ReadOnlyResults;
 import modelarium.results.mutable.Results;
 import modelarium.results.mutable.ResultsForAgents;
 import modelarium.results.mutable.ResultsForEnvironment;
+import modelarium.utils.Cloners;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,19 +99,30 @@ public class Model {
      *                                  interaction
      * @param sharedClock the clock used to synchronise entities in the model
      * @param randomGenerator the splittable random generator the environment can use
+     * @param initialAgentState the initial set of agents
      */
     private void createAndSetEnvironmentContext(
             Environment environment,
             RequestResponseController requestResponseController,
             MutableClock sharedClock,
-            SplittableRandom randomGenerator
+            SplittableRandom randomGenerator,
+            AgentSet initialAgentState
     ) {
-        MutableClock clock;
+        MutableClock clock = Objects.requireNonNullElseGet(
+                sharedClock,
+                () -> new MutableClock(config.tickCount())
+        );
 
-        clock = Objects.requireNonNullElseGet(sharedClock, () -> new MutableClock(config.tickCount()));
+        AgentSet visibleAgents;
+
+        if (initialAgentState == null)
+            visibleAgents = new AgentSet();
+        else
+            visibleAgents =
+                    Cloners.standard().deepClone(initialAgentState);
 
         environment.createContext(
-                new AgentSet(),
+                visibleAgents,
                 config,
                 new ContextCache(),
                 clock,
@@ -275,7 +287,13 @@ public class Model {
         RequestResponseController requestResponseController = new RequestResponseController(config);
 
         // Create a context the environment can use and set it to the environment
-        createAndSetEnvironmentContext(environment, requestResponseController, sharedClock, randomGenerator);
+        createAndSetEnvironmentContext(
+                environment,
+                requestResponseController,
+                sharedClock,
+                randomGenerator,
+                globalAgentSet
+        );
 
         // If threads are synchronised, create the coordinator thread
         CoordinatorHandle coordinatorHandle = null;

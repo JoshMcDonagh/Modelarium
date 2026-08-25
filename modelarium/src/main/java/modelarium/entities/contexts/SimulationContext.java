@@ -159,19 +159,6 @@ public sealed abstract class SimulationContext implements Context permits AgentS
         this.attribute = attribute;
     }
 
-
-    /**
-     * Updates the entity's local agent set.
-     *
-     * @param agentSet the agent set to update the local agent set with
-     */
-    @Internal
-    public void updateLocalAgentSet(AgentSet agentSet) {
-        localAgentSet.update(agentSet, true);
-        addedAgents.clear();
-        killedAgentNames.clear();
-    }
-
     /**
      * Returns the entity's local agent set.
      *
@@ -290,23 +277,6 @@ public sealed abstract class SimulationContext implements Context permits AgentS
         cache.addEnvironment(requestedEnvironment);
 
         return requestedEnvironment;
-    }
-
-    /**
-     * Creates and sets a simulation context for a newly added agent, sharing this context's resources.
-     *
-     * @param agent the agent to create a context for
-     */
-    private void createAgentContext(Agent agent) {
-        agent.createContext(
-                localAgentSet,
-                config,
-                cache,
-                clock,
-                requestResponseController,
-                localEnvironment,
-                randomGenerator
-        );
     }
 
     /**
@@ -477,6 +447,18 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * @param agentName the agent's name as a string
      */
     public void killAgent(String agentName) {
+        if (config.areThreadsSynced()) {
+            // Validates that the agent exists in the model-wide state visible during this tick.
+            getAgent(agentName);
+        } else if (!doesAgentExistInThisCore(agentName)) {
+            throw new AgentNotFoundException(
+                    "Agent '" + agentName + "' requested by '"
+                            + entity.name()
+                            + "' not found in this thread "
+                            + "(threads are not synced)"
+            );
+        }
+
         killedAgentNames.add(agentName);
     }
 
@@ -495,6 +477,20 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * @param agentNames the list of names of agents to kill
      */
     public void killAgents(List<String> agentNames) {
+        // Validate every name before queuing any of them.
+        for (String agentName : agentNames) {
+            if (config.areThreadsSynced()) {
+                getAgent(agentName);
+            } else if (!doesAgentExistInThisCore(agentName)) {
+                throw new AgentNotFoundException(
+                        "Agent '" + agentName + "' requested by '"
+                                + entity.name()
+                                + "' not found in this thread "
+                                + "(threads are not synced)"
+                );
+            }
+        }
+
         killedAgentNames.addAll(agentNames);
     }
 

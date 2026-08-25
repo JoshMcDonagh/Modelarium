@@ -137,16 +137,6 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
             attributeSet.setContext(context);
     }
 
-    /**
-     * Updates the entity's local agent set.
-     *
-     * @param agentSet the local agent set the context will be updated with
-     */
-    @Internal
-    public void updateLocalAgentSet(AgentSet agentSet) {
-        context.updateLocalAgentSet(agentSet);
-    }
-
     @Internal
     public AgentSet getAddedAgents() {
         return context.getAddedAgents();

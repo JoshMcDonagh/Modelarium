@@ -3,11 +3,13 @@ package modelarium.multithreading;
 import modelarium.Config;
 import modelarium.clock.ImmutableClock;
 import modelarium.clock.MutableClock;
+import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
 import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.ReadOnlyEnvironment;
+import modelarium.exceptions.AgentNotFoundException;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 import modelarium.results.mutable.Results;
@@ -125,6 +127,7 @@ public class WorkerThread implements Callable<Results> {
                     randomGenerator
             );
 
+            // Collect every population mutation requested during this tick.
             AgentSet agentsToAdd = new AgentSet();
             List<String> agentsToKill = new ArrayList<>();
 
@@ -135,8 +138,10 @@ public class WorkerThread implements Callable<Results> {
                 agent.clearPendingAgentChanges();
             }
 
-            agentsInThread.update(agentsToAdd, true);
+            // Apply additions to the actual worker state.
+            agentsInThread.update(agentsToAdd, false);
 
+            // Newly installed agents need contexts before they can run on the next tick.
             for (Agent addedAgent : agentsToAdd) {
                 Agent installedAgent = agentsInThread.get(addedAgent.name());
 
@@ -151,20 +156,80 @@ public class WorkerThread implements Callable<Results> {
                 );
             }
 
-            for (String agentName : agentsToKill)
-                agentsInThread.get(agentName).kill();
+            // Local kills can be committed to this worker now.
+            List<String> remoteAgentsToKill = new ArrayList<>();
 
-            if (config.areThreadsSynced()) {
-                requestResponseInterface.waitUntilAllWorkersFinishTick();
-                requestResponseInterface.updateCoordinatorAgents(agentsInThread);
-                requestResponseInterface.waitUntilAllWorkersUpdateCoordinator();
-            } else {
-                clock.triggerTick();
+            for (String agentName : agentsToKill) {
+                if (agentsInThread.doesAgentExist(agentName)) {
+                    agentsInThread.get(agentName).kill();
+                } else if (config.areThreadsSynced()) {
+                    remoteAgentsToKill.add(agentName);
+                } else {
+                    // This should normally have been caught by
+                    // SimulationContext.killAgent().
+                    throw new AgentNotFoundException(
+                            "Agent '" + agentName
+                                    + "' could not be found in worker '"
+                                    + threadName + "'"
+                    );
+                }
             }
 
-            visibleAgents.update(agentsInThread, true);
+            if (config.areThreadsSynced()) {
+                // Important: do not mutate the coordinator until EVERY worker has finished reading the old global
+                // state.
+                requestResponseInterface.waitUntilAllWorkersFinishTick();
 
-            cache.clear();
+                // Now we are safely in the coordinator-update phase.
+                if (!remoteAgentsToKill.isEmpty())
+                    requestResponseInterface.killCoordinatorAgents(
+                            remoteAgentsToKill
+                    );
+
+                requestResponseInterface.updateCoordinatorAgents(
+                        agentsInThread
+                );
+
+                // This barrier is only released after all worker updates have been processed and the environment has run.
+                requestResponseInterface
+                        .waitUntilAllWorkersUpdateCoordinator();
+
+                // All tick-specific cached reads are now stale.
+                cache.clear();
+
+                // Retrieve the FINAL global state for the completed tick.
+                ReadOnlyAgentSet resolvedGlobalAgents =
+                        requestResponseInterface
+                                .getGlobalAgentSetFromCoordinator(
+                                        threadName
+                                );
+
+                // Propagate coordinator-side deaths back to the worker that actually owns each agent.
+                for (Agent localAgent : agentsInThread) {
+                    if (
+                            resolvedGlobalAgents.doesAgentExist(
+                                    localAgent.name()
+                            )
+                                    && resolvedGlobalAgents
+                                    .get(localAgent.name())
+                                    .isDead()
+                                    && !localAgent.isDead()
+                    ) {
+                        localAgent.kill();
+                    }
+                }
+
+                // This global set is already the state that should be visible during the NEXT tick, so seed the cache with it.
+                cache.addGlobalAgentSet(resolvedGlobalAgents);
+            } else {
+                clock.triggerTick();
+
+                // Previous-tick cached reads are no longer valid.
+                cache.clear();
+            }
+
+            // Finally refresh the worker-local snapshot.
+            visibleAgents.update(agentsInThread, true);
         }
 
         // Final setup and result collection
