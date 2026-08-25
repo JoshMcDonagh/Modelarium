@@ -1,8 +1,8 @@
 package modelarium.entities.logging;
 
 import modelarium.entities.attributes.properties.Property;
-import modelarium.entities.attributes.sets.mutable.AttributeBase;
-import modelarium.entities.attributes.sets.mutable.AttributeSet;
+import modelarium.entities.attributes.sets.AttributeBase;
+import modelarium.entities.attributes.sets.AttributeSet;
 import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.logging.databases.AttributeSetLogDatabase;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;

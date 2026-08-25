@@ -8,8 +8,8 @@ import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.functional.FunctionalAgentProperty;
 import modelarium.entities.attributes.routines.AgentRoutine;
 import modelarium.entities.attributes.routines.functional.FunctionalAgentRoutine;
-import modelarium.entities.attributes.sets.immutable.ReadOnlyAgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
+import modelarium.entities.attributes.sets.readonly.ReadOnlyAgentAttributeSet;
+import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.logging.AttributeSetLog;
 import org.junit.jupiter.api.Test;
 

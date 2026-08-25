@@ -1,0 +1,139 @@
+package modelarium.entities.agentsets;
+
+import modelarium.entities.readonly.ReadOnlyAgent;
+import modelarium.entities.Agent;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.random.RandomGenerator;
+
+/**
+ * Class for providing a read-only view of an {@link AgentSet}.
+ *
+ * <p>This class wraps a mutable agent set so that its agents can be looked up, filtered and iterated over without
+ * the underlying set being modifiable, with each retrieved agent wrapped as an {@link ReadOnlyAgent}.
+ */
+public final class ReadOnlyAgentSet implements Iterable<ReadOnlyAgent> {
+
+    /** The mutable agent set this read-only view wraps */
+    private final AgentSet mutableVersion;
+
+    /**
+     * Constructs a new immutable agent set wrapping the specified mutable agent set.
+     *
+     * @param mutableVersion the mutable agent set to provide a read-only view of
+     */
+    public ReadOnlyAgentSet(AgentSet mutableVersion) {
+        this.mutableVersion = mutableVersion;
+    }
+
+    /**
+     * Retrieves an agent by name.
+     *
+     * @param agentName the agent's unique name
+     * @return a read-only view of the agent with the specified name
+     */
+    public ReadOnlyAgent get(String agentName) {
+        return mutableVersion.get(agentName).getAsImmutable();
+    }
+
+    /**
+     * Retrieves an agent by index.
+     *
+     * @param index the index of the agent
+     * @return a read-only view of the agent at the given position
+     */
+    public ReadOnlyAgent get(int index) {
+        return mutableVersion.get(index).getAsImmutable();
+    }
+
+    /**
+     * Returns the agents in this set as a list of read-only views.
+     *
+     * @return a list of {@link ReadOnlyAgent} instances
+     */
+    public List<ReadOnlyAgent> getAsList() {
+        List<Agent> originalList = mutableVersion.getAsList();
+        List<ReadOnlyAgent> newList = new ArrayList<>();
+
+        for (Agent agent : originalList)
+            newList.add(agent.getAsImmutable());
+
+        return newList;
+    }
+
+    /**
+     * Returns the number of agents in the set.
+     *
+     * @return the size of the agent set
+     */
+    public int size() {
+        return mutableVersion.size();
+    }
+
+    /**
+     * Returns whether the set contains no agents.
+     *
+     * @return true if the set is empty, false otherwise
+     */
+    public boolean isEmpty() {
+        return mutableVersion.isEmpty();
+    }
+
+    /**
+     * Checks if an agent exists in the set by name.
+     *
+     * @param agentName the name to check
+     * @return true if the agent exists
+     */
+    public boolean doesAgentExist(String agentName) {
+        return mutableVersion.doesAgentExist(agentName);
+    }
+
+    /**
+     * Returns a living-only filtered view of the agent set.
+     *
+     * @param agentFilter a predicate to apply to each agent
+     * @return a new {@link ReadOnlyAgentSet} containing only matching agents
+     */
+    public ReadOnlyAgentSet getFilteredAgents(Predicate<ReadOnlyAgent> agentFilter) {
+        return mutableVersion.getFilteredAgents(agentFilter).getAsImmutable();
+    }
+
+    /**
+     * Returns a filtered view of the agent set.
+     *
+     * @param agentFilter a predicate to apply to each agent
+     * @param includeDeadAgents a boolean which determines if dead agents are to be included in the output agent set or
+     *                          not
+     * @return a new {@link ReadOnlyAgentSet} containing only matching agents
+     */
+    public ReadOnlyAgentSet getFilteredAgents(Predicate<ReadOnlyAgent> agentFilter, boolean includeDeadAgents) {
+        return mutableVersion.getFilteredAgents(agentFilter, includeDeadAgents).getAsImmutable();
+    }
+
+    /**
+     * Returns a randomised iterator over the agents in this set.
+     *
+     * @param randomGenerator the random generator used to shuffle the agents
+     * @return an iterator that yields read-only views of the agents in random order
+     */
+    public Iterator<ReadOnlyAgent> getRandomIterator(RandomGenerator randomGenerator) {
+        List<ReadOnlyAgent> shuffledAgents = getAsList();
+        Collections.shuffle(shuffledAgents, randomGenerator);
+        return shuffledAgents.iterator();
+    }
+
+    /**
+     * Standard iterator over the agents in the order they were added.
+     *
+     * @return an iterator over read-only views of the agents
+     */
+    @Override
+    public Iterator<ReadOnlyAgent> iterator() {
+        return getAsList().iterator();
+    }
+}

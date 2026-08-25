@@ -1,6 +1,6 @@
 package unit.modelarium.multithreading.requestresponse;
 
-import modelarium.entities.agents.mutable.AgentSet;
+import modelarium.entities.agentsets.AgentSet;
 import modelarium.multithreading.requestresponse.Request;
 import modelarium.multithreading.requestresponse.RequestType;
 import modelarium.multithreading.requestresponse.Response;

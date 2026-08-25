@@ -1,12 +1,12 @@
 package unit.modelarium.results.mutable;
 
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
-import modelarium.entities.environments.Environment;
-import modelarium.results.mutable.Results;
-import modelarium.results.mutable.ResultsForAgents;
-import modelarium.results.mutable.ResultsForEnvironment;
+import modelarium.entities.Agent;
+import modelarium.entities.attributes.sets.AgentAttributeSet;
+import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
+import modelarium.entities.Environment;
+import modelarium.results.Results;
+import modelarium.results.ResultsForAgents;
+import modelarium.results.ResultsForEnvironment;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 

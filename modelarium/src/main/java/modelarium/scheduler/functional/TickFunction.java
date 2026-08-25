@@ -1,8 +1,8 @@
 package modelarium.scheduler.functional;
 
-import modelarium.clock.ImmutableClock;
-import modelarium.entities.agents.mutable.AgentSet;
-import modelarium.entities.environments.ReadOnlyEnvironment;
+import modelarium.clock.ReadOnlyClock;
+import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.readonly.ReadOnlyEnvironment;
 
 import java.util.random.RandomGenerator;
 
@@ -23,7 +23,7 @@ public interface TickFunction {
      */
     void runTick(
             String threadName,
-            ImmutableClock clock,
+            ReadOnlyClock clock,
             ReadOnlyEnvironment environment,
             AgentSet agentSet,
             RandomGenerator randomGenerator

@@ -2,16 +2,16 @@ package integration.multiCoreEquivalence;
 
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.entities.agents.generators.DefaultAgentGenerator;
-import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.generators.DefaultAgentGenerator;
+import modelarium.entities.Agent;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
-import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
+import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.generators.FunctionalEnvironmentGenerator;
-import modelarium.results.immutable.ReadOnlyResults;
+import modelarium.entities.Environment;
+import modelarium.entities.generators.FunctionalEnvironmentGenerator;
+import modelarium.results.readonly.ReadOnlyResults;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.Test;
 

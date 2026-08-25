@@ -1,9 +1,9 @@
 package unit.modelarium.entities.agents.immutable;
 
-import modelarium.entities.agents.immutable.ReadOnlyAgent;
-import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.agents.mutable.AgentSet;
+import modelarium.entities.readonly.ReadOnlyAgent;
+import modelarium.entities.agentsets.ReadOnlyAgentSet;
+import modelarium.entities.Agent;
+import modelarium.entities.agentsets.AgentSet;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

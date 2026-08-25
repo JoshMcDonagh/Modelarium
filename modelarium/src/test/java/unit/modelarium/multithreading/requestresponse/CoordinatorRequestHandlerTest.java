@@ -1,14 +1,14 @@
 package unit.modelarium.multithreading.requestresponse;
 
 import modelarium.Config;
-import modelarium.clock.MutableClock;
-import modelarium.entities.agents.immutable.ReadOnlyAgent;
-import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.agents.mutable.AgentSet;
+import modelarium.clock.Clock;
+import modelarium.entities.readonly.ReadOnlyAgent;
+import modelarium.entities.agentsets.ReadOnlyAgentSet;
+import modelarium.entities.Agent;
+import modelarium.entities.agentsets.AgentSet;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.ReadOnlyEnvironment;
+import modelarium.entities.Environment;
+import modelarium.entities.readonly.ReadOnlyEnvironment;
 import modelarium.multithreading.requestresponse.*;
 import modelarium.utils.Cloners;
 import org.junit.jupiter.api.Test;
@@ -236,7 +236,7 @@ public class CoordinatorRequestHandlerTest {
         EnvironmentSimulationContext environmentSimulationContext = mock(EnvironmentSimulationContext.class);
         doReturn(environmentSimulationContext).when(environment).context();
         when(environmentSimulationContext.getLocalAgentSet()).thenReturn(Cloners.standard().deepClone(agentSet));
-        MutableClock clock = new MutableClock(config.tickCount());
+        Clock clock = new Clock(config.tickCount());
         return new Fixture(config, controller, agentSet, environment, clock);
     }
 
@@ -245,6 +245,6 @@ public class CoordinatorRequestHandlerTest {
             RequestResponseController controller,
             AgentSet agents,
             Environment environment,
-            MutableClock clock
+            Clock clock
     ) {}
 }

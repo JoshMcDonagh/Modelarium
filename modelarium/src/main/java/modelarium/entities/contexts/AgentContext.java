@@ -1,10 +1,10 @@
 package modelarium.entities.contexts;
 
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.attributes.sets.mutable.AttributeBase;
-import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.ReadOnlyEnvironment;
+import modelarium.entities.Agent;
+import modelarium.entities.attributes.sets.AttributeBase;
+import modelarium.entities.attributes.sets.AgentAttributeSet;
+import modelarium.entities.Environment;
+import modelarium.entities.readonly.ReadOnlyEnvironment;
 
 /**
  * Interface for providing an agent's attributes with access to their owning agent and the wider model.

@@ -10,9 +10,9 @@ import dev.modelarium.examples.sir.entities.environment.attributes.prevalence.Pr
 import dev.modelarium.examples.sir.entities.environment.attributes.prevalence.PrevalenceUpdateRoutine;
 import modelarium.Config;
 import modelarium.entities.attributes.Attribute;
-import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.generators.EnvironmentGenerator;
+import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
+import modelarium.entities.Environment;
+import modelarium.entities.generators.EnvironmentGenerator;
 
 import java.util.ArrayList;
 import java.util.random.RandomGenerator;

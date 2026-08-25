@@ -1,6 +1,6 @@
 package modelarium.entities.attributes;
 
-import modelarium.entities.attributes.sets.mutable.AttributeBase;
+import modelarium.entities.attributes.sets.AttributeBase;
 
 /**
  * Interface for representing a single named behaviour or value belonging to an entity.

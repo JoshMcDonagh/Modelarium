@@ -2,19 +2,19 @@ package unit.modelarium.entities.contexts;
 
 import com.rits.cloning.Cloner;
 import modelarium.Config;
-import modelarium.clock.MutableClock;
-import modelarium.entities.agents.generators.DefaultAgentGenerator;
-import modelarium.entities.agents.immutable.ReadOnlyAgent;
-import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.agents.mutable.AgentSet;
-import modelarium.entities.attributes.sets.mutable.AttributeBase;
-import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
+import modelarium.clock.Clock;
+import modelarium.entities.generators.DefaultAgentGenerator;
+import modelarium.entities.readonly.ReadOnlyAgent;
+import modelarium.entities.agentsets.ReadOnlyAgentSet;
+import modelarium.entities.Agent;
+import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.attributes.sets.AttributeBase;
+import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.ContextCache;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.ReadOnlyEnvironment;
-import modelarium.entities.environments.generators.EnvironmentGenerator;
+import modelarium.entities.Environment;
+import modelarium.entities.readonly.ReadOnlyEnvironment;
+import modelarium.entities.generators.EnvironmentGenerator;
 import modelarium.exceptions.*;
 import modelarium.multithreading.requestresponse.*;
 import org.junit.jupiter.api.BeforeAll;
@@ -205,7 +205,7 @@ public class AgentSimulationContextTest {
     @Test
     public void testGetClock() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Config config = syncedConfig(2, 10, 1);
-        MutableClock clock = mutableClockFromConfig(config);
+        Clock clock = mutableClockFromConfig(config);
         AgentSimulationContext context = simulationContextWithClock(
                 AgentSimulationContext.class,
                 config,
@@ -810,7 +810,7 @@ public class AgentSimulationContextTest {
                 localAgents,
                 config,
                 new ContextCache(),
-                new MutableClock(config.tickCount()),
+                new Clock(config.tickCount()),
                 controller,
                 new Environment("environment", List.of()),
                 new SplittableRandom()

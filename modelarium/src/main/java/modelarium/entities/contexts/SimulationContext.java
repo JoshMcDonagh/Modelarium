@@ -2,16 +2,15 @@ package modelarium.entities.contexts;
 
 import modelarium.Config;
 import modelarium.clock.Clock;
-import modelarium.clock.MutableClock;
 import modelarium.entities.Entity;
-import modelarium.entities.agents.immutable.ReadOnlyAgent;
-import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.agents.mutable.AgentSet;
-import modelarium.entities.attributes.sets.mutable.AttributeBase;
-import modelarium.entities.attributes.sets.mutable.AttributeSet;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.ReadOnlyEnvironment;
+import modelarium.entities.readonly.ReadOnlyAgent;
+import modelarium.entities.agentsets.ReadOnlyAgentSet;
+import modelarium.entities.Agent;
+import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.attributes.sets.AttributeBase;
+import modelarium.entities.attributes.sets.AttributeSet;
+import modelarium.entities.Environment;
+import modelarium.entities.readonly.ReadOnlyEnvironment;
 import modelarium.exceptions.*;
 import modelarium.internal.Internal;
 import modelarium.multithreading.requestresponse.RequestResponseController;
@@ -49,7 +48,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     private final ContextCache cache;
 
     /** The clock the context provides access to */
-    private final MutableClock clock;
+    private final Clock clock;
 
     /** Controller that manages the request and response queues for inter-thread communication */
     private final RequestResponseController requestResponseController;
@@ -94,7 +93,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
             AgentSet localAgentSet,
             Config config,
             ContextCache cache,
-            MutableClock clock,
+            Clock clock,
             RequestResponseController requestResponseController,
             Environment localEnvironment,
             RandomGenerator randomGenerator

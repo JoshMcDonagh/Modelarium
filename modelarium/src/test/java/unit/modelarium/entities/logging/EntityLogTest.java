@@ -1,6 +1,6 @@
 package unit.modelarium.entities.logging;
 
-import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
+import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.logging.AttributeSetLog;

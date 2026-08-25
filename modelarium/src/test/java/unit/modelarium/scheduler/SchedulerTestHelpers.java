@@ -1,16 +1,16 @@
 package unit.modelarium.scheduler;
 
-import modelarium.clock.ImmutableClock;
-import modelarium.clock.MutableClock;
-import modelarium.entities.environments.ReadOnlyEnvironment;
+import modelarium.clock.ReadOnlyClock;
+import modelarium.clock.Clock;
+import modelarium.entities.readonly.ReadOnlyEnvironment;
 
 import static org.mockito.Mockito.mock;
 
 public class SchedulerTestHelpers {
     private SchedulerTestHelpers() {}
 
-    public static ImmutableClock immutableClock() {
-        return new ImmutableClock(new MutableClock(10));
+    public static ReadOnlyClock immutableClock() {
+        return new ReadOnlyClock(new Clock(10));
     }
 
     public static ReadOnlyEnvironment immutableEnvironment() {

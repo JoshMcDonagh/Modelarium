@@ -1,10 +1,10 @@
 package modelarium.multithreading.requestresponse;
 
 import modelarium.Config;
-import modelarium.entities.agents.immutable.ReadOnlyAgent;
-import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
-import modelarium.entities.agents.mutable.AgentSet;
-import modelarium.entities.environments.ReadOnlyEnvironment;
+import modelarium.entities.readonly.ReadOnlyAgent;
+import modelarium.entities.agentsets.ReadOnlyAgentSet;
+import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.readonly.ReadOnlyEnvironment;
 import modelarium.exceptions.CoordinatorErrorException;
 import modelarium.exceptions.CoordinatorTimeoutException;
 

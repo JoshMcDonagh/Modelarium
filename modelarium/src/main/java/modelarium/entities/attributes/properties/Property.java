@@ -1,7 +1,7 @@
 package modelarium.entities.attributes.properties;
 
 import modelarium.entities.attributes.AttributeAccessLevel;
-import modelarium.entities.attributes.sets.mutable.AttributeBase;
+import modelarium.entities.attributes.sets.AttributeBase;
 import modelarium.entities.contexts.Context;
 import modelarium.utils.Cloners;
 

@@ -1,11 +1,11 @@
 package unit.modelarium.multithreading;
 
 import modelarium.Config;
-import modelarium.clock.MutableClock;
-import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.agents.mutable.AgentSet;
-import modelarium.entities.environments.Environment;
+import modelarium.clock.Clock;
+import modelarium.entities.agentsets.ReadOnlyAgentSet;
+import modelarium.entities.Agent;
+import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.Environment;
 import modelarium.multithreading.CoordinatorThread;
 import modelarium.multithreading.requestresponse.*;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ public class CoordinatorThreadTest {
                 config,
                 environment,
                 controller,
-                new MutableClock(10),
+                new Clock(10),
                 globalAgentSet,
                 Map.of()
         );

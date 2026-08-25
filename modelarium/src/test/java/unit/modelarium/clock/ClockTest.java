@@ -1,7 +1,7 @@
 package unit.modelarium.clock;
 
-import modelarium.clock.ImmutableClock;
-import modelarium.clock.MutableClock;
+import modelarium.clock.ReadOnlyClock;
+import modelarium.clock.Clock;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,21 +9,21 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ClockTest {
     @Test
     public void testCurrentTick_StartsAtZero() {
-        MutableClock clock = new MutableClock(10);
+        Clock clock = new Clock(10);
 
         assertEquals(0, clock.currentTick());
     }
 
     @Test
     public void testTotalTickCount() {
-        MutableClock clock = new MutableClock(42);
+        Clock clock = new Clock(42);
 
         assertEquals(42, clock.totalTickCount());
     }
 
     @Test
     public void testTriggerTick() {
-        MutableClock clock = new MutableClock(5);
+        Clock clock = new Clock(5);
 
         clock.triggerTick();
 
@@ -33,7 +33,7 @@ public class ClockTest {
     @Test
     public void testTriggerTick_RunsToCompletion() {
         int totalTickCount = 5;
-        MutableClock clock = new MutableClock(totalTickCount);
+        Clock clock = new Clock(totalTickCount);
 
         for (int i = 0; i < totalTickCount; i++) {
             assertFalse(clock.isFinished());
@@ -46,7 +46,7 @@ public class ClockTest {
 
     @Test
     public void testTriggerTick_DoesNotAdvancePastTotalTickCount() {
-        MutableClock clock = new MutableClock(3);
+        Clock clock = new Clock(3);
 
         for (int i = 0; i < 10; i++)
             clock.triggerTick();
@@ -56,7 +56,7 @@ public class ClockTest {
 
     @Test
     public void testIsFinishedFalse() {
-        MutableClock clock = new MutableClock(2);
+        Clock clock = new Clock(2);
 
         assertFalse(clock.isFinished());
 
@@ -67,7 +67,7 @@ public class ClockTest {
 
     @Test
     public void testIsFinishedTrue() {
-        MutableClock clock = new MutableClock(1);
+        Clock clock = new Clock(1);
 
         clock.triggerTick();
 
@@ -76,8 +76,8 @@ public class ClockTest {
 
     @Test
     public void testImmutableClock_ReflectsMutableClock() {
-        MutableClock mutableClock = new MutableClock(5);
-        ImmutableClock immutableClock = new ImmutableClock(mutableClock);
+        Clock mutableClock = new Clock(5);
+        ReadOnlyClock immutableClock = new ReadOnlyClock(mutableClock);
 
         assertEquals(0, immutableClock.currentTick());
         assertEquals(5, immutableClock.totalTickCount());
@@ -90,8 +90,8 @@ public class ClockTest {
 
     @Test
     public void testImmutableClock_IsFinished() {
-        MutableClock mutableClock = new MutableClock(1);
-        ImmutableClock immutableClock = new ImmutableClock(mutableClock);
+        Clock mutableClock = new Clock(1);
+        ReadOnlyClock immutableClock = new ReadOnlyClock(mutableClock);
 
         mutableClock.triggerTick();
 

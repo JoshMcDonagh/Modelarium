@@ -1,9 +1,9 @@
 package unit.modelarium.entities.agents.mutable;
 
 import com.rits.cloning.Cloner;
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.agents.mutable.AgentSet;
-import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
+import modelarium.entities.Agent;
+import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
 import modelarium.exceptions.AgentNotFoundException;
 import org.junit.jupiter.api.BeforeAll;

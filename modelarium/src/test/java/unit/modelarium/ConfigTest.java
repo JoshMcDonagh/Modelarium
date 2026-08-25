@@ -1,8 +1,8 @@
 package unit.modelarium;
 
 import modelarium.Config;
-import modelarium.entities.agents.generators.DefaultAgentGenerator;
-import modelarium.entities.environments.generators.EnvironmentGenerator;
+import modelarium.entities.generators.DefaultAgentGenerator;
+import modelarium.entities.generators.EnvironmentGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;

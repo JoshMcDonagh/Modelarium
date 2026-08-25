@@ -1,8 +1,8 @@
 package unit.modelarium.results.mutable;
 
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.results.immutable.ReadOnlyResultsForAgents;
-import modelarium.results.mutable.ResultsForAgents;
+import modelarium.entities.Agent;
+import modelarium.results.readonly.ReadOnlyResultsForAgents;
+import modelarium.results.ResultsForAgents;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

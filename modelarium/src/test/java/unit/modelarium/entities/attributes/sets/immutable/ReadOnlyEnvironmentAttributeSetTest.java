@@ -8,8 +8,8 @@ import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.attributes.properties.functional.FunctionalEnvironmentProperty;
 import modelarium.entities.attributes.routines.EnvironmentRoutine;
 import modelarium.entities.attributes.routines.functional.FunctionalEnvironmentRoutine;
-import modelarium.entities.attributes.sets.immutable.ReadOnlyEnvironmentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.readonly.ReadOnlyEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
 import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
 import org.junit.jupiter.api.Test;
 

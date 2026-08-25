@@ -1,8 +1,8 @@
 package unit.modelarium.entities;
 
 import com.rits.cloning.Cloner;
-import modelarium.entities.agents.immutable.ReadOnlyAgent;
-import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.readonly.ReadOnlyAgent;
+import modelarium.entities.Agent;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.events.AgentEvent;
@@ -11,12 +11,12 @@ import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.attributes.routines.AgentRoutine;
 import modelarium.entities.attributes.routines.EnvironmentRoutine;
-import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.AgentAttributeSet;
+import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.EnvironmentContext;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.ReadOnlyEnvironment;
+import modelarium.entities.Environment;
+import modelarium.entities.readonly.ReadOnlyEnvironment;
 import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

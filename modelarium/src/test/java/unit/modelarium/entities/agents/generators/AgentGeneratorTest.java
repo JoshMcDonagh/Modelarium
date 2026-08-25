@@ -1,9 +1,9 @@
 package unit.modelarium.entities.agents.generators;
 
 import modelarium.Config;
-import modelarium.entities.agents.generators.DefaultAgentGenerator;
-import modelarium.entities.agents.generators.FunctionalDefaultAgentGenerator;
-import modelarium.entities.agents.mutable.AgentSet;
+import modelarium.entities.generators.DefaultAgentGenerator;
+import modelarium.entities.generators.FunctionalDefaultAgentGenerator;
+import modelarium.entities.agentsets.AgentSet;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

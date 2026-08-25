@@ -1,26 +1,26 @@
 package unit.modelarium.entities.contexts;
 
 import modelarium.Config;
-import modelarium.clock.MutableClock;
+import modelarium.clock.Clock;
 import modelarium.entities.Entity;
-import modelarium.entities.ReadOnlyEntity;
-import modelarium.entities.agents.generators.DefaultAgentGenerator;
-import modelarium.entities.agents.immutable.ReadOnlyAgent;
-import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.agents.mutable.AgentSet;
+import modelarium.entities.readonly.ReadOnlyEntity;
+import modelarium.entities.generators.DefaultAgentGenerator;
+import modelarium.entities.readonly.ReadOnlyAgent;
+import modelarium.entities.agentsets.ReadOnlyAgentSet;
+import modelarium.entities.Agent;
+import modelarium.entities.agentsets.AgentSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
-import modelarium.entities.attributes.sets.mutable.AttributeBase;
-import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.AttributeSet;
-import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.AttributeBase;
+import modelarium.entities.attributes.sets.AgentAttributeSet;
+import modelarium.entities.attributes.sets.AttributeSet;
+import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
 import modelarium.entities.contexts.*;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.ReadOnlyEnvironment;
-import modelarium.entities.environments.generators.EnvironmentGenerator;
+import modelarium.entities.Environment;
+import modelarium.entities.readonly.ReadOnlyEnvironment;
+import modelarium.entities.generators.EnvironmentGenerator;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
 import org.junit.jupiter.api.function.Executable;
@@ -71,8 +71,8 @@ class ContextTestHelpers {
         return new ContextCache();
     }
 
-    static MutableClock mutableClockFromConfig(Config config) {
-        return new MutableClock(config.tickCount());
+    static Clock mutableClockFromConfig(Config config) {
+        return new Clock(config.tickCount());
     }
 
     static RequestResponseController requestResponseController(Config config) {
@@ -188,7 +188,7 @@ class ContextTestHelpers {
             Config config,
             AgentSet agentSet,
             ContextCache contextCache,
-            MutableClock clock,
+            Clock clock,
             Environment thisEnvironment,
             Environment localEnvironment,
             RandomGenerator randomGenerator
@@ -213,7 +213,7 @@ class ContextTestHelpers {
                 AgentSet.class,
                 Config.class,
                 ContextCache.class,
-                MutableClock.class,
+                Clock.class,
                 RequestResponseController.class,
                 Environment.class,
                 RandomGenerator.class
@@ -266,7 +266,7 @@ class ContextTestHelpers {
     static <C extends SimulationContext> C simulationContextWithClock(
             Class<C> contextClass,
             Config config,
-            MutableClock clock
+            Clock clock
     ) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         return simulationContext(
                 contextClass,

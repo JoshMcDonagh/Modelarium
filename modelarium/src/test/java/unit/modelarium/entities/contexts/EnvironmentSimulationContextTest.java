@@ -1,16 +1,16 @@
 package unit.modelarium.entities.contexts;
 
 import modelarium.Config;
-import modelarium.clock.MutableClock;
-import modelarium.entities.agents.immutable.ReadOnlyAgent;
-import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.agents.mutable.AgentSet;
-import modelarium.entities.attributes.sets.mutable.AttributeBase;
-import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
+import modelarium.clock.Clock;
+import modelarium.entities.readonly.ReadOnlyAgent;
+import modelarium.entities.agentsets.ReadOnlyAgentSet;
+import modelarium.entities.Agent;
+import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.attributes.sets.AttributeBase;
+import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
-import modelarium.entities.environments.Environment;
+import modelarium.entities.Environment;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -79,7 +79,7 @@ public class EnvironmentSimulationContextTest {
     @Test
     public void testGetClock() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Config config = syncedConfig(2, 10, 1);
-        MutableClock clock = mutableClockFromConfig(config);
+        Clock clock = mutableClockFromConfig(config);
         EnvironmentSimulationContext context = simulationContextWithClock(
                 EnvironmentSimulationContext.class,
                 config,

@@ -1,14 +1,13 @@
 package modelarium.entities;
 
 import modelarium.Config;
-import modelarium.clock.MutableClock;
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.agents.mutable.AgentSet;
-import modelarium.entities.attributes.sets.mutable.AttributeSet;
+import modelarium.clock.Clock;
+import modelarium.entities.readonly.ReadOnlyEntity;
+import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.attributes.sets.AttributeSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.contexts.SimulationContext;
-import modelarium.entities.environments.Environment;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
@@ -90,7 +89,7 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
             AgentSet agentSet,
             Config config,
             ContextCache contextCache,
-            MutableClock clock,
+            Clock clock,
             RequestResponseController requestResponseController,
             Environment localEnvironment,
             RandomGenerator randomGenerator
@@ -114,7 +113,7 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
             AgentSet agentSet,
             Config config,
             ContextCache contextCache,
-            MutableClock clock,
+            Clock clock,
             RequestResponseController requestResponseController,
             Environment localEnvironment,
             RandomGenerator randomGenerator

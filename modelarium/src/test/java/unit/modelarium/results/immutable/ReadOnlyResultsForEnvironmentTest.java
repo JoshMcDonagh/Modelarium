@@ -1,7 +1,7 @@
 package unit.modelarium.results.immutable;
 
-import modelarium.entities.environments.Environment;
-import modelarium.results.immutable.ReadOnlyResultsForEnvironment;
+import modelarium.entities.Environment;
+import modelarium.results.readonly.ReadOnlyResultsForEnvironment;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

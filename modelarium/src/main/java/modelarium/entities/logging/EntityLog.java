@@ -1,6 +1,6 @@
 package modelarium.entities.logging;
 
-import modelarium.entities.attributes.sets.mutable.AttributeSet;
+import modelarium.entities.attributes.sets.AttributeSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.SimulationContext;
 

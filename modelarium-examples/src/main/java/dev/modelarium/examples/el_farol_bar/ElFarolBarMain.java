@@ -7,7 +7,7 @@ import dev.modelarium.examples.el_farol_bar.entities.agents.prediction.FocalPred
 import dev.modelarium.examples.el_farol_bar.entities.environment.ElFarolBarEnvironmentGenerator;
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.results.immutable.ReadOnlyResults;
+import modelarium.results.readonly.ReadOnlyResults;
 import modelarium.scheduler.RandomOrderScheduler;
 
 import java.nio.file.Path;

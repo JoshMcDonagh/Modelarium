@@ -1,11 +1,11 @@
 package modelarium.multithreading.requestresponse;
 
 import modelarium.Config;
-import modelarium.clock.MutableClock;
-import modelarium.entities.agents.immutable.ReadOnlyAgent;
-import modelarium.entities.agents.mutable.AgentSet;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.ReadOnlyEnvironment;
+import modelarium.clock.Clock;
+import modelarium.entities.readonly.ReadOnlyAgent;
+import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.Environment;
+import modelarium.entities.readonly.ReadOnlyEnvironment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public abstract class CoordinatorRequestHandler {
     private final Environment environment;
 
     /** The clock shared with the workers to synchronise the passing of ticks */
-    private final MutableClock sharedClock;
+    private final Clock sharedClock;
 
     /** The names of the workers currently waiting at this handler's synchronisation barrier */
     private List<String> workersWaiting = new ArrayList<>();
@@ -56,7 +56,7 @@ public abstract class CoordinatorRequestHandler {
                                      RequestResponseController requestResponseController,
                                      AgentSet globalAgentSet,
                                      Environment environment,
-                                     MutableClock sharedClock
+                                     Clock sharedClock
     ) {
         this.threadName = threadName;
         this.config = config;
@@ -115,9 +115,9 @@ public abstract class CoordinatorRequestHandler {
     /**
      * Returns the clock shared between the co-ordinator and the workers.
      *
-     * @return the shared {@link MutableClock} instance
+     * @return the shared {@link Clock} instance
      */
-    protected MutableClock getSharedClock() {
+    protected Clock getSharedClock() {
         return sharedClock;
     }
 
@@ -163,7 +163,7 @@ public abstract class CoordinatorRequestHandler {
          * @param environment the environment shared across all workers
          * @param sharedClock the clock used to synchronise the entities and cores in the model
          */
-        public AllWorkersFinishTick(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
+        public AllWorkersFinishTick(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, Clock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
@@ -202,7 +202,7 @@ public abstract class CoordinatorRequestHandler {
          * @param environment the environment shared across all workers
          * @param sharedClock the clock used to synchronise the entities and cores in the model
          */
-        public AllWorkersUpdateCoordinator(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
+        public AllWorkersUpdateCoordinator(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, Clock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
@@ -249,7 +249,7 @@ public abstract class CoordinatorRequestHandler {
          * @param environment the environment shared across all workers
          * @param sharedClock the clock used to synchronise the entities and cores in the model
          */
-        public CurrentPopulationSizeFromCoordinatorAccess(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
+        public CurrentPopulationSizeFromCoordinatorAccess(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, Clock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
@@ -279,7 +279,7 @@ public abstract class CoordinatorRequestHandler {
          * @param environment the environment shared across all workers
          * @param sharedClock the clock used to synchronise the entities and cores in the model
          */
-        public AgentAccess(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
+        public AgentAccess(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, Clock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
@@ -320,7 +320,7 @@ public abstract class CoordinatorRequestHandler {
          * @param environment the environment shared across all workers
          * @param sharedClock the clock used to synchronise the entities and cores in the model
          */
-        public UpdateCoordinatorAgents(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
+        public UpdateCoordinatorAgents(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, Clock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
@@ -357,7 +357,7 @@ public abstract class CoordinatorRequestHandler {
          * @param environment the environment shared across all workers
          * @param sharedClock the clock used to synchronise the entities and cores in the model
          */
-        public GlobalAgentSetAccess(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
+        public GlobalAgentSetAccess(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, Clock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
@@ -391,7 +391,7 @@ public abstract class CoordinatorRequestHandler {
          * @param environment the environment shared across all workers
          * @param sharedClock the clock used to synchronise the entities and cores in the model
          */
-        public EnvironmentAttributesAccess(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
+        public EnvironmentAttributesAccess(String threadName, Config settings, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, Clock sharedClock) {
             super(threadName, settings, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
@@ -422,7 +422,7 @@ public abstract class CoordinatorRequestHandler {
          * @param environment               the environment shared across all workers
          * @param sharedClock               the clock used to synchronise the entities and cores in the model
          */
-        public KillAgent(String threadName, Config config, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
+        public KillAgent(String threadName, Config config, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, Clock sharedClock) {
             super(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 
@@ -452,7 +452,7 @@ public abstract class CoordinatorRequestHandler {
          * @param environment               the environment shared across all workers
          * @param sharedClock               the clock used to synchronise the entities and cores in the model
          */
-        public KillAgents(String threadName, Config config, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, MutableClock sharedClock) {
+        public KillAgents(String threadName, Config config, RequestResponseController requestResponseController, AgentSet globalAgentSet, Environment environment, Clock sharedClock) {
             super(threadName, config, requestResponseController, globalAgentSet, environment, sharedClock);
         }
 

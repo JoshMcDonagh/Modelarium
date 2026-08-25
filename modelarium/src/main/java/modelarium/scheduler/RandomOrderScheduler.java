@@ -1,9 +1,9 @@
 package modelarium.scheduler;
 
-import modelarium.clock.ImmutableClock;
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.agents.mutable.AgentSet;
-import modelarium.entities.environments.ReadOnlyEnvironment;
+import modelarium.clock.ReadOnlyClock;
+import modelarium.entities.Agent;
+import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.readonly.ReadOnlyEnvironment;
 
 import java.util.Iterator;
 import java.util.random.RandomGenerator;
@@ -28,7 +28,7 @@ public class RandomOrderScheduler implements Scheduler {
     @Override
     public void runTick(
             String threadName,
-            ImmutableClock clock,
+            ReadOnlyClock clock,
             ReadOnlyEnvironment environment,
             AgentSet agentSet,
             RandomGenerator random

@@ -1,19 +1,19 @@
 package modelarium.multithreading;
 
 import modelarium.Config;
-import modelarium.clock.ImmutableClock;
-import modelarium.clock.MutableClock;
-import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.agents.mutable.AgentSet;
+import modelarium.clock.ReadOnlyClock;
+import modelarium.clock.Clock;
+import modelarium.entities.agentsets.ReadOnlyAgentSet;
+import modelarium.entities.Agent;
+import modelarium.entities.agentsets.AgentSet;
 import modelarium.entities.contexts.ContextCache;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.ReadOnlyEnvironment;
+import modelarium.entities.Environment;
+import modelarium.entities.readonly.ReadOnlyEnvironment;
 import modelarium.exceptions.AgentNotFoundException;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
-import modelarium.results.mutable.Results;
-import modelarium.results.mutable.ResultsForAgents;
+import modelarium.results.Results;
+import modelarium.results.ResultsForAgents;
 import modelarium.utils.Cloners;
 
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class WorkerThread implements Callable<Results> {
     private final AgentSet agentsInThread;
 
     /** The clock shared with the co-ordinator and other workers, or null if threads are not synchronised */
-    private final MutableClock sharedClock;
+    private final Clock sharedClock;
 
     /** The splittable random generator this worker and its agents can use */
     private final RandomGenerator randomGenerator;
@@ -69,7 +69,7 @@ public class WorkerThread implements Callable<Results> {
                         RequestResponseController requestResponseController,
                         Environment environment,
                         AgentSet agentsInThread,
-                        MutableClock sharedClock,
+                        Clock sharedClock,
                         RandomGenerator randomGenerator
     ) {
         this.threadName = Objects.requireNonNull(threadName, "threadName");
@@ -91,7 +91,7 @@ public class WorkerThread implements Callable<Results> {
      */
     @Override
     public Results call() throws InterruptedException {
-        MutableClock clock = Objects.requireNonNullElseGet(sharedClock, () -> new MutableClock(config.tickCount()));
+        Clock clock = Objects.requireNonNullElseGet(sharedClock, () -> new Clock(config.tickCount()));
         ContextCache cache = new ContextCache();
 
         AgentSet visibleAgents = Cloners.standard().deepClone(agentsInThread);
@@ -112,7 +112,7 @@ public class WorkerThread implements Callable<Results> {
             );
         }
 
-        ImmutableClock immutableClock = new ImmutableClock(clock);
+        ReadOnlyClock immutableClock = new ReadOnlyClock(clock);
         ReadOnlyEnvironment immutableEnvironment = new ReadOnlyEnvironment(environment);
 
         RequestResponseInterface requestResponseInterface = requestResponseController.getInterface(threadName);

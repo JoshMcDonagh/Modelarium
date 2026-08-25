@@ -1,12 +1,12 @@
 package modelarium.entities.contexts;
 
 import modelarium.Config;
-import modelarium.clock.MutableClock;
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.agents.mutable.AgentSet;
-import modelarium.entities.attributes.sets.mutable.AttributeBase;
-import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
-import modelarium.entities.environments.Environment;
+import modelarium.clock.Clock;
+import modelarium.entities.Agent;
+import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.attributes.sets.AttributeBase;
+import modelarium.entities.attributes.sets.AgentAttributeSet;
+import modelarium.entities.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 
 import java.util.random.RandomGenerator;
@@ -40,7 +40,7 @@ public final class AgentSimulationContext extends SimulationContext implements A
             AgentSet localAgentSet,
             Config config,
             ContextCache cache,
-            MutableClock clock,
+            Clock clock,
             RequestResponseController requestResponseController,
             Environment localEnvironment,
             RandomGenerator randomGenerator

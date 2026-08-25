@@ -1,10 +1,10 @@
 package unit.modelarium.entities.agents.mutable;
 
-import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.Agent;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.routines.AgentRoutine;
-import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
+import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
 import org.junit.jupiter.api.Test;

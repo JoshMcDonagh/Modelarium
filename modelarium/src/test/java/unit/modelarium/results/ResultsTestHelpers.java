@@ -1,21 +1,21 @@
 package unit.modelarium.results;
 
 import modelarium.entities.Entity;
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.agents.mutable.AgentSet;
+import modelarium.entities.Agent;
+import modelarium.entities.agentsets.AgentSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
-import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.AgentAttributeSet;
+import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.EnvironmentContext;
-import modelarium.entities.environments.Environment;
+import modelarium.entities.Environment;
 import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
-import modelarium.results.mutable.Results;
-import modelarium.results.mutable.ResultsForAgents;
-import modelarium.results.mutable.ResultsForEnvironment;
+import modelarium.results.Results;
+import modelarium.results.ResultsForAgents;
+import modelarium.results.ResultsForEnvironment;
 
 import java.util.Arrays;
 import java.util.List;

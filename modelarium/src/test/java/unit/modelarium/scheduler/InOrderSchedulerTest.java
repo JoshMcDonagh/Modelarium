@@ -1,7 +1,7 @@
 package unit.modelarium.scheduler;
 
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.agents.mutable.AgentSet;
+import modelarium.entities.Agent;
+import modelarium.entities.agentsets.AgentSet;
 import modelarium.scheduler.InOrderScheduler;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;

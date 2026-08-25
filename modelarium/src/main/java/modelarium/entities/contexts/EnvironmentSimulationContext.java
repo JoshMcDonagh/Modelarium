@@ -1,14 +1,14 @@
 package modelarium.entities.contexts;
 
 import modelarium.Config;
-import modelarium.clock.MutableClock;
-import modelarium.entities.agents.immutable.ReadOnlyAgent;
-import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
-import modelarium.entities.agents.mutable.AgentSet;
-import modelarium.entities.attributes.sets.mutable.AttributeBase;
-import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.ReadOnlyEnvironment;
+import modelarium.clock.Clock;
+import modelarium.entities.readonly.ReadOnlyAgent;
+import modelarium.entities.agentsets.ReadOnlyAgentSet;
+import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.attributes.sets.AttributeBase;
+import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
+import modelarium.entities.Environment;
+import modelarium.entities.readonly.ReadOnlyEnvironment;
 import modelarium.exceptions.AgentNotFoundException;
 import modelarium.internal.Internal;
 import modelarium.multithreading.requestresponse.RequestResponseController;
@@ -43,7 +43,7 @@ public final class EnvironmentSimulationContext extends SimulationContext implem
             AgentSet localAgentSet,
             Config config,
             ContextCache cache,
-            MutableClock clock,
+            Clock clock,
             RequestResponseController requestResponseController,
             Environment localEnvironment,
             RandomGenerator randomGenerator

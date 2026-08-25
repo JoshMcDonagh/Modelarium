@@ -1,10 +1,10 @@
 package unit.modelarium.multithreading.requestresponse;
 
 import modelarium.Config;
-import modelarium.entities.agents.generators.DefaultAgentGenerator;
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.generators.EnvironmentGenerator;
+import modelarium.entities.generators.DefaultAgentGenerator;
+import modelarium.entities.Agent;
+import modelarium.entities.Environment;
+import modelarium.entities.generators.EnvironmentGenerator;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 
 import java.util.List;

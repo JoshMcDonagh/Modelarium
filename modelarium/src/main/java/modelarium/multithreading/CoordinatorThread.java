@@ -1,9 +1,9 @@
 package modelarium.multithreading;
 
 import modelarium.Config;
-import modelarium.clock.MutableClock;
-import modelarium.entities.agents.mutable.AgentSet;
-import modelarium.entities.environments.Environment;
+import modelarium.clock.Clock;
+import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.Environment;
 import modelarium.multithreading.requestresponse.*;
 
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class CoordinatorThread implements Runnable {
     private final RequestResponseController requestResponseController;
 
     /** The clock shared with the workers to synchronise the passing of ticks */
-    private final MutableClock sharedClock;
+    private final Clock sharedClock;
 
     /** Global agent set of the model */
     private final AgentSet predefinedGlobalAgentSet;
@@ -60,7 +60,7 @@ public class CoordinatorThread implements Runnable {
                              Config config,
                              Environment environment,
                              RequestResponseController requestResponseController,
-                             MutableClock sharedClock
+                             Clock sharedClock
     ) {
         this(name, config, environment, requestResponseController, sharedClock, null, null);
     }
@@ -79,7 +79,7 @@ public class CoordinatorThread implements Runnable {
                              Config config,
                              Environment environment,
                              RequestResponseController requestResponseController,
-                             MutableClock sharedClock,
+                             Clock sharedClock,
                              AgentSet predefinedGlobalAgentSet,
                              Map<String, String> agentThreadMap
     ) {

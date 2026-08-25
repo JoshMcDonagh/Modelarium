@@ -1,11 +1,11 @@
 package unit.modelarium.results.immutable;
 
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.environments.Environment;
-import modelarium.results.immutable.ReadOnlyResults;
-import modelarium.results.immutable.ReadOnlyResultsForAgents;
-import modelarium.results.immutable.ReadOnlyResultsForEnvironment;
-import modelarium.results.mutable.Results;
+import modelarium.entities.Agent;
+import modelarium.entities.Environment;
+import modelarium.results.readonly.ReadOnlyResults;
+import modelarium.results.readonly.ReadOnlyResultsForAgents;
+import modelarium.results.readonly.ReadOnlyResultsForEnvironment;
+import modelarium.results.Results;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

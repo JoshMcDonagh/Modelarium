@@ -1,7 +1,7 @@
 package unit.modelarium.entities.environments;
 
-import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
-import modelarium.entities.environments.Environment;
+import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
+import modelarium.entities.Environment;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

@@ -1,20 +1,20 @@
 package unit.modelarium.entities.environments;
 
 import modelarium.Config;
-import modelarium.clock.MutableClock;
-import modelarium.entities.agents.generators.DefaultAgentGenerator;
-import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.agents.mutable.AgentSet;
+import modelarium.clock.Clock;
+import modelarium.entities.generators.DefaultAgentGenerator;
+import modelarium.entities.Agent;
+import modelarium.entities.agentsets.AgentSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.events.EnvironmentEvent;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.attributes.routines.EnvironmentRoutine;
-import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.contexts.EnvironmentContext;
-import modelarium.entities.environments.Environment;
-import modelarium.entities.environments.generators.EnvironmentGenerator;
+import modelarium.entities.Environment;
+import modelarium.entities.generators.EnvironmentGenerator;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 
 import java.util.List;
@@ -140,7 +140,7 @@ public class EnvironmentTestHelpers {
                 new AgentSet(),
                 config,
                 new ContextCache(),
-                new MutableClock(config.tickCount()),
+                new Clock(config.tickCount()),
                 new RequestResponseController(config),
                 environment,
                 new SplittableRandom()

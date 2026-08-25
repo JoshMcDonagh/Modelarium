@@ -5,10 +5,10 @@ import dev.modelarium.examples.el_farol_bar.entities.agents.attributes.decision.
 import dev.modelarium.examples.el_farol_bar.entities.agents.prediction.AttendancePredictor;
 import dev.modelarium.examples.el_farol_bar.entities.agents.prediction.FocalPredictorFactory;
 import modelarium.Config;
-import modelarium.entities.agents.generators.DefaultAgentGenerator;
-import modelarium.entities.agents.mutable.Agent;
+import modelarium.entities.generators.DefaultAgentGenerator;
+import modelarium.entities.Agent;
 import modelarium.entities.attributes.Attribute;
-import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
+import modelarium.entities.attributes.sets.AgentAttributeSet;
 
 import java.util.ArrayList;
 import java.util.List;
