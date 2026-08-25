@@ -1,6 +1,5 @@
 package integration.agentEnvironmentInteraction;
 
-import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.Model;
 import modelarium.entities.generators.DefaultAgentGenerator;
@@ -9,7 +8,6 @@ import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
-import modelarium.entities.attributes.sets.readonly.ReadOnlyEnvironmentAttributeSet;
 import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
@@ -19,14 +17,12 @@ import modelarium.entities.readonly.ReadOnlyEnvironment;
 import modelarium.entities.generators.EnvironmentGenerator;
 import modelarium.results.readonly.ReadOnlyResults;
 import modelarium.scheduler.InOrderScheduler;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.random.RandomGenerator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Integration test: agents observe environment state during a synced run.
@@ -38,14 +34,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * tick (the coordinator runs the environment between worker ticks).
  */
 public class AgentEnvironmentInteractionIntegrationTest {
-
-    @BeforeAll
-    static void openForCloning() {
-        AgentEnvironmentInteractionIntegrationTest.class.getModule().addOpens(
-                "integration.agentEnvironmentInteraction",
-                Cloner.class.getModule()
-        );
-    }
 
     // ---- Environment property: temperature increases each tick ----
 
@@ -84,17 +72,7 @@ public class AgentEnvironmentInteractionIntegrationTest {
         @Override
         protected void run(AgentContext context) {
             ReadOnlyEnvironment env = context.getEnvironment();
-
-            // Read a property from the environment's immutable attribute set.
-            // The temperature property is at index 0 in the "weather" set.
-            ReadOnlyEnvironmentAttributeSet weatherSet = (ReadOnlyEnvironmentAttributeSet)
-                    env.getAttributeSet("weather");
-
-            // We can't call getProperty() externally since it's package-private
-            // on ImmutableAttributeSet, but we can access the log or use the
-            // environment's own method. Instead, just confirm we can access
-            // the environment without error and record the tick.
-            observed = context.getClock().currentTick();
+            observed = (Double) env.getProperty("weather", "temperature").get();
         }
 
         @Override
@@ -158,12 +136,13 @@ public class AgentEnvironmentInteractionIntegrationTest {
                 "agent_0", "sensors", "observedTemp", Double.class);
         assertEquals(ticks, observed.size());
 
-        // Verify agent was able to read the clock tick during its run.
-        // Values should correspond to the tick at which they were executed.
-        // We're not asserting the exact environment values because the
-        // environment run happens between ticks (via coordinator), but we
-        // verify the mechanism doesn't throw and produces logged values.
-        assertFalse(observed.isEmpty(), "Agent should have recorded observations.");
+        // Agents run before the coordinator runs the environment for the tick,
+        // so they must observe the environment state from the end of the previous tick.
+        // On tick 0 that is the initial state (20.0).
+        for (int i = 0; i < observed.size(); i++) {
+            assertEquals(20.0 + i, observed.get(i), 1e-9,
+                    "Agent should observe the previous-tick environment state.");
+        }
 
         // Check environment temperature was logged
         List<Double> tempLog = results.environment().attributeLogs(

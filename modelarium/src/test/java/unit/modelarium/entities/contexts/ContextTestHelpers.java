@@ -13,7 +13,7 @@ import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
-import modelarium.entities.attributes.sets.AttributeBase;
+import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.attributes.sets.AttributeSet;
 import modelarium.entities.attributes.sets.EnvironmentAttributeSet;

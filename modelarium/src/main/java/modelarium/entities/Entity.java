@@ -121,6 +121,8 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
         if (context != null)
             throw new IllegalStateException("Context already created");
 
+        setLogDatabaseFactory(config.runLogDatabaseFactory());
+
         context = makeContextInstance(
                 agentSet,
                 config,

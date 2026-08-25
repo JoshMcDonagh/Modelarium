@@ -1,7 +1,7 @@
 package modelarium.entities.contexts;
 
 import modelarium.entities.Agent;
-import modelarium.entities.attributes.sets.AttributeBase;
+import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.Environment;
 import modelarium.entities.readonly.ReadOnlyEnvironment;

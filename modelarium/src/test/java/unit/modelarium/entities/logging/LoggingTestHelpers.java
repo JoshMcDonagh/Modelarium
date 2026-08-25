@@ -4,7 +4,7 @@ import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.events.functional.FunctionalAgentEvent;
 import modelarium.entities.attributes.properties.AgentProperty;
-import modelarium.entities.attributes.sets.AttributeBase;
+import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.AgentSimulationContext;

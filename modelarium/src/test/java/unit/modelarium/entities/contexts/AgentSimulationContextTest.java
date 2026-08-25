@@ -1,6 +1,5 @@
 package unit.modelarium.entities.contexts;
 
-import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.clock.Clock;
 import modelarium.entities.generators.DefaultAgentGenerator;
@@ -8,7 +7,7 @@ import modelarium.entities.readonly.ReadOnlyAgent;
 import modelarium.entities.agentsets.ReadOnlyAgentSet;
 import modelarium.entities.Agent;
 import modelarium.entities.agentsets.AgentSet;
-import modelarium.entities.attributes.sets.AttributeBase;
+import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.ContextCache;
@@ -17,7 +16,6 @@ import modelarium.entities.readonly.ReadOnlyEnvironment;
 import modelarium.entities.generators.EnvironmentGenerator;
 import modelarium.exceptions.*;
 import modelarium.multithreading.requestresponse.*;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -32,13 +30,6 @@ import static org.mockito.Mockito.*;
 import static unit.modelarium.entities.contexts.ContextTestHelpers.*;
 
 public class AgentSimulationContextTest {
-    @BeforeAll
-    static void openForCloning() {
-        AgentSimulationContextTest.class.getModule().addOpens(
-                "unit.modelarium.entities.contexts",
-                Cloner.class.getModule()
-        );
-    }
 
     @Test
     public void testGetThisEntity() {
@@ -815,6 +806,27 @@ public class AgentSimulationContextTest {
                 new Environment("environment", List.of()),
                 new SplittableRandom()
         );
+    }
+
+    @Test
+    public void testClearPendingAgentChanges_ClearsAddsAndKillsWithoutMutatingVisibleState() {
+        Agent self = emptyAgent("self");
+        Agent target = emptyAgent("target");
+        AgentSet localAgents = agentSet(self, target);
+        Config config = config(false, 2);
+        AgentSimulationContext context = context(
+                config, self, localAgents, new RequestResponseController(config)
+        );
+
+        context.addAgent(emptyAgent("new"));
+        context.killAgent("target");
+
+        context.clearPendingAgentChanges();
+
+        assertTrue(context.getAddedAgents().isEmpty());
+        assertTrue(context.getKilledAgentNames().isEmpty());
+        assertFalse(context.doesAgentExistInThisCore("new"));
+        assertFalse(target.isDead());
     }
 
     @Test

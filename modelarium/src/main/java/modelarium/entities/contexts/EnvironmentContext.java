@@ -1,6 +1,6 @@
 package modelarium.entities.contexts;
 
-import modelarium.entities.attributes.sets.AttributeBase;
+import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
 import modelarium.entities.Environment;
 

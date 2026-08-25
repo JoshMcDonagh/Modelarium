@@ -4,7 +4,7 @@ import modelarium.Config;
 import modelarium.clock.Clock;
 import modelarium.entities.Agent;
 import modelarium.entities.agentsets.AgentSet;
-import modelarium.entities.attributes.sets.AttributeBase;
+import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseController;

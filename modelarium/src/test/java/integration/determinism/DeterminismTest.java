@@ -1,6 +1,5 @@
 package integration.determinism;
 
-import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.Model;
 import modelarium.entities.generators.DefaultAgentGenerator;
@@ -14,7 +13,6 @@ import modelarium.entities.Environment;
 import modelarium.entities.generators.FunctionalEnvironmentGenerator;
 import modelarium.results.readonly.ReadOnlyResults;
 import modelarium.scheduler.RandomOrderScheduler;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -29,14 +27,6 @@ public class DeterminismTest {
     private static final int POPULATION = 24;
     private static final int TICKS = 15;
     private static final int THREADS = 3;
-
-    @BeforeAll
-    static void openForCloning() {
-        DeterminismTest.class.getModule().addOpens(
-                "integration.determinism",
-                Cloner.class.getModule()
-        );
-    }
 
     // ---- Agent property: a seeded random walk ----
 

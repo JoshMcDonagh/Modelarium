@@ -1,7 +1,7 @@
 package modelarium.entities.attributes.routines;
 
 import modelarium.entities.attributes.AttributeAccessLevel;
-import modelarium.entities.attributes.sets.AttributeBase;
+import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.contexts.Context;
 
 /**

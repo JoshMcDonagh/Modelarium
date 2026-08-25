@@ -1,6 +1,5 @@
 package integration.diskResults;
 
-import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.Model;
 import modelarium.entities.generators.DefaultAgentGenerator;
@@ -19,7 +18,6 @@ import modelarium.entities.generators.EnvironmentGenerator;
 import modelarium.entities.logging.databases.factories.DiskBasedAttributeSetLogDatabaseFactory;
 import modelarium.results.readonly.ReadOnlyResults;
 import modelarium.scheduler.InOrderScheduler;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -38,14 +36,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * that a remainder in the population distribution is handled cleanly.
  */
 public class DiskResultsIntegrationTest {
-
-    @BeforeAll
-    static void openForCloning() {
-        DiskResultsIntegrationTest.class.getModule().addOpens(
-                "integration.diskResults",
-                Cloner.class.getModule()
-        );
-    }
 
     static class StepCounter extends AgentProperty<Integer> {
         private int value = 0;

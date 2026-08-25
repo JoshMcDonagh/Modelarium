@@ -2,6 +2,7 @@ package modelarium.entities.attributes.sets;
 
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
+import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.events.Event;
 import modelarium.entities.attributes.properties.Property;
 import modelarium.entities.attributes.routines.Routine;
@@ -326,8 +327,19 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
                 attribute.run();
             }
 
-            if (attribute.isLogged())
+            if (attribute.isLogged()) {
+                if (log == null) {
+                    throw new IllegalStateException(
+                            "Log has not been initialised for attribute set '"
+                                    + name
+                                    + "' owned by '"
+                                    + ownerName
+                                    + "'"
+                    );
+                }
+
                 log.record(attribute.name(), valueToLog);
+            }
         }
     }
 }

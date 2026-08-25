@@ -1,6 +1,5 @@
 package integration.agentInteraction;
 
-import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.Model;
 import modelarium.entities.generators.DefaultAgentGenerator;
@@ -18,7 +17,6 @@ import modelarium.exceptions.CoordinatorErrorException;
 import modelarium.exceptions.ModelRunException;
 import modelarium.results.readonly.ReadOnlyResults;
 import modelarium.scheduler.InOrderScheduler;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -40,20 +38,6 @@ public class AgentInteractionIntegrationTest {
 
     /** The value every agent exposes, and which remote readers should observe. */
     private static final double REMOTE_VALUE = 42.0;
-
-    /** The first tick on which every core's agents are guaranteed to be visible model-wide. */
-    private static final long FIRST_STABLE_TICK = 2;
-
-    /** Logged on the ticks before a cross-core read is attempted. */
-    private static final double NOT_YET_READ = -1.0;
-
-    @BeforeAll
-    static void openForCloning() {
-        AgentInteractionIntegrationTest.class.getModule().addOpens(
-                "integration.agentInteraction",
-                Cloner.class.getModule()
-        );
-    }
 
     /** Always reports the same value, regardless of tick. */
     static class ConstantValue extends AgentProperty<Double> {
@@ -83,16 +67,6 @@ public class AgentInteractionIntegrationTest {
 
         @Override
         protected void run(AgentContext context) {
-            // The coordinator's global agent set is populated by each worker's initial
-            // (fire-and-forget) broadcast, and workers are not held at a barrier until
-            // those broadcasts have been processed. A remote read on the very first tick
-            // can therefore race that broadcast, so cross-core reads only begin once the
-            // population is guaranteed to be visible.
-            if (context.getClock().currentTick() < FIRST_STABLE_TICK) {
-                observed = NOT_YET_READ;
-                return;
-            }
-
             ReadOnlyAgent target = context.getAgent("agent_0");
             observed = (Double) target.getAttributeSet("value").getProperty("val").get();
         }
@@ -201,14 +175,10 @@ public class AgentInteractionIntegrationTest {
         assertEquals(10, observed.size(), "One observation should be logged per tick.");
 
         // agent_1 lives on a different worker from agent_0 (agents are distributed
-        // round-robin), so every one of these reads goes through the coordinator.
-        for (int tick = (int) FIRST_STABLE_TICK; tick < observed.size(); tick++)
-            assertEquals(REMOTE_VALUE, observed.get(tick), 1e-9,
-                    "agent_1 should read agent_0's value across cores.");
-
-        for (int tick = 0; tick < FIRST_STABLE_TICK; tick++)
-            assertEquals(NOT_YET_READ, observed.get(tick), 1e-9,
-                    "Ticks before the population is model-wide visible are deliberately not read.");
+        // round-robin), so these reads go through the model-wide snapshot from tick 0 onward.
+        for (double value : observed)
+            assertEquals(REMOTE_VALUE, value, 1e-9,
+                    "agent_1 should read agent_0's value across cores from the first tick.");
     }
 
     @Test
@@ -227,11 +197,10 @@ public class AgentInteractionIntegrationTest {
         List<Integer> counts = results.agents().attributeLogs("agent_0", "census", "count", Integer.class);
 
         assertEquals(10, counts.size(), "One population count should be logged per tick.");
-        // Once every worker's initial broadcast has been processed, a synchronised
-        // worker obtains the coordinator's global agent set and applies the filter locally,
-        // so it sees the entire population rather than just this core's share.
-        for (int tick = (int) FIRST_STABLE_TICK; tick < counts.size(); tick++)
-            assertEquals(population, counts.get(tick),
+        // The coordinator is initialised with the complete population before workers start,
+        // so a synchronised filter should see the whole population from tick 0 onward.
+        for (int count : counts)
+            assertEquals(population, count,
                     "A synchronised filter should see the whole population.");
     }
 

@@ -1,6 +1,5 @@
 package integration.workerFailure;
 
-import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.Model;
 import modelarium.entities.generators.DefaultAgentGenerator;
@@ -14,7 +13,6 @@ import modelarium.entities.Environment;
 import modelarium.entities.generators.FunctionalEnvironmentGenerator;
 import modelarium.exceptions.ModelRunException;
 import modelarium.scheduler.InOrderScheduler;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -31,14 +29,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * in both synchronisation modes.
  */
 public class WorkerFailureIntegrationTest {
-
-    @BeforeAll
-    static void openForCloning() {
-        WorkerFailureIntegrationTest.class.getModule().addOpens(
-                "integration.workerFailure",
-                Cloner.class.getModule()
-        );
-    }
 
     /** Throws on its third tick, but only for {@code agent_0}. */
     static class Bomb extends AgentProperty<Integer> {

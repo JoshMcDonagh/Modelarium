@@ -1,6 +1,5 @@
 package integration.eventsAndRoutines;
 
-import com.rits.cloning.Cloner;
 import modelarium.Config;
 import modelarium.Model;
 import modelarium.entities.generators.DefaultAgentGenerator;
@@ -21,7 +20,6 @@ import modelarium.entities.Environment;
 import modelarium.entities.generators.EnvironmentGenerator;
 import modelarium.results.readonly.ReadOnlyResults;
 import modelarium.scheduler.InOrderScheduler;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -44,14 +42,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * </ul>
  */
 public class EventsAndRoutinesIntegrationTest {
-
-    @BeforeAll
-    static void openForCloning() {
-        EventsAndRoutinesIntegrationTest.class.getModule().addOpens(
-                "integration.eventsAndRoutines",
-                Cloner.class.getModule()
-        );
-    }
 
     // ---- Agent attributes ----
 

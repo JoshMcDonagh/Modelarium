@@ -6,7 +6,7 @@ import modelarium.entities.readonly.ReadOnlyAgent;
 import modelarium.entities.agentsets.ReadOnlyAgentSet;
 import modelarium.entities.Agent;
 import modelarium.entities.agentsets.AgentSet;
-import modelarium.entities.attributes.sets.AttributeBase;
+import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
