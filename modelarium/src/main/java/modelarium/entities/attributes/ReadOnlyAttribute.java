@@ -9,7 +9,7 @@ import modelarium.entities.attributes.routines.ReadOnlyRoutine;
  *
  * <p>This class wraps a mutable attribute so that other model elements can inspect it without being able to modify it.
  */
-public sealed abstract class ReadOnlyAttribute<T extends Attribute> permits ReadOnlyEvent, ReadOnlyProperty, ReadOnlyRoutine {
+public abstract class ReadOnlyAttribute<T extends Attribute> {
     /** The mutable attribute this read-only view wraps */
     private final T attribute;
 
