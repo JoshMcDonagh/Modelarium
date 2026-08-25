@@ -9,8 +9,8 @@ import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
@@ -108,7 +108,7 @@ public class SyncedModelIntegrationTest {
             protected Agent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + index++;
                 Hunger hunger = new Hunger();
-                MutableAgentAttributeSet foodSet = new MutableAgentAttributeSet("food",
+                AgentAttributeSet foodSet = new AgentAttributeSet("food",
                         (List<Attribute>) (List<?>) List.of(hunger));
                 return new Agent(name, List.of(foodSet));
             }
@@ -118,7 +118,7 @@ public class SyncedModelIntegrationTest {
             @Override
             public Environment generateEnvironment(Config config, RandomGenerator random) {
                 EnvTick envTick = new EnvTick();
-                MutableEnvironmentAttributeSet timingSet = new MutableEnvironmentAttributeSet("timing",
+                EnvironmentAttributeSet timingSet = new EnvironmentAttributeSet("timing",
                         (List<Attribute>) (List<?>) List.of(envTick));
                 return new Environment(List.of(timingSet));
             }

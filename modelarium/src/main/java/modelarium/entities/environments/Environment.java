@@ -7,7 +7,7 @@ import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.attributes.events.EnvironmentEvent;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.attributes.routines.EnvironmentRoutine;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
@@ -20,10 +20,10 @@ import java.util.random.RandomGenerator;
 /**
  * Class for representing the environment of the model.
  *
- * <p>This class is an entity that owns {@link MutableEnvironmentAttributeSet} instances and uses an
+ * <p>This class is an entity that owns {@link EnvironmentAttributeSet} instances and uses an
  * {@link EnvironmentSimulationContext} for its behaviour and interactions.
  */
-public final class Environment extends Entity<EnvironmentSimulationContext, EnvironmentContext, MutableEnvironmentAttributeSet, AttributeSetLog<EnvironmentSimulationContext>> {
+public final class Environment extends Entity<EnvironmentSimulationContext, EnvironmentContext, EnvironmentAttributeSet, AttributeSetLog<EnvironmentSimulationContext>> {
     private ReadOnlyEnvironment immutableVersion = null;
 
     /**
@@ -32,7 +32,7 @@ public final class Environment extends Entity<EnvironmentSimulationContext, Envi
      * @param name the name of the environment, used to identify it within the model
      * @param attributeSets the attribute sets the environment will own
      */
-    public Environment(String name, List<MutableEnvironmentAttributeSet> attributeSets) {
+    public Environment(String name, List<EnvironmentAttributeSet> attributeSets) {
         super(name, attributeSets);
     }
 
@@ -41,7 +41,7 @@ public final class Environment extends Entity<EnvironmentSimulationContext, Envi
      *
      * @param attributeSets the attribute sets the environment will own
      */
-    public Environment(List<MutableEnvironmentAttributeSet> attributeSets) {
+    public Environment(List<EnvironmentAttributeSet> attributeSets) {
         super("environment", attributeSets);
     }
 

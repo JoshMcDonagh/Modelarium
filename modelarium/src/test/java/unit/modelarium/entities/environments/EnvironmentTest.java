@@ -1,6 +1,6 @@
 package unit.modelarium.entities.environments;
 
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.environments.Environment;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +26,7 @@ public class EnvironmentTest {
 
     @Test
     public void testGetAttributeSetByName() {
-        MutableEnvironmentAttributeSet attributeSet = environmentAttributeSet(
+        EnvironmentAttributeSet attributeSet = environmentAttributeSet(
                 "env",
                 "timing",
                 new EnvironmentTickProperty("tick")
@@ -38,7 +38,7 @@ public class EnvironmentTest {
 
     @Test
     public void testGetAttributeSetByIndex() {
-        MutableEnvironmentAttributeSet attributeSet = emptyEnvironmentAttributeSet("env", "timing");
+        EnvironmentAttributeSet attributeSet = emptyEnvironmentAttributeSet("env", "timing");
         Environment environment = new Environment("env", List.of(attributeSet));
 
         assertSame(attributeSet, environment.getAttributeSet(0));
@@ -47,7 +47,7 @@ public class EnvironmentTest {
 
     @Test
     public void testGetEvent() {
-        MutableEnvironmentAttributeSet attributeSet = environmentAttributeSetFromAttributes(
+        EnvironmentAttributeSet attributeSet = environmentAttributeSetFromAttributes(
                 "env", "weather", new AlwaysTriggeredEnvironmentEvent("storm"));
         Environment environment = new Environment("env", List.of(attributeSet));
 
@@ -56,7 +56,7 @@ public class EnvironmentTest {
 
     @Test
     public void testGetRoutine() {
-        MutableEnvironmentAttributeSet attributeSet = environmentAttributeSetFromAttributes(
+        EnvironmentAttributeSet attributeSet = environmentAttributeSetFromAttributes(
                 "env", "weather", new EmptyEnvironmentRoutine("cycle"));
         Environment environment = new Environment("env", List.of(attributeSet));
 
@@ -65,7 +65,7 @@ public class EnvironmentTest {
 
     @Test
     public void testGetProperty() {
-        MutableEnvironmentAttributeSet attributeSet = environmentAttributeSet(
+        EnvironmentAttributeSet attributeSet = environmentAttributeSet(
                 "env", "timing", new EnvironmentTickProperty("tick"));
         Environment environment = new Environment("env", List.of(attributeSet));
 
@@ -74,8 +74,8 @@ public class EnvironmentTest {
 
     @Test
     public void testAttributeCount() {
-        MutableEnvironmentAttributeSet firstAttributeSet = environmentAttributeSet("env", "s1", new EnvironmentTickProperty("a"));
-        MutableEnvironmentAttributeSet secondAttributeSet = environmentAttributeSet("env", "s2", new EnvironmentTickProperty("b"));
+        EnvironmentAttributeSet firstAttributeSet = environmentAttributeSet("env", "s1", new EnvironmentTickProperty("a"));
+        EnvironmentAttributeSet secondAttributeSet = environmentAttributeSet("env", "s2", new EnvironmentTickProperty("b"));
         Environment environment = new Environment("env", List.of(firstAttributeSet, secondAttributeSet));
 
         assertEquals(2, environment.attributeCount());
@@ -83,7 +83,7 @@ public class EnvironmentTest {
 
     @Test
     public void testCreateContext() {
-        MutableEnvironmentAttributeSet attributeSet = environmentAttributeSet(
+        EnvironmentAttributeSet attributeSet = environmentAttributeSet(
                 "env", "timing", new EnvironmentTickProperty("tick"));
         Environment environment = new Environment("env", List.of(attributeSet));
 

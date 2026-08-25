@@ -7,7 +7,7 @@ import modelarium.entities.agents.immutable.ReadOnlyAgent;
 import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.routines.AgentRoutine;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.ContextCache;
@@ -21,10 +21,10 @@ import java.util.random.RandomGenerator;
 /**
  * Class for representing an agent in the model.
  *
- * <p>This class is an entity that owns {@link MutableAgentAttributeSet} instances and uses an
+ * <p>This class is an entity that owns {@link AgentAttributeSet} instances and uses an
  * {@link AgentSimulationContext} for its behaviour and interactions.
  */
-public final class Agent extends Entity<AgentSimulationContext, AgentContext, MutableAgentAttributeSet, AttributeSetLog<AgentSimulationContext>> {
+public final class Agent extends Entity<AgentSimulationContext, AgentContext, AgentAttributeSet, AttributeSetLog<AgentSimulationContext>> {
     private boolean isDead = false;
     private ReadOnlyAgent immutableVersion = null;
 
@@ -34,7 +34,7 @@ public final class Agent extends Entity<AgentSimulationContext, AgentContext, Mu
      * @param name the name of the agent, used to identify it within the model
      * @param attributeSets the attribute sets the agent will own
      */
-    public Agent(String name, List<MutableAgentAttributeSet> attributeSets) {
+    public Agent(String name, List<AgentAttributeSet> attributeSets) {
         super(name, attributeSets);
     }
 
@@ -79,7 +79,7 @@ public final class Agent extends Entity<AgentSimulationContext, AgentContext, Mu
      * @param attributeSetIndex the index of the attribute set to retrieve
      * @return the attribute set at the specified index
      */
-    public MutableAgentAttributeSet getAttributeSet(int attributeSetIndex) {
+    public AgentAttributeSet getAttributeSet(int attributeSetIndex) {
         return super.getAttributeSet(attributeSetIndex);
     }
 
@@ -89,7 +89,7 @@ public final class Agent extends Entity<AgentSimulationContext, AgentContext, Mu
      * @param attributeSetName the name of the attribute set to retrieve
      * @return the attribute set with the specified name
      */
-    public MutableAgentAttributeSet getAttributeSet(String attributeSetName) {
+    public AgentAttributeSet getAttributeSet(String attributeSetName) {
         return super.getAttributeSet(attributeSetName);
     }
 

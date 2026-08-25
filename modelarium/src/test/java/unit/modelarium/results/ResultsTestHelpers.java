@@ -7,8 +7,8 @@ import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
@@ -69,27 +69,27 @@ public class ResultsTestHelpers {
         }
     }
 
-    public static MutableAgentAttributeSet agentAttributeSet(String ownerName, String attributeSetName, String... propertyNames) {
+    public static AgentAttributeSet agentAttributeSet(String ownerName, String attributeSetName, String... propertyNames) {
         List<Attribute> properties = Arrays.stream(propertyNames)
                 .map(propertyName -> (Attribute) new AgentCounterProperty(propertyName))
                 .toList();
-        return new MutableAgentAttributeSet(attributeSetName, properties);
+        return new AgentAttributeSet(attributeSetName, properties);
     }
 
-    public static MutableEnvironmentAttributeSet environmentAttributeSet(String ownerName, String attributeSetName, String... propertyNames) {
+    public static EnvironmentAttributeSet environmentAttributeSet(String ownerName, String attributeSetName, String... propertyNames) {
         List<Attribute> properties = Arrays.stream(propertyNames)
                 .map(propertyName -> (Attribute) new EnvironmentTickProperty(propertyName))
                 .toList();
-        return new MutableEnvironmentAttributeSet(attributeSetName, properties);
+        return new EnvironmentAttributeSet(attributeSetName, properties);
     }
 
-    public static Agent agentWithMemoryLogs(String agentName, MutableAgentAttributeSet... attributeSets) {
+    public static Agent agentWithMemoryLogs(String agentName, AgentAttributeSet... attributeSets) {
         Agent agent = new Agent(agentName, List.of(attributeSets));
         agent.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         return agent;
     }
 
-    public static Environment environmentWithMemoryLogs(String environmentName, MutableEnvironmentAttributeSet... attributeSets) {
+    public static Environment environmentWithMemoryLogs(String environmentName, EnvironmentAttributeSet... attributeSets) {
         Environment environment = new Environment(environmentName, List.of(attributeSets));
         environment.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         return environment;

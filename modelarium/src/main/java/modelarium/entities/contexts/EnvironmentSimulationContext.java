@@ -6,7 +6,7 @@ import modelarium.entities.agents.immutable.ReadOnlyAgent;
 import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
 import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.ReadOnlyEnvironment;
 import modelarium.exceptions.AgentNotFoundException;
@@ -74,11 +74,11 @@ public final class EnvironmentSimulationContext extends SimulationContext implem
     /**
      * Returns the attribute set currently being run on the owning environment.
      *
-     * @return the current {@link MutableEnvironmentAttributeSet} instance
+     * @return the current {@link EnvironmentAttributeSet} instance
      */
     @Override
-    public MutableEnvironmentAttributeSet getThisAttributeSet() {
-        return (MutableEnvironmentAttributeSet) attributeSet();
+    public EnvironmentAttributeSet getThisAttributeSet() {
+        return (EnvironmentAttributeSet) attributeSet();
     }
 
     /**

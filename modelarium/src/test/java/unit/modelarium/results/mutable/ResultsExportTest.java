@@ -1,8 +1,8 @@
 package unit.modelarium.results.mutable;
 
 import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.environments.Environment;
 import modelarium.results.mutable.Results;
 import modelarium.results.mutable.ResultsForAgents;
@@ -25,11 +25,11 @@ public class ResultsExportTest {
 
     @Test
     public void testExport_CreatesExpectedAgentAndEnvironmentStructure() {
-        MutableAgentAttributeSet agentSet = agentAttributeSet("Agent_0", "stats", "score");
+        AgentAttributeSet agentSet = agentAttributeSet("Agent_0", "stats", "score");
         Agent agent = agentWithMemoryLogs("Agent_0", agentSet);
         record(agent, "stats", "score", 1.0, 2.0);
 
-        MutableEnvironmentAttributeSet environmentSet = environmentAttributeSet(
+        EnvironmentAttributeSet environmentSet = environmentAttributeSet(
                 "environment",
                 "state",
                 "tick"
@@ -51,7 +51,7 @@ public class ResultsExportTest {
 
     @Test
     public void testExport_CsvEscapesCommaQuoteNewlineAndNull() throws IOException {
-        MutableAgentAttributeSet attributeSet = agentAttributeSet("Agent_0", "stats", "value");
+        AgentAttributeSet attributeSet = agentAttributeSet("Agent_0", "stats", "value");
         Agent agent = agentWithMemoryLogs("Agent_0", attributeSet);
         record(
                 agent,

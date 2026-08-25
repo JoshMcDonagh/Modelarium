@@ -7,7 +7,7 @@ import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.FunctionalEnvironmentGenerator;
@@ -68,7 +68,7 @@ public class MultiCoreEquivalenceIntegrationTest {
             protected Agent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + idx++;
                 DeterministicCounter counter = new DeterministicCounter();
-                MutableAgentAttributeSet set = new MutableAgentAttributeSet("stats",
+                AgentAttributeSet set = new AgentAttributeSet("stats",
                         (List<Attribute>) (List<?>) List.of(counter));
                 return new Agent(name, List.of(set));
             }

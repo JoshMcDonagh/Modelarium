@@ -11,8 +11,8 @@ import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.attributes.routines.AgentRoutine;
 import modelarium.entities.attributes.routines.EnvironmentRoutine;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
@@ -53,7 +53,7 @@ public class ReadOnlyEntityAdditionalTest {
         property.set(12);
         TestAgentEvent event = new TestAgentEvent("event");
         TestAgentRoutine routine = new TestAgentRoutine("routine");
-        MutableAgentAttributeSet set = new MutableAgentAttributeSet(
+        AgentAttributeSet set = new AgentAttributeSet(
                 "state",
                 List.<Attribute>of(property, event, routine)
         );
@@ -72,7 +72,7 @@ public class ReadOnlyEntityAdditionalTest {
     @Test
     public void testReadOnlyAgent_GetLogDelegatesToMutableAgent() {
         TestAgentProperty property = new TestAgentProperty("value");
-        MutableAgentAttributeSet set = new MutableAgentAttributeSet("state", List.<Attribute>of(property));
+        AgentAttributeSet set = new AgentAttributeSet("state", List.<Attribute>of(property));
         Agent agent = new Agent("A", List.of(set));
         agent.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         set.getLog().record("value", 4);
@@ -97,7 +97,7 @@ public class ReadOnlyEntityAdditionalTest {
         property.set(21);
         TestEnvironmentEvent event = new TestEnvironmentEvent("event");
         TestEnvironmentRoutine routine = new TestEnvironmentRoutine("routine");
-        MutableEnvironmentAttributeSet set = new MutableEnvironmentAttributeSet(
+        EnvironmentAttributeSet set = new EnvironmentAttributeSet(
                 "state",
                 List.<Attribute>of(property, event, routine)
         );
@@ -115,7 +115,7 @@ public class ReadOnlyEntityAdditionalTest {
     @Test
     public void testReadOnlyEnvironment_GetLogDelegatesToMutableEnvironment() {
         TestEnvironmentProperty property = new TestEnvironmentProperty("temperature");
-        MutableEnvironmentAttributeSet set = new MutableEnvironmentAttributeSet(
+        EnvironmentAttributeSet set = new EnvironmentAttributeSet(
                 "state",
                 List.<Attribute>of(property)
         );

@@ -5,7 +5,7 @@ import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.events.functional.FunctionalAgentEvent;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
@@ -72,12 +72,12 @@ class LoggingTestHelpers {
     }
 
     @SuppressWarnings("unchecked")
-    static MutableAgentAttributeSet agentAttributeSetWithMemoryLog(
+    static AgentAttributeSet agentAttributeSetWithMemoryLog(
             String ownerName,
             String attributeSetName,
             Attribute... attributes
     ) {
-        MutableAgentAttributeSet attributeSet = new MutableAgentAttributeSet(
+        AgentAttributeSet attributeSet = new AgentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(attributes)
         );

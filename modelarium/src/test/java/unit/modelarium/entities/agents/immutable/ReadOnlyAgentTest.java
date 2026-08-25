@@ -2,7 +2,7 @@ package unit.modelarium.entities.agents.immutable;
 
 import modelarium.entities.agents.immutable.ReadOnlyAgent;
 import modelarium.entities.agents.mutable.Agent;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -23,8 +23,8 @@ public class ReadOnlyAgentTest {
 
     @Test
     public void testAttributeSetCount() {
-        MutableAgentAttributeSet firstAttributeSet = singlePropertyAgentSet("a", "food", "hunger");
-        MutableAgentAttributeSet secondAttributeSet = singlePropertyAgentSet("a", "health", "hp");
+        AgentAttributeSet firstAttributeSet = singlePropertyAgentSet("a", "food", "hunger");
+        AgentAttributeSet secondAttributeSet = singlePropertyAgentSet("a", "health", "hp");
         Agent agent = new Agent("a", List.of(firstAttributeSet, secondAttributeSet));
         ReadOnlyAgent immutableAgent = new ReadOnlyAgent(agent);
 

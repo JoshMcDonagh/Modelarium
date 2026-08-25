@@ -1,6 +1,6 @@
 package modelarium.results.mutable;
 
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.environments.Environment;
@@ -21,7 +21,7 @@ import java.util.Map;
  * <p>Extends {@link ResultsForEntities} to store and access recorded property
  * and event values specific to the environment, using its name to simplify queries.
  */
-public final class ResultsForEnvironment extends ResultsForEntities<EnvironmentSimulationContext, EnvironmentContext, MutableEnvironmentAttributeSet, AttributeSetLog<EnvironmentSimulationContext>> {
+public final class ResultsForEnvironment extends ResultsForEntities<EnvironmentSimulationContext, EnvironmentContext, EnvironmentAttributeSet, AttributeSetLog<EnvironmentSimulationContext>> {
 
     /** The name of the environment used as a key for data access */
     private final String environmentName;
@@ -127,7 +127,7 @@ public final class ResultsForEnvironment extends ResultsForEntities<EnvironmentS
         EntityLog<
                 EnvironmentSimulationContext,
                 EnvironmentContext,
-                MutableEnvironmentAttributeSet,
+                EnvironmentAttributeSet,
                 AttributeSetLog<EnvironmentSimulationContext>
                 > environmentLog = getEntityLogList().getFirst();
 

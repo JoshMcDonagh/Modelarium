@@ -5,7 +5,7 @@ import modelarium.clock.MutableClock;
 import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
 import modelarium.entities.environments.Environment;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 
@@ -62,11 +62,11 @@ public final class AgentSimulationContext extends SimulationContext implements A
     /**
      * Returns the attribute set currently being run on the owning agent.
      *
-     * @return the current {@link MutableAgentAttributeSet} instance
+     * @return the current {@link AgentAttributeSet} instance
      */
     @Override
-    public MutableAgentAttributeSet getThisAttributeSet() {
-        return (MutableAgentAttributeSet) attributeSet();
+    public AgentAttributeSet getThisAttributeSet() {
+        return (AgentAttributeSet) attributeSet();
     }
 
     /**

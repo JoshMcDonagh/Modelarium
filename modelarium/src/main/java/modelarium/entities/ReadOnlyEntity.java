@@ -1,8 +1,8 @@
 package modelarium.entities;
 
 import modelarium.entities.agents.immutable.ReadOnlyAgent;
-import modelarium.entities.attributes.sets.immutable.ImmutableAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
+import modelarium.entities.attributes.sets.immutable.ReadOnlyAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AttributeSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.environments.ReadOnlyEnvironment;
@@ -21,7 +21,7 @@ import modelarium.entities.logging.EntityLog;
  * @param <AS> the type of attribute set the wrapped entity owns
  * @param <ASL> the type of attribute set log the wrapped entity produces
  */
-public sealed abstract class ReadOnlyEntity<SC extends SimulationContext, C extends Context, AS extends MutableAttributeSet<SC,C>, ASL extends AttributeSetLog<SC>> permits ReadOnlyAgent, ReadOnlyEnvironment {
+public sealed abstract class ReadOnlyEntity<SC extends SimulationContext, C extends Context, AS extends AttributeSet<SC,C>, ASL extends AttributeSetLog<SC>> permits ReadOnlyAgent, ReadOnlyEnvironment {
 
     /** The mutable entity this read-only view wraps */
     private final Entity<SC,C,AS,ASL> entity;
@@ -77,7 +77,7 @@ public sealed abstract class ReadOnlyEntity<SC extends SimulationContext, C exte
      * @param attributeSetIndex the index of the attribute set to retrieve
      * @return a read-only view of the attribute set at the specified index
      */
-    public abstract ImmutableAttributeSet<SC,C> getAttributeSet(int attributeSetIndex);
+    public abstract ReadOnlyAttributeSet<SC,C> getAttributeSet(int attributeSetIndex);
 
     /**
      * Retrieves a read-only view of an attribute set by name. Must be implemented by subclasses.
@@ -85,7 +85,7 @@ public sealed abstract class ReadOnlyEntity<SC extends SimulationContext, C exte
      * @param attributeSetName the name of the attribute set to retrieve
      * @return a read-only view of the attribute set with the specified name
      */
-    public abstract ImmutableAttributeSet<SC,C> getAttributeSet(String attributeSetName);
+    public abstract ReadOnlyAttributeSet<SC,C> getAttributeSet(String attributeSetName);
 
     /**
      * Returns the log of the wrapped entity's attribute values.

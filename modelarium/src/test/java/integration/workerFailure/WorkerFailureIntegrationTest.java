@@ -8,7 +8,7 @@ import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.FunctionalEnvironmentGenerator;
@@ -74,7 +74,7 @@ public class WorkerFailureIntegrationTest {
             @Override
             protected Agent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + index++;
-                MutableAgentAttributeSet set = new MutableAgentAttributeSet("danger",
+                AgentAttributeSet set = new AgentAttributeSet("danger",
                         (List<Attribute>) (List<?>) List.of(new Bomb()));
                 return new Agent(name, List.of(set));
             }

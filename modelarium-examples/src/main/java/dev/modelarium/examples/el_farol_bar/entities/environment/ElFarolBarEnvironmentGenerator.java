@@ -5,7 +5,7 @@ import dev.modelarium.examples.el_farol_bar.entities.environment.attributes.bar.
 import dev.modelarium.examples.el_farol_bar.entities.environment.attributes.bar.CrowdingThresholdProperty;
 import modelarium.Config;
 import modelarium.entities.attributes.Attribute;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.EnvironmentGenerator;
 
@@ -31,7 +31,7 @@ public final class ElFarolBarEnvironmentGenerator extends EnvironmentGenerator {
         barAttributes.add(new AttendanceProperty());
 
         return new Environment(List.of(
-                new MutableEnvironmentAttributeSet("bar", barAttributes)
+                new EnvironmentAttributeSet("bar", barAttributes)
         ));
     }
 }

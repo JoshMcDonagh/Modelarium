@@ -10,7 +10,7 @@ import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.events.EnvironmentEvent;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.attributes.routines.EnvironmentRoutine;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
@@ -52,15 +52,15 @@ public class EnvironmentTestHelpers {
     }
 
     @SuppressWarnings("unchecked")
-    static MutableEnvironmentAttributeSet environmentAttributeSet(String ownerName, String attributeSetName, EnvironmentProperty<?>... properties) {
-        return new MutableEnvironmentAttributeSet(
+    static EnvironmentAttributeSet environmentAttributeSet(String ownerName, String attributeSetName, EnvironmentProperty<?>... properties) {
+        return new EnvironmentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(properties)
         );
     }
 
-    static MutableEnvironmentAttributeSet emptyEnvironmentAttributeSet(String ownerName, String attributeSetName) {
-        return new MutableEnvironmentAttributeSet(attributeSetName, List.of());
+    static EnvironmentAttributeSet emptyEnvironmentAttributeSet(String ownerName, String attributeSetName) {
+        return new EnvironmentAttributeSet(attributeSetName, List.of());
     }
 
     public static DefaultAgentGenerator agentGenerator() {
@@ -127,8 +127,8 @@ public class EnvironmentTestHelpers {
     }
 
     @SuppressWarnings("unchecked")
-    static MutableEnvironmentAttributeSet environmentAttributeSetFromAttributes(String ownerName, String attributeSetName, Attribute... attributes) {
-        return new MutableEnvironmentAttributeSet(
+    static EnvironmentAttributeSet environmentAttributeSetFromAttributes(String ownerName, String attributeSetName, Attribute... attributes) {
+        return new EnvironmentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(attributes)
         );

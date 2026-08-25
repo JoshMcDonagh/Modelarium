@@ -10,8 +10,8 @@ import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
@@ -124,7 +124,7 @@ public class DiskResultsIntegrationTest {
             protected Agent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + index++;
                 StepCounter stepCounter = new StepCounter();
-                MutableAgentAttributeSet movement = new MutableAgentAttributeSet("movement",
+                AgentAttributeSet movement = new AgentAttributeSet("movement",
                         (List<Attribute>) (List<?>) List.of(stepCounter, new Pulse(stepCounter)));
                 return new Agent(name, List.of(movement));
             }
@@ -133,7 +133,7 @@ public class DiskResultsIntegrationTest {
         EnvironmentGenerator environmentGenerator = new EnvironmentGenerator() {
             @Override
             public Environment generateEnvironment(Config config, RandomGenerator random) {
-                MutableEnvironmentAttributeSet climate = new MutableEnvironmentAttributeSet("climate",
+                EnvironmentAttributeSet climate = new EnvironmentAttributeSet("climate",
                         (List<Attribute>) (List<?>) List.of(new Temperature()));
                 return new Environment(List.of(climate));
             }

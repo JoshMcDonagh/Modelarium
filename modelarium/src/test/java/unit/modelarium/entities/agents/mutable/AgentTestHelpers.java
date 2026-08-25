@@ -10,7 +10,7 @@ import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.routines.AgentRoutine;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
@@ -52,14 +52,14 @@ class AgentTestHelpers {
     }
 
     @SuppressWarnings("unchecked")
-    static MutableAgentAttributeSet agentAttributeSet(String ownerName, String attributeSetName, AgentProperty<?>... properties) {
-        return new MutableAgentAttributeSet(
+    static AgentAttributeSet agentAttributeSet(String ownerName, String attributeSetName, AgentProperty<?>... properties) {
+        return new AgentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(properties)
         );
     }
 
-    static MutableAgentAttributeSet singlePropertyAgentSet(String ownerName, String attributeSetName, String propertyName) {
+    static AgentAttributeSet singlePropertyAgentSet(String ownerName, String attributeSetName, String propertyName) {
         return agentAttributeSet(ownerName, attributeSetName, new AgentCounterProperty(propertyName));
     }
 
@@ -96,8 +96,8 @@ class AgentTestHelpers {
     }
 
     @SuppressWarnings("unchecked")
-    static MutableAgentAttributeSet agentAttributeSetFromAttributes(String ownerName, String attributeSetName, Attribute... attributes) {
-        return new MutableAgentAttributeSet(
+    static AgentAttributeSet agentAttributeSetFromAttributes(String ownerName, String attributeSetName, Attribute... attributes) {
+        return new AgentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(attributes)
         );

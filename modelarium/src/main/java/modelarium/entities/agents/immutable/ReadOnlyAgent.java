@@ -5,8 +5,8 @@ import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.attributes.events.ReadOnlyEvent;
 import modelarium.entities.attributes.properties.ReadOnlyProperty;
 import modelarium.entities.attributes.routines.ReadOnlyRoutine;
-import modelarium.entities.attributes.sets.immutable.ImmutableAgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.immutable.ReadOnlyAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
@@ -16,7 +16,7 @@ import modelarium.entities.logging.AttributeSetLog;
  *
  * <p>This class wraps a mutable agent so that other model elements can inspect it without being able to modify it.
  */
-public final class ReadOnlyAgent extends ReadOnlyEntity<AgentSimulationContext, AgentContext, MutableAgentAttributeSet, AttributeSetLog<AgentSimulationContext>> {
+public final class ReadOnlyAgent extends ReadOnlyEntity<AgentSimulationContext, AgentContext, AgentAttributeSet, AttributeSetLog<AgentSimulationContext>> {
     /**
      * Constructs a new immutable agent wrapping the specified mutable agent.
      *
@@ -30,22 +30,22 @@ public final class ReadOnlyAgent extends ReadOnlyEntity<AgentSimulationContext, 
      * Retrieves a read-only view of one of the wrapped agent's attribute sets by index.
      *
      * @param attributeSetIndex the index of the attribute set to retrieve
-     * @return a new {@link ImmutableAgentAttributeSet} instance wrapping the attribute set at the specified index
+     * @return a new {@link ReadOnlyAgentAttributeSet} instance wrapping the attribute set at the specified index
      */
     @Override
-    public ImmutableAgentAttributeSet getAttributeSet(int attributeSetIndex) {
-        return new ImmutableAgentAttributeSet(getMutableEntity().getAttributeSet(attributeSetIndex));
+    public ReadOnlyAgentAttributeSet getAttributeSet(int attributeSetIndex) {
+        return new ReadOnlyAgentAttributeSet(getMutableEntity().getAttributeSet(attributeSetIndex));
     }
 
     /**
      * Retrieves a read-only view of one of the wrapped agent's attribute sets by name.
      *
      * @param attributeSetName the name of the attribute set to retrieve
-     * @return a new {@link ImmutableAgentAttributeSet} instance wrapping the attribute set with the specified name
+     * @return a new {@link ReadOnlyAgentAttributeSet} instance wrapping the attribute set with the specified name
      */
     @Override
-    public ImmutableAgentAttributeSet getAttributeSet(String attributeSetName) {
-        return new ImmutableAgentAttributeSet(getMutableEntity().getAttributeSet(attributeSetName));
+    public ReadOnlyAgentAttributeSet getAttributeSet(String attributeSetName) {
+        return new ReadOnlyAgentAttributeSet(getMutableEntity().getAttributeSet(attributeSetName));
     }
 
     /**

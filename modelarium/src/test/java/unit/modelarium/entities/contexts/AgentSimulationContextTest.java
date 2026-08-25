@@ -9,7 +9,7 @@ import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
 import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.environments.Environment;
@@ -58,7 +58,7 @@ public class AgentSimulationContextTest {
     @Test
     public void testGetThisAttributeSet() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Config config = syncedConfig(2, 10, 1);
-        MutableAgentAttributeSet set = singlePropertyAgentSet("owner", "food", "hunger");
+        AgentAttributeSet set = singlePropertyAgentSet("owner", "food", "hunger");
         AgentSimulationContext context = simulationContextWithAttributeSet(
                 AgentSimulationContext.class,
                 config,

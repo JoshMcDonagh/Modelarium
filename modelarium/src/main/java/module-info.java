@@ -16,7 +16,6 @@ module modelarium {
     exports modelarium.entities.attributes.properties.functional;
     exports modelarium.entities.attributes.routines;
     exports modelarium.entities.attributes.routines.functional;
-    exports modelarium.entities.attributes.sets;
     exports modelarium.entities.attributes.sets.immutable;
     exports modelarium.entities.attributes.sets.mutable;
 
@@ -62,7 +61,6 @@ module modelarium {
     opens modelarium.entities.attributes.properties.functional to cloning;
     opens modelarium.entities.attributes.routines to cloning;
     opens modelarium.entities.attributes.routines.functional to cloning;
-    opens modelarium.entities.attributes.sets to cloning;
     opens modelarium.entities.attributes.sets.mutable to cloning;
     opens modelarium.entities.attributes.sets.immutable to cloning;
 

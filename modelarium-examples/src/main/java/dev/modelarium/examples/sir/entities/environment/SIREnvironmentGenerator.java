@@ -10,7 +10,7 @@ import dev.modelarium.examples.sir.entities.environment.attributes.prevalence.Pr
 import dev.modelarium.examples.sir.entities.environment.attributes.prevalence.PrevalenceUpdateRoutine;
 import modelarium.Config;
 import modelarium.entities.attributes.Attribute;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.EnvironmentGenerator;
 
@@ -26,7 +26,7 @@ public class SIREnvironmentGenerator extends EnvironmentGenerator {
 
     @Override
     public Environment generateEnvironment(Config config, RandomGenerator random) {
-        ArrayList<MutableEnvironmentAttributeSet> environmentAttributeSets = new ArrayList<MutableEnvironmentAttributeSet>();
+        ArrayList<EnvironmentAttributeSet> environmentAttributeSets = new ArrayList<EnvironmentAttributeSet>();
 
         // Geography attributes
 
@@ -40,7 +40,7 @@ public class SIREnvironmentGenerator extends EnvironmentGenerator {
         heightProperty.set(sirSettings.environment().area().height());
         environmentGeographyAttributes.add(heightProperty);
 
-        environmentAttributeSets.add(new MutableEnvironmentAttributeSet("geography", environmentGeographyAttributes));
+        environmentAttributeSets.add(new EnvironmentAttributeSet("geography", environmentGeographyAttributes));
 
         // Prevalence attributes
 
@@ -51,7 +51,7 @@ public class SIREnvironmentGenerator extends EnvironmentGenerator {
         environmentPrevalenceAttributes.add(new NumberOfInfectedProperty(prevalence));
         environmentPrevalenceAttributes.add(new InfectedPercentageProperty(prevalence));
 
-        environmentAttributeSets.add(new MutableEnvironmentAttributeSet("prevalence", environmentPrevalenceAttributes));
+        environmentAttributeSets.add(new EnvironmentAttributeSet("prevalence", environmentPrevalenceAttributes));
 
         // Environment generation
 

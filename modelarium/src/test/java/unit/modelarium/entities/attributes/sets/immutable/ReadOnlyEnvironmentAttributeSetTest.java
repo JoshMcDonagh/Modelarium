@@ -8,8 +8,8 @@ import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.attributes.properties.functional.FunctionalEnvironmentProperty;
 import modelarium.entities.attributes.routines.EnvironmentRoutine;
 import modelarium.entities.attributes.routines.functional.FunctionalEnvironmentRoutine;
-import modelarium.entities.attributes.sets.immutable.ImmutableEnvironmentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.immutable.ReadOnlyEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
 import org.junit.jupiter.api.Test;
 
@@ -38,15 +38,15 @@ public class ReadOnlyEnvironmentAttributeSetTest {
         attributeList.add(attribute);
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Attribute_8"));
 
-        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableEnvironmentAttributeSet.class,
+        ReadOnlyEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyEnvironmentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
 
         EnvironmentAttribute returnedAttribute = runGetClonedAttribute(
                 immutableAttributeSet,
-                MutableEnvironmentAttributeSet.class,
+                EnvironmentAttributeSet.class,
                 EnvironmentAttribute.class,
                 "get",
                 int.class,
@@ -69,8 +69,8 @@ public class ReadOnlyEnvironmentAttributeSetTest {
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Attribute_7"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Attribute_8"));
 
-        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableEnvironmentAttributeSet.class,
+        ReadOnlyEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyEnvironmentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
@@ -83,7 +83,7 @@ public class ReadOnlyEnvironmentAttributeSetTest {
                 IllegalArgumentException.class,
                 () -> runGetClonedAttribute(
                         immutableAttributeSet,
-                        MutableEnvironmentAttributeSet.class,
+                        EnvironmentAttributeSet.class,
                         EnvironmentAttribute.class,
                         getterMethodName,
                         attributeIdClass,
@@ -97,8 +97,8 @@ public class ReadOnlyEnvironmentAttributeSetTest {
     @Test
     public void testName() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         String attributeSetName = "testAttributeSetName";
-        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableEnvironmentAttributeSet.class,
+        ReadOnlyEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyEnvironmentAttributeSet.class,
                 attributeSetName,
                 new ArrayList<>()
         );
@@ -120,8 +120,8 @@ public class ReadOnlyEnvironmentAttributeSetTest {
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Routine_2"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Routine_3"));
 
-        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableEnvironmentAttributeSet.class,
+        ReadOnlyEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyEnvironmentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
@@ -131,14 +131,14 @@ public class ReadOnlyEnvironmentAttributeSetTest {
 
     @Test
     public void testGetLog() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        MutableEnvironmentAttributeSet attributeSet = makeAttributeSet(
-                MutableEnvironmentAttributeSet.class,
+        EnvironmentAttributeSet attributeSet = makeAttributeSet(
+                EnvironmentAttributeSet.class,
                 "testAttributeSetName",
                 new ArrayList<>()
         );
         attributeSet.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
 
-        ImmutableEnvironmentAttributeSet immutableAttributeSet = new ImmutableEnvironmentAttributeSet(attributeSet);
+        ReadOnlyEnvironmentAttributeSet immutableAttributeSet = new ReadOnlyEnvironmentAttributeSet(attributeSet);
 
         assertSame(attributeSet.getLog(), immutableAttributeSet.getLog());
     }
@@ -159,8 +159,8 @@ public class ReadOnlyEnvironmentAttributeSetTest {
         attributeList.add(attribute);
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Attribute_8"));
 
-        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableEnvironmentAttributeSet.class,
+        ReadOnlyEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyEnvironmentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
@@ -177,8 +177,8 @@ public class ReadOnlyEnvironmentAttributeSetTest {
         attributeList.add(makeEmptyFunctionalProperty(FunctionalEnvironmentProperty.class, "Attribute_1"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, name));
 
-        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableEnvironmentAttributeSet.class,
+        ReadOnlyEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyEnvironmentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
@@ -198,8 +198,8 @@ public class ReadOnlyEnvironmentAttributeSetTest {
         attributeList.add(makeEmptyFunctionalProperty(FunctionalEnvironmentProperty.class, "Property_0"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Routine_0"));
 
-        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableEnvironmentAttributeSet.class,
+        ReadOnlyEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyEnvironmentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
@@ -217,8 +217,8 @@ public class ReadOnlyEnvironmentAttributeSetTest {
         attributeList.add(makeEmptyFunctionalProperty(FunctionalEnvironmentProperty.class, "Property_0"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Routine_0"));
 
-        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableEnvironmentAttributeSet.class,
+        ReadOnlyEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyEnvironmentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
@@ -239,8 +239,8 @@ public class ReadOnlyEnvironmentAttributeSetTest {
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Routine_1"));
         attributeList.add(routine);
 
-        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableEnvironmentAttributeSet.class,
+        ReadOnlyEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyEnvironmentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
@@ -258,8 +258,8 @@ public class ReadOnlyEnvironmentAttributeSetTest {
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Routine_0"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, name));
 
-        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableEnvironmentAttributeSet.class,
+        ReadOnlyEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyEnvironmentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
@@ -280,8 +280,8 @@ public class ReadOnlyEnvironmentAttributeSetTest {
         attributeList.add(property);
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Routine_0"));
 
-        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableEnvironmentAttributeSet.class,
+        ReadOnlyEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyEnvironmentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
@@ -299,8 +299,8 @@ public class ReadOnlyEnvironmentAttributeSetTest {
         attributeList.add(makeEmptyFunctionalProperty(FunctionalEnvironmentProperty.class,name));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalEnvironmentRoutine.class, "Routine_0"));
 
-        ImmutableEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableEnvironmentAttributeSet.class,
+        ReadOnlyEnvironmentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyEnvironmentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );

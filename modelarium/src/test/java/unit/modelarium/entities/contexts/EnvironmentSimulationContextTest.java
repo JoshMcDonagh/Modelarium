@@ -7,7 +7,7 @@ import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
 import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.environments.Environment;
@@ -38,7 +38,7 @@ public class EnvironmentSimulationContextTest {
     @Test
     public void testGetThisAttributeSet() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Config config = syncedConfig(2, 10, 1);
-        MutableEnvironmentAttributeSet set = singlePropertyEnvironmentSet("owner", "time", "ticks");
+        EnvironmentAttributeSet set = singlePropertyEnvironmentSet("owner", "time", "ticks");
         EnvironmentSimulationContext context = simulationContextWithAttributeSet(
                 EnvironmentSimulationContext.class,
                 config,

@@ -13,8 +13,8 @@ import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.attributes.routines.AgentRoutine;
 import modelarium.entities.attributes.routines.EnvironmentRoutine;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
@@ -232,7 +232,7 @@ public class EventsAndRoutinesIntegrationTest {
                 String name = "agent_" + index++;
                 StepCount stepCount = new StepCount();
                 Energy energy = new Energy();
-                MutableAgentAttributeSet activity = new MutableAgentAttributeSet("activity",
+                AgentAttributeSet activity = new AgentAttributeSet("activity",
                         (List<Attribute>) (List<?>) List.of(
                                 stepCount,
                                 new PulseEvent(stepCount),
@@ -247,7 +247,7 @@ public class EventsAndRoutinesIntegrationTest {
             public Environment generateEnvironment(Config config, RandomGenerator random) {
                 Temperature temperature = new Temperature();
                 Airflow airflow = new Airflow();
-                MutableEnvironmentAttributeSet climate = new MutableEnvironmentAttributeSet("climate",
+                EnvironmentAttributeSet climate = new EnvironmentAttributeSet("climate",
                         (List<Attribute>) (List<?>) List.of(
                                 temperature,
                                 new HeatAlarm(temperature),

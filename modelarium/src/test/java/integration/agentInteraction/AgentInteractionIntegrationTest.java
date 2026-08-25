@@ -9,7 +9,7 @@ import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.FunctionalEnvironmentGenerator;
@@ -179,16 +179,16 @@ public class AgentInteractionIntegrationTest {
     }
 
     private interface AgentAttributeSetFactory {
-        List<MutableAgentAttributeSet> attributeSetsFor(String agentName);
+        List<AgentAttributeSet> attributeSetsFor(String agentName);
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void testSyncedAgentReadsAnotherCoresAgentProperty() {
         Config config = config(2, 2, true, name -> List.of(
-                new MutableAgentAttributeSet("value",
+                new AgentAttributeSet("value",
                         (List<Attribute>) (List<?>) List.of(new ConstantValue())),
-                new MutableAgentAttributeSet("observation",
+                new AgentAttributeSet("observation",
                         (List<Attribute>) (List<?>) List.of(new Observer()))
         ));
 
@@ -216,7 +216,7 @@ public class AgentInteractionIntegrationTest {
     public void testSyncedFilteredAgentsSeeWholePopulation() {
         int population = 6;
         Config config = config(population, 3, true, name -> List.of(
-                new MutableAgentAttributeSet("census",
+                new AgentAttributeSet("census",
                         (List<Attribute>) (List<?>) List.of(new PopulationCounter()))
         ));
 
@@ -239,7 +239,7 @@ public class AgentInteractionIntegrationTest {
     @SuppressWarnings("unchecked")
     public void testUnsyncedFilteredAgentsAreLocalOnly() {
         Config config = config(4, 2, false, name -> List.of(
-                new MutableAgentAttributeSet("census",
+                new AgentAttributeSet("census",
                         (List<Attribute>) (List<?>) List.of(new PopulationCounter()))
         ));
 
@@ -260,7 +260,7 @@ public class AgentInteractionIntegrationTest {
     @SuppressWarnings("unchecked")
     public void testUnsyncedMissingAgentFailsRun() {
         Config config = config(2, 2, false, name -> List.of(
-                new MutableAgentAttributeSet("lookup",
+                new AgentAttributeSet("lookup",
                         (List<Attribute>) (List<?>) List.of(new Reader("ghost")))
         ));
 
@@ -283,7 +283,7 @@ public class AgentInteractionIntegrationTest {
         // A single worker keeps this deterministic: the failing worker is the only
         // worker, so nothing is left waiting at the tick barrier.
         Config config = config(1, 1, true, name -> List.of(
-                new MutableAgentAttributeSet("lookup",
+                new AgentAttributeSet("lookup",
                         (List<Attribute>) (List<?>) List.of(new Reader("ghost")))
         ));
 

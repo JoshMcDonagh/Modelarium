@@ -9,14 +9,13 @@ import modelarium.entities.agents.immutable.ReadOnlyAgentSet;
 import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.agents.mutable.AgentSet;
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
-import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AttributeSet;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.ReadOnlyEnvironment;
 import modelarium.exceptions.*;
 import modelarium.internal.Internal;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 import modelarium.multithreading.requestresponse.RequestResponseInterface;
-import modelarium.utils.Cloners;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +64,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     private final RandomGenerator randomGenerator;
 
     /** The attribute set currently being run on the owning entity */
-    private MutableAttributeSet<?,?> attributeSet = null;
+    private AttributeSet<?,?> attributeSet = null;
 
     /** The attribute currently being run on the owning entity */
     private AttributeBase<?> attribute = null;
@@ -145,7 +144,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * @param attributeSet the attribute set now being run
      */
     @Internal
-    public void setCurrentAttributeSet(MutableAttributeSet<?,?> attributeSet) {
+    public void setCurrentAttributeSet(AttributeSet<?,?> attributeSet) {
         this.attributeSet = attributeSet;
     }
 
@@ -182,7 +181,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      *
      * @return the current attribute set
      */
-    protected MutableAttributeSet<?,?> attributeSet() {
+    protected AttributeSet<?,?> attributeSet() {
         return attributeSet;
     }
 
@@ -234,7 +233,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      *
      * @return the current attribute set
      */
-    public abstract MutableAttributeSet<?,?> getThisAttributeSet();
+    public abstract AttributeSet<?,?> getThisAttributeSet();
 
     /**
      * Returns the attribute currently being run on the owning entity. Must be implemented by subclasses.

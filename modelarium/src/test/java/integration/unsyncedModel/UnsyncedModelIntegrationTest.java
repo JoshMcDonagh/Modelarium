@@ -7,7 +7,7 @@ import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.FunctionalEnvironmentGenerator;
@@ -67,7 +67,7 @@ public class UnsyncedModelIntegrationTest {
             protected Agent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + idx++;
                 StepCounter counter = new StepCounter();
-                MutableAgentAttributeSet set = new MutableAgentAttributeSet("movement",
+                AgentAttributeSet set = new AgentAttributeSet("movement",
                         (List<Attribute>) (List<?>) List.of(counter));
                 return new Agent(name, List.of(set));
             }
@@ -117,7 +117,7 @@ public class UnsyncedModelIntegrationTest {
             protected Agent generateAgent(Config config, RandomGenerator random) {
                 String name = "a_" + idx++;
                 StepCounter c = new StepCounter();
-                MutableAgentAttributeSet set = new MutableAgentAttributeSet("s",
+                AgentAttributeSet set = new AgentAttributeSet("s",
                         (List<Attribute>) (List<?>) List.of(c));
                 return new Agent(name, List.of(set));
             }

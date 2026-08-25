@@ -1,7 +1,7 @@
 package modelarium.results.mutable;
 
 import modelarium.entities.agents.mutable.AgentSet;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
@@ -21,7 +21,7 @@ import java.util.Map;
  * <p>Wraps an {@link AgentSet} into a {@link ResultsForEntities} structure,
  * enabling easy access to recorded properties and events for all agents over time.
  */
-public final class ResultsForAgents extends ResultsForEntities<AgentSimulationContext, AgentContext, MutableAgentAttributeSet, AttributeSetLog<AgentSimulationContext>> {
+public final class ResultsForAgents extends ResultsForEntities<AgentSimulationContext, AgentContext, AgentAttributeSet, AttributeSetLog<AgentSimulationContext>> {
 
     /** The immutable version of this mutable agent-level results */
     private ReadOnlyResultsForAgents immutableResultsForAgents = null;
@@ -137,7 +137,7 @@ public final class ResultsForAgents extends ResultsForEntities<AgentSimulationCo
         List<EntityLog<
                         AgentSimulationContext,
                         AgentContext,
-                MutableAgentAttributeSet,
+                AgentAttributeSet,
                         AttributeSetLog<AgentSimulationContext>
                         >>
                 agentLogList = getEntityLogList();
@@ -153,7 +153,7 @@ public final class ResultsForAgents extends ResultsForEntities<AgentSimulationCo
         for (EntityLog<
                 AgentSimulationContext,
                 AgentContext,
-                MutableAgentAttributeSet,
+                AgentAttributeSet,
                 AttributeSetLog<AgentSimulationContext>
                 > agentLog : agentLogList) {
             String agentName = agentLog.getEntityName();

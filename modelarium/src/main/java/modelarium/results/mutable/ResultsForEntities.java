@@ -1,7 +1,7 @@
 package modelarium.results.mutable;
 
 import modelarium.entities.Entity;
-import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AttributeSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
@@ -25,7 +25,7 @@ import java.util.*;
  * @param <AS> the type of attribute set the entities own
  * @param <ASL> the type of attribute set log the entities produce
  */
-public sealed abstract class ResultsForEntities<SC extends SimulationContext, C extends Context, AS extends MutableAttributeSet<SC,C>, ASL extends AttributeSetLog<SC>>
+public sealed abstract class ResultsForEntities<SC extends SimulationContext, C extends Context, AS extends AttributeSet<SC,C>, ASL extends AttributeSetLog<SC>>
         permits ResultsForAgents, ResultsForEnvironment {
 
     /** The logs of the entities these results cover */

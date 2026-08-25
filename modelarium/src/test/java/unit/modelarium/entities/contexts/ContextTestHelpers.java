@@ -14,9 +14,9 @@ import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.contexts.*;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.ReadOnlyEnvironment;
@@ -168,16 +168,16 @@ class ContextTestHelpers {
     }
 
     @SuppressWarnings("unchecked")
-    static MutableAgentAttributeSet singlePropertyAgentSet(String ownerName, String attributeSetName, String propertyName) {
-        return new MutableAgentAttributeSet(
+    static AgentAttributeSet singlePropertyAgentSet(String ownerName, String attributeSetName, String propertyName) {
+        return new AgentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(new AgentCounterProperty(propertyName))
         );
     }
 
     @SuppressWarnings("unchecked")
-    static MutableEnvironmentAttributeSet singlePropertyEnvironmentSet(String ownerName, String attributeSetName, String propertyName) {
-        return new MutableEnvironmentAttributeSet(
+    static EnvironmentAttributeSet singlePropertyEnvironmentSet(String ownerName, String attributeSetName, String propertyName) {
+        return new EnvironmentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(new EnvironmentTickProperty(propertyName))
         );
@@ -334,7 +334,7 @@ class ContextTestHelpers {
     static <C extends SimulationContext> C simulationContextWithAttributeSet(
             Class<C> contextClass,
             Config config,
-            MutableAttributeSet<?,?> attributeSet
+            AttributeSet<?,?> attributeSet
     ) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         C context = simulationContext(
                 contextClass,

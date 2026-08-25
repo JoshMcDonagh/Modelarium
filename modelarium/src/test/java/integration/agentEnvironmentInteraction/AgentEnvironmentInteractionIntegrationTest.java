@@ -9,9 +9,9 @@ import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
-import modelarium.entities.attributes.sets.immutable.ImmutableEnvironmentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.immutable.ReadOnlyEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
@@ -87,7 +87,7 @@ public class AgentEnvironmentInteractionIntegrationTest {
 
             // Read a property from the environment's immutable attribute set.
             // The temperature property is at index 0 in the "weather" set.
-            ImmutableEnvironmentAttributeSet weatherSet = (ImmutableEnvironmentAttributeSet)
+            ReadOnlyEnvironmentAttributeSet weatherSet = (ReadOnlyEnvironmentAttributeSet)
                     env.getAttributeSet("weather");
 
             // We can't call getProperty() externally since it's package-private
@@ -122,7 +122,7 @@ public class AgentEnvironmentInteractionIntegrationTest {
             protected Agent generateAgent(Config config, RandomGenerator random) {
                 String name = "agent_" + idx++;
                 ObservedTemperature obs = new ObservedTemperature();
-                MutableAgentAttributeSet set = new MutableAgentAttributeSet("sensors",
+                AgentAttributeSet set = new AgentAttributeSet("sensors",
                         (List<Attribute>) (List<?>) List.of(obs));
                 return new Agent(name, List.of(set));
             }
@@ -132,7 +132,7 @@ public class AgentEnvironmentInteractionIntegrationTest {
             @Override
             public Environment generateEnvironment(Config config, RandomGenerator random) {
                 Temperature temp = new Temperature();
-                MutableEnvironmentAttributeSet weatherSet = new MutableEnvironmentAttributeSet("weather",
+                EnvironmentAttributeSet weatherSet = new EnvironmentAttributeSet("weather",
                         (List<Attribute>) (List<?>) List.of(temp));
                 return new Environment(List.of(weatherSet));
             }

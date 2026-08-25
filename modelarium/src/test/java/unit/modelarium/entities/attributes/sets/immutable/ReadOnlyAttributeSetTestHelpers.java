@@ -11,12 +11,12 @@ import modelarium.entities.attributes.routines.functional.AgentRoutineRunFunctio
 import modelarium.entities.attributes.routines.functional.EnvironmentRoutineRunFunction;
 import modelarium.entities.attributes.routines.functional.FunctionalAgentRoutine;
 import modelarium.entities.attributes.routines.functional.FunctionalEnvironmentRoutine;
-import modelarium.entities.attributes.sets.immutable.ImmutableAgentAttributeSet;
-import modelarium.entities.attributes.sets.immutable.ImmutableAttributeSet;
-import modelarium.entities.attributes.sets.immutable.ImmutableEnvironmentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.immutable.ReadOnlyAgentAttributeSet;
+import modelarium.entities.attributes.sets.immutable.ReadOnlyAttributeSet;
+import modelarium.entities.attributes.sets.immutable.ReadOnlyEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.SimulationContext;
 import org.junit.jupiter.api.function.Executable;
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ReadOnlyAttributeSetTestHelpers {
     private ReadOnlyAttributeSetTestHelpers() {}
 
-    static <T extends MutableAttributeSet<?,?>> T makeAttributeSet(
+    static <T extends AttributeSet<?,?>> T makeAttributeSet(
             Class<T> attributeSetClass,
             String attributeSetName,
             List<Attribute> attributes
@@ -45,21 +45,21 @@ class ReadOnlyAttributeSetTestHelpers {
         );
     }
 
-    static <T extends ImmutableAttributeSet<?,?>> T makeImmutableAttributeSet(
+    static <T extends ReadOnlyAttributeSet<?,?>> T makeImmutableAttributeSet(
             Class<T> attributeSetClass,
             String attributeSetName,
             List<Attribute> attributes
     ) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        if (attributeSetClass.equals(ImmutableAgentAttributeSet.class)) {
-            return (T) new ImmutableAgentAttributeSet(makeAttributeSet(
-                    MutableAgentAttributeSet.class,
+        if (attributeSetClass.equals(ReadOnlyAgentAttributeSet.class)) {
+            return (T) new ReadOnlyAgentAttributeSet(makeAttributeSet(
+                    AgentAttributeSet.class,
                     attributeSetName,
                     attributes
             ));
         }
-        else if (attributeSetClass.equals(ImmutableEnvironmentAttributeSet.class)) {
-            return (T) new ImmutableEnvironmentAttributeSet(makeAttributeSet(
-                    MutableEnvironmentAttributeSet.class,
+        else if (attributeSetClass.equals(ReadOnlyEnvironmentAttributeSet.class)) {
+            return (T) new ReadOnlyEnvironmentAttributeSet(makeAttributeSet(
+                    EnvironmentAttributeSet.class,
                     attributeSetName,
                     attributes
             ));
@@ -69,35 +69,35 @@ class ReadOnlyAttributeSetTestHelpers {
         }
     }
 
-    private static <SC extends SimulationContext, C extends Context> MutableAttributeSet<SC, C> getMutableAttributeSetFromImmutableAttributeSet(
-            ImmutableAttributeSet<SC, C> immutableAttributeSet
+    private static <SC extends SimulationContext, C extends Context> AttributeSet<SC, C> getMutableAttributeSetFromImmutableAttributeSet(
+            ReadOnlyAttributeSet<SC, C> immutableAttributeSet
     ) throws NoSuchFieldException, IllegalAccessException {
-        Field attributeSetField = ImmutableAttributeSet.class.getDeclaredField("attributeSet");
+        Field attributeSetField = ReadOnlyAttributeSet.class.getDeclaredField("attributeSet");
         attributeSetField.setAccessible(true);
-        return (MutableAttributeSet<SC, C>) attributeSetField.get(immutableAttributeSet);
+        return (AttributeSet<SC, C>) attributeSetField.get(immutableAttributeSet);
     }
 
-    static MutableAgentAttributeSet getMutableFromImmutable(
-            ImmutableAgentAttributeSet immutableAttributeSet
+    static AgentAttributeSet getMutableFromImmutable(
+            ReadOnlyAgentAttributeSet immutableAttributeSet
     ) throws NoSuchFieldException, IllegalAccessException {
-        return (MutableAgentAttributeSet) getMutableAttributeSetFromImmutableAttributeSet(immutableAttributeSet);
+        return (AgentAttributeSet) getMutableAttributeSetFromImmutableAttributeSet(immutableAttributeSet);
     }
 
-    static MutableEnvironmentAttributeSet getMutableFromImmutable(
-            ImmutableEnvironmentAttributeSet immutableAttributeSet
+    static EnvironmentAttributeSet getMutableFromImmutable(
+            ReadOnlyEnvironmentAttributeSet immutableAttributeSet
     ) throws NoSuchFieldException, IllegalAccessException {
-        return (MutableEnvironmentAttributeSet) getMutableAttributeSetFromImmutableAttributeSet(immutableAttributeSet);
+        return (EnvironmentAttributeSet) getMutableAttributeSetFromImmutableAttributeSet(immutableAttributeSet);
     }
 
     static <A,T,P> T runGetClonedAttribute(
-            ImmutableAttributeSet<?,?> immutableAttributeSet,
+            ReadOnlyAttributeSet<?,?> immutableAttributeSet,
             Class<A> attributeSetClass,
             Class<T> attributeReturnClass,
             String getterMethodName,
             Class<P> attributeIdClass,
             P attributeId
     ) throws Throwable {
-        Method getClonedAttributeMethod = ImmutableAttributeSet.class.getDeclaredMethod(
+        Method getClonedAttributeMethod = ReadOnlyAttributeSet.class.getDeclaredMethod(
                 "getClonedAttribute",
                 Class.class,
                 Class.class,

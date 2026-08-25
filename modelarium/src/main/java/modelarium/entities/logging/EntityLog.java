@@ -1,6 +1,6 @@
 package modelarium.entities.logging;
 
-import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AttributeSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.SimulationContext;
 
@@ -20,7 +20,7 @@ import java.util.Map;
  * @param <AS> the type of attribute set the entity owns
  * @param <ASL> the type of attribute set log the entity produces
  */
-public class EntityLog<SC extends SimulationContext, C extends Context, AS extends MutableAttributeSet<SC,C>, ASL extends AttributeSetLog<SC>> {
+public class EntityLog<SC extends SimulationContext, C extends Context, AS extends AttributeSet<SC,C>, ASL extends AttributeSetLog<SC>> {
 
     /** The name of the entity this log belongs to */
     private final String entityName;

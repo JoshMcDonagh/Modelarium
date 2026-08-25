@@ -4,7 +4,7 @@ import modelarium.Config;
 import modelarium.clock.MutableClock;
 import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.agents.mutable.AgentSet;
-import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AttributeSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.contexts.SimulationContext;
@@ -14,7 +14,6 @@ import modelarium.entities.logging.EntityLog;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 import modelarium.internal.Internal;
 import modelarium.multithreading.requestresponse.RequestResponseController;
-import modelarium.utils.Cloners;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +32,7 @@ import java.util.random.RandomGenerator;
  * @param <AS> the type of attribute set the entity owns
  * @param <ASL> the type of attribute set log the entity produces
  */
-public sealed abstract class Entity<SC extends SimulationContext, C extends Context, AS extends MutableAttributeSet<SC,C>, ASL extends AttributeSetLog<SC>> permits Agent, Environment {
+public sealed abstract class Entity<SC extends SimulationContext, C extends Context, AS extends AttributeSet<SC,C>, ASL extends AttributeSetLog<SC>> permits Agent, Environment {
 
     /** The name of this entity, used to identify it within the model */
     private final String name;

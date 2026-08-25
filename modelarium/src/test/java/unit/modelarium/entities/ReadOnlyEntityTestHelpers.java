@@ -5,8 +5,8 @@ import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.environments.Environment;
@@ -67,8 +67,8 @@ public class ReadOnlyEntityTestHelpers {
     }
 
     @SuppressWarnings("unchecked")
-    public static MutableAgentAttributeSet singlePropertyAgentSet(String ownerName, String attributeSetName, String propertyName) {
-        return new MutableAgentAttributeSet(
+    public static AgentAttributeSet singlePropertyAgentSet(String ownerName, String attributeSetName, String propertyName) {
+        return new AgentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(new AgentCounterProperty(propertyName))
         );
@@ -80,7 +80,7 @@ public class ReadOnlyEntityTestHelpers {
 
     @SuppressWarnings("unchecked")
     public static Environment environmentWithTickCounter() {
-        MutableEnvironmentAttributeSet attributeSet = new MutableEnvironmentAttributeSet(
+        EnvironmentAttributeSet attributeSet = new EnvironmentAttributeSet(
                 "timing",
                 (List<Attribute>) (List<?>) List.of(new EnvironmentTickProperty("envTick"))
         );

@@ -3,7 +3,7 @@ package unit.modelarium.entities.agents.mutable;
 import com.rits.cloning.Cloner;
 import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.agents.mutable.AgentSet;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
 import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
 import modelarium.exceptions.AgentNotFoundException;
 import org.junit.jupiter.api.BeforeAll;
@@ -179,7 +179,7 @@ public class AgentSetTest {
 
     @Test
     public void testAddDeepCopy_NewAgent() {
-        MutableAgentAttributeSet attributeSet = singlePropertyAgentSet("A", "food", "hunger");
+        AgentAttributeSet attributeSet = singlePropertyAgentSet("A", "food", "hunger");
         Agent original = new Agent("A", List.of(attributeSet));
         AgentSet agentSet = new AgentSet();
 

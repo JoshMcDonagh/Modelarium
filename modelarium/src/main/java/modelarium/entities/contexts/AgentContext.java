@@ -2,7 +2,7 @@ package modelarium.entities.contexts;
 
 import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.ReadOnlyEnvironment;
 
@@ -24,9 +24,9 @@ public sealed interface AgentContext extends EntityContext permits AgentSimulati
     /**
      * Returns the attribute set currently being run on the owning agent.
      *
-     * @return the current {@link MutableAgentAttributeSet} instance
+     * @return the current {@link AgentAttributeSet} instance
      */
-    MutableAgentAttributeSet getThisAttributeSet();
+    AgentAttributeSet getThisAttributeSet();
 
     /**
      * Returns the attribute currently being run on the owning agent.

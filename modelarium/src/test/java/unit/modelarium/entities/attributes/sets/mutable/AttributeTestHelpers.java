@@ -11,8 +11,8 @@ import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.attributes.routines.AgentRoutine;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.ContextCache;
@@ -121,43 +121,43 @@ class AttributeTestHelpers {
     }
 
     @SuppressWarnings("unchecked")
-    static MutableAgentAttributeSet agentAttributeSet(String ownerName, String attributeSetName, AgentProperty<?>... properties) {
-        return new MutableAgentAttributeSet(
+    static AgentAttributeSet agentAttributeSet(String ownerName, String attributeSetName, AgentProperty<?>... properties) {
+        return new AgentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(properties)
         );
     }
 
     @SuppressWarnings("unchecked")
-    static MutableAgentAttributeSet agentAttributeSetFromEvents(String ownerName, String attributeSetName, AgentEvent... events) {
-        return new MutableAgentAttributeSet(
+    static AgentAttributeSet agentAttributeSetFromEvents(String ownerName, String attributeSetName, AgentEvent... events) {
+        return new AgentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(events)
         );
     }
 
     @SuppressWarnings("unchecked")
-    static MutableAgentAttributeSet agentAttributeSetFromRoutines(String ownerName, String attributeSetName, AgentRoutine... routines) {
-        return new MutableAgentAttributeSet(
+    static AgentAttributeSet agentAttributeSetFromRoutines(String ownerName, String attributeSetName, AgentRoutine... routines) {
+        return new AgentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(routines)
         );
     }
 
-    static MutableAgentAttributeSet singlePropertyAgentSet(String ownerName, String attributeSetName, String propertyName) {
+    static AgentAttributeSet singlePropertyAgentSet(String ownerName, String attributeSetName, String propertyName) {
         return agentAttributeSet(ownerName, attributeSetName, new AgentCounterProperty(propertyName));
     }
 
     @SuppressWarnings("unchecked")
-    static MutableEnvironmentAttributeSet environmentAttributeSet(String ownerName, String attributeSetName, EnvironmentProperty<?>... properties) {
-        return new MutableEnvironmentAttributeSet(
+    static EnvironmentAttributeSet environmentAttributeSet(String ownerName, String attributeSetName, EnvironmentProperty<?>... properties) {
+        return new EnvironmentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(properties)
         );
     }
 
-    static MutableEnvironmentAttributeSet emptyEnvironmentAttributeSet(String ownerName, String attributeSetName) {
-        return new MutableEnvironmentAttributeSet(attributeSetName, List.of());
+    static EnvironmentAttributeSet emptyEnvironmentAttributeSet(String ownerName, String attributeSetName) {
+        return new EnvironmentAttributeSet(attributeSetName, List.of());
     }
 
 
@@ -226,8 +226,8 @@ class AttributeTestHelpers {
     }
 
     @SuppressWarnings("unchecked")
-    static MutableAgentAttributeSet agentAttributeSetFromAttributes(String ownerName, String attributeSetName, Attribute... attributes) {
-        return new MutableAgentAttributeSet(
+    static AgentAttributeSet agentAttributeSetFromAttributes(String ownerName, String attributeSetName, Attribute... attributes) {
+        return new AgentAttributeSet(
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(attributes)
         );
@@ -253,7 +253,7 @@ class AttributeTestHelpers {
         };
     }
 
-    static AgentSimulationContext agentSimulationContext(MutableAgentAttributeSet attributeSet) {
+    static AgentSimulationContext agentSimulationContext(AgentAttributeSet attributeSet) {
         Config config = Config.builder()
                 .populationSize(1)
                 .tickCount(1)

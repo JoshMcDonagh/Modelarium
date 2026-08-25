@@ -8,7 +8,7 @@ import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.environments.Environment;
 import modelarium.entities.environments.generators.FunctionalEnvironmentGenerator;
@@ -75,7 +75,7 @@ public class DeterminismTest {
             @Override
             protected Agent generateAgent(Config config, RandomGenerator random) {
                 String name = String.format("agent_%02d", idx++);
-                MutableAgentAttributeSet set = new MutableAgentAttributeSet("state",
+                AgentAttributeSet set = new AgentAttributeSet("state",
                         (List<Attribute>) (List<?>) List.of(new RandomWalk()));
                 return new Agent(name, List.of(set));
             }

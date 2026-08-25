@@ -12,7 +12,7 @@ import modelarium.Config;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
 import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.attributes.Attribute;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
 
 import java.util.ArrayList;
 import java.util.random.RandomGenerator;
@@ -31,7 +31,7 @@ public class SIRAgentGenerator extends DefaultAgentGenerator {
 
     @Override
     protected Agent generateAgent(Config config, RandomGenerator random) {
-        ArrayList<MutableAgentAttributeSet> agentAttributeSets = new ArrayList<>();
+        ArrayList<AgentAttributeSet> agentAttributeSets = new ArrayList<>();
 
         LocationProperty locationProperty = new LocationProperty();
         ArrayList<Attribute> agentLocationAttributes = new ArrayList<>();
@@ -39,7 +39,7 @@ public class SIRAgentGenerator extends DefaultAgentGenerator {
         int x = random.nextInt(0, sirSettings.environment().area().width());
         int y = random.nextInt(0, sirSettings.environment().area().height());
         locationProperty.set(new Coordinates(x, y));
-        agentAttributeSets.add(new MutableAgentAttributeSet("location", agentLocationAttributes));
+        agentAttributeSets.add(new AgentAttributeSet("location", agentLocationAttributes));
 
         SIRStateProperty sirStateProperty = new SIRStateProperty();
         ArrayList<Attribute> agentSIRAttributes = new ArrayList<>();
@@ -58,7 +58,7 @@ public class SIRAgentGenerator extends DefaultAgentGenerator {
         } else {
             throw new IllegalStateException("Agent cannot be generated - all initial SIR states have already been assigned.");
         }
-        agentAttributeSets.add(new MutableAgentAttributeSet("sir", agentSIRAttributes));
+        agentAttributeSets.add(new AgentAttributeSet("sir", agentSIRAttributes));
 
         Agent newAgent = new Agent("agent_" + agentCount, agentAttributeSets);
         agentCount++;

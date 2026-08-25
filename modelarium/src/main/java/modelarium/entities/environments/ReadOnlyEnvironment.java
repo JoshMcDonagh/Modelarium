@@ -4,8 +4,8 @@ import modelarium.entities.ReadOnlyEntity;
 import modelarium.entities.attributes.events.ReadOnlyEvent;
 import modelarium.entities.attributes.properties.ReadOnlyProperty;
 import modelarium.entities.attributes.routines.ReadOnlyRoutine;
-import modelarium.entities.attributes.sets.immutable.ImmutableEnvironmentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.immutable.ReadOnlyEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
@@ -16,7 +16,7 @@ import modelarium.entities.logging.AttributeSetLog;
  * <p>This class wraps the mutable environment so that other model elements can inspect it without being able to
  * modify it.
  */
-public final class ReadOnlyEnvironment extends ReadOnlyEntity<EnvironmentSimulationContext, EnvironmentContext, MutableEnvironmentAttributeSet, AttributeSetLog<EnvironmentSimulationContext>> {
+public final class ReadOnlyEnvironment extends ReadOnlyEntity<EnvironmentSimulationContext, EnvironmentContext, EnvironmentAttributeSet, AttributeSetLog<EnvironmentSimulationContext>> {
 
     /**
      * Constructs a new immutable environment wrapping the specified mutable environment.
@@ -31,24 +31,24 @@ public final class ReadOnlyEnvironment extends ReadOnlyEntity<EnvironmentSimulat
      * Retrieves a read-only view of one of the wrapped environment's attribute sets by index.
      *
      * @param attributeSetIndex the index of the attribute set to retrieve
-     * @return a new {@link ImmutableEnvironmentAttributeSet} instance wrapping the attribute set at the specified
+     * @return a new {@link ReadOnlyEnvironmentAttributeSet} instance wrapping the attribute set at the specified
      *         index
      */
     @Override
-    public ImmutableEnvironmentAttributeSet getAttributeSet(int attributeSetIndex) {
-        return new ImmutableEnvironmentAttributeSet(getMutableEntity().getAttributeSet(attributeSetIndex));
+    public ReadOnlyEnvironmentAttributeSet getAttributeSet(int attributeSetIndex) {
+        return new ReadOnlyEnvironmentAttributeSet(getMutableEntity().getAttributeSet(attributeSetIndex));
     }
 
     /**
      * Retrieves a read-only view of one of the wrapped environment's attribute sets by name.
      *
      * @param attributeSetName the name of the attribute set to retrieve
-     * @return a new {@link ImmutableEnvironmentAttributeSet} instance wrapping the attribute set with the specified
+     * @return a new {@link ReadOnlyEnvironmentAttributeSet} instance wrapping the attribute set with the specified
      *         name
      */
     @Override
-    public ImmutableEnvironmentAttributeSet getAttributeSet(String attributeSetName) {
-        return new ImmutableEnvironmentAttributeSet(getMutableEntity().getAttributeSet(attributeSetName));
+    public ReadOnlyEnvironmentAttributeSet getAttributeSet(String attributeSetName) {
+        return new ReadOnlyEnvironmentAttributeSet(getMutableEntity().getAttributeSet(attributeSetName));
     }
 
     /**

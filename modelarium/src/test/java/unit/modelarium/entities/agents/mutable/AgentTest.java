@@ -4,7 +4,7 @@ import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.routines.AgentRoutine;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
 import org.junit.jupiter.api.Test;
@@ -38,8 +38,8 @@ public class AgentTest {
 
     @Test
     public void testAttributeSetCount() {
-        MutableAgentAttributeSet firstAttributeSet = singlePropertyAgentSet("agent", "food", "hunger");
-        MutableAgentAttributeSet secondAttributeSet = singlePropertyAgentSet("agent", "health", "hp");
+        AgentAttributeSet firstAttributeSet = singlePropertyAgentSet("agent", "food", "hunger");
+        AgentAttributeSet secondAttributeSet = singlePropertyAgentSet("agent", "health", "hp");
         Agent agent = new Agent("agent", List.of(firstAttributeSet, secondAttributeSet));
 
         assertEquals(2, agent.attributeSetCount());
@@ -47,7 +47,7 @@ public class AgentTest {
 
     @Test
     public void testGetAttributeSetByIndex() {
-        MutableAgentAttributeSet attributeSet = singlePropertyAgentSet("agent", "food", "hunger");
+        AgentAttributeSet attributeSet = singlePropertyAgentSet("agent", "food", "hunger");
         Agent agent = new Agent("agent", List.of(attributeSet));
 
         assertSame(attributeSet, agent.getAttributeSet(0));
@@ -55,7 +55,7 @@ public class AgentTest {
 
     @Test
     public void testGetAttributeSetByName() {
-        MutableAgentAttributeSet attributeSet = singlePropertyAgentSet("agent", "food", "hunger");
+        AgentAttributeSet attributeSet = singlePropertyAgentSet("agent", "food", "hunger");
         Agent agent = new Agent("agent", List.of(attributeSet));
 
         assertSame(attributeSet, agent.getAttributeSet("food"));
@@ -63,8 +63,8 @@ public class AgentTest {
 
     @Test
     public void testAttributeCount() {
-        MutableAgentAttributeSet firstAttributeSet = agentAttributeSet("agent", "s1", new AgentCounterProperty("a"));
-        MutableAgentAttributeSet secondAttributeSet = agentAttributeSet("agent", "s2", new AgentCounterProperty("b"));
+        AgentAttributeSet firstAttributeSet = agentAttributeSet("agent", "s1", new AgentCounterProperty("a"));
+        AgentAttributeSet secondAttributeSet = agentAttributeSet("agent", "s2", new AgentCounterProperty("b"));
         Agent agent = new Agent("agent", List.of(firstAttributeSet, secondAttributeSet));
 
         assertEquals(2, agent.attributeCount());
@@ -73,7 +73,7 @@ public class AgentTest {
 
     @Test
     public void testGetEvent() {
-        MutableAgentAttributeSet attributeSet = agentAttributeSetFromAttributes(
+        AgentAttributeSet attributeSet = agentAttributeSetFromAttributes(
                 "agent", "behaviour", new AlwaysTriggeredAgentEvent("act"));
         Agent agent = new Agent("agent", List.of(attributeSet));
 
@@ -82,7 +82,7 @@ public class AgentTest {
 
     @Test
     public void testGetRoutine() {
-        MutableAgentAttributeSet attributeSet = agentAttributeSetFromAttributes(
+        AgentAttributeSet attributeSet = agentAttributeSetFromAttributes(
                 "agent", "behaviour", new EmptyAgentRoutine("tick"));
         Agent agent = new Agent("agent", List.of(attributeSet));
 
@@ -91,7 +91,7 @@ public class AgentTest {
 
     @Test
     public void testGetProperty() {
-        MutableAgentAttributeSet attributeSet = singlePropertyAgentSet("agent", "food", "hunger");
+        AgentAttributeSet attributeSet = singlePropertyAgentSet("agent", "food", "hunger");
         Agent agent = new Agent("agent", List.of(attributeSet));
 
         assertEquals("hunger", agent.getProperty("food", "hunger").name());
@@ -99,7 +99,7 @@ public class AgentTest {
 
     @Test
     public void testCreateContext() {
-        MutableAgentAttributeSet attributeSet = singlePropertyAgentSet("agent", "food", "hunger");
+        AgentAttributeSet attributeSet = singlePropertyAgentSet("agent", "food", "hunger");
         Agent agent = new Agent("agent", List.of(attributeSet));
 
         createContextFor(agent);
@@ -119,7 +119,7 @@ public class AgentTest {
 
     @Test
     public void testRun_RecordsLoggedValues() {
-        MutableAgentAttributeSet attributeSet = singlePropertyAgentSet("agent", "food", "hunger");
+        AgentAttributeSet attributeSet = singlePropertyAgentSet("agent", "food", "hunger");
         Agent agent = new Agent("agent", List.of(attributeSet));
         agent.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         createContextFor(agent);
@@ -158,7 +158,7 @@ public class AgentTest {
     @Test
     public void testRun_AfterKill_DoesNotRunOrAddAnotherLogEntry() {
         AgentCounterProperty property = new AgentCounterProperty("counter");
-        MutableAgentAttributeSet attributeSet = agentAttributeSet("A", "state", property);
+        AgentAttributeSet attributeSet = agentAttributeSet("A", "state", property);
         Agent agent = new Agent("A", List.of(attributeSet));
         agent.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         createContextFor(agent);
@@ -172,7 +172,7 @@ public class AgentTest {
     }
 
     private static class ContextCapturingRoutine extends AgentRoutine {
-        private MutableAgentAttributeSet observedAttributeSet;
+        private AgentAttributeSet observedAttributeSet;
         private Object observedAttribute;
 
         private ContextCapturingRoutine(String name) {
@@ -189,7 +189,7 @@ public class AgentTest {
     @Test
     public void testRun_AttributeSeesCorrectCurrentAttributeAndAttributeSet() {
         ContextCapturingRoutine routine = new ContextCapturingRoutine("capture");
-        MutableAgentAttributeSet attributeSet = new MutableAgentAttributeSet(
+        AgentAttributeSet attributeSet = new AgentAttributeSet(
                 "behaviour",
                 List.<Attribute>of(routine)
         );

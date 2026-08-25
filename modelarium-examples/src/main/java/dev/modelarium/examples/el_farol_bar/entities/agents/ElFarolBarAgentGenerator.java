@@ -8,7 +8,7 @@ import modelarium.Config;
 import modelarium.entities.agents.generators.DefaultAgentGenerator;
 import modelarium.entities.agents.mutable.Agent;
 import modelarium.entities.attributes.Attribute;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public final class ElFarolBarAgentGenerator extends DefaultAgentGenerator {
 
         Agent agent = new Agent(
                 "agent_" + generatedAgentCount,
-                List.of(new MutableAgentAttributeSet("decision", decisionAttributes))
+                List.of(new AgentAttributeSet("decision", decisionAttributes))
         );
         generatedAgentCount++;
 

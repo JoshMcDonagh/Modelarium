@@ -4,8 +4,7 @@ import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.events.Event;
 import modelarium.entities.attributes.properties.Property;
 import modelarium.entities.attributes.routines.Routine;
-import modelarium.entities.attributes.sets.AttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AttributeSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
@@ -15,26 +14,26 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * Abstract class for providing a read-only view of an {@link MutableAttributeSet}.
+ * Abstract class for providing a read-only view of an {@link AttributeSet}.
  *
  * <p>This class wraps a mutable attribute set so that its attributes can be inspected without the underlying set
  * being modifiable. Retrieved attributes are deep cloned, so changes made to them do not affect the original set.
- * It is extended by {@link ImmutableAgentAttributeSet} and {@link ImmutableEnvironmentAttributeSet}.
+ * It is extended by {@link ReadOnlyAgentAttributeSet} and {@link ReadOnlyEnvironmentAttributeSet}.
  *
  * @param <SC> the type of simulation context the wrapped attribute set uses
  * @param <C> the type of context interface the wrapped attribute set's attributes are given
  */
-public sealed abstract class ImmutableAttributeSet<SC extends SimulationContext, C extends Context> implements AttributeSet permits ImmutableAgentAttributeSet, ImmutableEnvironmentAttributeSet {
+public sealed abstract class ReadOnlyAttributeSet<SC extends SimulationContext, C extends Context> permits ReadOnlyAgentAttributeSet, ReadOnlyEnvironmentAttributeSet {
 
     /** The mutable attribute set this read-only view wraps */
-    private final MutableAttributeSet<SC,C> attributeSet;
+    private final AttributeSet<SC,C> attributeSet;
 
     /**
      * Constructs a new immutable attribute set wrapping the specified mutable attribute set.
      *
      * @param attributeSet the mutable attribute set to provide a read-only view of
      */
-    protected ImmutableAttributeSet(MutableAttributeSet<SC,C> attributeSet) {
+    protected ReadOnlyAttributeSet(AttributeSet<SC,C> attributeSet) {
         this.attributeSet = attributeSet;
     }
 

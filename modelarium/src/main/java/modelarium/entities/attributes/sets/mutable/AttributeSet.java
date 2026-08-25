@@ -5,7 +5,6 @@ import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.events.Event;
 import modelarium.entities.attributes.properties.Property;
 import modelarium.entities.attributes.routines.Routine;
-import modelarium.entities.attributes.sets.AttributeSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
@@ -23,12 +22,12 @@ import java.util.Map;
  *
  * <p>This class is responsible for storing an entity's attributes, providing typed and access-checked retrieval of
  * events, routines and properties, running each attribute in order every tick, and recording the values of logged
- * attributes. It is extended by {@link MutableAgentAttributeSet} and {@link MutableEnvironmentAttributeSet}.
+ * attributes. It is extended by {@link AgentAttributeSet} and {@link EnvironmentAttributeSet}.
  *
  * @param <SC> the type of simulation context this attribute set uses
  * @param <C> the type of context interface this attribute set's attributes are given
  */
-public sealed abstract class MutableAttributeSet<SC extends SimulationContext, C extends Context> implements AttributeSet permits MutableAgentAttributeSet, MutableEnvironmentAttributeSet {
+public sealed abstract class AttributeSet<SC extends SimulationContext, C extends Context> permits AgentAttributeSet, EnvironmentAttributeSet {
 
     /** The name of the entity that owns this attribute set */
     private String ownerName = null;
@@ -64,7 +63,7 @@ public sealed abstract class MutableAttributeSet<SC extends SimulationContext, C
      * @param attributeList the attributes the set will contain, in the order they will be run
      */
     @SuppressWarnings("unchecked")
-    protected MutableAttributeSet(String name, List<Attribute> attributeList) {
+    protected AttributeSet(String name, List<Attribute> attributeList) {
         this.name = name;
 
         for (int i = 0; i < attributeList.size(); i++) {

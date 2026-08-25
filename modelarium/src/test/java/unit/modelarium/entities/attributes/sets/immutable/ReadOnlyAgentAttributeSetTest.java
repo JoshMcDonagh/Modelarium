@@ -8,8 +8,8 @@ import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.properties.functional.FunctionalAgentProperty;
 import modelarium.entities.attributes.routines.AgentRoutine;
 import modelarium.entities.attributes.routines.functional.FunctionalAgentRoutine;
-import modelarium.entities.attributes.sets.immutable.ImmutableAgentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableAgentAttributeSet;
+import modelarium.entities.attributes.sets.immutable.ReadOnlyAgentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AgentAttributeSet;
 import modelarium.entities.logging.AttributeSetLog;
 import org.junit.jupiter.api.Test;
 
@@ -39,15 +39,15 @@ public class ReadOnlyAgentAttributeSetTest {
         attributeList.add(attribute);
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Attribute_8"));
 
-        ImmutableAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableAgentAttributeSet.class,
+        ReadOnlyAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyAgentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
 
         AgentAttribute returnedAttribute = runGetClonedAttribute(
                 immutableAttributeSet,
-                MutableAgentAttributeSet.class,
+                AgentAttributeSet.class,
                 AgentAttribute.class,
                 "get",
                 int.class,
@@ -70,8 +70,8 @@ public class ReadOnlyAgentAttributeSetTest {
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Attribute_7"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Attribute_8"));
 
-        ImmutableAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableAgentAttributeSet.class,
+        ReadOnlyAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyAgentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
@@ -84,7 +84,7 @@ public class ReadOnlyAgentAttributeSetTest {
                 IllegalArgumentException.class,
                 () -> runGetClonedAttribute(
                         immutableAttributeSet,
-                        MutableAgentAttributeSet.class,
+                        AgentAttributeSet.class,
                         AgentAttribute.class,
                         getterMethodName,
                         attributeIdClass,
@@ -98,8 +98,8 @@ public class ReadOnlyAgentAttributeSetTest {
     @Test
     public void testName() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         String attributeSetName = "testAttributeSetName";
-        ImmutableAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableAgentAttributeSet.class,
+        ReadOnlyAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyAgentAttributeSet.class,
                 attributeSetName,
                 new ArrayList<>()
         );
@@ -120,8 +120,8 @@ public class ReadOnlyAgentAttributeSetTest {
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_2"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_3"));
 
-        ImmutableAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableAgentAttributeSet.class,
+        ReadOnlyAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyAgentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
@@ -132,14 +132,14 @@ public class ReadOnlyAgentAttributeSetTest {
     @Test
     public void testGetLog() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         AttributeSetLog<?> attributeSetLog = mock(AttributeSetLog.class);
-        MutableAgentAttributeSet attributeSet = spy(makeAttributeSet(
-                MutableAgentAttributeSet.class,
+        AgentAttributeSet attributeSet = spy(makeAttributeSet(
+                AgentAttributeSet.class,
                 "testAttributeSetName",
                 new ArrayList<>()
         ));
         doReturn(attributeSetLog).when(attributeSet).getLog();
 
-        ImmutableAgentAttributeSet immutableAgentAttributeSet = new ImmutableAgentAttributeSet(attributeSet);
+        ReadOnlyAgentAttributeSet immutableAgentAttributeSet = new ReadOnlyAgentAttributeSet(attributeSet);
 
         assertSame(attributeSetLog, immutableAgentAttributeSet.getLog());
     }
@@ -160,8 +160,8 @@ public class ReadOnlyAgentAttributeSetTest {
         attributeList.add(attribute);
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Attribute_8"));
 
-        ImmutableAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableAgentAttributeSet.class,
+        ReadOnlyAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyAgentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
@@ -184,8 +184,8 @@ public class ReadOnlyAgentAttributeSetTest {
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, name));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Attribute_8"));
 
-        ImmutableAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableAgentAttributeSet.class,
+        ReadOnlyAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyAgentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
@@ -209,8 +209,8 @@ public class ReadOnlyAgentAttributeSetTest {
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_2"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_3"));
 
-        ImmutableAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableAgentAttributeSet.class,
+        ReadOnlyAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyAgentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
@@ -233,8 +233,8 @@ public class ReadOnlyAgentAttributeSetTest {
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_2"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_3"));
 
-        ImmutableAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableAgentAttributeSet.class,
+        ReadOnlyAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyAgentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
@@ -258,8 +258,8 @@ public class ReadOnlyAgentAttributeSetTest {
         attributeList.add(routine);
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_3"));
 
-        ImmutableAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableAgentAttributeSet.class,
+        ReadOnlyAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyAgentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
@@ -282,8 +282,8 @@ public class ReadOnlyAgentAttributeSetTest {
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_2"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, name));
 
-        ImmutableAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableAgentAttributeSet.class,
+        ReadOnlyAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyAgentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
@@ -307,8 +307,8 @@ public class ReadOnlyAgentAttributeSetTest {
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_2"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_3"));
 
-        ImmutableAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableAgentAttributeSet.class,
+        ReadOnlyAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyAgentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );
@@ -332,8 +332,8 @@ public class ReadOnlyAgentAttributeSetTest {
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_2"));
         attributeList.add(makeEmptyFunctionalRoutine(FunctionalAgentRoutine.class, "Routine_3"));
 
-        ImmutableAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
-                ImmutableAgentAttributeSet.class,
+        ReadOnlyAgentAttributeSet immutableAttributeSet = makeImmutableAttributeSet(
+                ReadOnlyAgentAttributeSet.class,
                 "testAttributeSetName",
                 attributeList
         );

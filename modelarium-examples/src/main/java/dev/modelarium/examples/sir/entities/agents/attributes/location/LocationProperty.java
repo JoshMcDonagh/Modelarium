@@ -3,7 +3,7 @@ package dev.modelarium.examples.sir.entities.agents.attributes.location;
 import dev.modelarium.examples.sir.config.SettingsLoader;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
-import modelarium.entities.attributes.sets.immutable.ImmutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.immutable.ReadOnlyEnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 
 import java.util.random.RandomGenerator;
@@ -26,7 +26,7 @@ public class LocationProperty extends AgentProperty<Coordinates> {
         RandomGenerator random = context.getRandom();
 
         if (random.nextDouble(0.0, 1.0) < movementProbabilityPerTick) {
-            ImmutableEnvironmentAttributeSet geography = context
+            ReadOnlyEnvironmentAttributeSet geography = context
                     .getEnvironment()
                     .getAttributeSet("geography");
 

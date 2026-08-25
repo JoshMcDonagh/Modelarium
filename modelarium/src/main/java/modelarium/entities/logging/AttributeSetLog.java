@@ -2,7 +2,7 @@ package modelarium.entities.logging;
 
 import modelarium.entities.attributes.properties.Property;
 import modelarium.entities.attributes.sets.mutable.AttributeBase;
-import modelarium.entities.attributes.sets.mutable.MutableAttributeSet;
+import modelarium.entities.attributes.sets.mutable.AttributeSet;
 import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.logging.databases.AttributeSetLogDatabase;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Stores and manages the logged results for a single {@link MutableAttributeSet},
+ * Stores and manages the logged results for a single {@link AttributeSet},
  * including properties and events marked for logging.
  *
  * <p>This class is responsible for writing tick-level data to the backing database,

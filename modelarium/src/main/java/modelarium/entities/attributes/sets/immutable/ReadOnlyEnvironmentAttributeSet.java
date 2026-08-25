@@ -4,25 +4,24 @@ import modelarium.entities.attributes.EnvironmentAttribute;
 import modelarium.entities.attributes.events.EnvironmentEvent;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
 import modelarium.entities.attributes.routines.EnvironmentRoutine;
-import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
-import modelarium.entities.attributes.sets.mutable.MutableEnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.mutable.EnvironmentAttributeSet;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
 
 /**
- * Class for providing a read-only view of an {@link MutableEnvironmentAttributeSet}.
+ * Class for providing a read-only view of an {@link EnvironmentAttributeSet}.
  *
- * <p>This class specialises {@link ImmutableAttributeSet} so that retrieved attributes are returned as deep clones
+ * <p>This class specialises {@link ReadOnlyAttributeSet} so that retrieved attributes are returned as deep clones
  * of their environment-flavoured types.
  */
-public final class ImmutableEnvironmentAttributeSet extends ImmutableAttributeSet<EnvironmentSimulationContext, EnvironmentContext> implements EnvironmentAttributeSet {
+public final class ReadOnlyEnvironmentAttributeSet extends ReadOnlyAttributeSet<EnvironmentSimulationContext, EnvironmentContext> {
 
     /**
      * Constructs a new immutable environment attribute set wrapping the specified mutable attribute set.
      *
      * @param attributeSet the mutable environment attribute set to provide a read-only view of
      */
-    public ImmutableEnvironmentAttributeSet(MutableEnvironmentAttributeSet attributeSet) {
+    public ReadOnlyEnvironmentAttributeSet(EnvironmentAttributeSet attributeSet) {
         super(attributeSet);
     }
 
@@ -35,7 +34,7 @@ public final class ImmutableEnvironmentAttributeSet extends ImmutableAttributeSe
     @Override
     public EnvironmentAttribute get(int index) {
         return getClonedAttribute(
-                MutableEnvironmentAttributeSet.class,
+                EnvironmentAttributeSet.class,
                 EnvironmentAttribute.class,
                 "get",
                 int.class,
@@ -52,7 +51,7 @@ public final class ImmutableEnvironmentAttributeSet extends ImmutableAttributeSe
     @Override
     public EnvironmentAttribute get(String attributeName) {
         return getClonedAttribute(
-                MutableEnvironmentAttributeSet.class,
+                EnvironmentAttributeSet.class,
                 EnvironmentAttribute.class,
                 "get",
                 String.class,
@@ -69,7 +68,7 @@ public final class ImmutableEnvironmentAttributeSet extends ImmutableAttributeSe
     @Override
     public EnvironmentEvent getEvent(int eventIndex) {
         return getClonedAttribute(
-                MutableEnvironmentAttributeSet.class,
+                EnvironmentAttributeSet.class,
                 EnvironmentEvent.class,
                 "getEvent",
                 int.class,
@@ -86,7 +85,7 @@ public final class ImmutableEnvironmentAttributeSet extends ImmutableAttributeSe
     @Override
     public EnvironmentEvent getEvent(String eventName) {
         return getClonedAttribute(
-                MutableEnvironmentAttributeSet.class,
+                EnvironmentAttributeSet.class,
                 EnvironmentEvent.class,
                 "getEvent",
                 String.class,
@@ -103,7 +102,7 @@ public final class ImmutableEnvironmentAttributeSet extends ImmutableAttributeSe
     @Override
     public EnvironmentRoutine getRoutine(int routineIndex) {
         return getClonedAttribute(
-                MutableEnvironmentAttributeSet.class,
+                EnvironmentAttributeSet.class,
                 EnvironmentRoutine.class,
                 "getRoutine",
                 int.class,
@@ -120,7 +119,7 @@ public final class ImmutableEnvironmentAttributeSet extends ImmutableAttributeSe
     @Override
     public EnvironmentRoutine getRoutine(String routineName) {
         return getClonedAttribute(
-                MutableEnvironmentAttributeSet.class,
+                EnvironmentAttributeSet.class,
                 EnvironmentRoutine.class,
                 "getRoutine",
                 String.class,
@@ -137,7 +136,7 @@ public final class ImmutableEnvironmentAttributeSet extends ImmutableAttributeSe
     @Override
     public EnvironmentProperty<?> getProperty(int propertyIndex) {
         return getClonedAttribute(
-                MutableEnvironmentAttributeSet.class,
+                EnvironmentAttributeSet.class,
                 EnvironmentProperty.class,
                 "getProperty",
                 int.class,
@@ -154,7 +153,7 @@ public final class ImmutableEnvironmentAttributeSet extends ImmutableAttributeSe
     @Override
     public EnvironmentProperty<?> getProperty(String propertyName) {
         return getClonedAttribute(
-                MutableEnvironmentAttributeSet.class,
+                EnvironmentAttributeSet.class,
                 EnvironmentProperty.class,
                 "getProperty",
                 String.class,
