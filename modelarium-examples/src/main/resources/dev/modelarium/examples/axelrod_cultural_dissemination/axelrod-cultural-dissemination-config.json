@@ -1,0 +1,18 @@
+{
+  "modelSettings": {
+    "numOfEvents": 100000,
+    "eventsPerModelariumTick": 100,
+    "metricMeasurementIntervalEvents": 1000,
+    "seed": 1997
+  },
+
+  "grid": {
+    "width": 10,
+    "height": 10
+  },
+
+  "culture": {
+    "numOfFeatures": 5,
+    "traitsPerFeature": 10
+  }
+}
