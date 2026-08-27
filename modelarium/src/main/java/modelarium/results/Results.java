@@ -1,6 +1,7 @@
 package modelarium.results;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import modelarium.Config;
 import modelarium.entities.Agent;
 import modelarium.entities.agentsets.AgentSet;

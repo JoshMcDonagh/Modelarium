@@ -1,5 +1,7 @@
 package modelarium;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import modelarium.entities.generators.AgentGenerator;
 import modelarium.entities.generators.EnvironmentGenerator;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
@@ -32,15 +34,34 @@ import java.util.Objects;
  * @param seed the seed value used for the core random generator used by the model
  */
 public record Config(
+        @JsonProperty("population_size")
         int populationSize,
+
+        @JsonProperty("tick_count")
         int tickCount,
+
+        @JsonIgnore
         int threadCount,
+
+        @JsonIgnore
         Duration threadTimeout,
+
+        @JsonIgnore
         boolean areThreadsSynced,
+
+        @JsonIgnore
         AgentGenerator agentGenerator,
+
+        @JsonIgnore
         EnvironmentGenerator environmentGenerator,
+
+        @JsonIgnore
         Scheduler scheduler,
+
+        @JsonIgnore
         AttributeSetLogDatabaseFactory runLogDatabaseFactory,
+
+        @JsonProperty("seed")
         long seed
 ) {
     /**

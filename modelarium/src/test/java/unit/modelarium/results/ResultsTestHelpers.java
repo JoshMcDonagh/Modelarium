@@ -1,5 +1,6 @@
 package unit.modelarium.results;
 
+import modelarium.Config;
 import modelarium.entities.Entity;
 import modelarium.entities.Agent;
 import modelarium.entities.agentsets.AgentSet;
@@ -12,6 +13,8 @@ import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.Environment;
+import modelarium.entities.generators.DefaultAgentGenerator;
+import modelarium.entities.generators.EnvironmentGenerator;
 import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
 import modelarium.results.Results;
 import modelarium.results.ResultsForAgents;
@@ -19,9 +22,41 @@ import modelarium.results.ResultsForEnvironment;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.random.RandomGenerator;
 
 public class ResultsTestHelpers {
     private ResultsTestHelpers() {}
+
+    private static DefaultAgentGenerator agentGenerator() {
+        return new DefaultAgentGenerator() {
+            private int index = 0;
+
+            @Override
+            protected Agent generateAgent(Config config, RandomGenerator random) {
+                return new Agent("agent_" + index++, List.of());
+            }
+        };
+    }
+
+    private static EnvironmentGenerator environmentGenerator() {
+        return new EnvironmentGenerator() {
+            @Override
+            public Environment generateEnvironment(Config config, RandomGenerator random) {
+                return new Environment("env", List.of());
+            }
+        };
+    }
+
+    static Config config() {
+        return Config.builder()
+                .populationSize(20)
+                .tickCount(20)
+                .threadCount(4)
+                .areThreadsSynced(true)
+                .agentGenerator(agentGenerator())
+                .environmentGenerator(environmentGenerator())
+                .build();
+    }
 
     static class AgentCounterProperty extends AgentProperty<Double> {
         private double value = 0.0;

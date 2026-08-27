@@ -16,12 +16,28 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 import static unit.modelarium.results.ResultsTestHelpers.*;
 
 public class ResultsExportTest {
-
     @TempDir
     Path tempDir;
+
+    @Test
+    public void testExport_CreatesConfigJsonFile() {
+        Agent agent = agentWithLoggedProperty("Agent_0", "stats", "score");
+        record(agent, "stats", "score", 1.0);
+        Environment environment = environmentWithLoggedProperty("environment", "state", "tick");
+        record(environment, "state", "tick", 1);
+        Results results = mutableResults(agentResults(agent), environmentResults(environment));
+
+        results.setConfig(config());
+
+        Path exported = results.export(tempDir);
+
+        assertTrue(Files.isRegularFile(exported.resolve("config.json")));
+    }
 
     @Test
     public void testExport_CreatesExpectedAgentAndEnvironmentStructure() {
@@ -41,6 +57,8 @@ public class ResultsExportTest {
                 new ResultsForAgents(agentSet(agent)),
                 new ResultsForEnvironment(environment)
         );
+
+        results.setConfig(config());
 
         Path exported = results.export(tempDir);
 
@@ -75,6 +93,8 @@ public class ResultsExportTest {
                 environmentResults(environment)
         );
 
+        results.setConfig(config());
+
         Path exported = results.export(tempDir);
         String csv = Files.readString(exported.resolve("agent/Agent_0/stats.csv"));
         String newline = System.lineSeparator();
@@ -95,6 +115,8 @@ public class ResultsExportTest {
         Environment environment = environmentWithLoggedProperty("environment", "state", "tick");
         record(environment, "state", "tick", 1);
         Results results = mutableResults(agentResults(agent), environmentResults(environment));
+
+        results.setConfig(config());
 
         Path exported = results.export(tempDir);
 
