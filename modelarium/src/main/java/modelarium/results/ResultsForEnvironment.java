@@ -6,6 +6,7 @@ import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.Environment;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
+import modelarium.internal.Internal;
 import modelarium.results.readonly.ReadOnlyResultsForEnvironment;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.util.Map;
  * <p>Extends {@link ResultsForEntities} to store and access recorded property
  * and event values specific to the environment, using its name to simplify queries.
  */
+@Internal
 public final class ResultsForEnvironment extends ResultsForEntities<EnvironmentSimulationContext, EnvironmentContext, EnvironmentAttributeSet, AttributeSetLog<EnvironmentSimulationContext>> {
 
     /** The name of the environment used as a key for data access */

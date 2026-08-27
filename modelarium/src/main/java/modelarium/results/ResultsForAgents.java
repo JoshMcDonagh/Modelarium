@@ -6,6 +6,7 @@ import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
+import modelarium.internal.Internal;
 import modelarium.results.readonly.ReadOnlyResultsForAgents;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.util.Map;
  * <p>Wraps an {@link AgentSet} into a {@link ResultsForEntities} structure,
  * enabling easy access to recorded properties and events for all agents over time.
  */
+@Internal
 public final class ResultsForAgents extends ResultsForEntities<AgentSimulationContext, AgentContext, AgentAttributeSet, AttributeSetLog<AgentSimulationContext>> {
 
     /** The immutable version of this mutable agent-level results */

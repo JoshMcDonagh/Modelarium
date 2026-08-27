@@ -6,6 +6,7 @@ import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
+import modelarium.internal.Internal;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -25,6 +26,7 @@ import java.util.*;
  * @param <AS> the type of attribute set the entities own
  * @param <ASL> the type of attribute set log the entities produce
  */
+@Internal
 public sealed abstract class ResultsForEntities<SC extends SimulationContext, C extends Context, AS extends AttributeSet<SC,C>, ASL extends AttributeSetLog<SC>>
         permits ResultsForAgents, ResultsForEnvironment {
 

@@ -311,6 +311,9 @@ public class Model {
 
         // Provide the results container with the environment's results
         results.setEnvironmentResults(new ResultsForEnvironment(environment));
+
+        // Provide the results with the model's Config instance
+        results.setConfig(config);
     }
 
     /**

@@ -1,9 +1,13 @@
 package modelarium.results;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import modelarium.Config;
 import modelarium.entities.Agent;
 import modelarium.entities.agentsets.AgentSet;
+import modelarium.internal.Internal;
 import modelarium.results.readonly.ReadOnlyResults;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,7 +24,9 @@ import java.util.List;
  * workers produce, merging per-worker agent results together, and providing a read-only view of the results once
  * the run has completed.
  */
+@Internal
 public final class Results {
+    private Config config = null;
 
     /** The agent-level results of the model run */
     private ResultsForAgents agentsResults;
@@ -44,6 +50,17 @@ public final class Results {
      * Constructs a new, empty results container.
      */
     public Results() {}
+
+    /**
+     * Sets the {@link Config} instance associated with the model.
+     *
+     * @param config the config instance to set
+     */
+    public void setConfig(Config config) {
+        if (this.config != null)
+            return;
+        this.config = config;
+    }
 
     /**
      * Stores the names of all agents in the model.
@@ -114,6 +131,18 @@ public final class Results {
         return environmentResults;
     }
 
+    private void exportConfig(Path exportedResultsPath) {
+        if (config == null)
+            throw new IllegalStateException("Config not set");
+
+        String jsonFileName = "config.json";
+        try {
+            new ObjectMapper().writeValue(new File(exportedResultsPath.resolve(jsonFileName).toString()), config);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create '" + jsonFileName + "'", e);
+        }
+    }
+
     /**
      * Exports the results of the model to a given export directory
      *
@@ -147,6 +176,7 @@ public final class Results {
             throw new RuntimeException("Failed to create path: " + exportedResultsPath, e);
         }
 
+        exportConfig(exportedResultsPath);
         environmentResults.export(exportedResultsPath);
         agentsResults.export(exportedResultsPath);
 

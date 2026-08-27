@@ -1,6 +1,6 @@
 {
   "modelSettings": {
-    "numOfEvents": 100000,
+    "numOfEvents": 500000,
     "eventsPerModelariumTick": 100,
     "metricMeasurementIntervalEvents": 1000,
     "seed": 1997

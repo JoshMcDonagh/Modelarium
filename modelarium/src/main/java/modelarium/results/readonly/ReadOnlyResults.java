@@ -1,5 +1,6 @@
 package modelarium.results.readonly;
 
+import modelarium.internal.Internal;
 import modelarium.results.Results;
 
 import java.nio.file.Path;
@@ -19,6 +20,7 @@ public final class ReadOnlyResults {
      *
      * @param results the mutable results to provide a read-only view of
      */
+    @Internal
     public ReadOnlyResults(Results results) {
         mutableVersion = results;
     }
