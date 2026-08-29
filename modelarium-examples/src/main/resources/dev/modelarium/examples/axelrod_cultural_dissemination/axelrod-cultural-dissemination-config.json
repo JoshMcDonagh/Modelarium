@@ -1,9 +1,9 @@
 {
   "modelSettings": {
-    "numOfEvents": 500000,
-    "eventsPerModelariumTick": 100,
-    "metricMeasurementIntervalEvents": 1000,
-    "seed": 1997
+    "numOfReplications": 100,
+    "maxNumOfEventsPerRun": 1000000,
+    "stabilityCheckIntervalEvents": 1000,
+    "baseSeed": 1997
   },
 
   "grid": {

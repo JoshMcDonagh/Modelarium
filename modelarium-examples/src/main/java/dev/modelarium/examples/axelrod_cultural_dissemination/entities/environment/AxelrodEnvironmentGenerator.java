@@ -32,9 +32,7 @@ public final class AxelrodEnvironmentGenerator extends EnvironmentGenerator {
                 new CulturalMetricsUpdateRoutine(
                         metrics,
                         settings.grid().width(),
-                        settings.grid().height(),
-                        settings.modelSettings().metricMeasurementIntervalEvents(),
-                        settings.modelSettings().eventsPerModelariumTick()
+                        settings.grid().height()
                 ),
                 new CulturalRegionCountProperty(metrics),
                 new LargestCulturalRegionSizeProperty(metrics),

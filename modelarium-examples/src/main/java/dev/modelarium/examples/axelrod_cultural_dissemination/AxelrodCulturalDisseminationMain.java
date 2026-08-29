@@ -4,26 +4,32 @@ import dev.modelarium.examples.axelrod_cultural_dissemination.config.AxelrodCult
 import dev.modelarium.examples.axelrod_cultural_dissemination.config.SettingsLoader;
 import dev.modelarium.examples.axelrod_cultural_dissemination.entities.agents.AxelrodAgentGenerator;
 import dev.modelarium.examples.axelrod_cultural_dissemination.entities.environment.AxelrodEnvironmentGenerator;
+import dev.modelarium.examples.axelrod_cultural_dissemination.replication.AxelrodReplicationExporter;
+import dev.modelarium.examples.axelrod_cultural_dissemination.replication.AxelrodReplicationRunResult;
+import dev.modelarium.examples.axelrod_cultural_dissemination.replication.AxelrodReplicationSummary;
 import dev.modelarium.examples.axelrod_cultural_dissemination.scheduler.AxelrodEventScheduler;
 import modelarium.Config;
 import modelarium.Model;
 import modelarium.results.readonly.ReadOnlyResults;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.SplittableRandom;
 
 /**
- * Modelarium implementation of Robert Axelrod's cultural dissemination model.
+ * Modelarium replication experiment for Robert Axelrod's cultural dissemination model.
  *
- * <p>Each site has F cultural features, each initially assigned one of q traits uniformly at random. One randomly
- * selected site is activated per event, selects one of its cardinal neighbours, and interacts with probability
- * equal to their cultural similarity. On interaction, the active site copies one randomly selected differing trait
- * from that neighbour. Thus every successful interaction is locally convergent even though multiple globally
- * distinct cultural regions can survive.
+ * <p>The default configuration reproduces the parameterisation for which Axelrod reported the distribution of
+ * stable cultural regions across 100 independent runs: a 10x10 territory, five cultural features, ten traits per
+ * feature, and cardinal-neighbour interaction. Every run receives a reproducible independent seed and proceeds until
+ * an absorbing state is detected or a high safety limit is reached.
  */
 public final class AxelrodCulturalDisseminationMain {
     private static final String CONFIG_RESOURCE =
             "dev/modelarium/examples/axelrod_cultural_dissemination/axelrod-cultural-dissemination-config.json";
+    private static final String OUTPUT_DIRECTORY =
+            "modelarium-examples/output/axelrod_cultural_dissemination";
 
     private AxelrodCulturalDisseminationMain() {}
 
@@ -32,117 +38,183 @@ public final class AxelrodCulturalDisseminationMain {
                 SettingsLoader.loadAxelrodCulturalDisseminationConfig(CONFIG_RESOURCE);
         validateSettings(settings);
 
-        Config config = Config
+        SplittableRandom seedSequence = new SplittableRandom(settings.modelSettings().baseSeed());
+        List<AxelrodReplicationRunResult> runResults = new ArrayList<>(
+                settings.modelSettings().numOfReplications()
+        );
+
+        ReadOnlyResults rawResultsToExport = null;
+        long rawResultsSeed = 0;
+        int rawResultsRunNumber = 1;
+
+        System.out.printf(
+                "Running Axelrod cultural dissemination replication: %,d independent runs (%dx%d, F=%d, q=%d)%n",
+                settings.modelSettings().numOfReplications(),
+                settings.grid().width(),
+                settings.grid().height(),
+                settings.culture().numOfFeatures(),
+                settings.culture().traitsPerFeature()
+        );
+
+        for (int runNumber = 1; runNumber <= settings.modelSettings().numOfReplications(); runNumber++) {
+            long runSeed = seedSequence.nextLong();
+            AxelrodEventScheduler scheduler = new AxelrodEventScheduler(
+                    settings.grid().width(),
+                    settings.grid().height(),
+                    settings.modelSettings().maxNumOfEventsPerRun(),
+                    settings.modelSettings().stabilityCheckIntervalEvents()
+            );
+
+            Model model = new Model(createConfig(settings, scheduler, runSeed));
+            model.run();
+
+            ReadOnlyResults results = model.getResults();
+            AxelrodReplicationRunResult runResult = extractRunResult(
+                    runNumber,
+                    runSeed,
+                    scheduler,
+                    results
+            );
+            runResults.add(runResult);
+
+            // Modelarium's normal export is retained for one concrete run. The replication-level CSV files added
+            // below summarize every run, so exporting 100 complete per-agent result trees would add little value.
+            if (runNumber == rawResultsRunNumber) {
+                rawResultsToExport = results;
+                rawResultsSeed = runSeed;
+            }
+
+            printRunProgress(runResult, settings.modelSettings().numOfReplications());
+        }
+
+        AxelrodReplicationSummary summary = AxelrodReplicationSummary.from(runResults);
+        printExperimentSummary(summary);
+
+        if (rawResultsToExport == null)
+            throw new IllegalStateException("No Modelarium results were produced");
+
+        Path outputPath = rawResultsToExport.export(OUTPUT_DIRECTORY);
+        AxelrodReplicationExporter.export(
+                outputPath,
+                settings,
+                runResults,
+                summary,
+                rawResultsRunNumber,
+                rawResultsSeed
+        );
+
+        System.out.println("Results exported to: " + outputPath.toAbsolutePath());
+    }
+
+    private static Config createConfig(
+            AxelrodCulturalDisseminationSettings settings,
+            AxelrodEventScheduler scheduler,
+            long seed
+    ) {
+        return Config
                 .builder()
                 .populationSize(settings.populationSize())
-                .tickCount(
-                        settings.modelSettings().numOfEvents()
-                                / settings.modelSettings().eventsPerModelariumTick()
-                                + 1
-                )
-                // Axelrod's original process is asynchronous: exactly one randomly selected site is activated per
-                // event. One synchronised worker preserves that semantics while still allowing the coordinator's
-                // environment to measure the population between event batches.
+                // Tick 0 performs the complete sequential Axelrod process. Tick 1 is deliberately a no-op, allowing
+                // the coordinator environment to observe/log the final worker state under Modelarium's synchronous
+                // visibility semantics.
+                .tickCount(2)
                 .threadCount(1)
                 .areThreadsSynced(true)
                 .agentGenerator(new AxelrodAgentGenerator(settings))
                 .environmentGenerator(new AxelrodEnvironmentGenerator(settings))
-                .scheduler(new AxelrodEventScheduler(
-                        settings.grid().width(),
-                        settings.grid().height(),
-                        settings.modelSettings().numOfEvents(),
-                        settings.modelSettings().eventsPerModelariumTick()
-                ))
-                .seed(settings.modelSettings().seed())
+                .scheduler(scheduler)
+                .seed(seed)
                 .build();
-
-        Model model = new Model(config);
-        model.run();
-
-        ReadOnlyResults results = model.getResults();
-        printSummary(results, settings);
-
-        Path outputPath = results.export("modelarium-examples/output/axelrod_cultural_dissemination");
-        System.out.println("Results exported to: " + outputPath.toAbsolutePath());
     }
 
-    private static void printSummary(
-            ReadOnlyResults results,
-            AxelrodCulturalDisseminationSettings settings
+    private static AxelrodReplicationRunResult extractRunResult(
+            int runNumber,
+            long seed,
+            AxelrodEventScheduler scheduler,
+            ReadOnlyResults results
     ) {
-        List<Integer> regionCounts = results.environment().attributeLogs(
+        int regionCount = last(results.environment().attributeLogs(
                 "cultural_metrics",
                 "cultural_region_count",
                 Integer.class
-        );
-        List<Integer> largestRegionSizes = results.environment().attributeLogs(
+        ));
+        int largestRegionSize = last(results.environment().attributeLogs(
                 "cultural_metrics",
                 "largest_cultural_region_size",
                 Integer.class
-        );
-        List<Integer> potentialPairs = results.environment().attributeLogs(
+        ));
+        int potentialPairs = last(results.environment().attributeLogs(
                 "cultural_metrics",
                 "potential_interaction_pair_count",
                 Integer.class
-        );
-        List<Double> meanSimilarities = results.environment().attributeLogs(
+        ));
+        double meanSimilarity = last(results.environment().attributeLogs(
                 "cultural_metrics",
                 "mean_neighbour_similarity",
                 Double.class
-        );
+        ));
 
-        if (regionCounts.isEmpty())
-            return;
-
-        int finalIndex = regionCounts.size() - 1;
-        int firstMeasuredStableEvent = firstMeasuredStableEvent(
+        return new AxelrodReplicationRunResult(
+                runNumber,
+                seed,
+                scheduler.stableStateReached(),
+                scheduler.eventsProcessed(),
+                scheduler.successfulInteractions(),
+                regionCount,
+                largestRegionSize,
                 potentialPairs,
-                settings.modelSettings().eventsPerModelariumTick()
+                meanSimilarity
         );
-
-        System.out.println("Axelrod cultural dissemination summary:");
-        System.out.printf(
-                "  Cultural regions: %d -> %d%n",
-                regionCounts.getFirst(),
-                regionCounts.get(finalIndex)
-        );
-        System.out.printf(
-                "  Largest cultural region: %d -> %d sites (of %d)%n",
-                largestRegionSizes.getFirst(),
-                largestRegionSizes.get(finalIndex),
-                settings.populationSize()
-        );
-        System.out.printf(
-                "  Mean neighbour similarity: %.3f -> %.3f%n",
-                meanSimilarities.getFirst(),
-                meanSimilarities.get(finalIndex)
-        );
-        System.out.printf(
-                "  Potentially interacting neighbour pairs: %d -> %d%n",
-                potentialPairs.getFirst(),
-                potentialPairs.get(finalIndex)
-        );
-
-        if (firstMeasuredStableEvent >= 0) {
-            System.out.printf(
-                    "  First measured stable state: by event %,d (metrics sampled every %,d events)%n",
-                    firstMeasuredStableEvent,
-                    settings.modelSettings().metricMeasurementIntervalEvents()
-            );
-        } else {
-            System.out.printf(
-                    "  Stable state not yet observed after %,d events%n",
-                    settings.modelSettings().numOfEvents()
-            );
-        }
     }
 
-    private static int firstMeasuredStableEvent(List<Integer> potentialPairs, int eventsPerModelariumTick) {
-        for (int tick = 0; tick < potentialPairs.size(); tick++) {
-            if (potentialPairs.get(tick) == 0)
-                return tick * eventsPerModelariumTick;
-        }
-        return -1;
+    private static <T> T last(List<T> values) {
+        if (values.isEmpty())
+            throw new IllegalStateException("Expected a logged Axelrod environment metric");
+        return values.getLast();
+    }
+
+    private static void printRunProgress(AxelrodReplicationRunResult run, int totalRuns) {
+        String stoppingDescription = run.stableStateReached() ? "stable" : "SAFETY LIMIT";
+        System.out.printf(
+                "  Run %3d/%d: regions=%d, events=%,d, interactions=%,d, %s%n",
+                run.runNumber(),
+                totalRuns,
+                run.finalCulturalRegionCount(),
+                run.eventsProcessed(),
+                run.successfulInteractions(),
+                stoppingDescription
+        );
+    }
+
+    private static void printExperimentSummary(AxelrodReplicationSummary summary) {
+        System.out.println("Axelrod replication summary:");
+        System.out.printf("  Runs reaching an absorbing state: %d/%d%n", summary.numOfStableRuns(), summary.numOfRuns());
+        System.out.printf("  Mean stable regions: %.3f%n", summary.meanStableRegionCount());
+        System.out.printf("  Median stable regions: %.3f%n", summary.medianStableRegionCount());
+        System.out.printf("  Stable-region sample SD: %.3f%n", summary.sampleStandardDeviationStableRegionCount());
+        System.out.printf(
+                "  Range of stable regions: %d to %d%n",
+                summary.minimumStableRegionCount(),
+                summary.maximumStableRegionCount()
+        );
+        System.out.printf(
+                "  One stable region: %d runs (%.1f%%; Axelrod: 14%% of 100 runs)%n",
+                summary.oneRegionRunCount(),
+                summary.oneRegionRunPercentage()
+        );
+        System.out.printf(
+                "  More than six stable regions: %d runs (%.1f%%; Axelrod: 10%% of 100 runs)%n",
+                summary.moreThanSixRegionRunCount(),
+                summary.moreThanSixRegionRunPercentage()
+        );
+        System.out.printf(
+                "  Axelrod's reported median for the same 100-run setup: 3; Modelarium: %.3f%n",
+                summary.medianStableRegionCount()
+        );
+        System.out.printf(
+                "  Secondary comparison: Axelrod Table 2 mean (10 runs) = 3.2; Modelarium mean = %.3f%n",
+                summary.meanStableRegionCount()
+        );
     }
 
     private static void validateSettings(AxelrodCulturalDisseminationSettings settings) {
@@ -155,28 +227,19 @@ public final class AxelrodCulturalDisseminationMain {
         if (settings.culture().traitsPerFeature() <= 1)
             throw new IllegalArgumentException("traitsPerFeature must be greater than 1");
 
-        if (settings.modelSettings().numOfEvents() <= 0)
-            throw new IllegalArgumentException("numOfEvents must be greater than 0");
+        if (settings.modelSettings().numOfReplications() <= 0)
+            throw new IllegalArgumentException("numOfReplications must be greater than 0");
 
-        if (settings.modelSettings().eventsPerModelariumTick() <= 0)
-            throw new IllegalArgumentException("eventsPerModelariumTick must be greater than 0");
+        if (settings.modelSettings().maxNumOfEventsPerRun() <= 0)
+            throw new IllegalArgumentException("maxNumOfEventsPerRun must be greater than 0");
 
-        if (settings.modelSettings().metricMeasurementIntervalEvents() <= 0)
-            throw new IllegalArgumentException("metricMeasurementIntervalEvents must be greater than 0");
+        if (settings.modelSettings().stabilityCheckIntervalEvents() <= 0)
+            throw new IllegalArgumentException("stabilityCheckIntervalEvents must be greater than 0");
 
-        if (settings.modelSettings().numOfEvents() % settings.modelSettings().eventsPerModelariumTick() != 0)
-            throw new IllegalArgumentException("numOfEvents must be divisible by eventsPerModelariumTick");
-
-        if (settings.modelSettings().metricMeasurementIntervalEvents()
-                % settings.modelSettings().eventsPerModelariumTick() != 0)
+        if (settings.modelSettings().stabilityCheckIntervalEvents()
+                > settings.modelSettings().maxNumOfEventsPerRun())
             throw new IllegalArgumentException(
-                    "metricMeasurementIntervalEvents must be divisible by eventsPerModelariumTick"
-            );
-
-        if (settings.modelSettings().numOfEvents()
-                % settings.modelSettings().metricMeasurementIntervalEvents() != 0)
-            throw new IllegalArgumentException(
-                    "numOfEvents must be divisible by metricMeasurementIntervalEvents so the final state is measured"
+                    "stabilityCheckIntervalEvents must not exceed maxNumOfEventsPerRun"
             );
     }
 }

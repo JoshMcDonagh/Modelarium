@@ -3,9 +3,11 @@ package dev.modelarium.examples.axelrod_cultural_dissemination.scheduler;
 import dev.modelarium.examples.axelrod_cultural_dissemination.entities.agents.attributes.culture.Culture;
 import dev.modelarium.examples.axelrod_cultural_dissemination.entities.agents.attributes.culture.CultureProperty;
 import dev.modelarium.examples.axelrod_cultural_dissemination.entities.agents.attributes.geography.GridPosition;
+import dev.modelarium.examples.axelrod_cultural_dissemination.spatial.AxelrodSpatialUtils;
 import modelarium.clock.ReadOnlyClock;
 import modelarium.entities.Agent;
 import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.agentsets.ReadOnlyAgentSet;
 import modelarium.entities.readonly.ReadOnlyEnvironment;
 import modelarium.scheduler.Scheduler;
 
@@ -14,29 +16,35 @@ import java.util.List;
 import java.util.random.RandomGenerator;
 
 /**
- * Executes Axelrod's asynchronous social-influence process in sequential event batches.
+ * Executes one complete Axelrod replication run as a sequential event process.
  *
- * <p>Every individual event selects exactly one active site and one of its cardinal neighbours. Events within a
- * Modelarium tick are deliberately processed sequentially against the mutable worker state, so a later event in the
- * same batch sees the cultural changes produced by earlier events. This retains Axelrod's event-at-a-time semantics
- * while avoiding a full Modelarium synchronisation barrier after every micro-event.
+ * <p>The original model is asynchronous: one randomly selected site and one neighbour are considered per event.
+ * Events are therefore executed one at a time against the same mutable worker state. Modelarium uses two ticks for
+ * each replication: the first performs Axelrod events until an absorbing state is detected (or the configured safety
+ * limit is reached), while the second is deliberately a no-op so that the environment can observe and log the final
+ * synchronised culture state.
  */
 public final class AxelrodEventScheduler implements Scheduler {
     private final int width;
     private final int height;
-    private final int numOfEvents;
-    private final int eventsPerModelariumTick;
+    private final int maxNumOfEvents;
+    private final int stabilityCheckIntervalEvents;
+
+    private boolean simulationExecuted = false;
+    private boolean stableStateReached = false;
+    private long eventsProcessed = 0;
+    private long successfulInteractions = 0;
 
     public AxelrodEventScheduler(
             int width,
             int height,
-            int numOfEvents,
-            int eventsPerModelariumTick
+            int maxNumOfEvents,
+            int stabilityCheckIntervalEvents
     ) {
         this.width = width;
         this.height = height;
-        this.numOfEvents = numOfEvents;
-        this.eventsPerModelariumTick = eventsPerModelariumTick;
+        this.maxNumOfEvents = maxNumOfEvents;
+        this.stabilityCheckIntervalEvents = stabilityCheckIntervalEvents;
     }
 
     @Override
@@ -47,22 +55,60 @@ public final class AxelrodEventScheduler implements Scheduler {
             AgentSet agentSet,
             RandomGenerator random
     ) {
-        long firstEventIndex = clock.currentTick() * (long) eventsPerModelariumTick;
-        if (firstEventIndex >= numOfEvents)
-            return; // Deliberate final no-op tick so the environment can observe the final worker state.
+        if (simulationExecuted)
+            return;
 
-        int eventsThisTick = (int) Math.min(
-                eventsPerModelariumTick,
-                numOfEvents - firstEventIndex
-        );
+        simulationExecuted = true;
+        ReadOnlyAgentSet readOnlyAgents = new ReadOnlyAgentSet(agentSet);
 
-        for (int event = 0; event < eventsThisTick; event++)
-            runEvent(agentSet, random);
+        // This is extraordinarily unlikely for Axelrod's standard initialisation, but it makes the stopping rule
+        // exact even for unusual parameterisations.
+        if (AxelrodSpatialUtils.potentialInteractionPairCount(readOnlyAgents, width, height) == 0) {
+            stableStateReached = true;
+            return;
+        }
+
+        while (eventsProcessed < maxNumOfEvents) {
+            int eventsInBatch = (int) Math.min(
+                    stabilityCheckIntervalEvents,
+                    maxNumOfEvents - eventsProcessed
+            );
+
+            for (int event = 0; event < eventsInBatch; event++) {
+                if (runEvent(agentSet, random))
+                    successfulInteractions++;
+            }
+
+            eventsProcessed += eventsInBatch;
+
+            // Once the active-pair count is zero the process is absorbing, so checking periodically cannot change
+            // the final cultural configuration; it only means the reported detection event is rounded up by at most
+            // stabilityCheckIntervalEvents - 1 attempted events.
+            if (AxelrodSpatialUtils.potentialInteractionPairCount(readOnlyAgents, width, height) == 0) {
+                stableStateReached = true;
+                return;
+            }
+        }
     }
 
-    private void runEvent(AgentSet agentSet, RandomGenerator random) {
+    /** Returns whether an absorbing cultural configuration was detected before the safety limit. */
+    public boolean stableStateReached() {
+        return stableStateReached;
+    }
+
+    /** Returns the number of attempted Axelrod activation events processed in this run. */
+    public long eventsProcessed() {
+        return eventsProcessed;
+    }
+
+    /** Returns the number of events that actually copied one cultural trait. */
+    public long successfulInteractions() {
+        return successfulInteractions;
+    }
+
+    private boolean runEvent(AgentSet agentSet, RandomGenerator random) {
         if (agentSet.isEmpty())
-            return;
+            return false;
 
         Agent activeSite = agentSet.get(random.nextInt(agentSet.size()));
         GridPosition activePosition = (GridPosition) activeSite
@@ -71,7 +117,7 @@ public final class AxelrodEventScheduler implements Scheduler {
 
         List<Agent> neighbours = neighbours(activePosition, agentSet);
         if (neighbours.isEmpty())
-            return;
+            return false;
 
         Agent neighbour = neighbours.get(random.nextInt(neighbours.size()));
 
@@ -86,14 +132,15 @@ public final class AxelrodEventScheduler implements Scheduler {
 
         // No common features means no interaction; identical cultures have nothing left to transmit.
         if (similarity <= 0.0 || similarity >= 1.0)
-            return;
+            return false;
 
         if (random.nextDouble() >= similarity)
-            return;
+            return false;
 
         List<Integer> differingFeatures = activeCulture.differingFeatures(neighbourCulture);
         int feature = differingFeatures.get(random.nextInt(differingFeatures.size()));
         activeCultureProperty.set(activeCulture.withTrait(feature, neighbourCulture.trait(feature)));
+        return true;
     }
 
     private List<Agent> neighbours(GridPosition position, AgentSet agentSet) {
