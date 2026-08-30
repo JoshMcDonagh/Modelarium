@@ -1,0 +1,12 @@
+{
+  "baseSeed": 1996,
+  "immediateGrowbackTicks": 250,
+  "selectionTicks": 500,
+  "carryingCapacityTicks": 500,
+  "carryingCapacityReplications": 10,
+  "wealthTicks": 1000,
+  "neighbourNetworkTicks": 500,
+  "waveTicks": 200,
+  "seasonalTicks": 300,
+  "pollutionTicks": 333
+}
