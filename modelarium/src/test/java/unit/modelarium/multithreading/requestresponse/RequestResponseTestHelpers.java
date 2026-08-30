@@ -1,6 +1,8 @@
 package unit.modelarium.multithreading.requestresponse;
 
 import modelarium.Config;
+import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.agentsets.ReadOnlyAgentSet;
 import modelarium.entities.generators.DefaultAgentGenerator;
 import modelarium.entities.Agent;
 import modelarium.entities.Environment;
@@ -46,5 +48,9 @@ class RequestResponseTestHelpers {
 
     static RequestResponseController requestResponseController() {
         return new RequestResponseController(syncedConfig(2, 5, 2));
+    }
+
+    static ReadOnlyAgentSet readOnlyAgentSet() {
+        return new ReadOnlyAgentSet(new AgentSet());
     }
 }

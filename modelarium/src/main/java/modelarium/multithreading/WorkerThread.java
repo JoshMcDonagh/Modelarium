@@ -190,30 +190,19 @@ public class WorkerThread implements Callable<Results> {
                         agentsInThread
                 );
 
-                // This barrier is only released after all worker updates have been processed and the environment has run.
-                requestResponseInterface
-                        .waitUntilAllWorkersUpdateCoordinator();
+                // This barrier is only released after all worker updates have been processed and the environment has
+                // run, after which point the FINAL global state for the completed tick is retrieved.
+                ReadOnlyAgentSet resolvedGlobalAgents = requestResponseInterface.waitUntilAllWorkersUpdateCoordinator();
 
                 // All tick-specific cached reads are now stale.
                 cache.clear();
 
-                // Retrieve the FINAL global state for the completed tick.
-                ReadOnlyAgentSet resolvedGlobalAgents =
-                        requestResponseInterface
-                                .getGlobalAgentSetFromCoordinator(
-                                        threadName
-                                );
-
                 // Propagate coordinator-side deaths back to the worker that actually owns each agent.
                 for (Agent localAgent : agentsInThread) {
                     if (
-                            resolvedGlobalAgents.doesAgentExist(
-                                    localAgent.name()
-                            )
-                                    && resolvedGlobalAgents
-                                    .get(localAgent.name())
-                                    .isDead()
-                                    && !localAgent.isDead()
+                            resolvedGlobalAgents.doesAgentExist(localAgent.name())
+                            && resolvedGlobalAgents.get(localAgent.name()).isDead()
+                            && !localAgent.isDead()
                     ) {
                         localAgent.kill();
                     }

@@ -227,11 +227,10 @@ public abstract class CoordinatorRequestHandler {
                 getEnvironment().context().getLocalAgentSet().update(getGlobalAgentSet(), true);
 
                 for (String worker : getWorkersWaiting())
-                    getResponseQueue(worker).put(new Response(getThreadName(), worker, ResponseType.ALL_WORKERS_UPDATE_COORDINATOR, null));
+                    getResponseQueue(worker).put(new Response(getThreadName(), worker, ResponseType.ALL_WORKERS_UPDATE_COORDINATOR, getGlobalAgentSet().getAsImmutable()));
 
                 setWorkersWaiting(new ArrayList<>());
             }
-
         }
     }
 

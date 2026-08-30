@@ -1,6 +1,7 @@
 package unit.modelarium.multithreading.requestresponse;
 
 import modelarium.Config;
+import modelarium.entities.agentsets.ReadOnlyAgentSet;
 import modelarium.entities.generators.DefaultAgentGenerator;
 import modelarium.entities.readonly.ReadOnlyAgent;
 import modelarium.entities.Agent;
@@ -56,19 +57,22 @@ public class RequestResponseInterfaceTest {
         Config config = config(true, Duration.ofSeconds(1));
         RequestResponseController controller = new RequestResponseController(config);
         RequestResponseInterface requestResponseInterface = controller.getInterface("worker");
+        ReadOnlyAgentSet expectedAgentSetPayload = RequestResponseTestHelpers.readOnlyAgentSet();
         controller.getResponseQueue("worker").put(new Response(
                 "coordinator",
                 "worker",
                 ResponseType.ALL_WORKERS_UPDATE_COORDINATOR,
-                null
+                expectedAgentSetPayload
         ));
 
-        requestResponseInterface.waitUntilAllWorkersUpdateCoordinator();
+        ReadOnlyAgentSet actualAgentSetPayLoad = requestResponseInterface.waitUntilAllWorkersUpdateCoordinator();
 
         assertEquals(
                 RequestType.ALL_WORKERS_UPDATE_COORDINATOR,
                 controller.getRequestQueue().take().getRequestType()
         );
+
+        assertSame(expectedAgentSetPayload, actualAgentSetPayLoad);
     }
 
     @Test

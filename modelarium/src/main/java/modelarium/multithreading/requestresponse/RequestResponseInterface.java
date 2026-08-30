@@ -124,12 +124,13 @@ public class RequestResponseInterface {
      *
      * @param requestType the type of the barrier request to send
      * @param responseType the type of the barrier response to wait for
+     * @return the payload of the matching response
      */
-    private void awaitBarrier(RequestType requestType, ResponseType responseType) throws InterruptedException {
+    private Object awaitBarrier(RequestType requestType, ResponseType responseType) throws InterruptedException {
         if (!areProcessesSynced)
-            return;
+            return null;
 
-        sendAndAwait(new Request(name, null, requestType, null), responseType);
+        return sendAndAwait(new Request(name, null, requestType, null), responseType);
     }
 
     /**
@@ -142,8 +143,8 @@ public class RequestResponseInterface {
     /**
      * Waits until all workers have updated the coordinator with their agent data.
      */
-    public void waitUntilAllWorkersUpdateCoordinator() throws InterruptedException {
-        awaitBarrier(RequestType.ALL_WORKERS_UPDATE_COORDINATOR, ResponseType.ALL_WORKERS_UPDATE_COORDINATOR);
+    public ReadOnlyAgentSet waitUntilAllWorkersUpdateCoordinator() throws InterruptedException {
+        return (ReadOnlyAgentSet) awaitBarrier(RequestType.ALL_WORKERS_UPDATE_COORDINATOR, ResponseType.ALL_WORKERS_UPDATE_COORDINATOR);
     }
 
     /**
