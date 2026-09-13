@@ -72,6 +72,25 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
     }
 
     /**
+     * Creates a mutable list containing a deep clone of each supplied value.
+     *
+     * <p>Values are cloned individually rather than cloning the list itself. Callers may supply lists backed by
+     * strongly encapsulated JDK implementation classes, such as the list returned by {@link Arrays#asList(Object[])},
+     * which reflective cloning libraries cannot safely access on Java 21.
+     *
+     * @param values the values to clone
+     * @return a mutable list containing the cloned values
+     */
+    private static List<Object> deepCloneValues(List<Object> values) {
+        List<Object> clonedValues = new ArrayList<>(values.size());
+
+        for (Object value : values)
+            clonedValues.add(Cloners.standard().deepClone(value));
+
+        return clonedValues;
+    }
+
+    /**
      * Creates a path for the database's backing file inside the system's temporary directory.
      *
      * @return a new database file path
@@ -208,8 +227,11 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
             attributeClassesMap.put(attributeName, inferred);
         }
 
-        replaceSeries(ATTRIBUTES_TABLE_NAME, attributeName,
-                attributeValues == null ? Collections.emptyList() : Cloners.standard().deepClone(attributeValues));
+        replaceSeries(
+                ATTRIBUTES_TABLE_NAME,
+                attributeName,
+                attributeValues == null ? Collections.emptyList() : deepCloneValues(attributeValues)
+        );
     }
 
     // === Column Retrieval ===
@@ -416,9 +438,10 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
                         String value = rs.getString("value_json");
-                        if (value != null) {
+                        if (value == null)
+                            results.add(null);
+                        else
                             results.add(type != null ? deserialiseValue(value, type) : value);
-                        }
                     }
                 }
             } catch (SQLException e) {

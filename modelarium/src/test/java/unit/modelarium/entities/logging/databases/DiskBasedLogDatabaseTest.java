@@ -1,10 +1,12 @@
 package unit.modelarium.entities.logging.databases;
 
 import modelarium.entities.logging.databases.DiskBasedAttributeSetLogDatabase;
+import modelarium.entities.logging.databases.MemoryBasedAttributeSetLogDatabase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -75,6 +77,52 @@ public class DiskBasedLogDatabaseTest {
     }
 
     @Test
+    public void testAddAttributeValue_NullValueIsPreserved() {
+        database.addAttributeValue("x", null);
+
+        List<Object> values = database.getAttributeColumnAsList("x");
+
+        assertEquals(1, values.size());
+        assertNull(values.get(0));
+    }
+
+    @Test
+    public void testAddAttributeValue_LeadingNullIsPreserved() {
+        database.addAttributeValue("x", null);
+        database.addAttributeValue("x", 10);
+        database.addAttributeValue("x", 20);
+
+        assertEquals(Arrays.asList(null, 10, 20), database.getAttributeColumnAsList("x"));
+    }
+
+    @Test
+    public void testAddAttributeValue_MiddleNullIsPreserved() {
+        database.addAttributeValue("x", 10);
+        database.addAttributeValue("x", null);
+        database.addAttributeValue("x", 20);
+
+        assertEquals(Arrays.asList(10, null, 20), database.getAttributeColumnAsList("x"));
+    }
+
+    @Test
+    public void testAddAttributeValue_TrailingNullIsPreserved() {
+        database.addAttributeValue("x", 10);
+        database.addAttributeValue("x", 20);
+        database.addAttributeValue("x", null);
+
+        assertEquals(Arrays.asList(10, 20, null), database.getAttributeColumnAsList("x"));
+    }
+
+    @Test
+    public void testAddAttributeValue_AllNullValuesArePreserved() {
+        database.addAttributeValue("x", null);
+        database.addAttributeValue("x", null);
+        database.addAttributeValue("x", null);
+
+        assertEquals(Arrays.asList(null, null, null), database.getAttributeColumnAsList("x"));
+    }
+
+    @Test
     public void testSetAttributeColumn() {
         database.addAttributeValue("y", 1);
         database.addAttributeValue("y", 2);
@@ -96,6 +144,31 @@ public class DiskBasedLogDatabaseTest {
         List<Object> values = database.getAttributeColumnAsList("z");
 
         assertEquals(0, values.size());
+    }
+
+    @Test
+    public void testSetAttributeColumn_NullEntriesArePreserved() {
+        List<Object> replacement = Arrays.asList(null, 100, null, 200, null);
+
+        database.setAttributeColumn("z", replacement);
+
+        assertEquals(replacement, database.getAttributeColumnAsList("z"));
+    }
+
+    @Test
+    public void testNullSeriesMatchesMemoryBasedDatabase() {
+        MemoryBasedAttributeSetLogDatabase memoryDatabase = new MemoryBasedAttributeSetLogDatabase();
+        List<Object> expected = Arrays.asList(null, 10, null, 20, null);
+
+        for (Object value : expected) {
+            database.addAttributeValue("x", value);
+            memoryDatabase.addAttributeValue("x", value);
+        }
+
+        assertEquals(
+                memoryDatabase.getAttributeColumnAsList("x"),
+                database.getAttributeColumnAsList("x")
+        );
     }
 
     @Test
