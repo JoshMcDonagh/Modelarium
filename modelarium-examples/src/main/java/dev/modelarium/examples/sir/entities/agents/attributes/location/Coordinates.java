@@ -32,9 +32,11 @@ public class Coordinates {
         return y;
     }
 
-    void moveRandomlyBy(RandomGenerator random, int maxDistance, int maxX, int maxY) {
+    void moveRandomlyBy(RandomGenerator random, int maxDistance, int width, int height) {
         if (maxDistance < 1)
             throw new IllegalArgumentException("maxDistance must be >= 1");
+        if (width < 1 || height < 1)
+            throw new IllegalArgumentException("width and height must be >= 1");
 
         int dx;
         int dy;
@@ -44,7 +46,7 @@ public class Coordinates {
             dy = random.nextInt(-maxDistance, maxDistance + 1);
         } while (dx == 0 && dy == 0);
 
-        x = Math.max(0, Math.min(x + dx, maxX));
-        y = Math.max(0, Math.min(y + dy, maxY));
+        x = Math.max(0, Math.min(x + dx, width - 1));
+        y = Math.max(0, Math.min(y + dy, height - 1));
     }
 }

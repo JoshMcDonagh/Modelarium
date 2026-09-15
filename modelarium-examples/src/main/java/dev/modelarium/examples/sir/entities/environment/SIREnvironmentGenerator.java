@@ -1,7 +1,6 @@
 package dev.modelarium.examples.sir.entities.environment;
 
 import dev.modelarium.examples.sir.config.SIRSettings;
-import dev.modelarium.examples.sir.config.SettingsLoader;
 import dev.modelarium.examples.sir.entities.environment.attributes.geography.HeightProperty;
 import dev.modelarium.examples.sir.entities.environment.attributes.geography.WidthProperty;
 import dev.modelarium.examples.sir.entities.environment.attributes.prevalence.InfectedPercentageProperty;
@@ -15,13 +14,14 @@ import modelarium.entities.Environment;
 import modelarium.entities.generators.EnvironmentGenerator;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.random.RandomGenerator;
 
 public class SIREnvironmentGenerator extends EnvironmentGenerator {
     private final SIRSettings sirSettings;
 
-    public SIREnvironmentGenerator() {
-        sirSettings = SettingsLoader.loadSIRConfig("dev/modelarium/examples/sir/sir-config.json");
+    public SIREnvironmentGenerator(SIRSettings sirSettings) {
+        this.sirSettings = Objects.requireNonNull(sirSettings, "sirSettings must be set");
     }
 
     @Override

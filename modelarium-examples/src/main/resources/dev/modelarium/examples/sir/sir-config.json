@@ -2,7 +2,7 @@
   "modelSettings": {
     "numOfCores": 16,
     "numOfTicks": 800,
-    "numOfWarmUpTicks": 0
+    "seed": 1976
   },
 
   "initialStates": {

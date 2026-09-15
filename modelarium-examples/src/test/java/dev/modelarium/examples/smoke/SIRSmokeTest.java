@@ -14,6 +14,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,18 +31,10 @@ class SIRSmokeTest {
         assertNotNull(settings);
         assertTrue(settings.initialStates().S() + settings.initialStates().I() + settings.initialStates().R() > 0);
 
-        int populationSize = 12;
-        int ticks = 3;
-        Config config = Config.builder()
-                .populationSize(populationSize)
-                .tickCount(ticks)
-                .threadCount(1)
-                .areThreadsSynced(true)
-                .agentGenerator(new SIRAgentGenerator())
-                .environmentGenerator(new SIREnvironmentGenerator())
-                .scheduler(new RandomOrderScheduler())
-                .seed(1976L)
-                .build();
+        SIRSettings testSettings = settingsWith(10, 1, 1, 3, settings.modelSettings().seed());
+        int populationSize = testSettings.populationSize();
+        int ticks = testSettings.modelSettings().numOfTicks();
+        Config config = configFor(testSettings);
 
         Model model = new Model(config);
         assertDoesNotThrow(model::run);
@@ -65,17 +58,18 @@ class SIRSmokeTest {
     @Test
     @Timeout(20)
     void sameGeneratorCanBeReusedForConsecutiveRuns() {
-        int populationSize = 12;
-        SIRAgentGenerator generator = new SIRAgentGenerator();
+        SIRSettings settings = settingsWith(10, 1, 1, 1, 1976L);
+        int populationSize = settings.populationSize();
+        SIRAgentGenerator generator = new SIRAgentGenerator(settings);
         Config config = Config.builder()
                 .populationSize(populationSize)
-                .tickCount(1)
-                .threadCount(1)
+                .tickCount(settings.modelSettings().numOfTicks())
+                .threadCount(settings.modelSettings().numOfCores())
                 .areThreadsSynced(true)
                 .agentGenerator(generator)
-                .environmentGenerator(new SIREnvironmentGenerator())
+                .environmentGenerator(new SIREnvironmentGenerator(settings))
                 .scheduler(new RandomOrderScheduler())
-                .seed(1976L)
+                .seed(settings.modelSettings().seed())
                 .build();
         Model model = new Model(config);
 
@@ -85,5 +79,62 @@ class SIRSmokeTest {
         ReadOnlyResults secondRunResults = model.getResults();
         assertEquals(populationSize, secondRunResults.agents().agentLogCount());
         assertEquals(1, secondRunResults.agents().attributeLogs("agent_0", "sir", "sir_state").size());
+    }
+
+    @Test
+    @Timeout(20)
+    void sameSeedProducesSameResults() {
+        SIRSettings settings = settingsWith(10, 1, 1, 4, 1976L);
+        Model firstModel = new Model(configFor(settings));
+        Model secondModel = new Model(configFor(settings));
+
+        firstModel.run();
+        secondModel.run();
+
+        ReadOnlyResults first = firstModel.getResults();
+        ReadOnlyResults second = secondModel.getResults();
+        for (int i = 0; i < settings.populationSize(); i++) {
+            String agentName = "agent_" + i;
+            List<String> firstLocations = first.agents()
+                    .attributeLogs(agentName, "location", "location")
+                    .stream()
+                    .map(Object::toString)
+                    .toList();
+            List<String> secondLocations = second.agents()
+                    .attributeLogs(agentName, "location", "location")
+                    .stream()
+                    .map(Object::toString)
+                    .toList();
+
+            assertEquals(firstLocations, secondLocations);
+            assertEquals(
+                    first.agents().attributeLogs(agentName, "sir", "sir_state"),
+                    second.agents().attributeLogs(agentName, "sir", "sir_state")
+            );
+        }
+        assertEquals(first.environment().environmentLogs(), second.environment().environmentLogs());
+    }
+
+    private static Config configFor(SIRSettings settings) {
+        return Config.builder()
+                .populationSize(settings.populationSize())
+                .tickCount(settings.modelSettings().numOfTicks())
+                .threadCount(settings.modelSettings().numOfCores())
+                .areThreadsSynced(true)
+                .agentGenerator(new SIRAgentGenerator(settings))
+                .environmentGenerator(new SIREnvironmentGenerator(settings))
+                .scheduler(new RandomOrderScheduler())
+                .seed(settings.modelSettings().seed())
+                .build();
+    }
+
+    private static SIRSettings settingsWith(int susceptible, int infectious, int recovered, int ticks, long seed) {
+        return new SIRSettings(
+                new SIRSettings.SIRModelSettings(1, ticks, seed),
+                new SIRSettings.InitialStates(susceptible, infectious, recovered),
+                new SIRSettings.Environment(new SIRSettings.Environment.Area(20, 20)),
+                new SIRSettings.Movement(0.5, 2.0),
+                new SIRSettings.Disease(0.5, 0.02)
+        );
     }
 }

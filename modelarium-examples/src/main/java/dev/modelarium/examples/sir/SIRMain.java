@@ -14,15 +14,14 @@ public class SIRMain {
 
         Config config = Config
                 .builder()
-                .populationSize(sirSettings.initialStates().S()
-                        + sirSettings.initialStates().I()
-                        + sirSettings.initialStates().R())
+                .populationSize(sirSettings.populationSize())
                 .tickCount(sirSettings.modelSettings().numOfTicks())
                 .threadCount(sirSettings.modelSettings().numOfCores())
                 .areThreadsSynced(true)
-                .agentGenerator(new SIRAgentGenerator())
-                .environmentGenerator(new SIREnvironmentGenerator())
+                .agentGenerator(new SIRAgentGenerator(sirSettings))
+                .environmentGenerator(new SIREnvironmentGenerator(sirSettings))
                 .scheduler(new RandomOrderScheduler())
+                .seed(sirSettings.modelSettings().seed())
                 .build();
 
         Model model = new Model(config);

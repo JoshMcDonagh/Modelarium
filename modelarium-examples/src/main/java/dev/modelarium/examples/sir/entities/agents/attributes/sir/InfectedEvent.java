@@ -1,7 +1,6 @@
 package dev.modelarium.examples.sir.entities.agents.attributes.sir;
 
 import dev.modelarium.examples.sir.config.SIRSettings;
-import dev.modelarium.examples.sir.config.SettingsLoader;
 import dev.modelarium.examples.sir.entities.agents.attributes.location.Coordinates;
 import modelarium.entities.readonly.ReadOnlyAgent;
 import modelarium.entities.agentsets.ReadOnlyAgentSet;
@@ -29,9 +28,8 @@ public class InfectedEvent extends AgentEvent {
     private final double infectionProbabilityPerContact;
     private final double contactDistance;
 
-    public InfectedEvent() {
+    public InfectedEvent(SIRSettings sirSettings) {
         super("infected", false, AttributeAccessLevel.PRIVATE);
-        SIRSettings sirSettings = SettingsLoader.loadSIRConfig("dev/modelarium/examples/sir/sir-config.json");
         infectionProbabilityPerContact = sirSettings.disease().infectionProbabilityPerContact();
         contactDistance = sirSettings.movement().contactDistance();
     }

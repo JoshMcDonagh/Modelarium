@@ -1,6 +1,6 @@
 package dev.modelarium.examples.sir.entities.agents.attributes.location;
 
-import dev.modelarium.examples.sir.config.SettingsLoader;
+import dev.modelarium.examples.sir.config.SIRSettings;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.sets.readonly.ReadOnlyEnvironmentAttributeSet;
@@ -13,12 +13,9 @@ public class LocationProperty extends AgentProperty<Coordinates> {
 
     private Coordinates coordinates;
 
-    public LocationProperty() {
+    public LocationProperty(SIRSettings sirSettings) {
         super("location", true, AttributeAccessLevel.PUBLIC, Coordinates.class);
-        movementProbabilityPerTick = SettingsLoader
-                .loadSIRConfig("dev/modelarium/examples/sir/sir-config.json")
-                .movement()
-                .probabilityPerTick();
+        movementProbabilityPerTick = sirSettings.movement().probabilityPerTick();
     }
 
     @Override

@@ -1,7 +1,6 @@
 package dev.modelarium.examples.sir.entities.agents;
 
 import dev.modelarium.examples.sir.config.SIRSettings;
-import dev.modelarium.examples.sir.config.SettingsLoader;
 import dev.modelarium.examples.sir.entities.agents.attributes.location.Coordinates;
 import dev.modelarium.examples.sir.entities.agents.attributes.location.LocationProperty;
 import dev.modelarium.examples.sir.entities.agents.attributes.sir.InfectedEvent;
@@ -15,6 +14,7 @@ import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.sets.AgentAttributeSet;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.random.RandomGenerator;
 
 public class SIRAgentGenerator extends DefaultAgentGenerator {
@@ -22,15 +22,15 @@ public class SIRAgentGenerator extends DefaultAgentGenerator {
 
     private final SIRSettings sirSettings;
 
-    public SIRAgentGenerator() {
-        sirSettings = SettingsLoader.loadSIRConfig("dev/modelarium/examples/sir/sir-config.json");
+    public SIRAgentGenerator(SIRSettings sirSettings) {
+        this.sirSettings = Objects.requireNonNull(sirSettings, "sirSettings must be set");
     }
 
     @Override
     protected Agent generateAgent(Config config, RandomGenerator random) {
         ArrayList<AgentAttributeSet> agentAttributeSets = new ArrayList<>();
 
-        LocationProperty locationProperty = new LocationProperty();
+        LocationProperty locationProperty = new LocationProperty(sirSettings);
         ArrayList<Attribute> agentLocationAttributes = new ArrayList<>();
         agentLocationAttributes.add(locationProperty);
         int x = random.nextInt(0, sirSettings.environment().area().width());
@@ -41,8 +41,8 @@ public class SIRAgentGenerator extends DefaultAgentGenerator {
         SIRStateProperty sirStateProperty = new SIRStateProperty();
         ArrayList<Attribute> agentSIRAttributes = new ArrayList<>();
         agentSIRAttributes.add(sirStateProperty);
-        agentSIRAttributes.add(new RecoveredEvent());
-        agentSIRAttributes.add(new InfectedEvent());
+        agentSIRAttributes.add(new RecoveredEvent(sirSettings));
+        agentSIRAttributes.add(new InfectedEvent(sirSettings));
         if (agentCount < sirSettings.initialStates().S())
             sirStateProperty.set(SIRState.SUSCEPTIBLE);
         else if (agentCount < sirSettings.initialStates().I() + sirSettings.initialStates().S())
