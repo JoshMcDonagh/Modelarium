@@ -61,4 +61,29 @@ class SIRSmokeTest {
         assertTrue(Files.isDirectory(exportPath));
         assertTrue(Files.isRegularFile(exportPath.resolve("config.json")));
     }
+
+    @Test
+    @Timeout(20)
+    void sameGeneratorCanBeReusedForConsecutiveRuns() {
+        int populationSize = 12;
+        SIRAgentGenerator generator = new SIRAgentGenerator();
+        Config config = Config.builder()
+                .populationSize(populationSize)
+                .tickCount(1)
+                .threadCount(1)
+                .areThreadsSynced(true)
+                .agentGenerator(generator)
+                .environmentGenerator(new SIREnvironmentGenerator())
+                .scheduler(new RandomOrderScheduler())
+                .seed(1976L)
+                .build();
+        Model model = new Model(config);
+
+        model.run();
+        model.run();
+
+        ReadOnlyResults secondRunResults = model.getResults();
+        assertEquals(populationSize, secondRunResults.agents().agentLogCount());
+        assertEquals(1, secondRunResults.agents().attributeLogs("agent_0", "sir", "sir_state").size());
+    }
 }

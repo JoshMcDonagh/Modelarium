@@ -50,9 +50,13 @@ public class Model {
      * @return a list of {@link AgentSet} objects, one per core
      */
     private List<AgentSet> generateAgentsForEachThreadAsList(RandomGenerator randomGenerator) {
-        List<AgentSet> agentsForEachCore = config.agentGenerator().generateAgentsForEachThread(config, randomGenerator);
-
-        config.agentGenerator().internalReset();
+        List<AgentSet> agentsForEachCore;
+        try {
+            agentsForEachCore = config.agentGenerator().generateAgentsForEachThread(config, randomGenerator);
+        } finally {
+            // A stateful generator must also be reusable when generation fails part-way through.
+            config.agentGenerator().internalReset();
+        }
 
         for (AgentSet agentSet : agentsForEachCore)
             agentSet.setLogDatabaseFactory(config.runLogDatabaseFactory());
