@@ -1,5 +1,8 @@
 package unit.modelarium.results;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import modelarium.Config;
 import modelarium.entities.Agent;
 import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
@@ -25,18 +28,24 @@ public class ResultsExportTest {
     Path tempDir;
 
     @Test
-    public void testExport_CreatesConfigJsonFile() {
+    public void testExport_CreatesConfigJsonFileWithExpectedValues() throws IOException {
         Agent agent = agentWithLoggedProperty("Agent_0", "stats", "score");
         record(agent, "stats", "score", 1.0);
         Environment environment = environmentWithLoggedProperty("environment", "state", "tick");
         record(environment, "state", "tick", 1);
         Results results = mutableResults(agentResults(agent), environmentResults(environment));
 
-        results.setConfig(config());
+        Config config = config();
+        results.setConfig(config);
 
         Path exported = results.export(tempDir);
 
         assertTrue(Files.isRegularFile(exported.resolve("config.json")));
+
+        JsonNode exportedConfig = new ObjectMapper().readTree(exported.resolve("config.json").toFile());
+        assertEquals(config.populationSize(), exportedConfig.get("population_size").asInt());
+        assertEquals(config.tickCount(), exportedConfig.get("tick_count").asInt());
+        assertEquals(config.seed(), exportedConfig.get("seed").asLong());
     }
 
     @Test
