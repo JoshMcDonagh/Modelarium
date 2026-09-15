@@ -48,6 +48,7 @@
         <mockito.bom.version>5.21.0</mockito.bom.version>
 
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
+        <maven.jar.plugin.version>3.4.2</maven.jar.plugin.version>
         <maven.surefire.plugin.version>3.1.2</maven.surefire.plugin.version>
         <maven.enforcer.plugin.version>3.5.0</maven.enforcer.plugin.version>
         <maven.javadoc.plugin.version>3.11.2</maven.javadoc.plugin.version>
@@ -150,6 +151,19 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven.jar.plugin.version}</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>modelarium</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.plugin.version}</version>
 
@@ -158,15 +172,6 @@
                         @{argLine}
                         -Xshare:off
                         -javaagent:"${settings.localRepository}/org/mockito/mockito-core/${mockito.bom.version}/mockito-core-${mockito.bom.version}.jar"
-                        --add-opens=modelarium/integration.unsyncedModel=cloning
-                        --add-opens=modelarium/integration.multiCoreEquivalence=cloning
-                        --add-opens=modelarium/integration.syncedModel=cloning
-                        --add-opens=modelarium/integration.agentInteraction=cloning
-                        --add-opens=modelarium/integration.agentEnvironmentInteraction=cloning
-                        --add-opens=modelarium/integration.eventsAndRoutines=cloning
-                        --add-opens=modelarium/integration.diskResults=cloning
-                        --add-opens=modelarium/integration.determinism=cloning
-                        --add-opens=modelarium/integration.workerFailure=cloning
                     </argLine>
                 </configuration>
             </plugin>
@@ -181,15 +186,6 @@
                         @{argLine}
                         -Xshare:off
                         -javaagent:"${settings.localRepository}/org/mockito/mockito-core/${mockito.bom.version}/mockito-core-${mockito.bom.version}.jar"
-                        --add-opens=modelarium/integration.unsyncedModel=cloning
-                        --add-opens=modelarium/integration.multiCoreEquivalence=cloning
-                        --add-opens=modelarium/integration.syncedModel=cloning
-                        --add-opens=modelarium/integration.agentInteraction=cloning
-                        --add-opens=modelarium/integration.agentEnvironmentInteraction=cloning
-                        --add-opens=modelarium/integration.eventsAndRoutines=cloning
-                        --add-opens=modelarium/integration.diskResults=cloning
-                        --add-opens=modelarium/integration.determinism=cloning
-                        --add-opens=modelarium/integration.workerFailure=cloning
                     </argLine>
                 </configuration>
             </plugin>

@@ -16,8 +16,9 @@ API (Javadoc): https://joshmcdonagh.github.io/Modelarium/
 </dependency>
 ```
 
-Modelarium is a named Java module (`modelarium`), so JPMS consumers can declare `requires modelarium;`. It works
-equally well on the classpath.
+Modelarium's JAR declares the stable automatic module name `modelarium` for module-path compatibility. It does not
+currently include an explicit module descriptor. Classpath use remains the plug-and-play option; applications that
+use explicit modules may need to open packages containing model objects to Modelarium's reflective cloning dependency.
 
 ## Core concepts
 

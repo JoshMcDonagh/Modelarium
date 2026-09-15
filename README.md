@@ -16,7 +16,7 @@ supports high-performance simulation with optional cross-thread coordination.
 - Pluggable schedulers (in-order, random order, or custom)
 - Configurable results recording to memory or SQLite
 - Seeded, reproducible randomness threaded through the whole model
-- Java 21, with full Java Platform Module System support
+- Java 21, with a stable automatic module name for module-path compatibility
 
 ## Repository structure
 
