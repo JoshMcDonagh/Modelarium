@@ -33,13 +33,12 @@ public class TickSnapshotIntegrationTest {
 
     private static AgentGenerator fixedAgents(List<Agent> agents) {
         return new AgentGenerator() {
-            @Override
             public AgentSet generateAgents(Config config, RandomGenerator random) {
                 return new AgentSet(agents);
             }
 
             @Override
-            public List<AgentSet> getAgentsForEachCore(Config config, RandomGenerator random) {
+            public List<AgentSet> generateAgentsForEachThread(Config config, RandomGenerator random) {
                 List<AgentSet> result = new ArrayList<>();
                 for (int i = 0; i < config.threadCount(); i++)
                     result.add(new AgentSet());

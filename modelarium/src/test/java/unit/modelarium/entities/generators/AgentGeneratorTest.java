@@ -24,11 +24,11 @@ public class AgentGeneratorTest {
     }
 
     @Test
-    public void testGetAgentsForEachCore_EvenDistribution() {
+    public void testGenerateAgentsForEachThread_EvenDistribution() {
         Config config = syncedConfig(9, 5, 3);
         DefaultAgentGenerator generator = agentGenerator();
 
-        List<AgentSet> agentSetsForEachCore = generator.getAgentsForEachCore(config, new SplittableRandom());
+        List<AgentSet> agentSetsForEachCore = generator.generateAgentsForEachThread(config, new SplittableRandom());
 
         assertEquals(3, agentSetsForEachCore.size());
         assertEquals(3, agentSetsForEachCore.get(0).size());
@@ -37,11 +37,11 @@ public class AgentGeneratorTest {
     }
 
     @Test
-    public void testGetAgentsForEachCore_UnevenDistribution() {
+    public void testGenerateAgentsForEachThread_UnevenDistribution() {
         Config config = syncedConfig(10, 5, 3);
         DefaultAgentGenerator generator = agentGenerator();
 
-        List<AgentSet> agentSetsForEachCore = generator.getAgentsForEachCore(config, new SplittableRandom());
+        List<AgentSet> agentSetsForEachCore = generator.generateAgentsForEachThread(config, new SplittableRandom());
 
         int totalAgentCount = agentSetsForEachCore.stream().mapToInt(AgentSet::size).sum();
 
@@ -49,11 +49,11 @@ public class AgentGeneratorTest {
     }
 
     @Test
-    public void testGetAgentsForEachCore_SingleCore() {
+    public void testGenerateAgentsForEachCore_SingleThread() {
         Config config = syncedConfig(5, 5, 1);
         DefaultAgentGenerator generator = agentGenerator();
 
-        List<AgentSet> agentSetsForEachCore = generator.getAgentsForEachCore(config, new SplittableRandom());
+        List<AgentSet> agentSetsForEachCore = generator.generateAgentsForEachThread(config, new SplittableRandom());
 
         assertEquals(1, agentSetsForEachCore.size());
         assertEquals(5, agentSetsForEachCore.get(0).size());

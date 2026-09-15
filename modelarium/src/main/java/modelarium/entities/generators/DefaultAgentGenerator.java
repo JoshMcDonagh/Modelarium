@@ -14,13 +14,13 @@ import java.util.random.RandomGenerator;
  * <p>This class provides methods to:
  * <ul>
  *     <li>Generate a full set of agents based on model settings</li>
- *     <li>Distribute agents evenly across multiple processing cores</li>
+ *     <li>Distribute agents evenly across multiple processing threads</li>
  * </ul>
  *
  * <p>Concrete subclasses must implement the {@link #generateAgent(Config, RandomGenerator)} method,
  * which defines how individual agents are constructed.
  */
-public abstract class DefaultAgentGenerator implements AgentGenerator {
+public abstract class DefaultAgentGenerator extends AgentGenerator {
 
     /**
      * Generates a complete {@link AgentSet} based on the number of agents specified in the model settings.
@@ -29,7 +29,6 @@ public abstract class DefaultAgentGenerator implements AgentGenerator {
      * @param random the random generator the agent generator can use for constructing agents
      * @return an {@link AgentSet} containing all generated agents
      */
-    @Override
     public AgentSet generateAgents(Config config, RandomGenerator random) {
         AgentSet agents = new AgentSet();
         int numOfAgents = config.populationSize();
@@ -41,41 +40,41 @@ public abstract class DefaultAgentGenerator implements AgentGenerator {
     }
 
     /**
-     * Distributes agents across processing cores in a round-robin fashion.
+     * Distributes agents across processing threads in a round-robin fashion.
      * This ensures an even workload split for multithreaded simulations.
      *
-     * @param config the simulation settings containing agent and core counts
+     * @param config the simulation settings containing agent and thread counts
      * @param random the random generator the agent generator can use for constructing agents
-     * @return a list of {@link AgentSet} objects, one per core
+     * @return a list of {@link AgentSet} objects, one per thread
      */
-    public List<AgentSet> getAgentsForEachCore(Config config, RandomGenerator random) {
+    public List<AgentSet> generateAgentsForEachThread(Config config, RandomGenerator random) {
         AgentSet agents = generateAgents(config, random);
-        int numOfCores = config.threadCount();
+        int numOfThreads = config.threadCount();
 
-        // If no cores are defined, return an empty list
-        if (numOfCores < 1)
+        // If no threads are defined, return an empty list
+        if (numOfThreads < 1)
             return new ArrayList<>();
 
-        // If only one core is used, assign all agents to it
-        if (numOfCores == 1) {
-            List<AgentSet> singleCoreList = new ArrayList<>();
-            singleCoreList.add(agents);
-            return singleCoreList;
+        // If only one thread is used, assign all agents to it
+        if (numOfThreads == 1) {
+            List<AgentSet> singleThreadList = new ArrayList<>();
+            singleThreadList.add(agents);
+            return singleThreadList;
         }
 
-        // Prepare empty agent sets for each core
-        List<AgentSet> agentsForEachCore = new ArrayList<>();
-        for (int i = 0; i < numOfCores; i++)
-            agentsForEachCore.add(new AgentSet());
+        // Prepare empty agent sets for each thread
+        List<AgentSet> agentsForEachThread = new ArrayList<>();
+        for (int i = 0; i < numOfThreads; i++)
+            agentsForEachThread.add(new AgentSet());
 
-        // Distribute agents evenly across cores (round-robin)
-        int core = 0;
+        // Distribute agents evenly across threads (round-robin)
+        int thread = 0;
         for (Agent agent : agents) {
-            agentsForEachCore.get(core).add(agent);
-            core = (core + 1) % numOfCores;
+            agentsForEachThread.get(thread).add(agent);
+            thread = (thread + 1) % numOfThreads;
         }
 
-        return agentsForEachCore;
+        return agentsForEachThread;
     }
 
     /**

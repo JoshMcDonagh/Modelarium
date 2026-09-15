@@ -18,10 +18,7 @@ import java.util.ArrayList;
 import java.util.random.RandomGenerator;
 
 public class SIRAgentGenerator extends DefaultAgentGenerator {
-    private static int agentCount = 0;
-    private static int susceptibleAgentCount = 0;
-    private static int infectiousAgentCount = 0;
-    private static int recoveredAgentCount = 0;
+    private int agentCount = 0;
 
     private final SIRSettings sirSettings;
 
@@ -46,22 +43,26 @@ public class SIRAgentGenerator extends DefaultAgentGenerator {
         agentSIRAttributes.add(sirStateProperty);
         agentSIRAttributes.add(new RecoveredEvent());
         agentSIRAttributes.add(new InfectedEvent());
-        if (susceptibleAgentCount < sirSettings.initialStates().S()) {
+        if (agentCount < sirSettings.initialStates().S())
             sirStateProperty.set(SIRState.SUSCEPTIBLE);
-            susceptibleAgentCount++;
-        } else if (infectiousAgentCount < sirSettings.initialStates().I()) {
+        else if (agentCount < sirSettings.initialStates().I() + sirSettings.initialStates().S())
             sirStateProperty.set(SIRState.INFECTIOUS);
-            infectiousAgentCount++;
-        } else if (recoveredAgentCount < sirSettings.initialStates().R()) {
+        else if (agentCount < sirSettings.initialStates().I() + sirSettings.initialStates().S()
+                + sirSettings.initialStates().R())
             sirStateProperty.set(SIRState.RECOVERED);
-            recoveredAgentCount++;
-        } else {
-            throw new IllegalStateException("Agent cannot be generated - all initial SIR states have already been assigned.");
-        }
+        else
+            throw new IllegalStateException("Agent cannot be generated - all initial SIR states have already been " +
+                    "assigned.");
+
         agentAttributeSets.add(new AgentAttributeSet("sir", agentSIRAttributes));
 
         Agent newAgent = new Agent("agent_" + agentCount, agentAttributeSets);
         agentCount++;
         return newAgent;
+    }
+
+    @Override
+    protected void reset() {
+        agentCount = 0;
     }
 }

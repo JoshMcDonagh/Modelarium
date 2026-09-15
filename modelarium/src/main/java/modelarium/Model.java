@@ -49,8 +49,10 @@ public class Model {
      *
      * @return a list of {@link AgentSet} objects, one per core
      */
-    private List<AgentSet> generateAgentsForEachCoreAsList(RandomGenerator randomGenerator) {
-        List<AgentSet> agentsForEachCore = config.agentGenerator().getAgentsForEachCore(config, randomGenerator);
+    private List<AgentSet> generateAgentsForEachThreadAsList(RandomGenerator randomGenerator) {
+        List<AgentSet> agentsForEachCore = config.agentGenerator().generateAgentsForEachThread(config, randomGenerator);
+
+        config.agentGenerator().internalReset();
 
         for (AgentSet agentSet : agentsForEachCore)
             agentSet.setLogDatabaseFactory(config.runLogDatabaseFactory());
@@ -267,7 +269,7 @@ public class Model {
         results = new Results();
 
         // Generate entities
-        List<AgentSet> agentsForEachCore = generateAgentsForEachCoreAsList(randomGenerator);
+        List<AgentSet> agentsForEachCore = generateAgentsForEachThreadAsList(randomGenerator);
         Environment environment = generateEnvironment(randomGenerator);
 
         AgentSet globalAgentSet = null;

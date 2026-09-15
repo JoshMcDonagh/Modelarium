@@ -2,6 +2,7 @@ package modelarium.entities.generators;
 
 import modelarium.Config;
 import modelarium.entities.Environment;
+import modelarium.internal.Internal;
 
 import java.util.random.RandomGenerator;
 
@@ -23,4 +24,19 @@ public abstract class EnvironmentGenerator {
      * @return a new {@link Environment} instance
      */
     public abstract Environment generateEnvironment(Config config, RandomGenerator random);
+
+    /**
+     * Internal method for resetting the state of the generator.
+     */
+    @Internal
+    public void internalReset() {
+        reset();
+    }
+
+    /**
+     * Resets the state of the generator.
+     */
+    protected void reset() {
+        // No-op by default
+    }
 }

@@ -7,7 +7,7 @@ import java.util.function.BiFunction;
 import java.util.random.RandomGenerator;
 
 /**
- * Class for generating agents by delegating creation logic to a user-defined function.
+ * Class for generating agents (via a default generator) by delegating creation logic to a user-defined function.
  *
  * <p>This implementation of {@link DefaultAgentGenerator} is intended for flexibility and cross-language use
  * (e.g. from Python).
