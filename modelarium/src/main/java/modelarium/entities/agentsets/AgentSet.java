@@ -49,9 +49,9 @@ public final class AgentSet implements Iterable<Agent> {
      * @param databaseFactory the factory the agents' attribute sets will use to create their log databases
      */
     @Internal
-    public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory databaseFactory) {
+    public void internalSetLogDatabaseFactory(AttributeSetLogDatabaseFactory databaseFactory) {
         for (Agent agent : agentList)
-            agent.setLogDatabaseFactory(databaseFactory);
+            agent.internalSetLogDatabaseFactory(databaseFactory);
     }
 
     /**

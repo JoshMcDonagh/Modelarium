@@ -57,7 +57,7 @@ public final class EnvironmentSimulationContext extends SimulationContext implem
      * @return the environment's local agent set
      */
     @Internal
-    public AgentSet getLocalAgentSet() {
+    public AgentSet internalGetLocalAgentSet() {
         return localAgentSet();
     }
 
@@ -110,7 +110,7 @@ public final class EnvironmentSimulationContext extends SimulationContext implem
      */
     @Override
     public int getCurrentPopulationSize() {
-        return getLocalAgentSet().size();
+        return internalGetLocalAgentSet().size();
     }
 
     /**

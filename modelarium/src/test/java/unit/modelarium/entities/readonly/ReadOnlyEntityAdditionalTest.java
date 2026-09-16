@@ -64,7 +64,7 @@ public class ReadOnlyEntityAdditionalTest {
         TestAgentProperty property = new TestAgentProperty("value");
         AgentAttributeSet set = new AgentAttributeSet("state", List.<Attribute>of(property));
         Agent agent = new Agent("A", List.of(set));
-        agent.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+        agent.internalSetLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         set.getLog().record("value", 4);
 
         assertEquals("A", agent.getAsImmutable().getLog().getEntityName());
@@ -110,7 +110,7 @@ public class ReadOnlyEntityAdditionalTest {
                 List.<Attribute>of(property)
         );
         Environment environment = new Environment("world", List.of(set));
-        environment.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+        environment.internalSetLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         set.getLog().record("temperature", 18);
 
         assertEquals("world", environment.getAsImmutable().getLog().getEntityName());

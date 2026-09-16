@@ -282,12 +282,12 @@ public class AgentSetTest {
     }
 
     @Test
-    public void testSetLogDatabaseFactory_PropagatesToAgents() {
+    public void testInternalSetLogDatabaseFactory_PropagatesToAgents() {
         AgentSet agentSet = new AgentSet(List.of(
                 new Agent("A", List.of(singlePropertyAgentSet("A", "food", "hunger")))
         ));
 
-        agentSet.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+        agentSet.internalSetLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
 
         assertNotNull(agentSet.get("A").getAttributeSet("food").getLog());
     }

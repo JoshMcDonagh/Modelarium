@@ -101,7 +101,7 @@ public class WorkerThread implements Callable<Results> {
             localEnvironment = Cloners.standard().deepClone(environment);
 
         for (Agent agent : agentsInThread) {
-            agent.createContext(
+            agent.internalCreateContext(
                     visibleAgents,
                     config,
                     cache,
@@ -132,10 +132,10 @@ public class WorkerThread implements Callable<Results> {
             List<String> agentsToKill = new ArrayList<>();
 
             for (Agent agent : agentsInThread) {
-                agentsToAdd.add(agent.getAddedAgents());
-                agentsToKill.addAll(agent.getKilledAgentNames());
+                agentsToAdd.add(agent.internalGetAddedAgents());
+                agentsToKill.addAll(agent.internalGetKilledAgentNames());
 
-                agent.clearPendingAgentChanges();
+                agent.internalClearPendingAgentChanges();
             }
 
             // Apply additions to the actual worker state.
@@ -145,7 +145,7 @@ public class WorkerThread implements Callable<Results> {
             for (Agent addedAgent : agentsToAdd) {
                 Agent installedAgent = agentsInThread.get(addedAgent.name());
 
-                installedAgent.createContext(
+                installedAgent.internalCreateContext(
                         visibleAgents,
                         config,
                         cache,
@@ -211,7 +211,7 @@ public class WorkerThread implements Callable<Results> {
                 // This global set is already the state that should be visible during the NEXT tick, so seed the cache with it.
                 cache.addGlobalAgentSet(resolvedGlobalAgents);
             } else {
-                clock.triggerTick();
+                clock.internalTriggerTick();
 
                 // Previous-tick cached reads are no longer valid.
                 cache.clear();

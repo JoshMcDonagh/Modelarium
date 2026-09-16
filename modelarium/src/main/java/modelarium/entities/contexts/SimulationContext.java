@@ -143,7 +143,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * @param attributeSet the attribute set now being run
      */
     @Internal
-    public void setCurrentAttributeSet(AttributeSet<?,?> attributeSet) {
+    public void internalSetCurrentAttributeSet(AttributeSet<?,?> attributeSet) {
         this.attributeSet = attributeSet;
     }
 
@@ -153,7 +153,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * @param attribute the attribute now being run
      */
     @Internal
-    public void setCurrentAttribute(AttributeBase<?> attribute) {
+    public void internalSetCurrentAttribute(AttributeBase<?> attribute) {
         this.attribute = attribute;
     }
 
@@ -505,17 +505,17 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     }
 
     @Internal
-    public AgentSet getAddedAgents() {
+    public AgentSet internalGetAddedAgents() {
         return addedAgents;
     }
 
     @Internal
-    public List<String> getKilledAgentNames() {
+    public List<String> internalGetKilledAgentNames() {
         return killedAgentNames;
     }
 
     @Internal
-    public void clearPendingAgentChanges() {
+    public void internalClearPendingAgentChanges() {
         addedAgents.clear();
         killedAgentNames.clear();
     }

@@ -59,7 +59,7 @@ public final class Clock {
      * Triggers the passing of another tick if the model is running.
      */
     @Internal
-    public void triggerTick() {
+    public void internalTriggerTick() {
         tick.updateAndGet(current -> current >= totalTickCount ? current : current + 1);
     }
 }

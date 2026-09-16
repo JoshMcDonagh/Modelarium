@@ -121,7 +121,7 @@ public class AgentTest {
     public void testRun_RecordsLoggedValues() {
         AgentAttributeSet attributeSet = singlePropertyAgentSet("agent", "food", "hunger");
         Agent agent = new Agent("agent", List.of(attributeSet));
-        agent.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+        agent.internalSetLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         createContextFor(agent);
 
         agent.run();
@@ -160,7 +160,7 @@ public class AgentTest {
         AgentCounterProperty property = new AgentCounterProperty("counter");
         AgentAttributeSet attributeSet = agentAttributeSet("A", "state", property);
         Agent agent = new Agent("A", List.of(attributeSet));
-        agent.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+        agent.internalSetLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         createContextFor(agent);
 
         agent.run();
@@ -194,7 +194,7 @@ public class AgentTest {
                 List.<Attribute>of(routine)
         );
         Agent agent = new Agent("A", List.of(attributeSet));
-        agent.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+        agent.internalSetLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         createContextFor(agent);
 
         agent.run();

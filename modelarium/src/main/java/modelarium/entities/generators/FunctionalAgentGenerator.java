@@ -57,7 +57,7 @@ public class FunctionalAgentGenerator extends AgentGenerator {
      * Resets the state of the generator.
      */
     @Override
-    public void reset() {
+    protected void reset() {
         if (resetFunction == null)
             return;
         resetFunction.run();

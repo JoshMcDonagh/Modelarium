@@ -13,17 +13,30 @@ import java.util.random.RandomGenerator;
  * Python), or when modular configuration is required without subclassing.
  */
 public class FunctionalEnvironmentGenerator extends EnvironmentGenerator {
-
-    /** The function used to generate the environment */
     private final BiFunction<Config, RandomGenerator, Environment> generatorFunction;
+    private final Runnable resetFunction;
 
     /**
      * Constructs a new functional generator.
      *
      * @param generatorFunction the function used to generate the environment
+     * @param resetFunction the function used to reset the state of the generator the environment is generated
+     */
+    public FunctionalEnvironmentGenerator(
+            BiFunction<Config, RandomGenerator, Environment> generatorFunction,
+            Runnable resetFunction
+    ) {
+        this.generatorFunction = generatorFunction;
+        this.resetFunction = resetFunction;
+    }
+
+    /**
+     * Constructs a new functional generator and uses the default reset logic.
+     *
+     * @param generatorFunction the function used to generate the environment
      */
     public FunctionalEnvironmentGenerator(BiFunction<Config, RandomGenerator, Environment> generatorFunction) {
-        this.generatorFunction = generatorFunction;
+        this(generatorFunction, null);
     }
 
     /**
@@ -36,5 +49,15 @@ public class FunctionalEnvironmentGenerator extends EnvironmentGenerator {
     @Override
     public Environment generateEnvironment(Config config, RandomGenerator random) {
         return generatorFunction.apply(config, random);
+    }
+
+    /**
+     * Resets the state of the generator.
+     */
+    @Override
+    protected void reset() {
+        if (resetFunction == null)
+            return;
+        resetFunction.run();
     }
 }

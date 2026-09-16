@@ -57,7 +57,7 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
         for (int i = 0; i < this.attributeSetList.size(); i++) {
             AS attributeSet = this.attributeSetList.get(i);
             this.attributeSetIndexMap.put(attributeSet.name(), i);
-            attributeSet.setOwnerName(name);
+            attributeSet.internalSetOwnerName(name);
         }
     }
 
@@ -67,9 +67,9 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
      * @param databaseFactory the factory the attribute sets will use to create their log databases
      */
     @Internal
-    public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory databaseFactory) {
+    public void internalSetLogDatabaseFactory(AttributeSetLogDatabaseFactory databaseFactory) {
         for (AS attributeSet : attributeSetList)
-            attributeSet.setLogDatabaseFactory(databaseFactory);
+            attributeSet.internalSetLogDatabaseFactory(databaseFactory);
     }
 
     /**
@@ -109,7 +109,7 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
      * @param randomGenerator the random generator the context will provide access to
      */
     @Internal
-    public void createContext(
+    public void internalCreateContext(
             AgentSet agentSet,
             Config config,
             ContextCache contextCache,
@@ -121,7 +121,7 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
         if (context != null)
             throw new IllegalStateException("Context already created");
 
-        setLogDatabaseFactory(config.runLogDatabaseFactory());
+        internalSetLogDatabaseFactory(config.runLogDatabaseFactory());
 
         context = makeContextInstance(
                 agentSet,
@@ -134,17 +134,17 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
         );
 
         for (AS attributeSet : attributeSetList)
-            attributeSet.setContext(context);
+            attributeSet.internalSetContext(context);
     }
 
     @Internal
-    public AgentSet getAddedAgents() {
-        return context.getAddedAgents();
+    public AgentSet internalGetAddedAgents() {
+        return context.internalGetAddedAgents();
     }
 
     @Internal
-    public List<String> getKilledAgentNames() {
-        return context.getKilledAgentNames();
+    public List<String> internalGetKilledAgentNames() {
+        return context.internalGetKilledAgentNames();
     }
 
     /**
@@ -233,7 +233,7 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
     public abstract ReadOnlyEntity<SC,C,AS,ASL> getAsImmutable();
 
     @Internal
-    public void clearPendingAgentChanges() {
-        context.clearPendingAgentChanges();
+    public void internalClearPendingAgentChanges() {
+        context.internalClearPendingAgentChanges();
     }
 }

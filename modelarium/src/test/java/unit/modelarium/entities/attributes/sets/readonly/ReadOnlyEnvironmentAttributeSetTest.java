@@ -136,7 +136,7 @@ public class ReadOnlyEnvironmentAttributeSetTest {
                 "testAttributeSetName",
                 new ArrayList<>()
         );
-        attributeSet.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+        attributeSet.internalSetLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
 
         ReadOnlyEnvironmentAttributeSet immutableAttributeSet = new ReadOnlyEnvironmentAttributeSet(attributeSet);
 

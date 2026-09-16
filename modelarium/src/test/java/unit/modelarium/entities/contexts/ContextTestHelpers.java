@@ -347,7 +347,7 @@ class ContextTestHelpers {
                 new SplittableRandom()
         );
 
-        context.setCurrentAttributeSet(attributeSet);
+        context.internalSetCurrentAttributeSet(attributeSet);
 
         return context;
     }
@@ -368,7 +368,7 @@ class ContextTestHelpers {
                 new SplittableRandom()
         );
 
-        context.setCurrentAttribute(attribute);
+        context.internalSetCurrentAttribute(attribute);
 
         return context;
     }

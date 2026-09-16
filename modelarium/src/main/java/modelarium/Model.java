@@ -59,7 +59,7 @@ public class Model {
         }
 
         for (AgentSet agentSet : agentsForEachCore)
-            agentSet.setLogDatabaseFactory(config.runLogDatabaseFactory());
+            agentSet.internalSetLogDatabaseFactory(config.runLogDatabaseFactory());
 
         return agentsForEachCore;
     }
@@ -70,8 +70,15 @@ public class Model {
      * @return a new {@link Environment} instance
      */
     private Environment generateEnvironment(RandomGenerator randomGenerator) {
-        Environment environment = config.environmentGenerator().generateEnvironment(config, randomGenerator);
-        environment.setLogDatabaseFactory(config.runLogDatabaseFactory());
+        Environment environment;
+        try {
+            environment = config.environmentGenerator()
+                    .generateEnvironment(config, randomGenerator);
+        } finally {
+            config.environmentGenerator().internalReset();
+        }
+
+        environment.internalSetLogDatabaseFactory(config.runLogDatabaseFactory());
         return environment;
     }
 
@@ -127,7 +134,7 @@ public class Model {
             visibleAgents =
                     Cloners.standard().deepClone(initialAgentState);
 
-        environment.createContext(
+        environment.internalCreateContext(
                 visibleAgents,
                 config,
                 new ContextCache(),

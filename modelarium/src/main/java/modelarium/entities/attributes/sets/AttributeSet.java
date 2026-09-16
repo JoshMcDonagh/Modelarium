@@ -84,7 +84,7 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
     }
 
     @Internal
-    public void setOwnerName(String ownerName) {
+    public void internalSetOwnerName(String ownerName) {
         if (ownerName == null)
             return;
         this.ownerName = ownerName;
@@ -97,7 +97,7 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
      * @param database the factory the set will use to create its log database
      */
     @Internal
-    public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory database) {
+    public void internalSetLogDatabaseFactory(AttributeSetLogDatabaseFactory database) {
         if (log != null)
             return;
 
@@ -129,12 +129,12 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
      * @param context the context to provide the set and its attributes with
      */
     @Internal
-    public void setContext(SC context) {
+    public void internalSetContext(SC context) {
         if (this.context != null)
             return;
 
         for (AttributeBase<SC> attribute : attributeList)
-            attribute.setContext(context);
+            attribute.internalSetContext(context);
 
         this.context = context;
     }
@@ -308,9 +308,9 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
      * routines are simply run.
      */
     public void run() {
-        context.setCurrentAttributeSet(this);
+        context.internalSetCurrentAttributeSet(this);
         for (AttributeBase<SC> attribute : attributeList) {
-            context.setCurrentAttribute(attribute);
+            context.internalSetCurrentAttribute(attribute);
             Object valueToLog = null;
 
             if (attribute instanceof Event<SC> event) {

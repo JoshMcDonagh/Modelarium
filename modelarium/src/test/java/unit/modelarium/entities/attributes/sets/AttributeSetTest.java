@@ -162,8 +162,8 @@ public class AttributeSetTest {
 
         AgentAttributeSet attributeSet = agentAttributeSetFromAttributes(
                 "TestOwner", "testAttributeSetName", property, unloggedProperty, triggeredEvent, routine);
-        attributeSet.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
-        attributeSet.setContext(agentSimulationContext(attributeSet));
+        attributeSet.internalSetLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+        attributeSet.internalSetContext(agentSimulationContext(attributeSet));
 
         attributeSet.run();
 
@@ -180,8 +180,8 @@ public class AttributeSetTest {
 
         AgentAttributeSet attributeSet = agentAttributeSetFromAttributes(
                 "TestOwner", "testAttributeSetName", property, unloggedProperty);
-        attributeSet.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
-        attributeSet.setContext(agentSimulationContext(attributeSet));
+        attributeSet.internalSetLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+        attributeSet.internalSetContext(agentSimulationContext(attributeSet));
 
         attributeSet.run();
 
@@ -195,8 +195,8 @@ public class AttributeSetTest {
 
         AgentAttributeSet attributeSet = agentAttributeSetFromAttributes(
                 "TestOwner", "testAttributeSetName", untriggeredEvent);
-        attributeSet.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
-        attributeSet.setContext(agentSimulationContext(attributeSet));
+        attributeSet.internalSetLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+        attributeSet.internalSetContext(agentSimulationContext(attributeSet));
 
         attributeSet.run();
 
@@ -205,27 +205,27 @@ public class AttributeSetTest {
     }
 
     @Test
-    public void testSetContext_SecondCallIgnored() {
+    public void testInternalSetContext_SecondCallIgnored() {
         AgentCounterProperty property = new AgentCounterProperty("Property_0");
 
         AgentAttributeSet attributeSet = agentAttributeSetFromAttributes(
                 "TestOwner", "testAttributeSetName", property);
-        attributeSet.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
-        attributeSet.setContext(agentSimulationContext(attributeSet));
+        attributeSet.internalSetLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+        attributeSet.internalSetContext(agentSimulationContext(attributeSet));
 
-        assertDoesNotThrow(() -> attributeSet.setContext(agentSimulationContext(attributeSet)));
+        assertDoesNotThrow(() -> attributeSet.internalSetContext(agentSimulationContext(attributeSet)));
         assertDoesNotThrow(attributeSet::run);
     }
 
     @Test
-    public void testSetLogDatabaseFactory_SecondCallIgnored() {
+    public void testInternalSetLogDatabaseFactory_SecondCallIgnored() {
         AgentAttributeSet attributeSet = singlePropertyAgentSet(
                 "TestOwner", "testAttributeSetName", "Property_0");
 
-        attributeSet.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+        attributeSet.internalSetLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         AttributeSetLog<?> firstLog = attributeSet.getLog();
 
-        attributeSet.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+        attributeSet.internalSetLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
 
         assertSame(firstLog, attributeSet.getLog());
     }
