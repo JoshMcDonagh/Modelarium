@@ -65,6 +65,26 @@ public record Config(
         long seed
 ) {
     /**
+     * Validates the invariants shared by direct construction and {@link ConfigBuilder} construction.
+     */
+    public Config {
+        Objects.requireNonNull(threadTimeout, "threadTimeout must be set");
+        Objects.requireNonNull(agentGenerator, "agentGenerator must be set");
+        Objects.requireNonNull(environmentGenerator, "environmentGenerator must be set");
+        Objects.requireNonNull(scheduler, "scheduler must be set");
+        Objects.requireNonNull(runLogDatabaseFactory, "runLogDatabaseFactory must be set");
+
+        if (populationSize <= 0)
+            throw new IllegalArgumentException("populationSize must be greater than 0");
+        if (tickCount <= 0)
+            throw new IllegalArgumentException("tickCount must be greater than 0");
+        if (threadCount <= 0)
+            throw new IllegalArgumentException("threadCount must be greater than 0");
+        if (threadTimeout.isZero() || threadTimeout.isNegative())
+            throw new IllegalArgumentException("threadTimeout must be greater than 0");
+    }
+
+    /**
      * Creates a new instance of {@link ConfigBuilder} that can assist in the construction of a {@link Config} record.
      *
      * @return a new {@link ConfigBuilder} instance
@@ -222,18 +242,6 @@ public record Config(
          * @return a new {@link Config} instance
          */
         public Config build() {
-            Objects.requireNonNull(agentGenerator, "agentGenerator must be set");
-            Objects.requireNonNull(environmentGenerator, "environmentGenerator must be set");
-
-            if (populationSize <= 0)
-                throw new IllegalArgumentException("populationSize must be greater than 0");
-
-            if (tickCount <= 0)
-                throw new IllegalArgumentException("tickCount must be greater than 0");
-
-            if (threadCount <= 0)
-                throw new IllegalArgumentException("threadCount must be greater than 0");
-
             return new Config(
                     populationSize,
                     tickCount,
