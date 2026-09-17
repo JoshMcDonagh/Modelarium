@@ -95,6 +95,72 @@ public class CoordinatorRequestHandlerTest {
     }
 
     @Test
+    public void testUpdateCoordinatorAgents_NonAgentSetPayload_IllegalArgumentException() {
+        Fixture fixture = fixture(2);
+        CoordinatorRequestHandler.UpdateCoordinatorAgents handler =
+                new CoordinatorRequestHandler.UpdateCoordinatorAgents(
+                        "coordinator", fixture.config, fixture.controller, fixture.agents, fixture.environment, fixture.clock
+                );
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> handler.handleRequest(new Request(
+                        "worker",
+                        null,
+                        RequestType.UPDATE_COORDINATOR_AGENTS,
+                        "not an agent set"
+                ))
+        );
+
+        assertTrue(exception.getMessage().contains(String.class.getName()));
+    }
+
+    @Test
+    public void testUpdateCoordinatorAgents_NullPayload_IllegalArgumentException() {
+        Fixture fixture = fixture(2);
+        CoordinatorRequestHandler.UpdateCoordinatorAgents handler =
+                new CoordinatorRequestHandler.UpdateCoordinatorAgents(
+                        "coordinator", fixture.config, fixture.controller, fixture.agents, fixture.environment, fixture.clock
+                );
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> handler.handleRequest(new Request(
+                        "worker",
+                        null,
+                        RequestType.UPDATE_COORDINATOR_AGENTS,
+                        null
+                ))
+        );
+
+        assertTrue(exception.getMessage().contains("got: null"));
+    }
+
+    @Test
+    public void testCurrentPopulationSizeAccess_ReturnsGlobalPopulationSize() throws InterruptedException {
+        Fixture fixture = fixture(new AgentSet(List.of(
+                new Agent("first", List.of()),
+                new Agent("second", List.of()),
+                new Agent("third", List.of())
+        )), 2);
+        CoordinatorRequestHandler.CurrentPopulationSizeFromCoordinatorAccess handler =
+                new CoordinatorRequestHandler.CurrentPopulationSizeFromCoordinatorAccess(
+                        "coordinator", fixture.config, fixture.controller, fixture.agents, fixture.environment, fixture.clock
+                );
+
+        handler.handleRequest(new Request(
+                "worker",
+                null,
+                RequestType.CURRENT_POPULATION_SIZE_ACCESS,
+                null
+        ));
+
+        Response response = fixture.controller.getResponseQueue("worker").take();
+        assertEquals(ResponseType.CURRENT_POPULATION_SIZE_ACCESS, response.getResponseType());
+        assertEquals(3, response.getPayload());
+    }
+
+    @Test
     public void testAgentAccess_ReturnsRequestedReadOnlyAgent() throws InterruptedException {
         Agent target = new Agent("target", List.of());
         Fixture fixture = fixture(new AgentSet(List.of(target)), 2);

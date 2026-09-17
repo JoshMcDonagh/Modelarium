@@ -11,6 +11,7 @@ import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.readonly.ReadOnlyAgent;
+import modelarium.exceptions.AgentNotFoundException;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -22,6 +23,18 @@ import static org.junit.jupiter.api.Assertions.*;
 import static unit.modelarium.entities.contexts.ContextTestHelpers.*;
 
 public class EnvironmentSimulationContextTest {
+    @Test
+    public void testInternalGetLocalAgentSet_ReturnsLocalAgentSet() throws Exception {
+        AgentSet agentSet = agentSetOfSize(3);
+        EnvironmentSimulationContext context = simulationContextWithAgentSet(
+                EnvironmentSimulationContext.class,
+                syncedConfig(3, 10, 1),
+                agentSet
+        );
+
+        assertSame(agentSet, context.internalGetLocalAgentSet());
+    }
+
     @Test
     public void testGetThisEntity() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Environment environment = emptyEnvironment();
@@ -155,6 +168,34 @@ public class EnvironmentSimulationContextTest {
     }
 
     @Test
+    public void testGetCurrentPopulationSize_ReturnsLocalAgentSetSize() throws Exception {
+        AgentSet agentSet = agentSetOfSize(4);
+        EnvironmentSimulationContext context = simulationContextWithAgentSet(
+                EnvironmentSimulationContext.class,
+                syncedConfig(4, 10, 1),
+                agentSet
+        );
+
+        assertEquals(4, context.getCurrentPopulationSize());
+    }
+
+    @Test
+    public void testGetAgent_MissingAgent_ThrowsAgentNotFoundException() throws Exception {
+        EnvironmentSimulationContext context = simulationContextWithAgentSet(
+                EnvironmentSimulationContext.class,
+                syncedConfig(1, 10, 1),
+                agentSet(emptyAgent("present"))
+        );
+
+        AgentNotFoundException exception = assertThrows(
+                AgentNotFoundException.class,
+                () -> context.getAgent("missing")
+        );
+
+        assertTrue(exception.getMessage().contains("missing"));
+    }
+
+    @Test
     public void testGetFilteredAgents() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         int populationSize = 20;
         Config config = unsyncedConfig(populationSize, 10, 1);
@@ -188,5 +229,104 @@ public class EnvironmentSimulationContextTest {
         assertEquals(2, result.size());
         assertFalse(result.get("alive").isDead());
         assertTrue(result.get("dead").isDead());
+    }
+
+    @Test
+    public void testKillAgent_ByName_KillsLocalAgent() throws Exception {
+        Agent target = emptyAgent("target");
+        EnvironmentSimulationContext context = simulationContextWithAgentSet(
+                EnvironmentSimulationContext.class,
+                syncedConfig(1, 10, 1),
+                agentSet(target)
+        );
+
+        context.killAgent("target");
+
+        assertTrue(target.isDead());
+    }
+
+    @Test
+    public void testKillAgent_ByReadOnlyAgent_KillsLocalAgent() throws Exception {
+        Agent target = emptyAgent("target");
+        EnvironmentSimulationContext context = simulationContextWithAgentSet(
+                EnvironmentSimulationContext.class,
+                syncedConfig(1, 10, 1),
+                agentSet(target)
+        );
+
+        context.killAgent(target.getAsImmutable());
+
+        assertTrue(target.isDead());
+    }
+
+    @Test
+    public void testKillAgent_MissingAgent_ThrowsWithoutKillingExistingAgent() throws Exception {
+        Agent existing = emptyAgent("existing");
+        EnvironmentSimulationContext context = simulationContextWithAgentSet(
+                EnvironmentSimulationContext.class,
+                syncedConfig(1, 10, 1),
+                agentSet(existing)
+        );
+
+        assertThrows(AgentNotFoundException.class, () -> context.killAgent("missing"));
+
+        assertFalse(existing.isDead());
+    }
+
+    @Test
+    public void testKillAgents_ByNames_KillsEveryNamedAgent() throws Exception {
+        Agent first = emptyAgent("first");
+        Agent second = emptyAgent("second");
+        Agent untouched = emptyAgent("untouched");
+        EnvironmentSimulationContext context = simulationContextWithAgentSet(
+                EnvironmentSimulationContext.class,
+                syncedConfig(3, 10, 1),
+                agentSet(first, second, untouched)
+        );
+
+        context.killAgents(List.of("first", "second"));
+
+        assertTrue(first.isDead());
+        assertTrue(second.isDead());
+        assertFalse(untouched.isDead());
+    }
+
+    @Test
+    public void testKillAgents_MissingAgent_IsAtomic() throws Exception {
+        Agent first = emptyAgent("first");
+        Agent second = emptyAgent("second");
+        EnvironmentSimulationContext context = simulationContextWithAgentSet(
+                EnvironmentSimulationContext.class,
+                syncedConfig(2, 10, 1),
+                agentSet(first, second)
+        );
+
+        assertThrows(
+                AgentNotFoundException.class,
+                () -> context.killAgents(List.of("first", "missing", "second"))
+        );
+
+        assertFalse(first.isDead(), "No agent should be killed when validation of the complete request fails.");
+        assertFalse(second.isDead(), "No agent should be killed when validation of the complete request fails.");
+    }
+
+    @Test
+    public void testKillAgents_ByReadOnlySet_KillsEveryAgentInSet() throws Exception {
+        Agent first = emptyAgent("first");
+        Agent second = emptyAgent("second");
+        Agent untouched = emptyAgent("untouched");
+        AgentSet localAgents = agentSet(first, second, untouched);
+        EnvironmentSimulationContext context = simulationContextWithAgentSet(
+                EnvironmentSimulationContext.class,
+                syncedConfig(3, 10, 1),
+                localAgents
+        );
+        ReadOnlyAgentSet agentsToKill = agentSet(first, second).getAsImmutable();
+
+        context.killAgents(agentsToKill);
+
+        assertTrue(first.isDead());
+        assertTrue(second.isDead());
+        assertFalse(untouched.isDead());
     }
 }

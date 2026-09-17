@@ -156,6 +156,16 @@ public class DiskBasedLogDatabaseTest {
     }
 
     @Test
+    public void testSetAttributeColumn_NullListClearsExistingSeries() {
+        database.addAttributeValue("z", 1);
+        database.addAttributeValue("z", 2);
+
+        database.setAttributeColumn("z", null);
+
+        assertEquals(List.of(), database.getAttributeColumnAsList("z"));
+    }
+
+    @Test
     public void testNullSeriesMatchesMemoryBasedDatabase() {
         MemoryBasedAttributeSetLogDatabase memoryDatabase = new MemoryBasedAttributeSetLogDatabase();
         List<Object> expected = Arrays.asList(null, 10, null, 20, null);
@@ -184,5 +194,39 @@ public class DiskBasedLogDatabaseTest {
         database.disconnect();
 
         assertDoesNotThrow(() -> database.disconnect());
+    }
+
+    @Test
+    public void testConnect_WhenAlreadyConnected_PreservesStoredValues() {
+        database.addAttributeValue("x", 10);
+
+        database.connect();
+
+        assertEquals(List.of(10), database.getAttributeColumnAsList("x"));
+    }
+
+    @Test
+    public void testOperationsBeforeConnect_FailFastWithHelpfulMessage() {
+        DiskBasedAttributeSetLogDatabase disconnectedDatabase = new DiskBasedAttributeSetLogDatabase();
+
+        IllegalStateException exception = assertThrows(
+                IllegalStateException.class,
+                () -> disconnectedDatabase.addAttributeValue("x", 1)
+        );
+
+        assertEquals(
+                "Database connection has not been established. Call connect() first.",
+                exception.getMessage()
+        );
+        disconnectedDatabase.disconnect();
+    }
+
+    @Test
+    public void testAttributeNameMustNotBeNull() {
+        assertAll(
+                () -> assertThrows(NullPointerException.class, () -> database.addAttributeValue(null, 1)),
+                () -> assertThrows(NullPointerException.class, () -> database.setAttributeColumn(null, List.of(1))),
+                () -> assertThrows(NullPointerException.class, () -> database.getAttributeColumnAsList(null))
+        );
     }
 }

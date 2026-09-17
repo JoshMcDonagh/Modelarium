@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static unit.modelarium.results.ResultsTestHelpers.*;
 
@@ -129,5 +130,33 @@ public class ResultsExportTest {
 
         assertEquals(tempDir.toAbsolutePath(), exported.getParent());
         assertTrue(exported.getFileName().toString().startsWith("modelarium_results_export_-_"));
+    }
+
+    @Test
+    public void testExport_StringPathOverloadUsesRequestedDirectory() {
+        Agent agent = agentWithLoggedProperty("Agent_0", "stats", "score");
+        record(agent, "stats", "score", 1.0);
+        Environment environment = environmentWithLoggedProperty("environment", "state", "tick");
+        record(environment, "state", "tick", 1);
+        Results results = mutableResults(agentResults(agent), environmentResults(environment));
+        results.setConfig(config());
+
+        Path exported = results.export(tempDir.toString());
+
+        assertEquals(tempDir.toAbsolutePath(), exported.getParent());
+    }
+
+    @Test
+    public void testExport_WithoutConfig_ThrowsHelpfulException() {
+        Agent agent = agentWithLoggedProperty("Agent_0", "stats", "score");
+        Environment environment = environmentWithLoggedProperty("environment", "state", "tick");
+        Results results = mutableResults(agentResults(agent), environmentResults(environment));
+
+        IllegalStateException exception = assertThrows(
+                IllegalStateException.class,
+                () -> results.export(tempDir)
+        );
+
+        assertEquals("Config not set", exception.getMessage());
     }
 }

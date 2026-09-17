@@ -173,4 +173,14 @@ public class ResultsTest {
         assertEquals(results.agents().agentLogCount(), immutableResults.agents().agentLogCount());
         assertEquals(results.environment().attributeSetLogCount(), immutableResults.environment().attributeSetLogCount());
     }
+
+    @Test
+    public void testGetAsImmutable_ReturnsCachedView() {
+        Results results = new Results();
+
+        ReadOnlyResults first = results.getAsImmutable();
+        ReadOnlyResults second = results.getAsImmutable();
+
+        assertSame(first, second);
+    }
 }
