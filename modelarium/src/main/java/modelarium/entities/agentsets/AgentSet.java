@@ -1,8 +1,8 @@
 package modelarium.entities.agentsets;
 
-import modelarium.entities.readonly.ReadOnlyAgent;
-import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
 import modelarium.entities.Agent;
+import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
+import modelarium.entities.readonly.ReadOnlyAgent;
 import modelarium.exceptions.AgentNotFoundException;
 import modelarium.internal.Internal;
 import modelarium.utils.Cloners;

@@ -8,10 +8,10 @@ import dev.modelarium.examples.sir.entities.agents.attributes.sir.RecoveredEvent
 import dev.modelarium.examples.sir.entities.agents.attributes.sir.SIRState;
 import dev.modelarium.examples.sir.entities.agents.attributes.sir.SIRStateProperty;
 import modelarium.Config;
-import modelarium.entities.generators.DefaultAgentGenerator;
 import modelarium.entities.Agent;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.sets.AgentAttributeSet;
+import modelarium.entities.generators.DefaultAgentGenerator;
 
 import java.util.ArrayList;
 import java.util.Objects;

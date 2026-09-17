@@ -1,9 +1,9 @@
 package modelarium.results;
 
+import modelarium.entities.Environment;
 import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
-import modelarium.entities.Environment;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
 import modelarium.internal.Internal;

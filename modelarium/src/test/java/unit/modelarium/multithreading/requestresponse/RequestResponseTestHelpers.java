@@ -1,11 +1,11 @@
 package unit.modelarium.multithreading.requestresponse;
 
 import modelarium.Config;
+import modelarium.entities.Agent;
+import modelarium.entities.Environment;
 import modelarium.entities.agentsets.AgentSet;
 import modelarium.entities.agentsets.ReadOnlyAgentSet;
 import modelarium.entities.generators.DefaultAgentGenerator;
-import modelarium.entities.Agent;
-import modelarium.entities.Environment;
 import modelarium.entities.generators.EnvironmentGenerator;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 

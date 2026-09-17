@@ -4,9 +4,9 @@ import dev.modelarium.examples.el_farol_bar.config.ElFarolBarSettings;
 import dev.modelarium.examples.el_farol_bar.entities.environment.attributes.bar.AttendanceProperty;
 import dev.modelarium.examples.el_farol_bar.entities.environment.attributes.bar.CrowdingThresholdProperty;
 import modelarium.Config;
+import modelarium.entities.Environment;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
-import modelarium.entities.Environment;
 import modelarium.entities.generators.EnvironmentGenerator;
 
 import java.util.ArrayList;

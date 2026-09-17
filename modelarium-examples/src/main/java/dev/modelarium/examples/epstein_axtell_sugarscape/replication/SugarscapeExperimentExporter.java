@@ -11,7 +11,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.function.ToDoubleFunction;
 
 /** Writes the paper/book-facing Chapter II replication tables alongside Modelarium's ordinary export. */
 public final class SugarscapeExperimentExporter {

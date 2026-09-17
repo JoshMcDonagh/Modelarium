@@ -2,8 +2,8 @@ package dev.modelarium.examples.epstein_axtell_sugarscape.scheduler;
 
 import modelarium.clock.ReadOnlyClock;
 import modelarium.entities.Agent;
-import modelarium.entities.readonly.ReadOnlyEnvironment;
 import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.readonly.ReadOnlyEnvironment;
 import modelarium.scheduler.Scheduler;
 
 import java.io.BufferedReader;

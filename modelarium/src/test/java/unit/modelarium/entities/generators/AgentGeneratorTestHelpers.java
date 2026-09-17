@@ -1,9 +1,9 @@
 package unit.modelarium.entities.generators;
 
 import modelarium.Config;
-import modelarium.entities.generators.DefaultAgentGenerator;
 import modelarium.entities.Agent;
 import modelarium.entities.Environment;
+import modelarium.entities.generators.DefaultAgentGenerator;
 import modelarium.entities.generators.EnvironmentGenerator;
 
 import java.util.List;

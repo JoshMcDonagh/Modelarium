@@ -9,9 +9,7 @@ import java.util.List;
 import java.util.SplittableRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 import static unit.modelarium.entities.generators.AgentGeneratorTestHelpers.syncedConfig;
 
 public class FunctionalAgentGeneratorTest {

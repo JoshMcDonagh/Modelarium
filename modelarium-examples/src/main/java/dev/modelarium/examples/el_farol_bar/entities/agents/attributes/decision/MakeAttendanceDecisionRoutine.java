@@ -2,10 +2,10 @@ package dev.modelarium.examples.el_farol_bar.entities.agents.attributes.decision
 
 import dev.modelarium.examples.el_farol_bar.entities.agents.prediction.AttendanceHistory;
 import dev.modelarium.examples.el_farol_bar.entities.agents.prediction.AttendancePredictor;
-import modelarium.entities.readonly.ReadOnlyAgent;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.routines.AgentRoutine;
 import modelarium.entities.contexts.AgentContext;
+import modelarium.entities.readonly.ReadOnlyAgent;
 
 import java.util.ArrayList;
 import java.util.List;

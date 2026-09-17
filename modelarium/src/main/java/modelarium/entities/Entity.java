@@ -2,7 +2,6 @@ package modelarium.entities;
 
 import modelarium.Config;
 import modelarium.clock.Clock;
-import modelarium.entities.readonly.ReadOnlyEntity;
 import modelarium.entities.agentsets.AgentSet;
 import modelarium.entities.attributes.sets.AttributeSet;
 import modelarium.entities.contexts.Context;
@@ -11,6 +10,7 @@ import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
+import modelarium.entities.readonly.ReadOnlyEntity;
 import modelarium.internal.Internal;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 

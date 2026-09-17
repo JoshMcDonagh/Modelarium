@@ -2,10 +2,10 @@ package unit.modelarium.multithreading;
 
 import modelarium.Config;
 import modelarium.clock.Clock;
-import modelarium.entities.agentsets.ReadOnlyAgentSet;
 import modelarium.entities.Agent;
-import modelarium.entities.agentsets.AgentSet;
 import modelarium.entities.Environment;
+import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.agentsets.ReadOnlyAgentSet;
 import modelarium.multithreading.CoordinatorThread;
 import modelarium.multithreading.requestresponse.*;
 import org.junit.jupiter.api.Test;

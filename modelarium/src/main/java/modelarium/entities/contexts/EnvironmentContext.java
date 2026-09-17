@@ -1,8 +1,8 @@
 package modelarium.entities.contexts;
 
+import modelarium.entities.Environment;
 import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
-import modelarium.entities.Environment;
 
 /**
  * Interface for providing the environment's attributes with access to their owning environment and the wider model.

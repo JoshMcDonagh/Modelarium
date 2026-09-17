@@ -2,8 +2,8 @@ package modelarium.multithreading;
 
 import modelarium.Config;
 import modelarium.clock.Clock;
-import modelarium.entities.agentsets.AgentSet;
 import modelarium.entities.Environment;
+import modelarium.entities.agentsets.AgentSet;
 import modelarium.multithreading.requestresponse.*;
 
 import java.util.HashMap;

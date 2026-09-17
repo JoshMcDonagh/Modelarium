@@ -1,7 +1,7 @@
 package unit.modelarium.scheduler;
 
-import modelarium.clock.ReadOnlyClock;
 import modelarium.clock.Clock;
+import modelarium.clock.ReadOnlyClock;
 import modelarium.entities.readonly.ReadOnlyEnvironment;
 
 import static org.mockito.Mockito.mock;

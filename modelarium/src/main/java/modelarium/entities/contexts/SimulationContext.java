@@ -2,14 +2,14 @@ package modelarium.entities.contexts;
 
 import modelarium.Config;
 import modelarium.clock.Clock;
-import modelarium.entities.Entity;
-import modelarium.entities.readonly.ReadOnlyAgent;
-import modelarium.entities.agentsets.ReadOnlyAgentSet;
 import modelarium.entities.Agent;
+import modelarium.entities.Entity;
+import modelarium.entities.Environment;
 import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.agentsets.ReadOnlyAgentSet;
 import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.sets.AttributeSet;
-import modelarium.entities.Environment;
+import modelarium.entities.readonly.ReadOnlyAgent;
 import modelarium.entities.readonly.ReadOnlyEnvironment;
 import modelarium.exceptions.*;
 import modelarium.internal.Internal;

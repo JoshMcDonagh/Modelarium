@@ -1,9 +1,5 @@
 package modelarium.entities.attributes;
 
-import modelarium.entities.attributes.events.ReadOnlyEvent;
-import modelarium.entities.attributes.properties.ReadOnlyProperty;
-import modelarium.entities.attributes.routines.ReadOnlyRoutine;
-
 /**
  * Class for providing a read-only view of an {@link Attribute}
  *
@@ -22,6 +18,11 @@ public abstract class ReadOnlyAttribute<T extends Attribute> {
         this.attribute = attribute;
     }
 
+    /**
+     * Returns the mutable version of this immutable attribute.
+     *
+     * @return the mutable {@link Attribute}
+     */
     protected T getMutableAttribute() {
         return attribute;
     }

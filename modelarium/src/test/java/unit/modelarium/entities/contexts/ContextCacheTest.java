@@ -1,8 +1,8 @@
 package unit.modelarium.entities.contexts;
 
-import modelarium.entities.readonly.ReadOnlyAgent;
 import modelarium.entities.agentsets.ReadOnlyAgentSet;
 import modelarium.entities.contexts.ContextCache;
+import modelarium.entities.readonly.ReadOnlyAgent;
 import modelarium.entities.readonly.ReadOnlyEnvironment;
 import org.junit.jupiter.api.Test;
 

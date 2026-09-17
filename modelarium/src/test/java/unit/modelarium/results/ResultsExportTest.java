@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import modelarium.Config;
 import modelarium.entities.Agent;
+import modelarium.entities.Environment;
 import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
-import modelarium.entities.Environment;
 import modelarium.results.Results;
 import modelarium.results.ResultsForAgents;
 import modelarium.results.ResultsForEnvironment;
@@ -19,8 +19,6 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
 import static unit.modelarium.results.ResultsTestHelpers.*;
 
 public class ResultsExportTest {

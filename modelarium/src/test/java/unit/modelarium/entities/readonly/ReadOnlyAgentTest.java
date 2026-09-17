@@ -1,8 +1,8 @@
 package unit.modelarium.entities.readonly;
 
-import modelarium.entities.readonly.ReadOnlyAgent;
 import modelarium.entities.Agent;
 import modelarium.entities.attributes.sets.AgentAttributeSet;
+import modelarium.entities.readonly.ReadOnlyAgent;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

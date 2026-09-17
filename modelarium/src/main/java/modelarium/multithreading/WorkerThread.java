@@ -1,13 +1,13 @@
 package modelarium.multithreading;
 
 import modelarium.Config;
-import modelarium.clock.ReadOnlyClock;
 import modelarium.clock.Clock;
-import modelarium.entities.agentsets.ReadOnlyAgentSet;
+import modelarium.clock.ReadOnlyClock;
 import modelarium.entities.Agent;
-import modelarium.entities.agentsets.AgentSet;
-import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.Environment;
+import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.agentsets.ReadOnlyAgentSet;
+import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.readonly.ReadOnlyEnvironment;
 import modelarium.exceptions.AgentNotFoundException;
 import modelarium.multithreading.requestresponse.RequestResponseController;

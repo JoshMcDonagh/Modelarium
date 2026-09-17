@@ -11,12 +11,12 @@ import modelarium.entities.attributes.routines.functional.AgentRoutineRunFunctio
 import modelarium.entities.attributes.routines.functional.EnvironmentRoutineRunFunction;
 import modelarium.entities.attributes.routines.functional.FunctionalAgentRoutine;
 import modelarium.entities.attributes.routines.functional.FunctionalEnvironmentRoutine;
-import modelarium.entities.attributes.sets.readonly.ReadOnlyAgentAttributeSet;
-import modelarium.entities.attributes.sets.readonly.ReadOnlyAttributeSet;
-import modelarium.entities.attributes.sets.readonly.ReadOnlyEnvironmentAttributeSet;
 import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.attributes.sets.AttributeSet;
 import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.readonly.ReadOnlyAgentAttributeSet;
+import modelarium.entities.attributes.sets.readonly.ReadOnlyAttributeSet;
+import modelarium.entities.attributes.sets.readonly.ReadOnlyEnvironmentAttributeSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.SimulationContext;
 import org.junit.jupiter.api.function.Executable;

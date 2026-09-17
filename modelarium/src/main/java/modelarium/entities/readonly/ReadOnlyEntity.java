@@ -1,12 +1,12 @@
 package modelarium.entities.readonly;
 
-import modelarium.entities.attributes.sets.readonly.ReadOnlyAttributeSet;
+import modelarium.entities.Entity;
 import modelarium.entities.attributes.sets.AttributeSet;
+import modelarium.entities.attributes.sets.readonly.ReadOnlyAttributeSet;
 import modelarium.entities.contexts.Context;
 import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.logging.EntityLog;
-import modelarium.entities.Entity;
 
 /**
  * Abstract class for providing a read-only view of an {@link Entity}.

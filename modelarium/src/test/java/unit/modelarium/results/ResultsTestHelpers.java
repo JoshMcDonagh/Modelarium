@@ -1,8 +1,9 @@
 package unit.modelarium.results;
 
 import modelarium.Config;
-import modelarium.entities.Entity;
 import modelarium.entities.Agent;
+import modelarium.entities.Entity;
+import modelarium.entities.Environment;
 import modelarium.entities.agentsets.AgentSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
@@ -12,7 +13,6 @@ import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.EnvironmentContext;
-import modelarium.entities.Environment;
 import modelarium.entities.generators.DefaultAgentGenerator;
 import modelarium.entities.generators.EnvironmentGenerator;
 import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;

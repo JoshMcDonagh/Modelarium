@@ -1,7 +1,7 @@
 package dev.modelarium.examples.epstein_axtell_sugarscape.replication;
 
-import dev.modelarium.examples.epstein_axtell_sugarscape.scheduler.SugarscapeScheduler;
 import dev.modelarium.examples.epstein_axtell_sugarscape.scheduler.SugarscapeRunSpec;
+import dev.modelarium.examples.epstein_axtell_sugarscape.scheduler.SugarscapeScheduler;
 
 import java.util.List;
 

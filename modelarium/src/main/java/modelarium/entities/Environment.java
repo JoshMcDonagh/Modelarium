@@ -2,7 +2,6 @@ package modelarium.entities;
 
 import modelarium.Config;
 import modelarium.clock.Clock;
-import modelarium.entities.readonly.ReadOnlyEnvironment;
 import modelarium.entities.agentsets.AgentSet;
 import modelarium.entities.attributes.events.EnvironmentEvent;
 import modelarium.entities.attributes.properties.EnvironmentProperty;
@@ -12,6 +11,7 @@ import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
+import modelarium.entities.readonly.ReadOnlyEnvironment;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 
 import java.util.List;

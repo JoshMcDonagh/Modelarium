@@ -1,14 +1,14 @@
 package modelarium.entities.readonly;
 
+import modelarium.entities.Environment;
 import modelarium.entities.attributes.events.ReadOnlyEvent;
 import modelarium.entities.attributes.properties.ReadOnlyProperty;
 import modelarium.entities.attributes.routines.ReadOnlyRoutine;
-import modelarium.entities.attributes.sets.readonly.ReadOnlyEnvironmentAttributeSet;
 import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
+import modelarium.entities.attributes.sets.readonly.ReadOnlyEnvironmentAttributeSet;
 import modelarium.entities.contexts.EnvironmentContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
-import modelarium.entities.Environment;
 
 /**
  * Class for providing a read-only view of an {@link Environment}.

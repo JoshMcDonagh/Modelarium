@@ -1,8 +1,8 @@
 package unit.modelarium.results;
 
 import modelarium.entities.Environment;
-import modelarium.results.readonly.ReadOnlyResultsForEnvironment;
 import modelarium.results.ResultsForEnvironment;
+import modelarium.results.readonly.ReadOnlyResultsForEnvironment;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

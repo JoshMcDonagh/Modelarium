@@ -1,7 +1,7 @@
 package unit.modelarium.entities.readonly;
 
-import modelarium.entities.readonly.ReadOnlyAgent;
 import modelarium.entities.Agent;
+import modelarium.entities.Environment;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.events.AgentEvent;
@@ -14,9 +14,9 @@ import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.attributes.sets.EnvironmentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.EnvironmentContext;
-import modelarium.entities.Environment;
-import modelarium.entities.readonly.ReadOnlyEnvironment;
 import modelarium.entities.logging.databases.factories.MemoryBasedAttributeSetLogDatabaseFactory;
+import modelarium.entities.readonly.ReadOnlyAgent;
+import modelarium.entities.readonly.ReadOnlyEnvironment;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

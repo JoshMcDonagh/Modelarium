@@ -5,12 +5,7 @@ import dev.modelarium.examples.schelling_segregation.entities.agents.attributes.
 import modelarium.entities.agentsets.ReadOnlyAgentSet;
 import modelarium.entities.readonly.ReadOnlyAgent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /** Shared spatial calculations used by the Schelling example and its summary reporting. */
 public final class SchellingSpatialUtils {

@@ -2,8 +2,8 @@ package unit.modelarium.entities;
 
 import modelarium.Config;
 import modelarium.clock.Clock;
-import modelarium.entities.generators.DefaultAgentGenerator;
 import modelarium.entities.Agent;
+import modelarium.entities.Environment;
 import modelarium.entities.agentsets.AgentSet;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
@@ -13,7 +13,7 @@ import modelarium.entities.attributes.routines.AgentRoutine;
 import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
 import modelarium.entities.contexts.ContextCache;
-import modelarium.entities.Environment;
+import modelarium.entities.generators.DefaultAgentGenerator;
 import modelarium.entities.generators.EnvironmentGenerator;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 

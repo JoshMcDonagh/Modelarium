@@ -1,18 +1,18 @@
 package modelarium;
 
 import modelarium.clock.Clock;
+import modelarium.entities.Environment;
 import modelarium.entities.agentsets.AgentSet;
 import modelarium.entities.contexts.ContextCache;
-import modelarium.entities.Environment;
 import modelarium.exceptions.ModelRunException;
 import modelarium.multithreading.CoordinatorHandle;
 import modelarium.multithreading.CoordinatorThread;
 import modelarium.multithreading.WorkerThread;
 import modelarium.multithreading.requestresponse.RequestResponseController;
-import modelarium.results.readonly.ReadOnlyResults;
 import modelarium.results.Results;
 import modelarium.results.ResultsForAgents;
 import modelarium.results.ResultsForEnvironment;
+import modelarium.results.readonly.ReadOnlyResults;
 import modelarium.utils.Cloners;
 
 import java.util.ArrayList;

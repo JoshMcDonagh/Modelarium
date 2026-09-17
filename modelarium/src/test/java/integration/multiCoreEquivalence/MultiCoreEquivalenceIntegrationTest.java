@@ -2,14 +2,14 @@ package integration.multiCoreEquivalence;
 
 import modelarium.Config;
 import modelarium.Model;
-import modelarium.entities.generators.DefaultAgentGenerator;
 import modelarium.entities.Agent;
+import modelarium.entities.Environment;
 import modelarium.entities.attributes.Attribute;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.properties.AgentProperty;
 import modelarium.entities.attributes.sets.AgentAttributeSet;
 import modelarium.entities.contexts.AgentContext;
-import modelarium.entities.Environment;
+import modelarium.entities.generators.DefaultAgentGenerator;
 import modelarium.entities.generators.FunctionalEnvironmentGenerator;
 import modelarium.results.readonly.ReadOnlyResults;
 import modelarium.scheduler.InOrderScheduler;

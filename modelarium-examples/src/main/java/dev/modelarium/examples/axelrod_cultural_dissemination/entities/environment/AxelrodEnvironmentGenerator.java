@@ -1,12 +1,7 @@
 package dev.modelarium.examples.axelrod_cultural_dissemination.entities.environment;
 
 import dev.modelarium.examples.axelrod_cultural_dissemination.config.AxelrodCulturalDisseminationSettings;
-import dev.modelarium.examples.axelrod_cultural_dissemination.entities.environment.attributes.metrics.CulturalMetrics;
-import dev.modelarium.examples.axelrod_cultural_dissemination.entities.environment.attributes.metrics.CulturalMetricsUpdateRoutine;
-import dev.modelarium.examples.axelrod_cultural_dissemination.entities.environment.attributes.metrics.CulturalRegionCountProperty;
-import dev.modelarium.examples.axelrod_cultural_dissemination.entities.environment.attributes.metrics.LargestCulturalRegionSizeProperty;
-import dev.modelarium.examples.axelrod_cultural_dissemination.entities.environment.attributes.metrics.MeanNeighbourSimilarityProperty;
-import dev.modelarium.examples.axelrod_cultural_dissemination.entities.environment.attributes.metrics.PotentialInteractionPairCountProperty;
+import dev.modelarium.examples.axelrod_cultural_dissemination.entities.environment.attributes.metrics.*;
 import modelarium.Config;
 import modelarium.entities.Environment;
 import modelarium.entities.attributes.Attribute;

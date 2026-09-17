@@ -2,10 +2,10 @@ package unit.modelarium.results.readonly;
 
 import modelarium.entities.Agent;
 import modelarium.entities.Environment;
+import modelarium.results.Results;
 import modelarium.results.readonly.ReadOnlyResults;
 import modelarium.results.readonly.ReadOnlyResultsForAgents;
 import modelarium.results.readonly.ReadOnlyResultsForEnvironment;
-import modelarium.results.Results;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

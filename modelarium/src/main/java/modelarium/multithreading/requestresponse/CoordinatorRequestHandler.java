@@ -2,9 +2,9 @@ package modelarium.multithreading.requestresponse;
 
 import modelarium.Config;
 import modelarium.clock.Clock;
-import modelarium.entities.readonly.ReadOnlyAgent;
-import modelarium.entities.agentsets.AgentSet;
 import modelarium.entities.Environment;
+import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.readonly.ReadOnlyAgent;
 import modelarium.entities.readonly.ReadOnlyEnvironment;
 
 import java.util.ArrayList;

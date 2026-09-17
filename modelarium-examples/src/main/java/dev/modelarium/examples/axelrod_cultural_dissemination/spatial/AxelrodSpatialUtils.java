@@ -5,13 +5,7 @@ import dev.modelarium.examples.axelrod_cultural_dissemination.entities.agents.at
 import modelarium.entities.agentsets.ReadOnlyAgentSet;
 import modelarium.entities.readonly.ReadOnlyAgent;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /** Spatial and aggregate calculations for the Axelrod cultural dissemination example. */
 public final class AxelrodSpatialUtils {

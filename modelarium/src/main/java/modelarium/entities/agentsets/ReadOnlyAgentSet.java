@@ -1,7 +1,7 @@
 package modelarium.entities.agentsets;
 
-import modelarium.entities.readonly.ReadOnlyAgent;
 import modelarium.entities.Agent;
+import modelarium.entities.readonly.ReadOnlyAgent;
 
 import java.util.ArrayList;
 import java.util.Collections;

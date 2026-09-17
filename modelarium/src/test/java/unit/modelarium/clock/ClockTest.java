@@ -1,7 +1,7 @@
 package unit.modelarium.clock;
 
-import modelarium.clock.ReadOnlyClock;
 import modelarium.clock.Clock;
+import modelarium.clock.ReadOnlyClock;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

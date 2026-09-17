@@ -2,11 +2,11 @@ package dev.modelarium.examples.sir.entities.agents.attributes.sir;
 
 import dev.modelarium.examples.sir.config.SIRSettings;
 import dev.modelarium.examples.sir.entities.agents.attributes.location.Coordinates;
-import modelarium.entities.readonly.ReadOnlyAgent;
 import modelarium.entities.agentsets.ReadOnlyAgentSet;
 import modelarium.entities.attributes.AttributeAccessLevel;
 import modelarium.entities.attributes.events.AgentEvent;
 import modelarium.entities.contexts.AgentContext;
+import modelarium.entities.readonly.ReadOnlyAgent;
 
 import java.util.function.Predicate;
 

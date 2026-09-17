@@ -2,12 +2,12 @@ package unit.modelarium.multithreading.requestresponse;
 
 import modelarium.Config;
 import modelarium.clock.Clock;
-import modelarium.entities.readonly.ReadOnlyAgent;
-import modelarium.entities.agentsets.ReadOnlyAgentSet;
 import modelarium.entities.Agent;
-import modelarium.entities.agentsets.AgentSet;
-import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.Environment;
+import modelarium.entities.agentsets.AgentSet;
+import modelarium.entities.agentsets.ReadOnlyAgentSet;
+import modelarium.entities.contexts.EnvironmentSimulationContext;
+import modelarium.entities.readonly.ReadOnlyAgent;
 import modelarium.entities.readonly.ReadOnlyEnvironment;
 import modelarium.multithreading.requestresponse.*;
 import modelarium.utils.Cloners;
