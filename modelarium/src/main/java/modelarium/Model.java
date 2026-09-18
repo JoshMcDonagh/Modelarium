@@ -270,6 +270,11 @@ public class Model {
 
     /**
      * Runs the model using the configurations given during construction.
+     *
+     * <p>Calling this method again starts a new run with the same configuration and replaces the previously exposed
+     * results after generation begins.
+     *
+     * @throws ModelRunException if a worker fails or the calling thread is interrupted while waiting for workers
      */
     public void run() {
         // Create a splittable random generator using a seed given by the model's config that entities in the model can
@@ -333,6 +338,7 @@ public class Model {
      * Returns the results of the most recent model run.
      *
      * @return a new {@link ReadOnlyResults} instance
+     * @throws IllegalStateException if the model has not yet been run
      */
     public ReadOnlyResults getResults() {
         if (results == null)

@@ -29,9 +29,38 @@ This repository contains two Maven modules, built together by a thin aggregator 
   compiled and smoke-tested on every build, so they always reflect the current API, and they are never published.
   See the [examples README](modelarium-examples/README.md) for how to run them.
 
+## Examples
+
+The examples module contains five complete models. They progress from a conventional compartmental epidemic model
+to published classic agent-based models and replication experiments:
+
+| Example | What it demonstrates |
+| --- | --- |
+| [SIR epidemic](modelarium-examples/src/main/java/dev/modelarium/examples/sir/) | Agent properties and events, spatial contact, an environment-level prevalence summary, seeded randomness, and multi-core execution. |
+| [Schelling segregation](modelarium-examples/src/main/java/dev/modelarium/examples/schelling_segregation/) | A spatial grid, agent relocation, neighbourhood queries, cross-agent interaction, and aggregate segregation measures. |
+| [El Farol Bar](modelarium-examples/src/main/java/dev/modelarium/examples/el_farol_bar/) | Adaptive decision-making, agent-specific predictor sets, shared attendance history, and environment feedback. |
+| [Epstein-Axtell Sugarscape](modelarium-examples/src/main/java/dev/modelarium/examples/epstein_axtell_sugarscape/) | A suite of replication experiments using a custom scheduler, resource landscapes, death and replacement, and experiment-level CSV output. |
+| [Axelrod cultural dissemination](modelarium-examples/src/main/java/dev/modelarium/examples/axelrod_cultural_dissemination/) | An event-driven replication study, spatial cultural interaction, absorbing-state detection, repeated seeded runs, and summary statistics. |
+
+Build all modules, then run an example from the repository root:
+
+```bash
+mvn -B verify
+mvn -pl modelarium-examples exec:java \
+  -Dexec.mainClass=dev.modelarium.examples.sir.SIRMain
+```
+
+Each example reads its default settings from `modelarium-examples/src/main/resources`, prints or exports a summary,
+and writes detailed results beneath `modelarium-examples/output/`. See the
+[examples README](modelarium-examples/README.md) for every main class, configuration file, expected output, and
+shorter smoke-test commands.
+
 ## Documentation
 
-API (Javadoc): https://joshmcdonagh.github.io/Modelarium/
+- [Library guide and quickstart](modelarium/README.md)
+- [Worked examples](modelarium-examples/README.md)
+- [API reference (Javadoc)](https://joshmcdonagh.github.io/Modelarium/)
+- [Supported public API policy](PUBLIC_API.md)
 
 ## Installation (Maven Central)
 

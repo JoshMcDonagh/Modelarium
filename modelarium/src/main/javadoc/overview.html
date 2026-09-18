@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Modelarium API overview</title>
+</head>
+<body>
+<p>
+    Modelarium is a modular, extensible, and multithreaded agent-based modelling framework for Java 21. Models are
+    assembled from agents, one environment, and composable property, event, and routine attributes.
+</p>
+
+<h2>Starting a model</h2>
+<ol>
+    <li>Create agent and environment attributes and group them into named attribute sets.</li>
+    <li>Provide agent and environment generators.</li>
+    <li>Build a {@link modelarium.Config} and pass it to {@link modelarium.Model}.</li>
+    <li>Call {@link modelarium.Model#run()}.</li>
+    <li>Inspect or export the {@link modelarium.results.readonly.ReadOnlyResults} returned by
+        {@link modelarium.Model#getResults()}.</li>
+</ol>
+
+<h2>Main extension points</h2>
+<ul>
+    <li>{@code modelarium.entities.attributes} and its subpackages define properties, events, routines, and their
+        functional variants.</li>
+    <li>{@code modelarium.entities.generators} controls population and environment construction.</li>
+    <li>{@code modelarium.scheduler} controls local agent execution order.</li>
+    <li>{@code modelarium.entities.logging.databases.factories} selects memory- or disk-backed log storage.</li>
+</ul>
+
+<h2>Concurrency</h2>
+<p>
+    Synchronised runs advance worker threads in lockstep, support cross-worker population access, and run environment
+    behaviour at tick boundaries. Unsynchronised runs avoid co-ordination but do not support cross-worker lookups and
+    do not run environment attributes. Configure this behaviour through {@link modelarium.Config.ConfigBuilder}; the
+    multithreading implementation packages are not application extension points.
+</p>
+
+<h2>API status</h2>
+<p>
+    Packages annotated with {@link modelarium.api.PublicApi} form the supported API unless a type or member is marked
+    {@code @Internal}. Internal elements may remain Java-public for framework integration but are not covered by
+    semantic-versioning compatibility guarantees.
+</p>
+</body>
+</html>

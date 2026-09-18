@@ -27,15 +27,19 @@ public abstract class EnvironmentGenerator {
 
     /**
      * Internal method for resetting the state of the generator.
-      * @hidden
-      */
+     *
+     * @hidden
+     */
     @Internal
     public void internalReset() {
         reset();
     }
 
     /**
-     * Resets the state of the generator.
+     * Resets any temporary state retained while generating an environment.
+     *
+     * <p>The model calls this hook after every generation attempt, including an attempt which throws. Stateful
+     * generators should override it so the same generator can be reused for a later run.
      */
     protected void reset() {
         // No-op by default

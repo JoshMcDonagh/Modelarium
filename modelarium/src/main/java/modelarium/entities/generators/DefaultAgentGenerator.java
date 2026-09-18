@@ -82,6 +82,7 @@ public abstract class DefaultAgentGenerator extends AgentGenerator {
      * Must be implemented by concrete subclasses.
      *
      * @param config the model settings passed to the agent during creation
+     * @param random the random generator the agent generator can use while constructing the agent
      * @return a new {@link Agent} instance
      */
     protected abstract Agent generateAgent(Config config, RandomGenerator random);

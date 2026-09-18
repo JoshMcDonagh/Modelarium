@@ -1,10 +1,12 @@
-# Modelarium (library)
+# Modelarium library
 
-This directory contains the Modelarium library itself, published to Maven Central as `dev.modelarium:modelarium`.
-For the repository overview see the [root README](../README.md); for complete runnable models see the
-[examples module](../modelarium-examples/).
+Modelarium is a modular, extensible, and multithreaded agent-based modelling framework for Java 21. This module is
+the library published to Maven Central as `dev.modelarium:modelarium`.
 
-API (Javadoc): https://joshmcdonagh.github.io/Modelarium/
+- [Repository overview](../README.md)
+- [Runnable examples](../modelarium-examples/README.md)
+- [Javadoc](https://joshmcdonagh.github.io/Modelarium/)
+- [Supported public API policy](../PUBLIC_API.md)
 
 ## Installation
 
@@ -16,171 +18,184 @@ API (Javadoc): https://joshmcdonagh.github.io/Modelarium/
 </dependency>
 ```
 
-Modelarium's JAR declares the stable automatic module name `modelarium` for module-path compatibility. It does not
-currently include an explicit module descriptor. Classpath use remains the plug-and-play option; applications that
-use explicit modules may need to open packages containing model objects to Modelarium's reflective cloning dependency.
+Modelarium requires Java 21. The JAR declares the stable automatic module name `modelarium`, allowing it to be used
+on either the class path or module path. It deliberately has no explicit `module-info.java`: class-path use is the
+most plug-and-play option, while explicitly modular applications may need to open packages containing model objects
+to the reflective cloning dependency.
+
+## Contents
+
+- [Core concepts](#core-concepts)
+- [Quickstart](#quickstart)
+- [Configuration](#configuration)
+- [Defining attributes](#defining-attributes)
+- [Contexts and interaction](#contexts-and-interaction)
+- [Generators and repeated runs](#generators-and-repeated-runs)
+- [Scheduling](#scheduling)
+- [Multithreading and synchronisation](#multithreading-and-synchronisation)
+- [Results and export](#results-and-export)
+- [Logging backends](#logging-backends)
+- [Reproducibility](#reproducibility)
+- [Errors and lifecycle rules](#errors-and-lifecycle-rules)
+- [Extending Modelarium](#extending-modelarium)
+- [Building and testing](#building-and-testing)
 
 ## Core concepts
 
-- **`Model`** - runs a simulation from a `Config`: it generates the entities, launches one worker thread per core
-  (plus a co-ordinator thread when synchronisation is enabled), drives the tick loop, and collects the results.
-- **`Config`** - an immutable record describing a run, created through `Config.builder()`. See the
-  [configuration reference](#configuration-reference) below.
-- **`Agent` / `Environment`** - the model's entities. A model contains many agents and a single shared environment,
-  each owning a list of attribute sets.
-- **`AttributeSet`** - a named, ordered group of attributes belonging to an entity. Each tick, an entity runs its
-  attribute sets in order, and each set runs its attributes in order, recording the values of logged attributes.
-- **Attributes** - the units of state and behaviour, in three forms:
-  - **Properties** carry a typed value. Each tick their run logic executes and (if logged) the value is recorded.
-  - **Events** hold a trigger condition and behaviour. Each tick the trigger is checked, the behaviour runs if it
-    holds, and (if logged) the trigger state is recorded.
-  - **Routines** are behaviour only: they run unconditionally every tick and are never logged.
+### Model and configuration
 
-  Every attribute has an access level: `PUBLIC` attributes can be read by other entities, while `PRIVATE` ones can
-  only be used by the framework's tick loop and throw an `AttributeAccessException` if retrieved.
-- **Functional attributes** - `FunctionalAgentProperty`, `FunctionalAgentEvent`, `FunctionalAgentRoutine`, and
-  their environment counterparts let you supply the logic as lambdas instead of subclassing. This is the quickest
-  way to define behaviour, and the intended route for cross-language use (for example from Python via JPype).
-- **Contexts** - every attribute's logic receives a context (`AgentContext` or `EnvironmentContext`) giving access
-  to the owning entity, the model's clock, a seeded random generator, and the rest of the population via
-  `getAgent(name)` and `getFilteredAgents(predicate)`.
-- **Generators** - `AgentGenerator` and `EnvironmentGenerator` define how the population is created from the
-  config. `FunctionalDefaultAgentGenerator` and `FunctionalEnvironmentGenerator` accept a creation function and,
-  for agents, distribute the population across cores round-robin.
-- **Schedulers** - the tick policy within a core: `InOrderScheduler`, `RandomOrderScheduler`, or your own
-  `Scheduler` implementation (`FunctionalScheduler` accepts a lambda).
-- **Results** - after `run()`, `model.getResults()` returns an immutable view of every logged series, queryable per
-  agent, attribute set, and attribute. Calling it before a run completes throws an `IllegalStateException`.
+`Model` executes a simulation from an immutable `Config`. A run generates the population and environment, creates
+the worker threads, advances the simulation for the configured number of ticks, and collects logged results.
+Configuration is normally created with `Config.builder()`.
+
+### Entities and attribute sets
+
+A model contains many `Agent` instances and one shared `Environment`. Each entity owns named `AttributeSet`
+instances. An attribute set is an ordered group: its attributes run in list order on every tick.
+
+### Attributes
+
+Model behaviour is composed from three attribute kinds:
+
+- A `Property<T>` carries a typed value. Its run logic can update that value and, when logging is enabled, its value
+  is recorded once per tick.
+- An `Event` evaluates a trigger, runs its behaviour when triggered, and can log the trigger result.
+- A `Routine` performs unconditional behaviour each tick and is not logged.
+
+Agent and environment variants give each attribute an appropriately typed context. Attributes also have an
+`AttributeAccessLevel`: `PUBLIC` attributes may be retrieved by other model components, while `PRIVATE` attributes
+are not exposed through the normal public lookup methods.
+
+### Contexts
+
+Attribute logic receives an `AgentContext` or `EnvironmentContext`. Contexts expose the owning entity, current
+attribute set and attribute, clock, configuration, seeded random generator, environment, and visible agents. Use
+the context rather than global mutable state when implementing behaviour.
+
+### Results
+
+After a completed run, `model.getResults()` returns `ReadOnlyResults`. Agent and environment logs can be queried as
+individual typed series or nested maps, or exported to files.
 
 ## Quickstart
 
-A population of one-dimensional random walkers, run single-threaded with a fixed seed:
+The following model runs 50 one-dimensional random walkers for 200 ticks with a fixed seed:
 
 ```java
-AtomicInteger nextIndex = new AtomicInteger(0);
+import modelarium.Config;
+import modelarium.Model;
+import modelarium.entities.Agent;
+import modelarium.entities.Environment;
+import modelarium.entities.attributes.Attribute;
+import modelarium.entities.attributes.AttributeAccessLevel;
+import modelarium.entities.attributes.properties.functional.FunctionalAgentProperty;
+import modelarium.entities.attributes.sets.AgentAttributeSet;
+import modelarium.entities.generators.FunctionalDefaultAgentGenerator;
+import modelarium.entities.generators.FunctionalEnvironmentGenerator;
+import modelarium.results.readonly.ReadOnlyResults;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+AtomicInteger nextIndex = new AtomicInteger();
 
 Config config = Config.builder()
         .populationSize(50)
         .tickCount(200)
         .threadCount(1)
         .areThreadsSynced(false)
-        .agentGenerator(new FunctionalDefaultAgentGenerator(cfg ->
+        .agentGenerator(new FunctionalDefaultAgentGenerator((cfg, random) ->
                 makeWalker("walker_" + nextIndex.getAndIncrement())))
-        .environmentGenerator(new FunctionalEnvironmentGenerator(cfg ->
-                new Environment("environment", List.of())))
+        .environmentGenerator(new FunctionalEnvironmentGenerator((cfg, random) ->
+                new Environment(List.of())))
         .seed(42L)
         .build();
 
 Model model = new Model(config);
 model.run();
 
-ImmutableResults results = model.getResults();
+ReadOnlyResults results = model.getResults();
 List<Double> trajectory = results.agents()
         .attributeLogs("walker_0", "movement", "position", Double.class);
-System.out.println("walker_0 finished at " + trajectory.get(trajectory.size() - 1));
+System.out.println("walker_0 finished at " + trajectory.getLast());
 ```
 
-where each walker is a single logged property whose run function adds a Gaussian step to the stored value:
+The helper constructs one logged property. Its value starts at zero and changes by one Gaussian step per tick:
 
 ```java
 private static Agent makeWalker(String name) {
     FunctionalAgentProperty<Double> position = new FunctionalAgentProperty<>(
             "position",
-            true,                              // logged each tick
+            true,
             AttributeAccessLevel.PUBLIC,
             Double.class,
-            (context, value) -> value,                          // getter
-            (context, currentValue, newValue) -> newValue,      // setter
-            (context, value) ->                                 // run each tick
+            (context, value) -> value,
+            (context, currentValue, newValue) -> newValue,
+            (context, value) ->
                     (value == null ? 0.0 : value) + context.getRandom().nextGaussian()
     );
 
     return new Agent(name, List.of(
-            new AgentAttributeSet(name, "movement", List.<Attribute>of(position))
+            new AgentAttributeSet("movement", List.<Attribute>of(position))
     ));
 }
 ```
 
-The [examples module](../modelarium-examples/) contains this model in full, alongside an SIR contagion model
-(events and population sampling) and a synchronised two-core model (cross-core agent access).
+See the [examples module](../modelarium-examples/README.md) for five complete models covering events, routines,
+spatial interaction, custom schedulers, multiple cores, replication experiments, and result export.
 
-## Configuration reference
+## Configuration
 
-`Config.builder()` accepts the following, with `agentGenerator` and `environmentGenerator` required:
+`agentGenerator` and `environmentGenerator` are required. Every other builder setting has a default:
 
 | Builder method | Default | Meaning |
 | --- | --- | --- |
-| `populationSize(int)` | `100` | The number of agents the model will contain. |
-| `tickCount(int)` | `100` | The number of ticks the model will perform. |
-| `threadCount(int)` | `2` | The number of worker cores the agents are distributed across. |
-| `threadTimeout(Duration)` | 60 seconds | How long a thread waits for a co-ordinator response before timing out. |
-| `areThreadsSynced(boolean)` | `true` | Whether cores progress in lockstep through the co-ordinator. |
-| `agentGenerator(AgentGenerator)` | *required* | How the model's agents are created. |
-| `environmentGenerator(EnvironmentGenerator)` | *required* | How the model's environment is created. |
-| `scheduler(Scheduler)` | `InOrderScheduler` | The order agents are run within a core each tick. |
-| `runLogDatabaseFactory(...)` | memory-based | Where logged attribute values are stored (see below). |
-| `seed(long)` | `System.nanoTime()` | The seed for the model's random generators. |
+| `populationSize(int)` | `100` | Number of agents generated for the run; must be greater than zero. |
+| `tickCount(int)` | `100` | Number of model ticks; must be greater than zero. |
+| `threadCount(int)` | `2` | Number of worker threads; must be greater than zero. |
+| `threadTimeout(Duration)` | 60 seconds | Maximum wait for inter-thread responses; must be positive. |
+| `areThreadsSynced(boolean)` | `true` | Whether workers advance in lockstep through the co-ordinator. |
+| `agentGenerator(AgentGenerator)` | Required | Creates and distributes the agent population. |
+| `environmentGenerator(EnvironmentGenerator)` | Required | Creates the shared environment. |
+| `scheduler(Scheduler)` | `InOrderScheduler` | Chooses the order in which a worker runs its agents. |
+| `runLogDatabaseFactory(...)` | Memory-backed | Creates storage for each attribute-set log. |
+| `seed(long)` | `System.nanoTime()` | Root seed from which run randomness is derived. |
 
-## Multithreading and synchronisation
+`Config` validates these invariants whether it is built through the builder or its record constructor. Null required
+components fail immediately with a descriptive `NullPointerException`; invalid numeric settings produce an
+`IllegalArgumentException`.
 
-`threadCount` controls the number of worker threads, with agents distributed across them round-robin by the
-default generators. `areThreadsSynced` controls whether those workers are coordinated:
+## Defining attributes
 
-**Synchronised (`true`, the default).** A co-ordinator thread holds a global view of the population. All cores
-progress in lockstep: each tick every worker runs its agents, pushes its updated agent states to the co-ordinator,
-and waits at a barrier before the next tick begins. Agents can read agents on *other* cores through their context -
-those reads travel through the co-ordinator and observe the other core's state as of the end of the previous tick,
-which keeps runs deterministic. Reads of same-core agents are always live. The environment's attributes are run by
-the co-ordinator once per tick boundary.
+### Functional attributes
 
-**Unsynchronised (`false`).** Workers run completely independently with no co-ordinator, which is faster and suits
-models whose agents only interact within their own core (or single-core models). Two consequences to be aware of:
-agents cannot see agents on other cores (a remote lookup throws an `AgentNotFoundException`), and **the environment's attributes do not run**, since they are driven by
-the co-ordinator's tick boundary.
+The quickest approach is to supply lambdas to `FunctionalAgentProperty`, `FunctionalAgentEvent`, and
+`FunctionalAgentRoutine`, or their environment counterparts. Functional properties accept getter, setter, and run
+functions. A property's run function may be `null` for a no-op, but invoking a missing getter or setter throws
+`MissingAttributeFunctionException`.
 
-Use synchronised mode when agents interact across the population or the environment carries behaviour; use
-unsynchronised mode for independent agents where throughput matters.
+Functional attributes are particularly useful when integrating from another JVM language or from Python through
+JPype. The functional interfaces are public and may also be implemented explicitly when a lambda is inconvenient.
 
-## Results and storage
+### Subclassed attributes
 
-Logged attribute values are recorded per tick and retrieved after the run through `model.getResults()`, at any
-granularity from a single series (`attributeLogs(agent, set, attribute)`) up to every log in the model
-(`allLogs()`). Where the values are stored during the run is controlled by the config's log database factory:
-
-- **`MemoryBasedAttributeSetLogDatabaseFactory`** (default) - fastest, suitable for most simulations.
-- **`DiskBasedAttributeSetLogDatabaseFactory`** - backs each attribute set's log with a SQLite database in the
-  system's temporary directory, with values serialised as JSON. Suitable for large populations or long runs where
-  memory pressure matters. Databases are created and cleaned up automatically, including on JVM shutdown.
-
-## Reproducibility
-
-The config's seed drives a splittable random generator threaded through the model, the workers, the schedulers,
-and every attribute's context (`context.getRandom()`). Given the same config and seed, runs are reproducible -
-including in synchronised multi-core mode, where the cross-core visibility rule above keeps interactions
-deterministic. If no seed is set, `System.nanoTime()` is used and each run differs.
-
-## Extending Modelarium
-
-The functional attribute classes cover most needs, but attributes can also be subclassed directly - extend
-`AgentProperty<T>` / `EnvironmentProperty<T>`, `AgentEvent` / `EnvironmentEvent`, or `AgentRoutine` /
-`EnvironmentRoutine` and implement the abstract methods, each of which receives the context:
+For named, reusable components, subclass `AgentProperty<T>` / `EnvironmentProperty<T>`, `AgentEvent` /
+`EnvironmentEvent`, or `AgentRoutine` / `EnvironmentRoutine`. For example:
 
 ```java
-public class DecayingValueProperty extends AgentProperty<Double> {
-
+public final class DecayingValueProperty extends AgentProperty<Double> {
     private final double decayRate;
     private double value;
 
-    public DecayingValueProperty(String name, boolean isLogged, AttributeAccessLevel accessLevel,
-                                 double initialValue, double decayRate) {
-        super(name, isLogged, accessLevel, Double.class);
+    public DecayingValueProperty(double initialValue, double decayRate) {
+        super("decaying_value", true, AttributeAccessLevel.PUBLIC, Double.class);
         this.value = initialValue;
         this.decayRate = decayRate;
     }
 
     @Override
     protected void run(AgentContext context) {
-        value *= (1.0 - decayRate);
+        value *= 1.0 - decayRate;
     }
 
     @Override
@@ -195,33 +210,165 @@ public class DecayingValueProperty extends AgentProperty<Double> {
 }
 ```
 
-Events implement `isTriggered(context)` and `run(context)`; routines implement `run(context)`.
+Events implement `isTriggered(context)` and `run(context)`. Routines implement `run(context)`.
 
-A note on state: Modelarium deep clones entities reflectively (for example when distributing agents, sharing them
-across cores, or returning immutable views), so any state your attribute holds should be safely deep-cloneable -
-plain fields and standard collections are fine, and no copy constructor is needed. Functional attribute lambdas
-are shared rather than cloned, and contexts are re-established by the framework after cloning.
+## Contexts and interaction
 
-## Building and testing this module
+An agent context provides access to the current agent and environment. The inherited `SimulationContext` operations
+also provide the current `Config`, clock, random generator, agent lookup, and filtered population lookup. Prefer
+`context.getRandom()` for all stochastic behaviour so runs remain seed-controlled.
 
-From the repository root:
+Population visibility depends on execution mode. In synchronised mode, same-worker reads are live and remote reads
+observe the other worker's state at the previous completed tick boundary. In unsynchronised mode, an agent cannot
+look up agents assigned to another worker; attempting to do so throws `AgentNotFoundException`.
 
-```bash
-mvn -B test --file modelarium/pom.xml
+Attribute lookup honours access control. Trying to retrieve a private attribute through a public lookup throws
+`AttributeAccessException`. Asking for an absent agent or environment produces the corresponding documented
+exception rather than returning a partially initialised object.
+
+## Generators and repeated runs
+
+`DefaultAgentGenerator` generates one agent at a time and distributes the completed population across workers in
+round-robin order. Override `generateAgent(Config, RandomGenerator)` for the usual case. Implement
+`AgentGenerator` directly when the model needs custom partitioning.
+
+`EnvironmentGenerator` creates the run's environment. Functional variants accept `BiFunction<Config,
+RandomGenerator, ...>` instances, avoiding the need for subclasses.
+
+Generators may hold temporary counters while creating entities. Override the protected `reset()` hook to clear
+that state. Modelarium invokes it after every generation attempt, including one which throws, so the same generator
+and `Model` configuration can be reused safely. Functional generators which accept a reset callback provide the
+same facility.
+
+## Scheduling
+
+The scheduler determines the order in which each worker runs its local agents on a tick:
+
+- `InOrderScheduler` preserves the agent-set order.
+- `RandomOrderScheduler` shuffles through the run's seeded random generator.
+- `FunctionalScheduler` delegates tick logic to a supplied function.
+- A custom `Scheduler` can implement model-specific semantics, including event-driven processing.
+
+A scheduler controls agent execution within each worker; thread synchronisation and environment execution remain
+the responsibility of the model runtime.
+
+## Multithreading and synchronisation
+
+`threadCount` determines the number of worker threads. Default generators distribute agents across them in
+round-robin order.
+
+In **synchronised mode** (`areThreadsSynced(true)`, the default), a co-ordinator maintains the shared population
+view. Workers advance in lockstep, publish their updated agent states, and wait at a tick barrier. Cross-worker
+queries are supported and the environment's attributes run once per tick at the co-ordinator boundary.
+
+In **unsynchronised mode**, workers run independently. This avoids co-ordination overhead but agents cannot access
+agents on other workers. The environment's attributes do not run because no co-ordinator drives their tick loop.
+Use this mode for a single worker or for populations whose partitions do not interact.
+
+Worker, co-ordinator, and request/response classes are implementation details rather than supported extension
+points. Configure concurrency through `Config` and interact through contexts.
+
+## Results and export
+
+Call `model.getResults()` only after `model.run()` has completed. The returned `ReadOnlyResults` exposes:
+
+- `agents()` for per-agent logs;
+- `environment()` for environment logs; and
+- `export(String)` / `export(Path)` for file export.
+
+Typed retrieval avoids repeated casts:
+
+```java
+List<Double> values = results.agents().attributeLogs(
+        "agent_0", "health", "risk", Double.class
+);
 ```
 
-or, using the aggregator to build the examples against it as well:
+Broader methods return every attribute in a set, every set for an entity, or all agent/environment logs. Returned
+collections are unmodifiable, and the storage backends return detached values so callers cannot mutate the stored
+run history through a retrieved list.
+
+Export creates a timestamped result directory beneath the requested path and writes the configuration and logged
+series. The returned `Path` is the directory actually created, which is useful when an example adds its own summary
+files alongside the standard export.
+
+## Logging backends
+
+`runLogDatabaseFactory` selects the storage used while a run is executing:
+
+- `MemoryBasedAttributeSetLogDatabaseFactory` is the default and is appropriate for most runs.
+- `DiskBasedAttributeSetLogDatabaseFactory` stores each attribute set in a temporary SQLite database, with values
+  serialised as JSON. It is useful when log volume would otherwise create memory pressure.
+
+Both implementations follow the same contract:
+
+- `connect()` must be called before reading or writing and is idempotent;
+- missing or cleared series return an empty list;
+- null entries are retained but do not establish a series type;
+- the first non-null append establishes the accepted runtime type;
+- replacing a series validates all non-null values before changing stored data and may establish a new type;
+- inputs are copied on write and results are detached on read; and
+- `disconnect()` is idempotent, discards stored data, and makes subsequent operations fail until reconnection.
+
+Normal model users do not manage these connections directly: `AttributeSetLog` connects storage when constructed,
+and result cleanup disconnects it. Direct backend users must follow the lifecycle above.
+
+## Reproducibility
+
+The configured seed initialises a `SplittableRandom`; derived generators are passed through model setup, workers,
+schedulers, and contexts. A fixed seed therefore controls every stochastic decision which uses the provided random
+generators. Synchronised cross-worker visibility is tick-boundary based, keeping the ordering rule deterministic.
+
+Reproducibility still depends on user code: avoid unseeded randomness, wall-clock decisions, iteration over
+unordered external data, and shared mutable state. If no seed is supplied, the default `System.nanoTime()` value
+intentionally produces a different run.
+
+## Errors and lifecycle rules
+
+- `getResults()` before a run throws `IllegalStateException`.
+- Invalid configuration fails during `Config` construction.
+- A worker or co-ordinator failure is surfaced as a Modelarium run exception rather than silently producing partial
+  results.
+- Missing cross-worker entities, private attribute access, missing functional callbacks, timeouts, and interruption
+  have dedicated exceptions in `modelarium.exceptions`.
+- Reading or writing a disconnected log database throws `IllegalStateException`.
+
+Consult the [Javadoc](https://joshmcdonagh.github.io/Modelarium/) for method-level contracts and exception types.
+
+## Extending Modelarium
+
+The supported extension points are attributes, generators, schedulers, log database factories, and their functional
+interfaces. Packages marked `@PublicApi` form the supported API unless a type or member is marked `@Internal`; see
+the [public API policy](../PUBLIC_API.md). Do not depend on the multithreading, mutable results, or other internal
+implementation packages.
+
+Modelarium deep-clones entities when distributing or sharing state and when constructing immutable views. Model
+objects should therefore contain cloneable state. Plain fields, records, and ordinary collections are suitable.
+Functional callbacks are shared rather than reflectively cloned, and simulation contexts are re-established by the
+runtime after cloning.
+
+## Building and testing
+
+From the repository root, run the release-representative build:
 
 ```bash
 mvn -B verify
 ```
 
-The test suite includes unit tests and end-to-end integration tests covering threading, schedulers, agent
-interaction, and both results backends.
+This builds and tests the library and examples and applies the configured coverage checks. To test only the library:
 
-> CI is configured for Java 21. If you run the tests locally with a newer JDK, Mockito/Byte Buddy may fail when
-> instrumenting classes.
+```bash
+mvn -B test --file modelarium/pom.xml
+```
 
-## License
+To install a development build locally:
 
-MIT - see [`LICENSE`](../LICENSE).
+```bash
+mvn -B install --file modelarium/pom.xml
+```
+
+CI and the Maven Enforcer configuration require Java 21. A newer JDK is not treated as a supported build runtime.
+
+## Licence
+
+Modelarium is available under the MIT Licence. See [`LICENSE`](../LICENSE).
