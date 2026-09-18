@@ -2,6 +2,7 @@ package modelarium.entities.contexts;
 
 import modelarium.Config;
 import modelarium.clock.Clock;
+import modelarium.clock.ReadOnlyClock;
 import modelarium.entities.Agent;
 import modelarium.entities.Entity;
 import modelarium.entities.Environment;
@@ -50,6 +51,9 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     /** The clock the context provides access to */
     private final Clock clock;
 
+    /** Read-only clock view exposed to model code. */
+    private final ReadOnlyClock readOnlyClock;
+
     /** Controller that manages the request and response queues for inter-thread communication */
     private final RequestResponseController requestResponseController;
 
@@ -86,7 +90,8 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      *                                  interaction
      * @param localEnvironment the local environment the context will provide access to
      * @param randomGenerator the random generator the context will provide access to
-     */
+      * @hidden
+      */
     @Internal
     public SimulationContext(
             Entity<?,?,?,?> entity,
@@ -103,6 +108,7 @@ public sealed abstract class SimulationContext implements Context permits AgentS
         this.config = config;
         this.cache = cache;
         this.clock = clock;
+        this.readOnlyClock = new ReadOnlyClock(clock);
         this.requestResponseController = requestResponseController;
         this.requestResponseInterface = requestResponseController.getInterface(entity().name());
         this.localEnvironment = localEnvironment;
@@ -112,10 +118,10 @@ public sealed abstract class SimulationContext implements Context permits AgentS
     /**
      * Returns the model's clock.
      *
-     * @return a read-only view of the model's {@link Clock}
+     * @return a read-only view of the model's clock
      */
-    public Clock getClock() {
-        return clock;
+    public ReadOnlyClock getClock() {
+        return readOnlyClock;
     }
 
     /**
@@ -141,9 +147,10 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * Records the attribute set currently being run on the owning entity.
      *
      * @param attributeSet the attribute set now being run
-     */
+      * @hidden
+      */
     @Internal
-    public void internalSetCurrentAttributeSet(AttributeSet<?,?> attributeSet) {
+    public void setCurrentAttributeSet(AttributeSet<?,?> attributeSet) {
         this.attributeSet = attributeSet;
     }
 
@@ -151,9 +158,10 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * Records the attribute currently being run on the owning entity.
      *
      * @param attribute the attribute now being run
-     */
+      * @hidden
+      */
     @Internal
-    public void internalSetCurrentAttribute(AttributeBase<?> attribute) {
+    public void setCurrentAttribute(AttributeBase<?> attribute) {
         this.attribute = attribute;
     }
 
@@ -206,7 +214,9 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * Returns the cache this context uses for agents and the environment.
      *
      * @return the context's {@link ContextCache} instance
+     * @hidden
      */
+    @Internal
     protected ContextCache cache() {
         return cache;
     }
@@ -215,7 +225,9 @@ public sealed abstract class SimulationContext implements Context permits AgentS
      * Returns the interface this context uses to make requests to the co-ordinator.
      *
      * @return the context's {@link RequestResponseInterface} instance
+     * @hidden
      */
+    @Internal
     protected RequestResponseInterface requestResponseInterface() {
         return requestResponseInterface;
     }
@@ -504,18 +516,35 @@ public sealed abstract class SimulationContext implements Context permits AgentS
         killAgents(agentNames);
     }
 
+    /**
+     * Returns agents queued for addition during the current tick.
+     *
+     * @return the queued agents
+     * @hidden
+     */
     @Internal
-    public AgentSet internalGetAddedAgents() {
+    public AgentSet getAddedAgents() {
         return addedAgents;
     }
 
+    /**
+     * Returns names of agents queued for removal during the current tick.
+     *
+     * @return the queued agent names
+     * @hidden
+     */
     @Internal
-    public List<String> internalGetKilledAgentNames() {
+    public List<String> getKilledAgentNames() {
         return killedAgentNames;
     }
 
+    /**
+     * Clears agent changes after the worker has processed them.
+     *
+     * @hidden
+     */
     @Internal
-    public void internalClearPendingAgentChanges() {
+    public void clearPendingAgentChanges() {
         addedAgents.clear();
         killedAgentNames.clear();
     }

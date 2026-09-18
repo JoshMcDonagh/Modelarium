@@ -21,7 +21,8 @@ import java.util.Map;
  *
  * <p>Extends {@link ResultsForEntities} to store and access recorded property
  * and event values specific to the environment, using its name to simplify queries.
- */
+  * @hidden
+  */
 @Internal
 public final class ResultsForEnvironment extends ResultsForEntities<EnvironmentSimulationContext, EnvironmentContext, EnvironmentAttributeSet, AttributeSetLog<EnvironmentSimulationContext>> {
 

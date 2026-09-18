@@ -203,7 +203,8 @@ public class AgentSimulationContextTest {
                 clock
         );
 
-        assertSame(clock, context.getClock());
+        assertEquals(clock.currentTick(), context.getClock().currentTick());
+        assertEquals(clock.totalTickCount(), context.getClock().totalTickCount());
     }
 
     @Test
@@ -669,13 +670,13 @@ public class AgentSimulationContextTest {
 
         // It should instead be queued for WorkerThread.
         assertTrue(
-                context.internalGetAddedAgents()
+                context.getAddedAgents()
                         .doesAgentExist("new")
         );
 
         assertSame(
                 newAgent,
-                context.internalGetAddedAgents().get("new")
+                context.getAddedAgents().get("new")
         );
     }
 
@@ -709,7 +710,7 @@ public class AgentSimulationContextTest {
         );
 
         AgentSet addedAgents =
-                context.internalGetAddedAgents();
+                context.getAddedAgents();
 
         assertTrue(
                 addedAgents.doesAgentExist("agent_1")
@@ -759,7 +760,7 @@ public class AgentSimulationContextTest {
         );
 
         AgentSet queuedAgents =
-                context.internalGetAddedAgents();
+                context.getAddedAgents();
 
         assertTrue(
                 queuedAgents.doesAgentExist("agent_1")
@@ -809,7 +810,7 @@ public class AgentSimulationContextTest {
     }
 
     @Test
-    public void testInternalClearPendingAgentChanges_ClearsAddsAndKillsWithoutMutatingVisibleState() {
+    public void testClearPendingAgentChanges_ClearsAddsAndKillsWithoutMutatingVisibleState() {
         Agent self = emptyAgent("self");
         Agent target = emptyAgent("target");
         AgentSet localAgents = agentSet(self, target);
@@ -821,10 +822,10 @@ public class AgentSimulationContextTest {
         context.addAgent(emptyAgent("new"));
         context.killAgent("target");
 
-        context.internalClearPendingAgentChanges();
+        context.clearPendingAgentChanges();
 
-        assertTrue(context.internalGetAddedAgents().isEmpty());
-        assertTrue(context.internalGetKilledAgentNames().isEmpty());
+        assertTrue(context.getAddedAgents().isEmpty());
+        assertTrue(context.getKilledAgentNames().isEmpty());
         assertFalse(context.doesAgentExistInThisCore("new"));
         assertFalse(target.isDead());
     }
@@ -855,7 +856,7 @@ public class AgentSimulationContextTest {
         // The worker will apply this at the tick boundary.
         assertEquals(
                 List.of("target"),
-                context.internalGetKilledAgentNames()
+                context.getKilledAgentNames()
         );
     }
 
@@ -882,7 +883,7 @@ public class AgentSimulationContextTest {
         // But its name should have been queued for killing at the tick boundary.
         assertEquals(
                 List.of("target"),
-                context.internalGetKilledAgentNames()
+                context.getKilledAgentNames()
         );
     }
 
@@ -926,7 +927,7 @@ public class AgentSimulationContextTest {
 
         assertEquals(
                 List.of("target_1", "target_2"),
-                context.internalGetKilledAgentNames()
+                context.getKilledAgentNames()
         );
     }
 
@@ -979,7 +980,7 @@ public class AgentSimulationContextTest {
         // and queued both names.
         assertEquals(
                 List.of("first", "second"),
-                context.internalGetKilledAgentNames()
+                context.getKilledAgentNames()
         );
     }
 
@@ -1008,7 +1009,7 @@ public class AgentSimulationContextTest {
 
         assertEquals(
                 names,
-                context.internalGetKilledAgentNames()
+                context.getKilledAgentNames()
         );
     }
 
@@ -1053,7 +1054,7 @@ public class AgentSimulationContextTest {
 
         assertEquals(
                 List.of("remote"),
-                context.internalGetKilledAgentNames()
+                context.getKilledAgentNames()
         );
 
         // killAgent() itself must not send a KILL_AGENT request.
@@ -1125,7 +1126,7 @@ public class AgentSimulationContextTest {
 
             // Validation failed, so nothing should have been queued.
             assertFalse(
-                    context.internalGetKilledAgentNames().contains("remote")
+                    context.getKilledAgentNames().contains("remote")
             );
         } finally {
             // Don't leave the JUnit thread interrupted.
@@ -1157,7 +1158,7 @@ public class AgentSimulationContextTest {
 
         // The failed validation must not queue a kill.
         assertFalse(
-                context.internalGetKilledAgentNames().contains("remote")
+                context.getKilledAgentNames().contains("remote")
         );
     }
 
@@ -1188,7 +1189,7 @@ public class AgentSimulationContextTest {
 
         // Again, validation failed before the kill was queued.
         assertFalse(
-                context.internalGetKilledAgentNames().contains("remote")
+                context.getKilledAgentNames().contains("remote")
         );
     }
 

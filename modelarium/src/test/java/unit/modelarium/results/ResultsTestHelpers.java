@@ -120,13 +120,13 @@ public class ResultsTestHelpers {
 
     public static Agent agentWithMemoryLogs(String agentName, AgentAttributeSet... attributeSets) {
         Agent agent = new Agent(agentName, List.of(attributeSets));
-        agent.internalSetLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+        agent.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         return agent;
     }
 
     public static Environment environmentWithMemoryLogs(String environmentName, EnvironmentAttributeSet... attributeSets) {
         Environment environment = new Environment(environmentName, List.of(attributeSets));
-        environment.internalSetLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+        environment.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         return environment;
     }
 

@@ -178,7 +178,7 @@ public abstract class CoordinatorRequestHandler {
             getWorkersWaiting().add(request.getRequester());
             if (getWorkersWaiting().size() == getConfig().threadCount()) {
                 if (getConfig().areThreadsSynced())
-                    getSharedClock().internalTriggerTick();
+                    getSharedClock().triggerTick();
 
                 for (String worker : getWorkersWaiting())
                     getResponseQueue(worker).put(new Response(getThreadName(), worker, ResponseType.ALL_WORKERS_FINISH_TICK, null));
@@ -223,8 +223,8 @@ public abstract class CoordinatorRequestHandler {
             getWorkersWaiting().add(request.getRequester());
             if (getWorkersWaiting().size() == getConfig().threadCount()) {
                 getEnvironment().run();
-                getGlobalAgentSet().update(agentsKilledByEnvironment(getGlobalAgentSet(), getEnvironment().context().internalGetLocalAgentSet()), true);
-                getEnvironment().context().internalGetLocalAgentSet().update(getGlobalAgentSet(), true);
+                getGlobalAgentSet().update(agentsKilledByEnvironment(getGlobalAgentSet(), getEnvironment().context().getLocalAgentSet()), true);
+                getEnvironment().context().getLocalAgentSet().update(getGlobalAgentSet(), true);
 
                 for (String worker : getWorkersWaiting())
                     getResponseQueue(worker).put(new Response(getThreadName(), worker, ResponseType.ALL_WORKERS_UPDATE_COORDINATOR, getGlobalAgentSet().getAsImmutable()));

@@ -9,7 +9,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * <p>This class is used by the model and its worker threads to drive the passing of time, with the current tick
  * stored atomically so that it can be safely shared between synchronised threads.
- */
+  * @hidden
+  */
+@Internal
 public final class Clock {
 
     /** The total number of ticks the model will perform */
@@ -22,7 +24,8 @@ public final class Clock {
      * Constructs a new mutable clock with the specified total tick count.
      *
      * @param totalTickCount the total number of ticks the model will perform
-     */
+      * @hidden
+      */
     @Internal
     public Clock(int totalTickCount) {
         this.totalTickCount = totalTickCount;
@@ -57,9 +60,10 @@ public final class Clock {
 
     /**
      * Triggers the passing of another tick if the model is running.
-     */
+      * @hidden
+      */
     @Internal
-    public void internalTriggerTick() {
+    public void triggerTick() {
         tick.updateAndGet(current -> current >= totalTickCount ? current : current + 1);
     }
 }

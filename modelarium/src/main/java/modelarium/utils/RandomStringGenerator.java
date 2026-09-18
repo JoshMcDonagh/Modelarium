@@ -1,5 +1,7 @@
 package modelarium.utils;
 
+import modelarium.internal.Internal;
+
 import java.security.SecureRandom;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -9,7 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * <p>This class provides functionality for generating both general and unique random strings. Uniqueness is
  * maintained in memory for the life of the JVM.
- */
+  * @hidden
+  */
+@Internal
 public final class RandomStringGenerator {
 
     private RandomStringGenerator() {}

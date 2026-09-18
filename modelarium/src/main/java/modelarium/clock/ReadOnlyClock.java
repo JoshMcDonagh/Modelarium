@@ -17,7 +17,8 @@ public final class ReadOnlyClock {
      * Constructs a new immutable clock wrapping the specified mutable clock.
      *
      * @param clock the mutable clock to provide a read-only view of
-     */
+      * @hidden
+      */
     @Internal
     public ReadOnlyClock(Clock clock) {
         this.clock = clock;

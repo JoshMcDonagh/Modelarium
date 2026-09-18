@@ -83,8 +83,14 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
         }
     }
 
+    /**
+     * Assigns the owning entity name during framework initialisation.
+     *
+     * @param ownerName the owning entity name
+     * @hidden
+     */
     @Internal
-    public void internalSetOwnerName(String ownerName) {
+    public void setOwnerName(String ownerName) {
         if (ownerName == null)
             return;
         this.ownerName = ownerName;
@@ -95,9 +101,10 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
      * does not already exist.
      *
      * @param database the factory the set will use to create its log database
-     */
+      * @hidden
+      */
     @Internal
-    public void internalSetLogDatabaseFactory(AttributeSetLogDatabaseFactory database) {
+    public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory database) {
         if (log != null)
             return;
 
@@ -127,14 +134,15 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
      * has not already been set.
      *
      * @param context the context to provide the set and its attributes with
-     */
+      * @hidden
+      */
     @Internal
-    public void internalSetContext(SC context) {
+    public void setContext(SC context) {
         if (this.context != null)
             return;
 
         for (AttributeBase<SC> attribute : attributeList)
-            attribute.internalSetContext(context);
+            attribute.setContext(context);
 
         this.context = context;
     }
@@ -308,9 +316,9 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
      * routines are simply run.
      */
     public void run() {
-        context.internalSetCurrentAttributeSet(this);
+        context.setCurrentAttributeSet(this);
         for (AttributeBase<SC> attribute : attributeList) {
-            context.internalSetCurrentAttribute(attribute);
+            context.setCurrentAttribute(attribute);
             Object valueToLog = null;
 
             if (attribute instanceof Event<SC> event) {

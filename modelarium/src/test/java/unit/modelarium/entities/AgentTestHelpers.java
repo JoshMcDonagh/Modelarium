@@ -136,7 +136,7 @@ public class AgentTestHelpers {
 
     static void createContextFor(Agent agent) {
         Config config = syncedConfig(1, 1, 1);
-        agent.internalCreateContext(
+        agent.createContext(
                 new AgentSet(List.of(agent)),
                 config,
                 new ContextCache(),

@@ -136,7 +136,7 @@ public class EnvironmentTestHelpers {
 
     static void createContextFor(Environment environment) {
         Config config = syncedConfig(1, 1, 1);
-        environment.internalCreateContext(
+        environment.createContext(
                 new AgentSet(),
                 config,
                 new ContextCache(),

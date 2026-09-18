@@ -7,6 +7,7 @@ import modelarium.entities.Environment;
 import modelarium.entities.agentsets.AgentSet;
 import modelarium.entities.attributes.AttributeBase;
 import modelarium.entities.attributes.sets.AgentAttributeSet;
+import modelarium.internal.Internal;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 
 import java.util.random.RandomGenerator;
@@ -34,7 +35,9 @@ public final class AgentSimulationContext extends SimulationContext implements A
      *                                  interaction
      * @param localEnvironment the local environment the context will provide access to
      * @param randomGenerator the random generator the context will provide access to
-     */
+      * @hidden
+      */
+    @Internal
     public AgentSimulationContext(
             Agent entity,
             AgentSet localAgentSet,

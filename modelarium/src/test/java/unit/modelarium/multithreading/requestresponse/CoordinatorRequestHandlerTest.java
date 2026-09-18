@@ -301,7 +301,7 @@ public class CoordinatorRequestHandlerTest {
         Environment environment = spy(new Environment("environment", List.of()));
         EnvironmentSimulationContext environmentSimulationContext = mock(EnvironmentSimulationContext.class);
         doReturn(environmentSimulationContext).when(environment).context();
-        when(environmentSimulationContext.internalGetLocalAgentSet()).thenReturn(Cloners.standard().deepClone(agentSet));
+        when(environmentSimulationContext.getLocalAgentSet()).thenReturn(Cloners.standard().deepClone(agentSet));
         Clock clock = new Clock(config.tickCount());
         return new Fixture(config, controller, agentSet, environment, clock);
     }

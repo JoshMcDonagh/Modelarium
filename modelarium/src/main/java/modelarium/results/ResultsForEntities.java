@@ -25,7 +25,8 @@ import java.util.*;
  * @param <C> the type of context interface the entities' attributes are given
  * @param <AS> the type of attribute set the entities own
  * @param <ASL> the type of attribute set log the entities produce
- */
+  * @hidden
+  */
 @Internal
 public sealed abstract class ResultsForEntities<SC extends SimulationContext, C extends Context, AS extends AttributeSet<SC,C>, ASL extends AttributeSetLog<SC>>
         permits ResultsForAgents, ResultsForEnvironment {

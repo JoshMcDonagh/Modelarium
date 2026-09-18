@@ -21,7 +21,8 @@ import java.util.Map;
  *
  * <p>Wraps an {@link AgentSet} into a {@link ResultsForEntities} structure,
  * enabling easy access to recorded properties and events for all agents over time.
- */
+  * @hidden
+  */
 @Internal
 public final class ResultsForAgents extends ResultsForEntities<AgentSimulationContext, AgentContext, AgentAttributeSet, AttributeSetLog<AgentSimulationContext>> {
 

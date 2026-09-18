@@ -23,7 +23,8 @@ import java.util.List;
  * <p>This class is responsible for collecting the agent-level and environment-level results the model and its
  * workers produce, merging per-worker agent results together, and providing a read-only view of the results once
  * the run has completed.
- */
+  * @hidden
+  */
 @Internal
 public final class Results {
     private Config config = null;

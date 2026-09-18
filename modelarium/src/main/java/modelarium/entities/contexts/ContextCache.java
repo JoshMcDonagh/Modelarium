@@ -13,7 +13,9 @@ import java.util.function.Predicate;
  *
  * <p>This class is responsible for avoiding repeated requests to the co-ordinator within a single tick. It is
  * cleared by the worker at the end of every tick so that stale state does not carry over.
- */
+  * @hidden
+  */
+@Internal
 public class ContextCache {
     /** List of previously applied agent filters (for caching filtered sets) */
     private final IdentityHashMap<Predicate<ReadOnlyAgent>, ReadOnlyAgentSet> filteredAgentsCache = new IdentityHashMap<>();
@@ -36,7 +38,8 @@ public class ContextCache {
 
     /**
      * Constructs a new worker cache.
-     */
+      * @hidden
+      */
     @Internal
     public ContextCache() { }
 

@@ -1,5 +1,6 @@
 package modelarium.results.readonly;
 
+import modelarium.internal.Internal;
 import modelarium.results.ResultsForAgents;
 
 import java.util.Collections;
@@ -22,7 +23,9 @@ public final class ReadOnlyResultsForAgents {
      * Constructs a new immutable agent results view wrapping the specified mutable results.
      *
      * @param results the mutable agent results to provide a read-only view of
+     * @hidden
      */
+    @Internal
     public ReadOnlyResultsForAgents(ResultsForAgents results) {
         this.results = results;
     }

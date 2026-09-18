@@ -1,6 +1,6 @@
 package modelarium.entities.contexts;
 
-import modelarium.clock.Clock;
+import modelarium.clock.ReadOnlyClock;
 import modelarium.entities.Agent;
 import modelarium.entities.agentsets.AgentSet;
 import modelarium.entities.agentsets.ReadOnlyAgentSet;
@@ -21,9 +21,9 @@ public sealed interface Context permits SimulationContext, EntityContext {
     /**
      * Returns the model's clock.
      *
-     * @return a read-only view of the model's {@link Clock}
+     * @return a read-only view of the model's clock
      */
-    Clock getClock();
+    ReadOnlyClock getClock();
 
     /**
      * Returns whether an agent with the given name exists on the current core.

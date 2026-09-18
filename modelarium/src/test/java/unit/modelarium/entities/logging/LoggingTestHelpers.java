@@ -81,7 +81,7 @@ class LoggingTestHelpers {
                 attributeSetName,
                 (List<Attribute>) (List<?>) List.of(attributes)
         );
-        attributeSet.internalSetLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
+        attributeSet.setLogDatabaseFactory(new MemoryBasedAttributeSetLogDatabaseFactory());
         return attributeSet;
     }
 }

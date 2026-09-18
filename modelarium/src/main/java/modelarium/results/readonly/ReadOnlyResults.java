@@ -19,7 +19,8 @@ public final class ReadOnlyResults {
      * Constructs a new immutable results view of the specified mutable results.
      *
      * @param results the mutable results to provide a read-only view of
-     */
+      * @hidden
+      */
     @Internal
     public ReadOnlyResults(Results results) {
         mutableVersion = results;

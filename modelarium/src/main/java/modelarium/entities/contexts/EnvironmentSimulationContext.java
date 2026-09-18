@@ -37,7 +37,9 @@ public final class EnvironmentSimulationContext extends SimulationContext implem
      *                                  interaction
      * @param localEnvironment the local environment the context will provide access to
      * @param randomGenerator the random generator the context will provide access to
-     */
+      * @hidden
+      */
+    @Internal
     public EnvironmentSimulationContext(
             Environment entity,
             AgentSet localAgentSet,
@@ -55,9 +57,10 @@ public final class EnvironmentSimulationContext extends SimulationContext implem
      * Internal method which returns the environment's local agent set.
      *
      * @return the environment's local agent set
-     */
+      * @hidden
+      */
     @Internal
-    public AgentSet internalGetLocalAgentSet() {
+    public AgentSet getLocalAgentSet() {
         return localAgentSet();
     }
 
@@ -110,7 +113,7 @@ public final class EnvironmentSimulationContext extends SimulationContext implem
      */
     @Override
     public int getCurrentPopulationSize() {
-        return internalGetLocalAgentSet().size();
+        return getLocalAgentSet().size();
     }
 
     /**

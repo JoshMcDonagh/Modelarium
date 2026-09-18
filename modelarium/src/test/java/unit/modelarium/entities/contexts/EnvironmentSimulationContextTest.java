@@ -24,7 +24,7 @@ import static unit.modelarium.entities.contexts.ContextTestHelpers.*;
 
 public class EnvironmentSimulationContextTest {
     @Test
-    public void testInternalGetLocalAgentSet_ReturnsLocalAgentSet() throws Exception {
+    public void testGetLocalAgentSet_ReturnsLocalAgentSet() throws Exception {
         AgentSet agentSet = agentSetOfSize(3);
         EnvironmentSimulationContext context = simulationContextWithAgentSet(
                 EnvironmentSimulationContext.class,
@@ -32,7 +32,7 @@ public class EnvironmentSimulationContextTest {
                 agentSet
         );
 
-        assertSame(agentSet, context.internalGetLocalAgentSet());
+        assertSame(agentSet, context.getLocalAgentSet());
     }
 
     @Test
@@ -99,7 +99,8 @@ public class EnvironmentSimulationContextTest {
                 clock
         );
 
-        assertSame(clock, context.getClock());
+        assertEquals(clock.currentTick(), context.getClock().currentTick());
+        assertEquals(clock.totalTickCount(), context.getClock().totalTickCount());
     }
 
     @Test

@@ -22,22 +22,22 @@ public class ClockTest {
     }
 
     @Test
-    public void testInternalTriggerTick() {
+    public void testTriggerTick() {
         Clock clock = new Clock(5);
 
-        clock.internalTriggerTick();
+        clock.triggerTick();
 
         assertEquals(1, clock.currentTick());
     }
 
     @Test
-    public void testInternalTriggerTick_RunsToCompletion() {
+    public void testTriggerTick_RunsToCompletion() {
         int totalTickCount = 5;
         Clock clock = new Clock(totalTickCount);
 
         for (int i = 0; i < totalTickCount; i++) {
             assertFalse(clock.isFinished());
-            clock.internalTriggerTick();
+            clock.triggerTick();
         }
 
         assertTrue(clock.isFinished());
@@ -45,11 +45,11 @@ public class ClockTest {
     }
 
     @Test
-    public void testInternalTriggerTick_DoesNotAdvancePastTotalTickCount() {
+    public void testTriggerTick_DoesNotAdvancePastTotalTickCount() {
         Clock clock = new Clock(3);
 
         for (int i = 0; i < 10; i++)
-            clock.internalTriggerTick();
+            clock.triggerTick();
 
         assertEquals(3, clock.currentTick());
     }
@@ -60,7 +60,7 @@ public class ClockTest {
 
         assertFalse(clock.isFinished());
 
-        clock.internalTriggerTick();
+        clock.triggerTick();
 
         assertFalse(clock.isFinished());
     }
@@ -69,7 +69,7 @@ public class ClockTest {
     public void testIsFinishedTrue() {
         Clock clock = new Clock(1);
 
-        clock.internalTriggerTick();
+        clock.triggerTick();
 
         assertTrue(clock.isFinished());
     }
@@ -83,7 +83,7 @@ public class ClockTest {
         assertEquals(5, immutableClock.totalTickCount());
         assertFalse(immutableClock.isFinished());
 
-        mutableClock.internalTriggerTick();
+        mutableClock.triggerTick();
 
         assertEquals(1, immutableClock.currentTick());
     }
@@ -93,7 +93,7 @@ public class ClockTest {
         Clock mutableClock = new Clock(1);
         ReadOnlyClock immutableClock = new ReadOnlyClock(mutableClock);
 
-        mutableClock.internalTriggerTick();
+        mutableClock.triggerTick();
 
         assertTrue(immutableClock.isFinished());
     }

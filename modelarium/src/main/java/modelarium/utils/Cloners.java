@@ -12,6 +12,7 @@ import modelarium.entities.attributes.routines.functional.EnvironmentRoutineRunF
 import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
+import modelarium.internal.Internal;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,9 @@ import java.util.stream.Collectors;
  * <p>This class configures the cloner so that entity contexts and attribute logs are nulled rather than cloned,
  * functional attribute lambdas are shared rather than cloned, and the JDK's immutable collections are cloned via
  * registered fast cloners.
- */
+  * @hidden
+  */
+@Internal
 public final class Cloners {
 
     /** The shared cloner instance used throughout the framework */

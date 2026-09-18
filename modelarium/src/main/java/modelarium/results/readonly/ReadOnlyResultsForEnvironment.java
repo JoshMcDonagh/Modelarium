@@ -1,5 +1,6 @@
 package modelarium.results.readonly;
 
+import modelarium.internal.Internal;
 import modelarium.results.ResultsForEnvironment;
 
 import java.util.Collections;
@@ -22,7 +23,9 @@ public final class ReadOnlyResultsForEnvironment {
      * Constructs a new immutable environment results view wrapping the specified mutable results.
      *
      * @param results the mutable environment results to provide a read-only view of
+     * @hidden
      */
+    @Internal
     public ReadOnlyResultsForEnvironment(ResultsForEnvironment results) {
         this.results = results;
     }

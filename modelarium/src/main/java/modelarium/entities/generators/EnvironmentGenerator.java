@@ -27,7 +27,8 @@ public abstract class EnvironmentGenerator {
 
     /**
      * Internal method for resetting the state of the generator.
-     */
+      * @hidden
+      */
     @Internal
     public void internalReset() {
         reset();

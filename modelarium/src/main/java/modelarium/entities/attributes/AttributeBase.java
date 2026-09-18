@@ -73,9 +73,10 @@ public non-sealed abstract class AttributeBase<C extends Context> implements Att
      * Provides this attribute with the context it will use to interact with the rest of the model.
      *
      * @param context the context to provide the attribute with
-     */
+      * @hidden
+      */
     @Internal
-    public void internalSetContext(C context) {
+    public void setContext(C context) {
         if (this.context != null)
             throw new IllegalStateException("Context already set");
 

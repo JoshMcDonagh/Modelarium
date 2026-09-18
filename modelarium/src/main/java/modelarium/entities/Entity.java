@@ -57,7 +57,7 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
         for (int i = 0; i < this.attributeSetList.size(); i++) {
             AS attributeSet = this.attributeSetList.get(i);
             this.attributeSetIndexMap.put(attributeSet.name(), i);
-            attributeSet.internalSetOwnerName(name);
+            attributeSet.setOwnerName(name);
         }
     }
 
@@ -65,11 +65,12 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
      * Provides each of this entity's attribute sets with the factory used to create its log database.
      *
      * @param databaseFactory the factory the attribute sets will use to create their log databases
-     */
+      * @hidden
+      */
     @Internal
-    public void internalSetLogDatabaseFactory(AttributeSetLogDatabaseFactory databaseFactory) {
+    public void setLogDatabaseFactory(AttributeSetLogDatabaseFactory databaseFactory) {
         for (AS attributeSet : attributeSetList)
-            attributeSet.internalSetLogDatabaseFactory(databaseFactory);
+            attributeSet.setLogDatabaseFactory(databaseFactory);
     }
 
     /**
@@ -107,9 +108,10 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
      *                                  interaction
      * @param localEnvironment the local environment the context will provide access to
      * @param randomGenerator the random generator the context will provide access to
-     */
+      * @hidden
+      */
     @Internal
-    public void internalCreateContext(
+    public void createContext(
             AgentSet agentSet,
             Config config,
             ContextCache contextCache,
@@ -121,7 +123,7 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
         if (context != null)
             throw new IllegalStateException("Context already created");
 
-        internalSetLogDatabaseFactory(config.runLogDatabaseFactory());
+        setLogDatabaseFactory(config.runLogDatabaseFactory());
 
         context = makeContextInstance(
                 agentSet,
@@ -134,17 +136,29 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
         );
 
         for (AS attributeSet : attributeSetList)
-            attributeSet.internalSetContext(context);
+            attributeSet.setContext(context);
     }
 
+    /**
+     * Returns agents queued for addition by this entity.
+     *
+     * @return the queued agents
+     * @hidden
+     */
     @Internal
-    public AgentSet internalGetAddedAgents() {
-        return context.internalGetAddedAgents();
+    public AgentSet getAddedAgents() {
+        return context.getAddedAgents();
     }
 
+    /**
+     * Returns names of agents queued for removal by this entity.
+     *
+     * @return the queued agent names
+     * @hidden
+     */
     @Internal
-    public List<String> internalGetKilledAgentNames() {
-        return context.internalGetKilledAgentNames();
+    public List<String> getKilledAgentNames() {
+        return context.getKilledAgentNames();
     }
 
     /**
@@ -232,8 +246,13 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
      */
     public abstract ReadOnlyEntity<SC,C,AS,ASL> getAsImmutable();
 
+    /**
+     * Clears agent changes after the framework has processed them.
+     *
+     * @hidden
+     */
     @Internal
-    public void internalClearPendingAgentChanges() {
-        context.internalClearPendingAgentChanges();
+    public void clearPendingAgentChanges() {
+        context.clearPendingAgentChanges();
     }
 }
