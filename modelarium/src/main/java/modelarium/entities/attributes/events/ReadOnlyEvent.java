@@ -3,6 +3,9 @@ package modelarium.entities.attributes.events;
 import modelarium.entities.attributes.ReadOnlyAttribute;
 import modelarium.utils.Cloners;
 
+/**
+ * Provides a read-only view of an event attribute.
+ */
 public final class ReadOnlyEvent extends ReadOnlyAttribute<Event<?>> {
     /**
      * Constructs a new immutable attribute wrapping the specified mutable attribute.

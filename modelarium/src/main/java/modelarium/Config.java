@@ -109,6 +109,11 @@ public record Config(
         private long seed = System.nanoTime();
 
         /**
+         * Constructs a builder initialised with Modelarium's default configuration values.
+         */
+        public ConfigBuilder() {}
+
+        /**
          * Sets the model's population size.
          *
          * @param populationSize the number of agents the model will contain

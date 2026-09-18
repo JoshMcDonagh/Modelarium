@@ -19,6 +19,8 @@ import java.util.Map;
  *
  * <p>This class is responsible for writing tick-level data to the backing database,
  * and for providing access to stored values after simulation.
+ *
+ * @param <C> the simulation context type used by the owning attribute set
  */
 public class AttributeSetLog<C extends SimulationContext> {
 

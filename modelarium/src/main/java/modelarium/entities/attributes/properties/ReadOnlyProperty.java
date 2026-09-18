@@ -3,6 +3,11 @@ package modelarium.entities.attributes.properties;
 import modelarium.entities.attributes.ReadOnlyAttribute;
 import modelarium.utils.Cloners;
 
+/**
+ * Provides a read-only view of a typed property attribute.
+ *
+ * @param <T> the type of value carried by the property
+ */
 public final class ReadOnlyProperty<T> extends ReadOnlyAttribute<Property<T, ?>> {
     /**
      * Constructs a new immutable attribute wrapping the specified mutable attribute.

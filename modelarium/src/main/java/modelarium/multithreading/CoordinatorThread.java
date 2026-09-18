@@ -74,6 +74,7 @@ public class CoordinatorThread implements Runnable {
      * @param requestResponseController the controller managing request/response queues
      * @param sharedClock the clock used to keep a track of time passing in the model
      * @param predefinedGlobalAgentSet the pre-defined agent set instance to use as the global agent set
+     * @param agentThreadMap the map from agent name to the worker thread containing that agent
      */
     public CoordinatorThread(String name,
                              Config config,

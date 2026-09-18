@@ -23,6 +23,11 @@ import java.util.random.RandomGenerator;
 public abstract class DefaultAgentGenerator extends AgentGenerator {
 
     /**
+     * Constructs a default agent generator.
+     */
+    public DefaultAgentGenerator() {}
+
+    /**
      * Generates a complete {@link AgentSet} based on the number of agents specified in the model settings.
      *
      * @param config the simulation configuration containing the agent count

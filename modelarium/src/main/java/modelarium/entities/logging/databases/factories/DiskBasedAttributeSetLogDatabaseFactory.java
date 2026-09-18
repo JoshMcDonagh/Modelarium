@@ -12,6 +12,11 @@ import modelarium.entities.logging.databases.DiskBasedAttributeSetLogDatabase;
 public class DiskBasedAttributeSetLogDatabaseFactory implements AttributeSetLogDatabaseFactory {
 
     /**
+     * Constructs a factory for disk-backed attribute-set log databases.
+     */
+    public DiskBasedAttributeSetLogDatabaseFactory() {}
+
+    /**
      * Creates a new disk-based attribute set log database.
      *
      * @return a new {@link DiskBasedAttributeSetLogDatabase} instance

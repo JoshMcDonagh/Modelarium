@@ -17,6 +17,11 @@ import java.util.random.RandomGenerator;
 public abstract class EnvironmentGenerator {
 
     /**
+     * Constructs an environment generator.
+     */
+    public EnvironmentGenerator() {}
+
+    /**
      * Creates and returns a fully initialised {@link Environment} for the simulation.
      *
      * @param config the global model settings used to configure the environment

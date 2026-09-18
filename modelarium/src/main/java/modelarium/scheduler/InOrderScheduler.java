@@ -16,6 +16,11 @@ import java.util.random.RandomGenerator;
 public class InOrderScheduler implements Scheduler {
 
     /**
+     * Constructs an in-order scheduler.
+     */
+    public InOrderScheduler() {}
+
+    /**
      * Executes each agent's {@code run()} method in the order they are stored in the agent set.
      *
      * @param threadName the name of the worker thread running the tick

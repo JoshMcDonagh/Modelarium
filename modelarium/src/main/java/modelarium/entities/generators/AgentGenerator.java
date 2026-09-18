@@ -15,6 +15,11 @@ import java.util.random.RandomGenerator;
  */
 public abstract class AgentGenerator {
     /**
+     * Constructs an agent generator.
+     */
+    public AgentGenerator() {}
+
+    /**
      * Generates the model's agents and distributes them across the model's worker cores.
      *
      * @param config the model settings containing the agent and thread counts

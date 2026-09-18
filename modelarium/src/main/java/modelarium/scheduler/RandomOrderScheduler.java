@@ -17,6 +17,11 @@ import java.util.random.RandomGenerator;
 public class RandomOrderScheduler implements Scheduler {
 
     /**
+     * Constructs a random-order scheduler.
+     */
+    public RandomOrderScheduler() {}
+
+    /**
      * Executes each agent's {@code run()} method in a randomised order.
      *
      * @param threadName the name of the worker thread running the tick

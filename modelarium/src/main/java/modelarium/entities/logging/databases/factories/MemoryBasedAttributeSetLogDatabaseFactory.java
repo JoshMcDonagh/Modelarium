@@ -12,6 +12,11 @@ import modelarium.entities.logging.databases.MemoryBasedAttributeSetLogDatabase;
 public class MemoryBasedAttributeSetLogDatabaseFactory implements AttributeSetLogDatabaseFactory {
 
     /**
+     * Constructs a factory for memory-backed attribute-set log databases.
+     */
+    public MemoryBasedAttributeSetLogDatabaseFactory() {}
+
+    /**
      * Creates a new memory-based attribute set log database.
      *
      * @return a new {@link MemoryBasedAttributeSetLogDatabase} instance

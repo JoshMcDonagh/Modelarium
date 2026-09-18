@@ -4,6 +4,8 @@ package modelarium.entities.attributes;
  * Class for providing a read-only view of an {@link Attribute}
  *
  * <p>This class wraps a mutable attribute so that other model elements can inspect it without being able to modify it.
+ *
+ * @param <T> the type of mutable attribute wrapped by this view
  */
 public abstract class ReadOnlyAttribute<T extends Attribute> {
     /** The mutable attribute this read-only view wraps */
