@@ -62,6 +62,8 @@ public class PublicApiBoundaryTest {
             }
 
             for (Method method : type.getDeclaredMethods()) {
+                if (method.isBridge() || method.isSynthetic())
+                    continue;
                 if (!isSupportedMember(method))
                     continue;
                 checkType(method.getGenericReturnType(), method.toGenericString(), violations);

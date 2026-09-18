@@ -85,7 +85,9 @@ public sealed abstract class Entity<SC extends SimulationContext, C extends Cont
      * @param localEnvironment the local environment the context will provide access to
      * @param randomGenerator the random generator the context will provide access to
      * @return a new simulation context instance for this entity
+     * @hidden
      */
+    @Internal
     protected abstract SC makeContextInstance(
             AgentSet agentSet,
             Config config,

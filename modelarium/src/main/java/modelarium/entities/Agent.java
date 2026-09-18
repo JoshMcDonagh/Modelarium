@@ -12,6 +12,7 @@ import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.ContextCache;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.entities.readonly.ReadOnlyAgent;
+import modelarium.internal.Internal;
 import modelarium.multithreading.requestresponse.RequestResponseController;
 
 import java.util.List;
@@ -49,8 +50,10 @@ public final class Agent extends Entity<AgentSimulationContext, AgentContext, Ag
      * @param localEnvironment the local environment the context will provide access to
      * @param randomGenerator the random generator the context will provide access to
      * @return a new {@link AgentSimulationContext} instance for this agent
+     * @hidden
      */
     @Override
+    @Internal
     protected AgentSimulationContext makeContextInstance(
             AgentSet agentSet,
             Config config,
