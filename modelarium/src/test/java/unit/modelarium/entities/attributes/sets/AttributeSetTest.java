@@ -186,7 +186,7 @@ public class AttributeSetTest {
         attributeSet.run();
 
         assertFalse(attributeSet.getLog().getAttributeNamesList().contains("Property_1"));
-        assertNull(attributeSet.getLog().getValues("Property_1"));
+        assertEquals(List.of(), attributeSet.getLog().getValues("Property_1"));
     }
 
     @Test

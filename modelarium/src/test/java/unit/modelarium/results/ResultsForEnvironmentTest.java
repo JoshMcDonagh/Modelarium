@@ -123,7 +123,10 @@ public class ResultsForEnvironmentTest {
 
         results.disconnectDatabases();
 
-        assertNull(environment.getAttributeSet("AttributeSet_0").getLog().getValues("Property_0"));
+        assertThrows(
+                IllegalStateException.class,
+                () -> environment.getAttributeSet("AttributeSet_0").getLog().getValues("Property_0")
+        );
     }
 
     @Test

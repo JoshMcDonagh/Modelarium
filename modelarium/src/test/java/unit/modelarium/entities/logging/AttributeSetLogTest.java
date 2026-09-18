@@ -173,6 +173,6 @@ public class AttributeSetLogTest {
 
         log.disconnectDatabase();
 
-        assertNull(log.getValues("Property_0"));
+        assertThrows(IllegalStateException.class, () -> log.getValues("Property_0"));
     }
 }

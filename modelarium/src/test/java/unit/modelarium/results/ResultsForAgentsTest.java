@@ -166,7 +166,10 @@ public class ResultsForAgentsTest {
         results.disconnectDatabases();
 
         assertEquals(0, results.agentLogCount());
-        assertNull(agent.getAttributeSet("AttributeSet_0").getLog().getValues("Property_0"));
+        assertThrows(
+                IllegalStateException.class,
+                () -> agent.getAttributeSet("AttributeSet_0").getLog().getValues("Property_0")
+        );
     }
 
     @Test

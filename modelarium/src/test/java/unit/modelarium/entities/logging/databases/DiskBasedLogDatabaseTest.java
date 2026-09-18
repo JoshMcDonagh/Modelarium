@@ -11,8 +11,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DiskBasedLogDatabaseTest {
+public class DiskBasedLogDatabaseTest extends AttributeSetLogDatabaseContractTest {
     private DiskBasedAttributeSetLogDatabase database;
+
+    @Override
+    protected DiskBasedAttributeSetLogDatabase createDatabase() {
+        return new DiskBasedAttributeSetLogDatabase();
+    }
 
     @BeforeEach
     public void setUp() {
@@ -170,15 +175,20 @@ public class DiskBasedLogDatabaseTest {
         MemoryBasedAttributeSetLogDatabase memoryDatabase = new MemoryBasedAttributeSetLogDatabase();
         List<Object> expected = Arrays.asList(null, 10, null, 20, null);
 
-        for (Object value : expected) {
-            database.addAttributeValue("x", value);
-            memoryDatabase.addAttributeValue("x", value);
-        }
+        memoryDatabase.connect();
+        try {
+            for (Object value : expected) {
+                database.addAttributeValue("x", value);
+                memoryDatabase.addAttributeValue("x", value);
+            }
 
-        assertEquals(
-                memoryDatabase.getAttributeColumnAsList("x"),
-                database.getAttributeColumnAsList("x")
-        );
+            assertEquals(
+                    memoryDatabase.getAttributeColumnAsList("x"),
+                    database.getAttributeColumnAsList("x")
+            );
+        } finally {
+            memoryDatabase.disconnect();
+        }
     }
 
     @Test

@@ -97,7 +97,7 @@ public class EntityLogTest {
         log.disconnectDatabases();
 
         assertEquals(0, log.attributeSetLogCount());
-        assertNull(attributeSetLog0.getValues("Property_0"));
-        assertNull(attributeSetLog1.getValues("Property_1"));
+        assertThrows(IllegalStateException.class, () -> attributeSetLog0.getValues("Property_0"));
+        assertThrows(IllegalStateException.class, () -> attributeSetLog1.getValues("Property_1"));
     }
 }

@@ -98,8 +98,14 @@ public class ResultsTest {
         results.disconnectDatabases();
 
         assertEquals(0, results.agents().agentLogCount());
-        assertNull(agent.getAttributeSet("AttributeSet_0").getLog().getValues("Property_0"));
-        assertNull(environment.getAttributeSet("AttributeSet_0").getLog().getValues("Property_0"));
+        assertThrows(
+                IllegalStateException.class,
+                () -> agent.getAttributeSet("AttributeSet_0").getLog().getValues("Property_0")
+        );
+        assertThrows(
+                IllegalStateException.class,
+                () -> environment.getAttributeSet("AttributeSet_0").getLog().getValues("Property_0")
+        );
     }
 
     @Test

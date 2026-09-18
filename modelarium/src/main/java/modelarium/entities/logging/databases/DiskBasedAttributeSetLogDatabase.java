@@ -110,8 +110,6 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
         super(createTempDatabasePath());
 
         synchronized (activeDatabases) {
-            activeDatabases.add(this);
-
             if (!shutdownHookRegistered) {
                 Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                     List<DiskBasedAttributeSetLogDatabase> snapshot;
@@ -151,6 +149,11 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
                 connection = DriverManager.getConnection("jdbc:sqlite:" + getDatabasePath());
                 configureConnection(connection);
                 createAttributeTable();
+
+                synchronized (activeDatabases) {
+                    if (!activeDatabases.contains(this))
+                        activeDatabases.add(this);
+                }
             } catch (SQLException e) {
                 connection = null;
                 throw new RuntimeException("Failed to establish SQLite connection: " + e.getMessage(), e);
@@ -186,6 +189,7 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
                     deleteDatabaseFileAndMaybeParentDirectory();
                 } finally {
                     activeDatabases.remove(this);
+                    attributeClassesMap.clear();
                     connection = null;
                 }
             }
@@ -204,9 +208,14 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
      */
     @Override
     public <T> void addAttributeValue(String attributeName, T attributeValue) {
+        ensureConnected();
         Objects.requireNonNull(attributeName, "attributeName must not be null");
-        rememberType(attributeClassesMap, attributeName, attributeValue);
+        Class<?> expectedType = attributeClassesMap.get(attributeName);
+        validateValueType(attributeName, attributeValue, expectedType);
+
         addSeriesValue(ATTRIBUTES_TABLE_NAME, attributeName, Cloners.standard().deepClone(attributeValue));
+        if (attributeValue != null && expectedType == null)
+            attributeClassesMap.put(attributeName, attributeValue.getClass());
     }
 
     // === Bulk Column Replacement ===
@@ -220,18 +229,21 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
      */
     @Override
     public void setAttributeColumn(String attributeName, List<Object> attributeValues) {
+        ensureConnected();
         Objects.requireNonNull(attributeName, "attributeName must not be null");
 
         Class<?> inferred = firstNonNullClass(attributeValues);
-        if (inferred != null) {
-            attributeClassesMap.put(attributeName, inferred);
-        }
+        validateColumnTypes(attributeName, attributeValues, inferred);
 
         replaceSeries(
                 ATTRIBUTES_TABLE_NAME,
                 attributeName,
                 attributeValues == null ? Collections.emptyList() : deepCloneValues(attributeValues)
         );
+
+        attributeClassesMap.remove(attributeName);
+        if (inferred != null)
+            attributeClassesMap.put(attributeName, inferred);
     }
 
     // === Column Retrieval ===
@@ -244,6 +256,7 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
      */
     @Override
     public List<Object> getAttributeColumnAsList(String attributeName) {
+        ensureConnected();
         Objects.requireNonNull(attributeName, "attributeName must not be null");
         return retrieveSeries(ATTRIBUTES_TABLE_NAME, attributeName, attributeClassesMap.get(attributeName));
     }
@@ -457,16 +470,18 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
 
     // === Utility ===
 
-    /**
-     * Records the class of a value against its series name for later deserialisation, if the value is non-null.
-     *
-     * @param typeMap the map of series names to value classes to record into
-     * @param name the name of the series the value belongs to
-     * @param value the value whose class to record
-     */
-    private void rememberType(Map<String, Class<?>> typeMap, String name, Object value) {
-        if (value != null)
-            typeMap.put(name, value.getClass());
+    private static void validateColumnTypes(String attributeName, List<?> values, Class<?> expectedType) {
+        if (values == null || expectedType == null)
+            return;
+
+        for (Object value : values)
+            validateValueType(attributeName, value, expectedType);
+    }
+
+    private static void validateValueType(String attributeName, Object value, Class<?> expectedType) {
+        if (value != null && expectedType != null && !expectedType.isInstance(value))
+            throw new IllegalArgumentException("Attribute '" + attributeName + "' requires values of type "
+                    + expectedType.getName() + " but received " + value.getClass().getName());
     }
 
     /**

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * An in-memory implementation of {@link AttributeSetLogDatabase}.
@@ -22,6 +23,9 @@ public class MemoryBasedAttributeSetLogDatabase extends AttributeSetLogDatabase 
 
     /** Maps each attribute's name to the class of the values it stores */
     private final Map<String, Class<?>> attributeClassesMap = new HashMap<>();
+
+    /** Whether this database is currently open for reading and writing */
+    private boolean connected = false;
 
     /**
      * Returns the class of the first non-null value in a list.
@@ -44,6 +48,12 @@ public class MemoryBasedAttributeSetLogDatabase extends AttributeSetLogDatabase 
         super();
     }
 
+    /** Opens this database for reading and writing. */
+    @Override
+    public void connect() {
+        connected = true;
+    }
+
     /**
      * Clears all stored series and recorded value types.
      */
@@ -51,6 +61,7 @@ public class MemoryBasedAttributeSetLogDatabase extends AttributeSetLogDatabase 
     public void disconnect() {
         attributesMap.clear();
         attributeClassesMap.clear();
+        connected = false;
     }
 
     /**
@@ -63,17 +74,15 @@ public class MemoryBasedAttributeSetLogDatabase extends AttributeSetLogDatabase 
      */
     @Override
     public <T> void addAttributeValue(String attributeName, T attributeValue) {
+        ensureConnected();
+        Objects.requireNonNull(attributeName, "attributeName must not be null");
         attributesMap.computeIfAbsent(attributeName, k -> new ArrayList<>());
-        if (attributeValue != null && !attributeClassesMap.containsKey(attributeName))
-            attributeClassesMap.put(attributeName, attributeValue.getClass());
+        Class<?> expectedType = attributeClassesMap.get(attributeName);
+        validateValueType(attributeName, attributeValue, expectedType);
 
-        if (attributeValue == null || attributeClassesMap.get(attributeName).isInstance(attributeValue)) {
-            attributesMap.get(attributeName).add(Cloners.standard().deepClone(attributeValue));
-        } else {
-            Class<?> expectedType = attributeClassesMap.get(attributeName);
-            throw new IllegalArgumentException("Attribute '" + attributeName + "' is not an instance of "
-                    + expectedType.getSimpleName());
-        }
+        attributesMap.get(attributeName).add(Cloners.standard().deepClone(attributeValue));
+        if (attributeValue != null && expectedType == null)
+            attributeClassesMap.put(attributeName, attributeValue.getClass());
     }
 
     /**
@@ -85,10 +94,18 @@ public class MemoryBasedAttributeSetLogDatabase extends AttributeSetLogDatabase 
      */
     @Override
     public void setAttributeColumn(String attributeName, List<Object> attributeValues) {
-        attributesMap.computeIfAbsent(attributeName, k -> new ArrayList<>());
-        attributesMap.put(attributeName, attributeValues == null ? new ArrayList<>() : Cloners.standard().deepClone(attributeValues));
+        ensureConnected();
+        Objects.requireNonNull(attributeName, "attributeName must not be null");
 
         Class<?> inferred = firstNonNullClass(attributeValues);
+        validateColumnTypes(attributeName, attributeValues, inferred);
+
+        attributesMap.put(
+                attributeName,
+                attributeValues == null ? new ArrayList<>() : deepCloneValues(attributeValues)
+        );
+
+        attributeClassesMap.remove(attributeName);
         if (inferred != null)
             attributeClassesMap.put(attributeName, inferred);
     }
@@ -97,10 +114,39 @@ public class MemoryBasedAttributeSetLogDatabase extends AttributeSetLogDatabase 
      * Retrieves the named attribute's stored series.
      *
      * @param attributeName the name of the attribute whose series to retrieve
-     * @return the attribute's stored values in insertion order, or null if none have been stored
+     * @return a detached list containing the attribute's stored values in insertion order, or an empty list when the
+     * series does not exist
      */
     @Override
     public List<Object> getAttributeColumnAsList(String attributeName) {
-        return attributesMap.get(attributeName);
+        ensureConnected();
+        Objects.requireNonNull(attributeName, "attributeName must not be null");
+        return deepCloneValues(attributesMap.getOrDefault(attributeName, List.of()));
+    }
+
+    private static List<Object> deepCloneValues(List<?> values) {
+        List<Object> clonedValues = new ArrayList<>(values.size());
+        for (Object value : values)
+            clonedValues.add(Cloners.standard().deepClone(value));
+        return clonedValues;
+    }
+
+    private static void validateColumnTypes(String attributeName, List<?> values, Class<?> expectedType) {
+        if (values == null || expectedType == null)
+            return;
+
+        for (Object value : values)
+            validateValueType(attributeName, value, expectedType);
+    }
+
+    private static void validateValueType(String attributeName, Object value, Class<?> expectedType) {
+        if (value != null && expectedType != null && !expectedType.isInstance(value))
+            throw new IllegalArgumentException("Attribute '" + attributeName + "' requires values of type "
+                    + expectedType.getName() + " but received " + value.getClass().getName());
+    }
+
+    private void ensureConnected() {
+        if (!connected)
+            throw new IllegalStateException("Database connection has not been established. Call connect() first.");
     }
 }
