@@ -33,7 +33,7 @@ tests use reduced settings and are a quicker way to verify the implementations.
 Use Maven's `exec:java` goal and select the example's main class:
 
 ```bash
-mvn -pl modelarium-examples exec:java \
+mvn -pl java/modelarium-examples exec:java \
   -Dexec.mainClass=dev.modelarium.examples.sir.SIRMain
 ```
 
@@ -41,7 +41,7 @@ On Windows PowerShell, enter the command on one line or use PowerShell's backtic
 
 The configuration files are classpath resources under
 [`src/main/resources/dev/modelarium/examples/`](src/main/resources/dev/modelarium/examples/). Edit a configuration
-file and rebuild before rerunning an example. Generated files are written beneath `modelarium-examples/output/`,
+file and rebuild before rerunning an example. Generated files are written beneath `java/modelarium-examples/output/`,
 which is intentionally ignored by Git.
 
 ## SIR epidemic
@@ -62,7 +62,7 @@ derives prevalence measures from the population. The example demonstrates:
 - a random-order scheduler and a fixed seed; and
 - environment-level prevalence logging.
 
-Results are exported to `modelarium-examples/output/sir/`.
+Results are exported to `java/modelarium-examples/output/sir/`.
 
 ## Schelling segregation
 
@@ -81,7 +81,7 @@ their neighbourhood and dissatisfied agents propose moves to vacant cells. The e
 - validating configuration before starting a run; and
 - calculating and printing segregation summaries from immutable results.
 
-Results are exported to `modelarium-examples/output/schelling_segregation/`.
+Results are exported to `java/modelarium-examples/output/schelling_segregation/`.
 
 ## El Farol Bar
 
@@ -101,7 +101,7 @@ history for the next decision. The example demonstrates:
 - synchronised execution across two worker cores; and
 - post-run aggregation and burn-in-aware summary statistics.
 
-Results are exported to `modelarium-examples/output/el_farol_bar/`.
+Results are exported to `java/modelarium-examples/output/el_farol_bar/`.
 
 ## Epstein-Axtell Sugarscape
 
@@ -125,7 +125,7 @@ pollution. It demonstrates:
 - running reproducible experiment families from a base seed; and
 - exporting both raw Modelarium results and experiment-level CSV summaries.
 
-Results are exported to `modelarium-examples/output/epstein_axtell_sugarscape/`. The landscape format is described
+Results are exported to `java/modelarium-examples/output/epstein_axtell_sugarscape/`. The landscape format is described
 in [`LANDSCAPE_README.txt`](src/main/resources/dev/modelarium/examples/epstein_axtell_sugarscape/LANDSCAPE_README.txt).
 
 Source: Joshua M. Epstein and Robert L. Axtell, *Growing Artificial Societies: Social Science from the Bottom Up*
@@ -150,7 +150,7 @@ runs. The example demonstrates:
 - independent reproducible replications; and
 - experiment summaries alongside one representative raw result export.
 
-Results are exported to `modelarium-examples/output/axelrod_cultural_dissemination/`.
+Results are exported to `java/modelarium-examples/output/axelrod_cultural_dissemination/`.
 
 Source: Robert Axelrod, “The Dissemination of Culture: A Model with Local Convergence and Global Polarization,”
 *Journal of Conflict Resolution* 41, no. 2 (1997): 203–226,
@@ -167,13 +167,13 @@ mvn -B verify
 Run only the examples module and its dependencies:
 
 ```bash
-mvn -B -pl modelarium-examples -am test
+mvn -B -pl java/modelarium-examples -am test
 ```
 
 Run one smoke-test class while still building the required library module:
 
 ```bash
-mvn -B -pl modelarium-examples -am \
+mvn -B -pl java/modelarium-examples -am \
   -Dtest=dev.modelarium.examples.smoke.SIRSmokeTest \
   -Dsurefire.failIfNoSpecifiedTests=false test
 ```

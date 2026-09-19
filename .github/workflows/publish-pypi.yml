@@ -1,0 +1,141 @@
+name: Publish to PyPI
+
+on:
+  push:
+    tags:
+      - "python-v*"
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish after verification (leave disabled for a safe dry run)
+        required: true
+        type: boolean
+        default: false
+      release_version:
+        description: Exact version from python/pyproject.toml (required when publishing manually)
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "pypi-${{ github.ref }}"
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify and build Python distributions
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout release revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Confirm revision is releasable
+        shell: bash
+        run: |
+          git fetch origin main --no-tags
+
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" "origin/main"; then
+            echo "Release revision $GITHUB_SHA is not part of the main branch."
+            exit 1
+          fi
+
+          if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
+            if [[ ! "$GITHUB_REF_NAME" =~ ^python-v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "Python release tag must use the form python-vMAJOR.MINOR.PATCH."
+              exit 1
+            fi
+          elif [[ "$GITHUB_REF" != "refs/heads/main" ]]; then
+            echo "Manual release verification must run from the main branch."
+            exit 1
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Confirm Java core version alignment
+        run: python scripts/check_version_alignment.py
+
+      - name: Confirm release version
+        shell: bash
+        env:
+          REQUESTED_VERSION: ${{ inputs.release_version }}
+        run: |
+          PROJECT_VERSION="$(python -c "import tomllib; print(tomllib.load(open('python/pyproject.toml', 'rb'))['project']['version'])")"
+
+          if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
+            EXPECTED_VERSION="${GITHUB_REF_NAME#python-v}"
+          else
+            EXPECTED_VERSION="$REQUESTED_VERSION"
+            if [[ -z "$EXPECTED_VERSION" ]]; then
+              echo "release_version is required when publishing manually."
+              exit 1
+            fi
+          fi
+
+          if [[ "$PROJECT_VERSION" != "$EXPECTED_VERSION" ]]; then
+            echo "Python project version '$PROJECT_VERSION' does not match release version '$EXPECTED_VERSION'."
+            exit 1
+          fi
+
+      - name: Install build tools
+        run: python -m pip install --upgrade build twine
+
+      - name: Fetch the declared Modelarium JAR from Maven Central
+        working-directory: python
+        run: python scripts/fetch_jar.py
+
+      - name: Build and check distributions
+        working-directory: python
+        run: |
+          python -m build
+          python -m twine check dist/*
+
+      - name: Test the built wheel as an installed package
+        working-directory: python
+        shell: bash
+        run: |
+          python -m pip install --force-reinstall dist/*.whl
+          python -c "import modelarium; path = modelarium.get_jar_path(); assert path.is_file(), path"
+
+      - name: Upload verified distributions
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-distributions
+          path: python/dist/*
+          if-no-files-found: error
+
+  publish:
+    name: Publish Python distributions
+    needs: verify
+    if: ${{ github.event_name == 'push' || inputs.publish }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download verified distributions
+        uses: actions/download-artifact@v4
+        with:
+          name: python-distributions
+          path: dist
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Twine
+        run: python -m pip install --upgrade twine
+
+      - name: Publish to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: python -m twine upload dist/*

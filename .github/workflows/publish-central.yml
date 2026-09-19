@@ -12,7 +12,7 @@ on:
         type: boolean
         default: false
       release_version:
-        description: Exact version from modelarium/pom.xml (required when publishing manually)
+        description: Exact version from java/modelarium/pom.xml (required when publishing manually)
         required: false
         type: string
 
@@ -62,6 +62,14 @@ jobs:
           java-version: "21"
           cache: maven
 
+      - name: Set up Python for repository checks
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Confirm Java core version alignment
+        run: python scripts/check_version_alignment.py
+
       - name: Clean, build and test all modules
         run: mvn -B -U clean verify --file pom.xml
 
@@ -93,7 +101,7 @@ jobs:
         env:
           REQUESTED_VERSION: ${{ inputs.release_version }}
         run: |
-          PROJECT_VERSION="$(mvn -B -q help:evaluate -Dexpression=project.version -DforceStdout --file modelarium/pom.xml)"
+          PROJECT_VERSION="$(mvn -B -q help:evaluate -Dexpression=project.version -DforceStdout --file java/modelarium/pom.xml)"
 
           if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
             EXPECTED_VERSION="${GITHUB_REF_NAME#v}"
@@ -111,7 +119,7 @@ jobs:
           fi
 
       - name: Publish signed library to Maven Central
-        run: mvn -B -U -Prelease deploy --file modelarium/pom.xml
+        run: mvn -B -U -Prelease deploy --file java/modelarium/pom.xml
         env:
           CENTRAL_TOKEN_USERNAME: ${{ secrets.CENTRAL_TOKEN_USERNAME }}
           CENTRAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}

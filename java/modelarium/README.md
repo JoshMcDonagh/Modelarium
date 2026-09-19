@@ -3,10 +3,10 @@
 Modelarium is a modular, extensible, and multithreaded agent-based modelling framework for Java 21. This module is
 the library published to Maven Central as `dev.modelarium:modelarium`.
 
-- [Repository overview](../README.md)
+- [Repository overview](../../README.md)
 - [Runnable examples](../modelarium-examples/README.md)
 - [Javadoc](https://joshmcdonagh.github.io/Modelarium/)
-- [Supported public API policy](../PUBLIC_API.md)
+- [Supported public API policy](../../PUBLIC_API.md)
 
 ## Installation
 
@@ -339,7 +339,7 @@ Consult the [Javadoc](https://joshmcdonagh.github.io/Modelarium/) for method-lev
 
 The supported extension points are attributes, generators, schedulers, log database factories, and their functional
 interfaces. Packages marked `@PublicApi` form the supported API unless a type or member is marked `@Internal`; see
-the [public API policy](../PUBLIC_API.md). Do not depend on the multithreading, mutable results, or other internal
+the [public API policy](../../PUBLIC_API.md). Do not depend on the multithreading, mutable results, or other internal
 implementation packages.
 
 Modelarium deep-clones entities when distributing or sharing state and when constructing immutable views. Model
@@ -358,17 +358,17 @@ mvn -B verify
 This builds and tests the library and examples and applies the configured coverage checks. To test only the library:
 
 ```bash
-mvn -B test --file modelarium/pom.xml
+mvn -B test --file java/modelarium/pom.xml
 ```
 
 To install a development build locally:
 
 ```bash
-mvn -B install --file modelarium/pom.xml
+mvn -B install --file java/modelarium/pom.xml
 ```
 
 CI and the Maven Enforcer configuration require Java 21. A newer JDK is not treated as a supported build runtime.
 
 ## Licence
 
-Modelarium is available under the MIT Licence. See [`LICENSE`](../LICENSE).
+Modelarium is available under the MIT Licence. See [`LICENSE`](../../LICENSE).

@@ -29,7 +29,7 @@ public final class AxelrodCulturalDisseminationMain {
     private static final String CONFIG_RESOURCE =
             "dev/modelarium/examples/axelrod_cultural_dissemination/axelrod-cultural-dissemination-config.json";
     private static final String OUTPUT_DIRECTORY =
-            "modelarium-examples/output/axelrod_cultural_dissemination";
+            "java/modelarium-examples/output/axelrod_cultural_dissemination";
 
     private AxelrodCulturalDisseminationMain() {}
 

@@ -28,7 +28,7 @@ import java.util.SplittableRandom;
 public final class EpsteinAxtellSugarscapeMain {
     private static final String CONFIG_RESOURCE =
             "dev/modelarium/examples/epstein_axtell_sugarscape/sugarscape-config.json";
-    private static final String OUTPUT_DIRECTORY = "modelarium-examples/output/epstein_axtell_sugarscape";
+    private static final String OUTPUT_DIRECTORY = "java/modelarium-examples/output/epstein_axtell_sugarscape";
 
     private EpsteinAxtellSugarscapeMain() {}
 

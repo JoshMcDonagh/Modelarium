@@ -53,7 +53,7 @@ public final class SchellingSegregationMain {
         ReadOnlyResults results = model.getResults();
         printSummary(results);
 
-        Path outputPath = results.export("modelarium-examples/output/schelling_segregation");
+        Path outputPath = results.export("java/modelarium-examples/output/schelling_segregation");
         System.out.println("Results exported to: " + outputPath.toAbsolutePath());
     }
 

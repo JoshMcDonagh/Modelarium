@@ -28,6 +28,6 @@ public class SIRMain {
 
         model.run();
 
-        model.getResults().export("modelarium-examples/output/sir");
+        model.getResults().export("java/modelarium-examples/output/sir");
     }
 }

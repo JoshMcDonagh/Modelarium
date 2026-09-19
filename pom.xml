@@ -22,8 +22,8 @@
     </properties>
 
     <modules>
-        <module>modelarium</module>
-        <module>modelarium-examples</module>
+        <module>java/modelarium</module>
+        <module>java/modelarium-examples</module>
     </modules>
 
 </project>

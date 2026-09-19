@@ -49,7 +49,7 @@ public final class ElFarolBarMain {
         ReadOnlyResults results = model.getResults();
         printSummary(results, settings);
 
-        Path outputPath = results.export("modelarium-examples/output/el_farol_bar");
+        Path outputPath = results.export("java/modelarium-examples/output/el_farol_bar");
         System.out.println("Results exported to: " + outputPath.toAbsolutePath());
     }
 

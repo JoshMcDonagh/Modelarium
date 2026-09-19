@@ -30,20 +30,20 @@ jobs:
           cache: maven
 
       - name: Generate Javadocs
-        run: mvn -B -DskipTests javadoc:javadoc --file modelarium/pom.xml
+        run: mvn -B -DskipTests javadoc:javadoc --file java/modelarium/pom.xml
 
       - name: Prepare Pages content
         run: |
           rm -rf site
           mkdir -p site
 
-          if [ -f "modelarium/target/site/apidocs/index.html" ]; then
-            cp -R modelarium/target/site/apidocs/* site/
-          elif [ -f "modelarium/target/reports/apidocs/index.html" ]; then
-            cp -R modelarium/target/reports/apidocs/* site/
+          if [ -f "java/modelarium/target/site/apidocs/index.html" ]; then
+            cp -R java/modelarium/target/site/apidocs/* site/
+          elif [ -f "java/modelarium/target/reports/apidocs/index.html" ]; then
+            cp -R java/modelarium/target/reports/apidocs/* site/
           else
             echo "Could not find Javadocs index.html"
-            find modelarium/target -maxdepth 5 -type f -name index.html -print
+            find java/modelarium/target -maxdepth 5 -type f -name index.html -print
             exit 1
           fi
 

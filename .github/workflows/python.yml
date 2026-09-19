@@ -1,0 +1,69 @@
+name: Python CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Confirm Java core version alignment
+        run: python scripts/check_version_alignment.py
+
+      - name: Build the Java library from this revision
+        run: mvn -B -U -DskipTests package --file java/modelarium/pom.xml
+
+      - name: Bundle the Java library in the Python package
+        shell: bash
+        run: |
+          JAR="$(find java/modelarium/target -maxdepth 1 -type f -name 'modelarium-*.jar' \
+              ! -name '*-sources.jar' ! -name '*-javadoc.jar' -print -quit)"
+          if [[ -z "$JAR" ]]; then
+            echo "The Modelarium Java JAR was not produced."
+            exit 1
+          fi
+          cp "$JAR" python/src/modelarium/_jars/
+
+      - name: Install Python build tools
+        run: python -m pip install --upgrade build twine
+
+      - name: Build and inspect the Python distributions
+        working-directory: python
+        run: |
+          python -m build
+          python -m twine check dist/*
+
+      - name: Test the built wheel as an installed package
+        working-directory: python
+        shell: bash
+        run: |
+          python -m pip install --force-reinstall dist/*.whl
+          python -c "import modelarium; path = modelarium.get_jar_path(); assert path.is_file(), path"

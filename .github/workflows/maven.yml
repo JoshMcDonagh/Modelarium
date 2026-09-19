@@ -29,45 +29,53 @@ jobs:
           java-version: "21"
           cache: maven
 
+      - name: Set up Python for repository checks
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Confirm Java core version alignment
+        run: python scripts/check_version_alignment.py
+
       - name: Clean, build, test and verify all modules
         run: mvn -B -U clean verify --file pom.xml
 
       - name: Confirm tests and release artefacts were produced
         shell: bash
         run: |
-          if ! compgen -G "modelarium/target/surefire-reports/TEST-unit.*.xml" > /dev/null; then
+          if ! compgen -G "java/modelarium/target/surefire-reports/TEST-unit.*.xml" > /dev/null; then
             echo "No Modelarium unit-test reports were produced."
             exit 1
           fi
 
-          if ! compgen -G "modelarium/target/surefire-reports/TEST-integration.*.xml" > /dev/null; then
+          if ! compgen -G "java/modelarium/target/surefire-reports/TEST-integration.*.xml" > /dev/null; then
             echo "No Modelarium integration-test reports were produced."
             exit 1
           fi
 
-          if ! compgen -G "modelarium-examples/target/surefire-reports/TEST-dev.modelarium.examples.smoke.*.xml" > /dev/null; then
+          if ! compgen -G "java/modelarium-examples/target/surefire-reports/TEST-dev.modelarium.examples.smoke.*.xml" > /dev/null; then
             echo "No example smoke-test reports were produced."
             exit 1
           fi
 
-          if ! find modelarium/target -maxdepth 1 -type f -name "modelarium-*.jar" \
+          if ! find java/modelarium/target -maxdepth 1 -type f -name "modelarium-*.jar" \
               ! -name "*-sources.jar" ! -name "*-javadoc.jar" -print -quit | grep -q .; then
             echo "The library JAR was not produced."
             exit 1
           fi
 
-          if ! compgen -G "modelarium/target/modelarium-*-sources.jar" > /dev/null; then
+          if ! compgen -G "java/modelarium/target/modelarium-*-sources.jar" > /dev/null; then
             echo "The source JAR was not produced."
             exit 1
           fi
 
-          if ! compgen -G "modelarium/target/modelarium-*-javadoc.jar" > /dev/null; then
+          if ! compgen -G "java/modelarium/target/modelarium-*-javadoc.jar" > /dev/null; then
             echo "The Javadoc JAR was not produced."
             exit 1
           fi
 
-          if [[ ! -f "modelarium/target/site/apidocs/index.html" \
-                && ! -f "modelarium/target/reports/apidocs/index.html" ]]; then
+          if [[ ! -f "java/modelarium/target/site/apidocs/index.html" \
+                && ! -f "java/modelarium/target/reports/apidocs/index.html" ]]; then
             echo "The HTML Javadocs were not produced."
             exit 1
           fi
