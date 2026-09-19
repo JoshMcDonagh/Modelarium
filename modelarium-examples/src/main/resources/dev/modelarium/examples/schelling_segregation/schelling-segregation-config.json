@@ -1,0 +1,21 @@
+{
+  "modelSettings": {
+    "numOfCores": 2,
+    "numOfTicks": 100,
+    "seed": 1971
+  },
+
+  "grid": {
+    "width": 20,
+    "height": 20
+  },
+
+  "population": {
+    "vacancyProportion": 0.10,
+    "groupOneProportion": 0.50
+  },
+
+  "segregation": {
+    "minimumSimilarNeighbourFraction": 0.30
+  }
+}

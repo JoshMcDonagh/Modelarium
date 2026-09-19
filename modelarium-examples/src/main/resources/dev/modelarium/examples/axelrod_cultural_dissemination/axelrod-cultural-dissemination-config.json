@@ -1,0 +1,18 @@
+{
+  "modelSettings": {
+    "numOfReplications": 100,
+    "maxNumOfEventsPerRun": 1000000,
+    "stabilityCheckIntervalEvents": 1000,
+    "baseSeed": 1997
+  },
+
+  "grid": {
+    "width": 10,
+    "height": 10
+  },
+
+  "culture": {
+    "numOfFeatures": 5,
+    "traitsPerFeature": 10
+  }
+}

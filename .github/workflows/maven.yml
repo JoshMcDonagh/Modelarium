@@ -16,7 +16,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
@@ -29,8 +29,45 @@ jobs:
           java-version: "21"
           cache: maven
 
-      - name: Build and test
-        run: mvn -B -U test --file pom.xml
+      - name: Clean, build, test and verify all modules
+        run: mvn -B -U clean verify --file pom.xml
 
-      - name: Package (skip tests)
-        run: mvn -B -DskipTests package --file pom.xml
+      - name: Confirm tests and release artefacts were produced
+        shell: bash
+        run: |
+          if ! compgen -G "modelarium/target/surefire-reports/TEST-unit.*.xml" > /dev/null; then
+            echo "No Modelarium unit-test reports were produced."
+            exit 1
+          fi
+
+          if ! compgen -G "modelarium/target/surefire-reports/TEST-integration.*.xml" > /dev/null; then
+            echo "No Modelarium integration-test reports were produced."
+            exit 1
+          fi
+
+          if ! compgen -G "modelarium-examples/target/surefire-reports/TEST-dev.modelarium.examples.smoke.*.xml" > /dev/null; then
+            echo "No example smoke-test reports were produced."
+            exit 1
+          fi
+
+          if ! find modelarium/target -maxdepth 1 -type f -name "modelarium-*.jar" \
+              ! -name "*-sources.jar" ! -name "*-javadoc.jar" -print -quit | grep -q .; then
+            echo "The library JAR was not produced."
+            exit 1
+          fi
+
+          if ! compgen -G "modelarium/target/modelarium-*-sources.jar" > /dev/null; then
+            echo "The source JAR was not produced."
+            exit 1
+          fi
+
+          if ! compgen -G "modelarium/target/modelarium-*-javadoc.jar" > /dev/null; then
+            echo "The Javadoc JAR was not produced."
+            exit 1
+          fi
+
+          if [[ ! -f "modelarium/target/site/apidocs/index.html" \
+                && ! -f "modelarium/target/reports/apidocs/index.html" ]]; then
+            echo "The HTML Javadocs were not produced."
+            exit 1
+          fi

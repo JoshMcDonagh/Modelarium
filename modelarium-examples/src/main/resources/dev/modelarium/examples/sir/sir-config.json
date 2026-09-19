@@ -1,0 +1,30 @@
+{
+  "modelSettings": {
+    "numOfCores": 16,
+    "numOfTicks": 800,
+    "seed": 1976
+  },
+
+  "initialStates": {
+    "S": 5000,
+    "I": 100,
+    "R": 0
+  },
+
+  "environment": {
+    "area": {
+      "width": 300,
+      "height": 300
+    }
+  },
+
+  "movement": {
+    "probabilityPerTick": 0.5,
+    "contactDistance": 2.0
+  },
+
+  "disease": {
+    "infectionProbabilityPerContact": 0.5,
+    "recoveryProbabilityPerTick": 0.02
+  }
+}
