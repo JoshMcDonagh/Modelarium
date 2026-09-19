@@ -34,13 +34,13 @@ This repository contains two Maven modules, built together by a thin aggregator 
 The examples module contains five complete models. They progress from a conventional compartmental epidemic model
 to published classic agent-based models and replication experiments:
 
-| Example | What it demonstrates |
-| --- | --- |
-| [SIR epidemic](modelarium-examples/src/main/java/dev/modelarium/examples/sir/) | Agent properties and events, spatial contact, an environment-level prevalence summary, seeded randomness, and multi-core execution. |
-| [Schelling segregation](modelarium-examples/src/main/java/dev/modelarium/examples/schelling_segregation/) | A spatial grid, agent relocation, neighbourhood queries, cross-agent interaction, and aggregate segregation measures. |
-| [El Farol Bar](modelarium-examples/src/main/java/dev/modelarium/examples/el_farol_bar/) | Adaptive decision-making, agent-specific predictor sets, shared attendance history, and environment feedback. |
-| [Epstein-Axtell Sugarscape](modelarium-examples/src/main/java/dev/modelarium/examples/epstein_axtell_sugarscape/) | A suite of replication experiments using a custom scheduler, resource landscapes, death and replacement, and experiment-level CSV output. |
-| [Axelrod cultural dissemination](modelarium-examples/src/main/java/dev/modelarium/examples/axelrod_cultural_dissemination/) | An event-driven replication study, spatial cultural interaction, absorbing-state detection, repeated seeded runs, and summary statistics. |
+| Example | What it demonstrates | Original literature |
+| --- | --- | --- |
+| [SIR epidemic](modelarium-examples/src/main/java/dev/modelarium/examples/sir/) | Agent properties and events, spatial contact, an environment-level prevalence summary, seeded randomness, and multi-core execution. | — |
+| [Schelling segregation](modelarium-examples/src/main/java/dev/modelarium/examples/schelling_segregation/) | A spatial grid, agent relocation, neighbourhood queries, cross-agent interaction, and aggregate segregation measures. | — |
+| [El Farol Bar](modelarium-examples/src/main/java/dev/modelarium/examples/el_farol_bar/) | Adaptive decision-making, agent-specific predictor sets, shared attendance history, and environment feedback. | — |
+| [Epstein-Axtell Sugarscape](modelarium-examples/src/main/java/dev/modelarium/examples/epstein_axtell_sugarscape/) | A suite of replication experiments using a custom scheduler, resource landscapes, death and replacement, and experiment-level CSV output. | [Epstein and Axtell (1996)](https://mitpress.mit.edu/9780262550253/growing-artificial-societies/) |
+| [Axelrod cultural dissemination](modelarium-examples/src/main/java/dev/modelarium/examples/axelrod_cultural_dissemination/) | An event-driven replication study, spatial cultural interaction, absorbing-state detection, repeated seeded runs, and summary statistics. | [Axelrod (1997)](https://doi.org/10.1177/0022002797041002001) |
 
 Build all modules, then run an example from the repository root:
 

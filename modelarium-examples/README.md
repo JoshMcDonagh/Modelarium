@@ -128,6 +128,9 @@ pollution. It demonstrates:
 Results are exported to `modelarium-examples/output/epstein_axtell_sugarscape/`. The landscape format is described
 in [`LANDSCAPE_README.txt`](src/main/resources/dev/modelarium/examples/epstein_axtell_sugarscape/LANDSCAPE_README.txt).
 
+Source: Joshua M. Epstein and Robert L. Axtell, *Growing Artificial Societies: Social Science from the Bottom Up*
+(The MIT Press, 1996), [publisher's page](https://mitpress.mit.edu/9780262550253/growing-artificial-societies/).
+
 ## Axelrod cultural dissemination
 
 Main class:
@@ -148,6 +151,10 @@ runs. The example demonstrates:
 - experiment summaries alongside one representative raw result export.
 
 Results are exported to `modelarium-examples/output/axelrod_cultural_dissemination/`.
+
+Source: Robert Axelrod, “The Dissemination of Culture: A Model with Local Convergence and Global Polarization,”
+*Journal of Conflict Resolution* 41, no. 2 (1997): 203–226,
+[doi:10.1177/0022002797041002001](https://doi.org/10.1177/0022002797041002001).
 
 ## Running the example tests
 
