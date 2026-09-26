@@ -36,4 +36,4 @@ class Entity(ABC, WrapperObject):
 
     @abstractmethod
     def get_as_immutable(self): # TODO: Update to return a ReadOnlyEntity wrapper type
-        return self.java_object.getAsImmutable()
+        pass
