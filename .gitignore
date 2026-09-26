@@ -1,3 +1,7 @@
+# ==========================
+# Java
+# ==========================
+
 # Compiled class file
 *.class
 
@@ -32,3 +36,64 @@ target/
 
 # Output files
 output/
+
+# ==========================
+# Python
+# ==========================
+
+# Bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# Python packaging and build artefacts
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+pip-wheel-metadata/
+
+# Testing and coverage
+.pytest_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+*.py.cover
+.hypothesis/
+
+# Type checking and linting
+.mypy_cache/
+.pyre/
+.pytype/
+.ruff_cache/
+.dmypy.json
+dmypy.json
+
+# Jupyter notebooks
+.ipynb_checkpoints/
+
+# Python IDEs and editors
+.vscode/
+.spyproject/
+.ropeproject/
+
+# Local environment variables
+.env
+.env.*
+!.env.example
+
+# Python profiling
+*.prof
+*.pstats
