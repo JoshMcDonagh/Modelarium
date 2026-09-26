@@ -8,4 +8,4 @@ will be added in a future release.
 
 __version__ = "0.0.1"
 
-from .jvm import get_jar_path
+from .jvm import get_classpath, get_jar_path, start_jvm

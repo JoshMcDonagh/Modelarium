@@ -61,6 +61,13 @@ jobs:
           python-version: "3.11"
           cache: pip
 
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
       - name: Confirm Java core version alignment
         run: python scripts/check_version_alignment.py
 
@@ -89,9 +96,30 @@ jobs:
       - name: Install build tools
         run: python -m pip install --upgrade build twine
 
-      - name: Fetch the declared Modelarium JAR from Maven Central
-        working-directory: python
-        run: python scripts/fetch_jar.py
+      - name: Build the Java library from this revision
+        run: mvn -B -DskipTests package --file java/modelarium/pom.xml
+
+      - name: Bundle the Java library and runtime dependencies
+        shell: bash
+        run: |
+          mkdir -p python/src/modelarium/_jars
+
+          JAR="$(find java/modelarium/target -maxdepth 1 -type f \
+            -name 'modelarium-*.jar' \
+            ! -name '*-sources.jar' \
+            ! -name '*-javadoc.jar' \
+            -print -quit)"
+
+          if [[ -z "$JAR" ]]; then
+            echo "The Modelarium Java JAR was not produced."
+            exit 1
+          fi
+
+          cp "$JAR" python/src/modelarium/_jars/
+
+          mvn -B -f java/modelarium/pom.xml dependency:copy-dependencies \
+            -DincludeScope=runtime \
+            -DoutputDirectory="$GITHUB_WORKSPACE/python/src/modelarium/_jars"
 
       - name: Build and check distributions
         working-directory: python
@@ -104,7 +132,7 @@ jobs:
         shell: bash
         run: |
           python -m pip install --force-reinstall dist/*.whl
-          python -c "import modelarium; path = modelarium.get_jar_path(); assert path.is_file(), path"
+          python -c "import modelarium, jpype; modelarium.start_jvm(); assert jpype.JClass('modelarium.Model'); assert len(modelarium.get_classpath()) > 1"
 
       - name: Upload verified distributions
         uses: actions/upload-artifact@v4

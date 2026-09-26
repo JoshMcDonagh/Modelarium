@@ -8,6 +8,7 @@ version = "0.0.1"
 description = "Python wrapper for the Modelarium Java agent-based modelling framework."
 readme = "README.md"
 requires-python = ">=3.9"
+dependencies = ["JPype1>=1.5"]
 license = { file = "LICENSE" }
 authors = [
   { name = "Joshua McDonagh" }
