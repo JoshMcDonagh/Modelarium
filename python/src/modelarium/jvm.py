@@ -29,26 +29,24 @@ def get_jar_path() -> Path:
 
 
 def get_classpath() -> list[Path]:
-    """Return the core JAR and its bundled runtime dependencies."""
+    """
+    Return the core JAR and its bundled runtime dependencies.
+    """
     core = get_jar_path()
     jars_dir = resources.files("modelarium") / "_jars"
 
     dependencies = sorted(
-        (
-            Path(jar)
-            for jar in jars_dir.iterdir()
-            if jar.name.endswith(".jar") and Path(jar) != core
-        ),
+        (Path(jar) for jar in jars_dir.iterdir() if jar.name.endswith(".jar") and Path(jar) != core),
         key=lambda jar: jar.name,
     )
     return [core, *dependencies]
 
 
 def start_jvm() -> None:
-    """Start JPype with all JARs required by Modelarium."""
+    """
+    Start JPype with all JARs required by Modelarium.
+    """
     import jpype
 
     if not jpype.isJVMStarted():
-        jpype.startJVM(
-            classpath=[str(jar) for jar in get_classpath()]
-        )
+        jpype.startJVM(classpath=[str(jar) for jar in get_classpath()])
