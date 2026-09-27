@@ -4,9 +4,9 @@ import jpype
 
 
 class WrapperObject(ABC):
-    def __init__(self, java_object: jpype.JClass) -> None:
-        self._java_object = java_object
+    def __init__(self, java_obj: jpype.JClass) -> None:
+        self._java_obj = java_obj
 
     @property
-    def java_object(self):
-        return self._java_object
+    def _java_object(self) -> jpype.JClass:
+        return self._java_obj
