@@ -1,23 +1,25 @@
 from enum import Enum
-
 import jpype
 
 from python.src.modelarium.wrapper_object import WrapperObject
 
 
-class AttributeAccessLevel(Enum, WrapperObject):
+class AttributeAccessLevel(WrapperObject, Enum):
     PUBLIC = "public"
     PRIVATE = "private"
 
-    def __init__(self) -> None:
-        super().__init__(jpype.JClass("modelarium.entities.attributes.AttributeAccessLevel"))
+    def __init__(self, value: str) -> None:
+        java_enum = jpype.JClass("modelarium.entities.attributes.AttributeAccessLevel")
+        super().__init__(getattr(java_enum, value.upper()))
 
-    @property
-    def _java_version(self) -> jpype.JClass:
-        if self is AttributeAccessLevel.PUBLIC:
-            return self._java_object.PUBLIC
+    @staticmethod
+    def make_python_version(java_version: object) -> "AttributeAccessLevel":
+        java_enum = jpype.JClass("modelarium.entities.attributes.AttributeAccessLevel")
 
-        if self is AttributeAccessLevel.PRIVATE:
-            return self._java_object.PRIVATE
+        if java_version == java_enum.PUBLIC:
+            return AttributeAccessLevel.PUBLIC
+        if java_version == java_enum.PRIVATE:
 
-        raise ValueError(f"Attribute access level {self} is not supported")
+            return AttributeAccessLevel.PRIVATE
+
+        raise ValueError(f"Java attribute access level {java_version} is not supported")

@@ -23,12 +23,12 @@ class Agent(Entity):
         return self.get_attribute_set(attribute_set_id).get_property(property_id)
 
     def kill(self) -> None:
-        self.java_object.kill()
+        self._java_object.kill()
 
     @property
     def is_dead(self) -> bool:
-        return self.java_object.isDead()
+        return self._java_object.isDead()
 
     @override
     def get_as_immutable(self): # TODO: Update to return a ReadOnlyAgent wrapper type
-        return self.java_object.getAsImmutable()
+        return self._java_object.getAsImmutable()

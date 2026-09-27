@@ -15,7 +15,7 @@ class Environment(Entity):
         ...
 
     def __init__(self, name: str | list[object], attribute_sets: list[object] | None = None) -> None: # TODO: Update to use an EnvironmentAttributeSet wrapper type
-        java_class = jpype.JClass("modelarium.entities.Environment")
+        java_object = jpype.JClass("modelarium.entities.Environment")
 
         if not (
                 isinstance(name, str) and isinstance(attribute_sets, list)
@@ -26,9 +26,9 @@ class Environment(Entity):
             )
 
         if attribute_sets is None:
-            super().__init__(java_class(name))
+            super().__init__(java_object(name))
         else:
-            super().__init__(java_class(name, attribute_sets))
+            super().__init__(java_object(name, attribute_sets))
 
     def get_event(self, attribute_set_id: int | str, event_id: int | str): # TODO: Update to return an EnvironmentEvent wrapper type
         return self.get_attribute_set(attribute_set_id).get_event(event_id)
@@ -41,4 +41,4 @@ class Environment(Entity):
 
     @override
     def get_as_immutable(self): # TODO: Update to return a ReadOnlyEnvironment wrapper type
-        return self.java_object.getAsImmutable()
+        return self._java_object.getAsImmutable()

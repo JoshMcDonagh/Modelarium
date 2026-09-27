@@ -1,23 +1,26 @@
 from abc import ABC, abstractmethod
 
+import jpype
+
 from python.src.modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+from python.src.modelarium.wrapper_object import WrapperObject
 
 
-class Attribute(ABC):
+class Attribute(ABC, WrapperObject):
+    def __init__(self, java_object: jpype.JClass):
+        super().__init__(java_object)
+
     @property
-    @abstractmethod
     def name(self) -> str:
-        pass
+        return self._java_object.name()
 
     @property
-    @abstractmethod
     def is_logged(self) -> bool:
-        pass
+        return self._java_object.isLogged()
 
     @property
-    @abstractmethod
     def access_level(self) -> AttributeAccessLevel:
-        pass
+        return AttributeAccessLevel.make_python_version(self._java_object.accessLevel())
 
     @abstractmethod
     def run(self) -> None:
