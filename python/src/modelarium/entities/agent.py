@@ -6,7 +6,7 @@ from python.src.modelarium.entities.entity import Entity
 
 
 class Agent(Entity):
-    def __init__(self, name: str, attribute_sets: list[object]): # TODO: Add AgentAttributeSet wrapper type
+    def __init__(self, name: str, attribute_sets: list[object]) -> None: # TODO: Add AgentAttributeSet wrapper type
         super().__init__(jpype.JClass("modelarium.entities.Agent")(name, attribute_sets))
 
     @override
@@ -31,4 +31,4 @@ class Agent(Entity):
 
     @override
     def get_as_immutable(self): # TODO: Update to return a ReadOnlyAgent wrapper type
-        self.java_object.getAsImmutable()
+        return self.java_object.getAsImmutable()

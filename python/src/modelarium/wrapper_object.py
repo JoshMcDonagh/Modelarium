@@ -4,7 +4,7 @@ import jpype
 
 
 class WrapperObject(ABC):
-    def __init__(self, java_object: jpype.JClass):
+    def __init__(self, java_object: jpype.JClass) -> None:
         self._java_object = java_object
 
     @property
