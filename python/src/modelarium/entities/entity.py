@@ -1,14 +1,9 @@
 from abc import ABC, abstractmethod
 
-import jpype
-
 from python.src.modelarium.wrapper_object import WrapperObject
 
 
 class Entity(ABC, WrapperObject):
-    def __init__(self, java_entity: jpype.JClass) -> None:
-        super().__init__(java_entity)
-
     @property
     def context(self): # TODO: Update to return a SimulationContext wrapper type
         return self._java_object.context()
