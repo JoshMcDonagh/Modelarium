@@ -27,7 +27,7 @@ class Entity(ABC, WrapperObject):
         return self._java_object.getLog()
 
     def run(self) -> None:
-        self._java_object.run()
+        self._java_object._run()
 
     @abstractmethod
     def get_as_immutable(self): # TODO: Update to return a ReadOnlyEntity wrapper type

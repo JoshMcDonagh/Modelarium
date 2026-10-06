@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
 from typing_extensions import override
 
@@ -14,8 +14,12 @@ class Event(ABC, Attribute):
         return self._java_object.isTriggered()
 
     @override
-    def run(self) -> None:
+    def _run(self) -> None:
         self._java_object.run()
+
+    @abstractmethod
+    def run(self, context: object) -> None: # TODO: Update with context type hint
+        pass
 
     @override
     def get_as_immutable(self) -> ReadOnlyEvent:
