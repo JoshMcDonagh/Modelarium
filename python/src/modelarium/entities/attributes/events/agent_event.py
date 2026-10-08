@@ -15,3 +15,9 @@ class AgentEvent(ABC, Event, AgentAttribute):
             "modelarium.entities.attributes.events.functional.AgentEventRunFunction",
             "modelarium.entities.attributes.events.functional.AgentEventIsTriggeredFunction"
         )
+
+
+class _AgentEvent(AgentEvent):
+    def __init__(self, java_object: object) -> None:
+        super().__init__(None, None, None)
+        super()._java_obj = java_object

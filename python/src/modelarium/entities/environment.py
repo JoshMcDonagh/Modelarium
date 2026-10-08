@@ -2,6 +2,8 @@ from typing import overload, override
 
 import jpype
 
+from python.src.modelarium.entities.attributes.events.environment_event import EnvironmentEvent, _EnvironmentEvent
+from python.src.modelarium.entities.attributes.read_only.read_only_environment import ReadOnlyEnvironment
 from python.src.modelarium.entities.entity import Entity
 
 
@@ -30,8 +32,8 @@ class Environment(Entity):
         else:
             super().__init__(java_object(name, attribute_sets))
 
-    def get_event(self, attribute_set_id: int | str, event_id: int | str): # TODO: Update to return an EnvironmentEvent wrapper type
-        return self.get_attribute_set(attribute_set_id).get_event(event_id)
+    def get_event(self, attribute_set_id: int | str, event_id: int | str) -> EnvironmentEvent:
+        return _EnvironmentEvent(self.get_attribute_set(attribute_set_id).get_event(event_id))
 
     def get_routine(self, attribute_set_id: int | str, routine_id: int | str): # TODO: Update to return an EnvironmentRoutine wrapper type
         return self.get_attribute_set(attribute_set_id).get_routine(routine_id)
@@ -40,5 +42,11 @@ class Environment(Entity):
         return self.get_attribute_set(attribute_set_id).get_property(property_id)
 
     @override
-    def get_as_immutable(self): # TODO: Update to return a ReadOnlyEnvironment wrapper type
-        return self._java_object.getAsImmutable()
+    def get_as_immutable(self) -> ReadOnlyEnvironment:
+        return ReadOnlyEnvironment(self._java_object.getAsImmutable())
+
+
+class _Environment(Environment):
+    def __init__(self, java_object: object) -> None:
+        super().__init__(None, None)
+        super()._java_obj = java_object

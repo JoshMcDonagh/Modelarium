@@ -2,6 +2,8 @@ from typing import override
 
 import jpype
 
+from python.src.modelarium.entities.attributes.events.agent_event import AgentEvent, _AgentEvent
+from python.src.modelarium.entities.attributes.read_only.read_only_agent import ReadOnlyAgent
 from python.src.modelarium.entities.entity import Entity
 
 
@@ -11,10 +13,10 @@ class Agent(Entity):
 
     @override
     def get_attribute_set(self, attribute_set_id: int | str): # TODO: Update to return a AgentAttributeSet wrapper type
-        super().get_attribute_set(attribute_set_id)
+        return super().get_attribute_set(attribute_set_id)
 
-    def get_event(self, attribute_set_id: int | str, event_id: int | str): # TODO: Update to return an AgentEvent wrapper type
-        return self.get_attribute_set(attribute_set_id).get_event(event_id)
+    def get_event(self, attribute_set_id: int | str, event_id: int | str) -> AgentEvent:
+        return _AgentEvent(self.get_attribute_set(attribute_set_id).get_event(event_id))
 
     def get_routine(self, attribute_set_id: int | str, routine_id: int | str): # TODO: Update to return an AgentRoutine wrapper type
         return self.get_attribute_set(attribute_set_id).get_routine(routine_id)
@@ -30,5 +32,11 @@ class Agent(Entity):
         return self._java_object.isDead()
 
     @override
-    def get_as_immutable(self): # TODO: Update to return a ReadOnlyAgent wrapper type
-        return self._java_object.getAsImmutable()
+    def get_as_immutable(self) -> ReadOnlyAgent:
+        return ReadOnlyAgent(self._java_object.getAsImmutable())
+
+
+class _Agent(Agent):
+    def __init__(self, java_object: object) -> None:
+        super().__init__(None, None)
+        super()._java_obj = java_object

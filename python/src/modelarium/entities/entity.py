@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from python.src.modelarium.entities.attributes.read_only.read_only_entity import ReadOnlyEntity
 from python.src.modelarium.wrapper_object import WrapperObject
 
 
@@ -30,5 +31,5 @@ class Entity(ABC, WrapperObject):
         self._java_object._run()
 
     @abstractmethod
-    def get_as_immutable(self): # TODO: Update to return a ReadOnlyEntity wrapper type
+    def get_as_immutable(self) -> ReadOnlyEntity:
         pass

@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from python.src.modelarium.entities.agent import Agent
 from python.src.modelarium.entities.attributes.attribute import Attribute
+from python.src.modelarium.entities.attributes.read_only.read_only_agent import ReadOnlyAgent
 from python.src.modelarium.entities.entity import Entity
 from python.src.modelarium.wrapper_object import WrapperObject
 
@@ -16,8 +17,8 @@ class Context(ABC, WrapperObject):
     def get_current_population_size(self) -> int:
         return self._java_object.getCurrentPopulationSize()
 
-    def get_agent(self, target_agent_name: str) -> object: # TODO: update to ReadOnlyAgent type hint
-        return self._java_object.getAgent(target_agent_name)
+    def get_agent(self, target_agent_name: str) -> ReadOnlyAgent:
+        return ReadOnlyAgent(self._java_object.getAgent(target_agent_name))
 
     def get_filtered_agents(self, filter: object, include_dead_agents: bool = False) -> object: # TODO update to Predicate<ReadOnlyAgent> (equivalent) and ReadOnlyAgentSet type hint
         return self._java_object.getFilteredAgents(filter, include_dead_agents)
@@ -31,8 +32,13 @@ class Context(ABC, WrapperObject):
     def add_agents(self, agents: object | list[Agent]) -> None: # TODO: update to AgentSet type hint
         return self._java_object.addAgents(agents)
 
-    def kill_agent(self, agent: str | object) -> None: # TODO: update toe ReadOnlyAgent type hint
-        return self._java_object.killAgent(agent)
+    def kill_agent(self, agent: str | ReadOnlyAgent) -> None:
+        if isinstance(agent, ReadOnlyAgent):
+            self._java_object.killAgent(agent._java_object)
+        elif isinstance(agent, str):
+            self._java_object.killAgent(agent)
+        else:
+            raise TypeError("Agent identifier must be a string or a ReadOnlyAgent, not: {}".format(type(agent)))
 
     def kill_agents(self, agents: list[str] | object) -> None: # TODO: update to ReadOnlyAgentSet type hint
         return self._java_object.killAgents(agents)
