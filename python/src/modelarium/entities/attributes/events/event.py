@@ -5,6 +5,7 @@ from typing_extensions import override
 
 from python.src.modelarium.entities.attributes.attribute import Attribute
 from python.src.modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+from python.src.modelarium.entities.attributes.contexts.context import Context
 from python.src.modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
 
 
@@ -34,11 +35,11 @@ class Event(ABC, Attribute):
         self._java_object.run()
 
     @abstractmethod
-    def is_triggered(self, context: object) -> bool: # TODO: Update with context type hint
+    def is_triggered(self, context: Context) -> bool:
         pass
 
     @abstractmethod
-    def run(self, context: object) -> None: # TODO: Update with context type hint
+    def run(self, context: Context) -> None:
         pass
 
     @override

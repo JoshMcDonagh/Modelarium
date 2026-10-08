@@ -1,7 +1,5 @@
 from abc import ABC
 
-import jpype
-
 
 class WrapperObject(ABC):
     def __init__(self, java_obj: object) -> None:
