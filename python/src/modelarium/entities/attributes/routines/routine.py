@@ -6,6 +6,7 @@ import jpype
 from python.src.modelarium.entities.attributes.attribute import Attribute
 from python.src.modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 from python.src.modelarium.entities.attributes.contexts.context import Context
+from python.src.modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
 
 
 class Routine(ABC, Attribute):
@@ -28,5 +29,5 @@ class Routine(ABC, Attribute):
         pass
 
     @override
-    def get_as_immutable(self) -> object: # TODO: Update with ReadOnlyRoutine type hint
-        return self._java_object.getAsImmutable()
+    def get_as_immutable(self) -> ReadOnlyRoutine:
+        return ReadOnlyRoutine(self._java_object.getAsImmutable())
