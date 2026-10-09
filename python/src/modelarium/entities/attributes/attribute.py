@@ -18,9 +18,8 @@ class Attribute(ABC, WrapperObject):
     def access_level(self) -> AttributeAccessLevel:
         return AttributeAccessLevel.make_python_version(self._java_object.accessLevel())
 
-    @abstractmethod
     def _run(self) -> None:
-        pass
+        self._java_object.run()
 
     @abstractmethod
     def get_as_immutable(self) -> ReadOnlyAttribute:

@@ -18,7 +18,7 @@ class Event(ABC, Attribute):
             java_class_name: str,
             java_run_logic_interface_name: str,
             java_trigger_logic_interface_name: str
-    ):
+    ) -> None:
         run_logic = jpype.JProxy(java_run_logic_interface_name, dict={"run": self.run})
         trigger_logic = jpype.JProxy(java_trigger_logic_interface_name, dict={"is_triggered": self.is_triggered})
 
@@ -29,10 +29,6 @@ class Event(ABC, Attribute):
 
     def _is_triggered(self) -> bool:
         return self._java_object.isTriggered()
-
-    @override
-    def _run(self) -> None:
-        self._java_object.run()
 
     @abstractmethod
     def is_triggered(self, context: Context) -> bool:
