@@ -3,7 +3,9 @@ from typing import override
 import jpype
 
 from python.src.modelarium.entities.attributes.events.agent_event import AgentEvent, _AgentEvent
+from python.src.modelarium.entities.attributes.properties.agent_property import AgentProperty, _AgentProperty
 from python.src.modelarium.entities.attributes.read_only.read_only_agent import ReadOnlyAgent
+from python.src.modelarium.entities.attributes.routines.agent_routine import AgentRoutine, _AgentRoutine
 from python.src.modelarium.entities.entity import Entity
 
 
@@ -18,11 +20,11 @@ class Agent(Entity):
     def get_event(self, attribute_set_id: int | str, event_id: int | str) -> AgentEvent:
         return _AgentEvent(self.get_attribute_set(attribute_set_id).get_event(event_id))
 
-    def get_routine(self, attribute_set_id: int | str, routine_id: int | str): # TODO: Update to return an AgentRoutine wrapper type
-        return self.get_attribute_set(attribute_set_id).get_routine(routine_id)
+    def get_routine(self, attribute_set_id: int | str, routine_id: int | str) -> AgentRoutine:
+        return _AgentRoutine(self.get_attribute_set(attribute_set_id).get_routine(routine_id))
 
-    def get_property(self, attribute_set_id: int | str, property_id: int | str): # TODO: Update to return an AgentProperty wrapper type
-        return self.get_attribute_set(attribute_set_id).get_property(property_id)
+    def get_property(self, attribute_set_id: int | str, property_id: int | str) -> AgentProperty:
+        return _AgentProperty(self.get_attribute_set(attribute_set_id).get_property(property_id))
 
     def kill(self) -> None:
         self._java_object.kill()
