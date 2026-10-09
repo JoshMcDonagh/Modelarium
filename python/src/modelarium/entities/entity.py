@@ -1,13 +1,15 @@
 from abc import ABC, abstractmethod
 
+from python.src.modelarium.entities.attributes.contexts.context import Context
 from python.src.modelarium.entities.attributes.read_only.read_only_entity import ReadOnlyEntity
 from python.src.modelarium.wrapper_object import WrapperObject
 
 
 class Entity(ABC, WrapperObject):
     @property
-    def context(self): # TODO: Update to return a SimulationContext wrapper type
-        return self._java_object.context()
+    @abstractmethod
+    def context(self) -> Context:
+        pass
 
     @property
     def name(self) -> str:

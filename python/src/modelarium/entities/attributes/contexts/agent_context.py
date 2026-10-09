@@ -1,4 +1,3 @@
-from abc import ABC
 from typing import override
 
 from python.src.modelarium.entities.agent import Agent, _Agent
@@ -6,7 +5,7 @@ from python.src.modelarium.entities.attributes.contexts.context import Context
 from python.src.modelarium.entities.attributes.read_only.read_only_environment import ReadOnlyEnvironment
 
 
-class AgentContext(ABC, Context):
+class AgentContext(Context):
     @override
     def get_this_entity(self) -> Agent:
         return _Agent(self._java_object.getThisEntity())

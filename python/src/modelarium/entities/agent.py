@@ -2,6 +2,7 @@ from typing import override
 
 import jpype
 
+from python.src.modelarium.entities.attributes.contexts.agent_context import AgentContext
 from python.src.modelarium.entities.attributes.events.agent_event import AgentEvent, _AgentEvent
 from python.src.modelarium.entities.attributes.properties.agent_property import AgentProperty, _AgentProperty
 from python.src.modelarium.entities.attributes.read_only.read_only_agent import ReadOnlyAgent
@@ -12,6 +13,11 @@ from python.src.modelarium.entities.entity import Entity
 class Agent(Entity):
     def __init__(self, name: str, attribute_sets: list[object]) -> None: # TODO: Add AgentAttributeSet wrapper type
         super().__init__(jpype.JClass("modelarium.entities.Agent")(name, attribute_sets))
+
+    @property
+    @override
+    def context(self) -> AgentContext:
+        return AgentContext(self._java_object.context())
 
     @override
     def get_attribute_set(self, attribute_set_id: int | str): # TODO: Update to return a AgentAttributeSet wrapper type
