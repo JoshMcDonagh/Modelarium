@@ -22,7 +22,13 @@ class Event(ABC, Attribute):
         run_logic = jpype.JProxy(java_run_logic_interface_name, dict={"run": self.run})
         trigger_logic = jpype.JProxy(java_trigger_logic_interface_name, dict={"is_triggered": self.is_triggered})
 
-        super().__init__(jpype.JClass(java_class_name)(name, is_logged, access_level, run_logic, trigger_logic))
+        super().__init__(jpype.JClass(java_class_name)(
+            name,
+            is_logged,
+            access_level._java_object,
+            run_logic,
+            trigger_logic
+        ))
 
     def __str__(self) -> str:
         return self._java_object.toString()

@@ -1,11 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import TypeVar, Generic, override
+from typing import TypeVar, Generic, override, Type, get_args
 
 import jpype
 
 from python.src.modelarium.entities.attributes.attribute import Attribute
 from python.src.modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 from python.src.modelarium.entities.attributes.contexts.context import Context
+from python.src.modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
 
 T = TypeVar("T")
 
@@ -28,8 +29,11 @@ class Property(ABC, Attribute, Generic[T]):
         super().__init__(jpype.JClass(java_class_name)(
             name,
             is_logged,
-            access_level,
-            jpype.JClass("java.lang.Object").class_
+            access_level._java_object,
+            jpype.JClass("java.lang.Object").class_,
+            getter,
+            setter,
+            run_logic
         ))
 
     def _set(self, value: T) -> None:
@@ -37,6 +41,19 @@ class Property(ABC, Attribute, Generic[T]):
 
     def _get(self) -> T:
         return self._java_object.get()
+
+    def type(self) -> Type[T]:
+        orig_class = getattr(self, "__orig_class__", None)
+
+        if orig_class is None:
+            return object
+
+        args = get_args(orig_class)
+
+        if not args:
+            return object
+
+        return args[0]
 
     @abstractmethod
     def set(self, context: Context, value: T) -> None:
@@ -50,5 +67,5 @@ class Property(ABC, Attribute, Generic[T]):
         return
 
     @override
-    def get_as_immutable(self) -> object: # TODO: Update with ReadOnlyProperty type hint
-        return self._java_object.getAsImmutable()
+    def get_as_immutable(self) -> ReadOnlyProperty:
+        return ReadOnlyProperty[T](self._java_object.getAsImmutable())
