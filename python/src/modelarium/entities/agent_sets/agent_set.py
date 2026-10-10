@@ -88,8 +88,8 @@ class AgentSet(Iterable[Agent], WrapperObject):
         for java_agent in java_iterator:
             yield _Agent(java_agent)
 
-    def get_as_immutable(self) -> object: # TODO: Update with ReadOnlyAgentSet type hint
-        return self._java_object.getAsImmutable()
+    def get_as_immutable(self) -> ReadOnlyAgent:
+        return ReadOnlyAgent(self._java_object.getAsImmutable())
 
     def duplicate(self) -> AgentSet:
         return _AgentSet(self._java_object.duplicate())
