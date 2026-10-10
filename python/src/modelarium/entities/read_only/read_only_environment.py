@@ -1,9 +1,11 @@
 from typing import override
 
+from python.src.modelarium.entities.attributes.sets.read_only.read_only_environment_attribute_set import \
+    ReadOnlyEnvironmentAttributeSet
 from python.src.modelarium.entities.read_only.read_only_entity import ReadOnlyEntity
 
 
 class ReadOnlyEnvironment(ReadOnlyEntity):
     @override
-    def get_attribute_set(self, attribute_set_identifier: int | str) -> object:  # TODO: Update with ReadOnlyEnvironmentAttributeSet type hint
-        return self._java_object.getAttributeSet(attribute_set_identifier)
+    def get_attribute_set(self, attribute_set_identifier: int | str) -> ReadOnlyEnvironmentAttributeSet:
+        return ReadOnlyEnvironmentAttributeSet(self._java_object.getAttributeSet(attribute_set_identifier))

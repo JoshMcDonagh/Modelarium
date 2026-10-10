@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from python.src.modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
 from python.src.modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
 from python.src.modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
+from python.src.modelarium.entities.attributes.sets.read_only.read_only_attribute_set import ReadOnlyAttributeSet
 from python.src.modelarium.wrapper_object import WrapperObject
 
 
@@ -17,7 +18,7 @@ class ReadOnlyEntity(ABC, WrapperObject):
         return self._java_object.attributeCount()
 
     @abstractmethod
-    def get_attribute_set(self, attribute_set_identifier: int | str) -> object: # TODO: Update ReadOnlyAttributeSet type hint
+    def get_attribute_set(self, attribute_set_identifier: int | str) -> ReadOnlyAttributeSet:
         pass
 
     def get_log(self) -> object: # TODO: Update EntityLog type hint

@@ -2,7 +2,8 @@ from typing import override
 
 import jpype
 
-from python.src.modelarium.entities.contexts import AgentContext
+from python.src.modelarium.entities.attributes.sets.agent_attribute_set import AgentAttributeSet, _AgentAttributeSet
+from python.src.modelarium.entities.contexts.agent_context import AgentContext
 from python.src.modelarium.entities.attributes.events.agent_event import AgentEvent, _AgentEvent
 from python.src.modelarium.entities.attributes.properties.agent_property import AgentProperty, _AgentProperty
 from python.src.modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
@@ -11,8 +12,11 @@ from python.src.modelarium.entities.entity import Entity
 
 
 class Agent(Entity):
-    def __init__(self, name: str, attribute_sets: list[object]) -> None: # TODO: Add AgentAttributeSet wrapper type
-        super().__init__(jpype.JClass("modelarium.entities.Agent")(name, attribute_sets))
+    def __init__(self, name: str, attribute_sets: list[AgentAttributeSet]) -> None:
+        java_attribute_sets = jpype.JClass("java.util.ArrayList")()
+        for attribute_set in attribute_sets:
+            java_attribute_sets.add(attribute_set._java_object)
+        super().__init__(jpype.JClass("modelarium.entities.Agent")(name, java_attribute_sets))
 
     @property
     @override
@@ -20,8 +24,8 @@ class Agent(Entity):
         return AgentContext(self._java_object.context())
 
     @override
-    def get_attribute_set(self, attribute_set_id: int | str): # TODO: Update to return a AgentAttributeSet wrapper type
-        return super().get_attribute_set(attribute_set_id)
+    def get_attribute_set(self, attribute_set_id: int | str) -> AgentAttributeSet:
+        return _AgentAttributeSet(super().get_attribute_set(attribute_set_id))
 
     def get_event(self, attribute_set_id: int | str, event_id: int | str) -> AgentEvent:
         return _AgentEvent(self.get_attribute_set(attribute_set_id).get_event(event_id))

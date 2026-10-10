@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
-from python.src.modelarium.entities.contexts import Context
+from python.src.modelarium.entities.attributes.sets.attribute_set import AttributeSet
+from python.src.modelarium.entities.contexts.context import Context
 from python.src.modelarium.entities.read_only.read_only_entity import ReadOnlyEntity
 from python.src.modelarium.wrapper_object import WrapperObject
 
@@ -23,8 +24,9 @@ class Entity(ABC, WrapperObject):
     def attribute_count(self) -> int:
         return self._java_object.attributeCount()
 
-    def get_attribute_set(self, attribute_set_id: int | str): # TODO: Update to return a AttributeSet wrapper type
-        return self._java_object.getAttributeSet(attribute_set_id)
+    @abstractmethod
+    def get_attribute_set(self, attribute_set_id: int | str) -> AttributeSet:
+        pass
 
     def getLog(self): # TODO: Update to return an EntityLog wrapper type
         return self._java_object.getLog()
