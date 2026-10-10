@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from python.src.modelarium.entities.attributes.contexts.context import Context
-from python.src.modelarium.entities.attributes.read_only.read_only_entity import ReadOnlyEntity
+from python.src.modelarium.entities.contexts import Context
+from python.src.modelarium.entities.read_only.read_only_entity import ReadOnlyEntity
 from python.src.modelarium.wrapper_object import WrapperObject
 
 

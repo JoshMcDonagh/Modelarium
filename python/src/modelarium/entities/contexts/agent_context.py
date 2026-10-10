@@ -1,8 +1,8 @@
 from typing import override
 
 from python.src.modelarium.entities.agent import Agent, _Agent
-from python.src.modelarium.entities.attributes.contexts.context import Context
-from python.src.modelarium.entities.attributes.read_only.read_only_environment import ReadOnlyEnvironment
+from python.src.modelarium.entities.contexts.context import Context
+from python.src.modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
 
 
 class AgentContext(Context):

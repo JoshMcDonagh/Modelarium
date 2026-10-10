@@ -315,6 +315,7 @@ public sealed abstract class AttributeSet<SC extends SimulationContext, C extend
      * <p>Events are only run if triggered, with the trigger state logged; properties are run and their value logged;
      * routines are simply run.
      */
+    @Internal
     public void run() {
         context.setCurrentAttributeSet(this);
         for (AttributeBase<SC> attribute : attributeList) {

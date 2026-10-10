@@ -2,11 +2,11 @@ from typing import overload, override
 
 import jpype
 
-from python.src.modelarium.entities.attributes.contexts.environment_context import EnvironmentContext
+from python.src.modelarium.entities.contexts import EnvironmentContext
 from python.src.modelarium.entities.attributes.events.environment_event import EnvironmentEvent, _EnvironmentEvent
 from python.src.modelarium.entities.attributes.properties.environment_property import EnvironmentProperty, \
     _EnvironmentProperty
-from python.src.modelarium.entities.attributes.read_only.read_only_environment import ReadOnlyEnvironment
+from python.src.modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
 from python.src.modelarium.entities.attributes.routines.environment_routine import EnvironmentRoutine, \
     _EnvironmentRoutine
 from python.src.modelarium.entities.entity import Entity

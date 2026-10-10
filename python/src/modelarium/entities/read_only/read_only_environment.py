@@ -1,6 +1,6 @@
 from typing import override
 
-from python.src.modelarium.entities.attributes.read_only.read_only_entity import ReadOnlyEntity
+from python.src.modelarium.entities.read_only.read_only_entity import ReadOnlyEntity
 
 
 class ReadOnlyEnvironment(ReadOnlyEntity):

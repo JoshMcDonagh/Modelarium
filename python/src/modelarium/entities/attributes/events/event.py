@@ -5,7 +5,7 @@ from typing_extensions import override
 
 from python.src.modelarium.entities.attributes.attribute import Attribute
 from python.src.modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
-from python.src.modelarium.entities.attributes.contexts.context import Context
+from python.src.modelarium.entities.contexts.context import Context
 from python.src.modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
 
 

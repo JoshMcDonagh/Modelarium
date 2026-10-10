@@ -2,10 +2,10 @@ from typing import override
 
 import jpype
 
-from python.src.modelarium.entities.attributes.contexts.agent_context import AgentContext
+from python.src.modelarium.entities.contexts import AgentContext
 from python.src.modelarium.entities.attributes.events.agent_event import AgentEvent, _AgentEvent
 from python.src.modelarium.entities.attributes.properties.agent_property import AgentProperty, _AgentProperty
-from python.src.modelarium.entities.attributes.read_only.read_only_agent import ReadOnlyAgent
+from python.src.modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
 from python.src.modelarium.entities.attributes.routines.agent_routine import AgentRoutine, _AgentRoutine
 from python.src.modelarium.entities.entity import Entity
 

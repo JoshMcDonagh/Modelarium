@@ -1,6 +1,6 @@
 from typing import override
 
-from python.src.modelarium.entities.attributes.contexts.context import Context
+from python.src.modelarium.entities.contexts.context import Context
 from python.src.modelarium.entities.environment import Environment, _Environment
 
 

@@ -1,22 +1,22 @@
 from abc import ABC, abstractmethod
-from typing import TypeVar, Generic, override, Type, get_args
+from typing import Generic, override
 
 import jpype
 
 from python.src.modelarium.entities.attributes.attribute import Attribute
 from python.src.modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
-from python.src.modelarium.entities.attributes.contexts.context import Context
+from python.src.modelarium.entities.attributes.properties import PROPERTY_T, _type_to_string, _string_to_type
 from python.src.modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
+from python.src.modelarium.entities.contexts.context import Context
 
-T = TypeVar("T")
 
-
-class Property(ABC, Attribute, Generic[T]):
+class Property(ABC, Attribute, Generic[PROPERTY_T]):
     def __init__(
             self,
             name: str,
             is_logged: bool,
             access_level: AttributeAccessLevel,
+            stored_type: type[PROPERTY_T],
             java_class_name: str,
             java_getter_interface_name: str,
             java_setter_interface_name: str,
@@ -33,34 +33,25 @@ class Property(ABC, Attribute, Generic[T]):
             jpype.JClass("java.lang.Object").class_,
             getter,
             setter,
-            run_logic
+            run_logic,
+            _type_to_string(stored_type)
         ))
 
-    def _set(self, value: T) -> None:
+    def _set(self, value: PROPERTY_T) -> None:
         self._java_object.set(value)
 
-    def _get(self) -> T:
+    def _get(self) -> PROPERTY_T:
         return self._java_object.get()
 
-    def type(self) -> Type[T]:
-        orig_class = getattr(self, "__orig_class__", None)
-
-        if orig_class is None:
-            return object
-
-        args = get_args(orig_class)
-
-        if not args:
-            return object
-
-        return args[0]
+    def stored_type(self) -> type[PROPERTY_T]:
+        return _string_to_type(self._java_object.getPythonType())
 
     @abstractmethod
-    def set(self, context: Context, value: T) -> None:
+    def set(self, context: Context, value: PROPERTY_T) -> None:
         pass
 
     @abstractmethod
-    def get(self, context: Context) -> T:
+    def get(self, context: Context) -> PROPERTY_T:
         pass
 
     def run(self, context: Context) -> None:
@@ -68,4 +59,4 @@ class Property(ABC, Attribute, Generic[T]):
 
     @override
     def get_as_immutable(self) -> ReadOnlyProperty:
-        return ReadOnlyProperty[T](self._java_object.getAsImmutable())
+        return ReadOnlyProperty[PROPERTY_T](self._java_object.getAsImmutable())

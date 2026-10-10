@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from python.src.modelarium.entities.agent import Agent
 from python.src.modelarium.entities.attributes.attribute import Attribute
-from python.src.modelarium.entities.attributes.read_only.read_only_agent import ReadOnlyAgent
+from python.src.modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
 from python.src.modelarium.entities.entity import Entity
 from python.src.modelarium.wrapper_object import WrapperObject
 
