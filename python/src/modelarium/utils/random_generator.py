@@ -21,3 +21,9 @@ class RandomGenerator(WrapperObject):
 
     def next_boolean(self) -> bool:
         return bool(self._java_object.nextBoolean())
+
+
+class _RandomGenerator(RandomGenerator):
+    def __init__(self, java_object: object) -> None:
+        super().__init__(None)
+        super()._java_obj = java_object

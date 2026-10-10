@@ -1,6 +1,7 @@
 from typing import override
 
 from python.src.modelarium.entities.agent import Agent, _Agent
+from python.src.modelarium.entities.attributes.sets.agent_attribute_set import AgentAttributeSet, _AgentAttributeSet
 from python.src.modelarium.entities.contexts.context import Context
 from python.src.modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
 
@@ -11,8 +12,8 @@ class AgentContext(Context):
         return _Agent(self._java_object.getThisEntity())
 
     @override
-    def get_this_attribute_set(self) -> object:  # TODO: Update with AgentAttributeSet type hint
-        return self._java_object.getThisAttributeSet()
+    def get_this_attribute_set(self) -> AgentAttributeSet:
+        return _AgentAttributeSet(self._java_object.getThisAttributeSet())
 
     @override
     def get_environment(self) -> ReadOnlyEnvironment:

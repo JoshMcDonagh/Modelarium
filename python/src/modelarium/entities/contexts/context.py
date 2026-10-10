@@ -2,8 +2,10 @@ from abc import ABC, abstractmethod
 
 from python.src.modelarium.entities.agent import Agent
 from python.src.modelarium.entities.attributes.attribute import Attribute
+from python.src.modelarium.entities.attributes.sets.attribute_set import AttributeSet
 from python.src.modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
 from python.src.modelarium.entities.entity import Entity
+from python.src.modelarium.utils.random_generator import RandomGenerator, _RandomGenerator
 from python.src.modelarium.wrapper_object import WrapperObject
 
 
@@ -23,8 +25,8 @@ class Context(ABC, WrapperObject):
     def get_filtered_agents(self, filter: object, include_dead_agents: bool = False) -> object: # TODO update to Predicate<ReadOnlyAgent> (equivalent) and ReadOnlyAgentSet type hint
         return self._java_object.getFilteredAgents(filter, include_dead_agents)
 
-    def get_random(self) -> object: # TODO: update to RandomGenerator type hint
-        return self._java_object.getRandom()
+    def get_random(self) -> RandomGenerator:
+        return _RandomGenerator(self._java_object.getRandom())
 
     def add_agent(self, agent: Agent) -> None:
         return self._java_object.addAgent(agent._java_object)
@@ -51,5 +53,5 @@ class Context(ABC, WrapperObject):
         pass
 
     @abstractmethod
-    def get_this_attribute_set(self) -> object:  # TODO: Update with AttributeSet type hint
+    def get_this_attribute_set(self) -> AttributeSet:
         pass

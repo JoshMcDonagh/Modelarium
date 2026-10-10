@@ -1,5 +1,7 @@
 from typing import override
 
+from python.src.modelarium.entities.attributes.sets.environment_attribute_set import EnvironmentAttributeSet, \
+    _EnvironmentAttributeSet
 from python.src.modelarium.entities.contexts.context import Context
 from python.src.modelarium.entities.environment import Environment, _Environment
 
@@ -10,5 +12,5 @@ class EnvironmentContext(Context):
         return _Environment(self._java_object.getThisEntity())
 
     @override
-    def get_this_attribute_set(self) -> object:  # TODO: Update with EnvironmentAttributeSet type hint
-        return self._java_object.getThisAttributeSet()
+    def get_this_attribute_set(self) -> EnvironmentAttributeSet:
+        return _EnvironmentAttributeSet(self._java_object.getThisAttributeSet())
