@@ -17,7 +17,7 @@ class Routine(ABC, Attribute):
             java_class_name: str,
             java_run_logic_interface_name: str
     ) -> None:
-        run_logic = jpype.JProxy(java_run_logic_interface_name, dict={"_java_run": self.run})
+        run_logic = jpype.JProxy(java_run_logic_interface_name, dict={"run": self._java_run})
         super().__init__(jpype.JClass(java_class_name)(
             name,
             access_level._java_object,

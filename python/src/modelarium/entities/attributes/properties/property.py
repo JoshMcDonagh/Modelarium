@@ -22,9 +22,9 @@ class Property(ABC, Attribute, Generic[PROPERTY_T]):
             java_setter_interface_name: str,
             java_run_logic_interface_name: str
     ) -> None:
-        getter = jpype.JProxy(java_getter_interface_name, dict={"_java_get": self.get})
-        setter = jpype.JProxy(java_setter_interface_name, dict={"_java_set": self.set})
-        run_logic = jpype.JProxy(java_run_logic_interface_name, dict={"_java_run": self.run})
+        getter = jpype.JProxy(java_getter_interface_name, dict={"get": self._java_get})
+        setter = jpype.JProxy(java_setter_interface_name, dict={"set": self._java_set})
+        run_logic = jpype.JProxy(java_run_logic_interface_name, dict={"run": self._java_run})
 
         super().__init__(jpype.JClass(java_class_name)(
             name,
