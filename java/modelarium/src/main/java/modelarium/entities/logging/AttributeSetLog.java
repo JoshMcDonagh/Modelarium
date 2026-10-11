@@ -6,6 +6,7 @@ import modelarium.entities.attributes.sets.AttributeSet;
 import modelarium.entities.contexts.SimulationContext;
 import modelarium.entities.logging.databases.AttributeSetLogDatabase;
 import modelarium.entities.logging.databases.factories.AttributeSetLogDatabaseFactory;
+import modelarium.internal.Internal;
 import modelarium.utils.Cloners;
 
 import java.util.ArrayList;
@@ -136,6 +137,7 @@ public class AttributeSetLog<C extends SimulationContext> {
      * @param attributeName the name of the attribute the value belongs to
      * @param value the value to record
      */
+    @Internal
     public void record(String attributeName, Object value) {
         database.addAttributeValue(attributeName, value);
     }
