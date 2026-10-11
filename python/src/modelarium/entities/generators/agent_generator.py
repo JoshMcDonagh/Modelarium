@@ -11,12 +11,12 @@ from python.src.modelarium.utils.random_generator import RandomGenerator, _Rando
 class AgentGenerator(ABC, EntityGenerator):
     def __init__(self) -> None:
         super().__init__(
-            self._generate_agents_for_each_thread,
+            self._java_generate_agents_for_each_thread,
             "modelarium.entities.generators.FunctionalAgentGenerator",
             "generateAgentsForEachThread",
         )
 
-    def _generate_agents_for_each_thread(self, java_config: object, java_random: object) -> object:
+    def _java_generate_agents_for_each_thread(self, java_config: object, java_random: object) -> object:
         config = java_config # TODO: Update with java to python config converter
         random = _RandomGenerator(java_random)
         agent_sets = self.generate_agents_for_each_thread(config, random)
