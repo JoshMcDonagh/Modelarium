@@ -22,9 +22,9 @@ class Property(ABC, Attribute, Generic[PROPERTY_T]):
             java_setter_interface_name: str,
             java_run_logic_interface_name: str
     ) -> None:
-        getter = jpype.JProxy(java_getter_interface_name, dict={"get": self.get})
-        setter = jpype.JProxy(java_setter_interface_name, dict={"set": self.set})
-        run_logic = jpype.JProxy(java_run_logic_interface_name, dict={"run": self.run})
+        getter = jpype.JProxy(java_getter_interface_name, dict={"_java_get": self.get})
+        setter = jpype.JProxy(java_setter_interface_name, dict={"_java_set": self.set})
+        run_logic = jpype.JProxy(java_run_logic_interface_name, dict={"_java_run": self.run})
 
         super().__init__(jpype.JClass(java_class_name)(
             name,
@@ -47,13 +47,22 @@ class Property(ABC, Attribute, Generic[PROPERTY_T]):
         return _string_to_type(self._java_object.getPythonType())
 
     @abstractmethod
+    def _java_set(self, java_context: object, value: PROPERTY_T) -> None:
+        pass
+
+    @abstractmethod
     def set(self, context: Context, value: PROPERTY_T) -> None:
+        pass
+
+    @abstractmethod
+    def _java_get(self, java_context: object) -> PROPERTY_T:
         pass
 
     @abstractmethod
     def get(self, context: Context) -> PROPERTY_T:
         pass
 
+    @override
     def run(self, context: Context) -> None:
         return
 

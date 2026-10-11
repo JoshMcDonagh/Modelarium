@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from python.src.modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 from python.src.modelarium.entities.attributes.read_only_attribute import ReadOnlyAttribute
+from python.src.modelarium.entities.contexts.context import Context
 from python.src.modelarium.wrapper_object import WrapperObject
 
 
@@ -20,6 +21,14 @@ class Attribute(ABC, WrapperObject):
 
     def _run(self) -> None:
         self._java_object.run()
+
+    @abstractmethod
+    def _java_run(self, java_context: object) -> None:
+        pass
+
+    @abstractmethod
+    def run(self, context: Context) -> None:
+        pass
 
     @abstractmethod
     def get_as_immutable(self) -> ReadOnlyAttribute:
