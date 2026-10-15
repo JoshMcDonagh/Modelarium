@@ -1,11 +1,10 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import override
 
 import jpype
 
 from python.src.modelarium.entities.attributes.attribute import Attribute
 from python.src.modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
-from python.src.modelarium.entities.contexts.context import Context
 from python.src.modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
 
 

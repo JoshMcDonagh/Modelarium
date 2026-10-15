@@ -33,7 +33,7 @@ class Event(ABC, Attribute):
     def __str__(self) -> str:
         return self._java_object.toString()
 
-    def _is_triggered(self) -> bool:
+    def is_triggered(self) -> bool:
         return self._java_object.isTriggered()
 
     @abstractmethod
@@ -41,7 +41,7 @@ class Event(ABC, Attribute):
         pass
 
     @abstractmethod
-    def is_triggered(self, context: Context) -> bool:
+    def _is_triggered(self, context: Context) -> bool:
         pass
 
     @override

@@ -1,8 +1,10 @@
 from abc import ABC
+from typing import override
 
 from python.src.modelarium.entities.attributes.agent_attribute import AgentAttribute
 from python.src.modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 from python.src.modelarium.entities.attributes.routines.routine import Routine
+from python.src.modelarium.entities.contexts.agent_context import AgentContext
 
 
 class AgentRoutine(ABC, Routine, AgentAttribute):
@@ -13,6 +15,11 @@ class AgentRoutine(ABC, Routine, AgentAttribute):
             "modelarium.entities.attributes.routines.functional.FunctionalAgentRoutine",
             "modelarium.entities.attributes.routines.functional.AgentRoutineRunFunction"
         )
+
+    @override
+    def _java_run(self, java_context: object) -> None:
+        context = AgentContext(java_context)
+        return self._run(context)
 
 
 class _AgentRoutine(AgentRoutine):

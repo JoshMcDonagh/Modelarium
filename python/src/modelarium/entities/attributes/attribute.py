@@ -19,7 +19,7 @@ class Attribute(ABC, WrapperObject):
     def access_level(self) -> AttributeAccessLevel:
         return AttributeAccessLevel.make_python_version(self._java_object.accessLevel())
 
-    def _run(self) -> None:
+    def run(self) -> None:
         self._java_object.run()
 
     @abstractmethod
@@ -27,7 +27,7 @@ class Attribute(ABC, WrapperObject):
         pass
 
     @abstractmethod
-    def run(self, context: Context) -> None:
+    def _run(self, context: Context) -> None:
         pass
 
     @abstractmethod

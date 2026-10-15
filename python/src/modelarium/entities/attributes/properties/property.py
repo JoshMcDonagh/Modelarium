@@ -37,10 +37,10 @@ class Property(ABC, Attribute, Generic[PROPERTY_T]):
             _type_to_string(stored_type)
         ))
 
-    def _set(self, value: PROPERTY_T) -> None:
+    def set(self, value: PROPERTY_T) -> None:
         self._java_object.set(value)
 
-    def _get(self) -> PROPERTY_T:
+    def get(self) -> PROPERTY_T:
         return self._java_object.get()
 
     def stored_type(self) -> type[PROPERTY_T]:
@@ -51,7 +51,7 @@ class Property(ABC, Attribute, Generic[PROPERTY_T]):
         pass
 
     @abstractmethod
-    def set(self, context: Context, value: PROPERTY_T) -> None:
+    def _set(self, context: Context, value: PROPERTY_T) -> None:
         pass
 
     @abstractmethod
@@ -59,11 +59,11 @@ class Property(ABC, Attribute, Generic[PROPERTY_T]):
         pass
 
     @abstractmethod
-    def get(self, context: Context) -> PROPERTY_T:
+    def _get(self, context: Context) -> PROPERTY_T:
         pass
 
     @override
-    def run(self, context: Context) -> None:
+    def _run(self, context: Context) -> None:
         return
 
     @override

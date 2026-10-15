@@ -1,8 +1,10 @@
 from abc import ABC
+from typing import override
 
 from python.src.modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 from python.src.modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
 from python.src.modelarium.entities.attributes.events.event import Event
+from python.src.modelarium.entities.contexts.environment_context import EnvironmentContext
 
 
 class EnvironmentEvent(ABC, Event, EnvironmentAttribute):
@@ -15,6 +17,16 @@ class EnvironmentEvent(ABC, Event, EnvironmentAttribute):
             "modelarium.entities.attributes.events.functional.EnvironmentEventRunFunction",
             "modelarium.entities.attributes.events.functional.EnvironmentEventIsTriggeredFunction"
         )
+
+    @override
+    def _java_is_triggered(self, java_context: object) -> bool:
+        context = EnvironmentContext(java_context)
+        return self.is_triggered(context)
+
+    @override
+    def _java_run(self, java_context: object) -> None:
+        context = EnvironmentContext(java_context)
+        return self._run(context)
 
 
 class _EnvironmentEvent(EnvironmentAttribute):
