@@ -5,13 +5,14 @@ from python.src.modelarium.entities.attributes.attribute import Attribute
 from python.src.modelarium.entities.attributes.sets.attribute_set import AttributeSet
 from python.src.modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
 from python.src.modelarium.entities.entity import Entity
+from python.src.modelarium.read_only_clock import ReadOnlyClock
 from python.src.modelarium.utils.random_generator import RandomGenerator, _RandomGenerator
 from python.src.modelarium.wrapper_object import WrapperObject
 
 
 class Context(ABC, WrapperObject):
-    def get_clock(self) -> object: # TODO: update to ReadOnlyClock type hint
-        return self._java_object.getClock()
+    def get_clock(self) -> ReadOnlyClock: #
+        return ReadOnlyClock(self._java_object.getClock())
 
     def does_agent_exist_in_this_core(self, agent_name: str) -> bool:
         return self._java_object.doesAgentExistInThisCore(agent_name)

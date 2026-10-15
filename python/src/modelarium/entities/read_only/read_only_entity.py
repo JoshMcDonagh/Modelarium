@@ -4,6 +4,7 @@ from python.src.modelarium.entities.attributes.events.read_only_event import Rea
 from python.src.modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
 from python.src.modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
 from python.src.modelarium.entities.attributes.sets.read_only.read_only_attribute_set import ReadOnlyAttributeSet
+from python.src.modelarium.entities.logging.entity_log import EntityLog
 from python.src.modelarium.wrapper_object import WrapperObject
 
 
@@ -21,8 +22,8 @@ class ReadOnlyEntity(ABC, WrapperObject):
     def get_attribute_set(self, attribute_set_identifier: int | str) -> ReadOnlyAttributeSet:
         pass
 
-    def get_log(self) -> object: # TODO: Update EntityLog type hint
-        return self._java_object.getLog()
+    def get_log(self) -> EntityLog:
+        return EntityLog(self._java_object.getLog())
 
     def get_event(self, attribute_set_name: str, event_name: str) -> ReadOnlyEvent:
         return ReadOnlyEvent(self._java_object.getEvent(attribute_set_name, event_name))

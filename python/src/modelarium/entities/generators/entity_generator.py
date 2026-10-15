@@ -3,10 +3,6 @@ from collections.abc import Callable
 
 import jpype
 
-from python.src.modelarium.config import Config
-from python.src.modelarium.entities.agent_sets.agent_set import AgentSet
-from python.src.modelarium.entities.entity import Entity
-from python.src.modelarium.utils.random_generator import RandomGenerator
 from python.src.modelarium.wrapper_object import WrapperObject
 
 

@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import override
 
-import jpype
-
 from python.src.modelarium.config import Config
 from python.src.modelarium.entities.agent import Agent
 from python.src.modelarium.entities.agent_sets.agent_set import AgentSet
