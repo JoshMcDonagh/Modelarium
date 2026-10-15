@@ -3,6 +3,7 @@ from typing import Generic, override
 
 from python.src.modelarium.entities.attributes.agent_attribute import AgentAttribute
 from python.src.modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+from python.src.modelarium.entities.attributes.properties import _java_to_python, _python_to_java
 from python.src.modelarium.entities.attributes.properties.property import PROPERTY_T, Property
 from python.src.modelarium.entities.contexts.agent_context import AgentContext
 
@@ -29,12 +30,12 @@ class AgentProperty(ABC, Generic[PROPERTY_T], Property[PROPERTY_T], AgentAttribu
     @override
     def _java_set(self, java_context: object, value: PROPERTY_T) -> None:
         context = AgentContext(java_context)
-        return self._set(context, value)
+        return self._set(context, _java_to_python(self.type, value))
 
     @override
     def _java_get(self, java_context: object) -> PROPERTY_T:
         context = AgentContext(java_context)
-        return self._get(context)
+        return _python_to_java(self.type, self._get(context))
 
     @override
     def _java_run(self, java_context: object) -> None:

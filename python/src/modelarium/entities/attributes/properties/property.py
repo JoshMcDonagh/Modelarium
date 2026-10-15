@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Generic, override
+from typing import Generic, override, Type
 
 import jpype
 
@@ -43,7 +43,8 @@ class Property(ABC, Attribute, Generic[PROPERTY_T]):
     def get(self) -> PROPERTY_T:
         return self._java_object.get()
 
-    def stored_type(self) -> type[PROPERTY_T]:
+    @property
+    def type(self) -> Type[PROPERTY_T]:
         return _string_to_type(self._java_object.getPythonType())
 
     @abstractmethod

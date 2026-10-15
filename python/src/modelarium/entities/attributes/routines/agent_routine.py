@@ -24,5 +24,5 @@ class AgentRoutine(ABC, Routine, AgentAttribute):
 
 class _AgentRoutine(AgentRoutine):
     def __init__(self, java_object: object) -> None:
-        super().__init__(None, None, None)
+        super().__init__(None, None)
         super()._java_obj = java_object
