@@ -1,6 +1,11 @@
 from abc import ABC, abstractmethod
+from typing import Callable
+
+import jpype
 
 from python.src.modelarium.entities.agent import Agent
+from python.src.modelarium.entities.agent_sets.agent_set import AgentSet
+from python.src.modelarium.entities.agent_sets.read_only_agent_set import ReadOnlyAgentSet
 from python.src.modelarium.entities.attributes.attribute import Attribute
 from python.src.modelarium.entities.attributes.sets.attribute_set import AttributeSet
 from python.src.modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
@@ -23,8 +28,15 @@ class Context(ABC, WrapperObject):
     def get_agent(self, target_agent_name: str) -> ReadOnlyAgent:
         return ReadOnlyAgent(self._java_object.getAgent(target_agent_name))
 
-    def get_filtered_agents(self, filter: object, include_dead_agents: bool = False) -> object: # TODO update to Predicate<ReadOnlyAgent> (equivalent) and ReadOnlyAgentSet type hint
-        return self._java_object.getFilteredAgents(filter, include_dead_agents)
+    def get_filtered_agents(
+            self, filter: Callable[[ReadOnlyAgent], bool],
+            include_dead_agents: bool = False
+    ) -> ReadOnlyAgentSet:
+        java_filter = jpype.JProxy(
+            "java.util.function.Predicate",
+            dict={"test": lambda java_agent: filter(ReadOnlyAgent(java_agent))}
+        )
+        return ReadOnlyAgentSet(self._java_object.getFilteredAgents(java_filter, include_dead_agents))
 
     def get_random(self) -> RandomGenerator:
         return _RandomGenerator(self._java_object.getRandom())
@@ -32,7 +44,9 @@ class Context(ABC, WrapperObject):
     def add_agent(self, agent: Agent) -> None:
         return self._java_object.addAgent(agent._java_object)
 
-    def add_agents(self, agents: object | list[Agent]) -> None: # TODO: update to AgentSet type hint
+    def add_agents(self, agents: AgentSet | list[Agent]) -> None:
+        if isinstance(agents, AgentSet):
+            return self._java_object.addAgents(agents._java_object)
         return self._java_object.addAgents(agents)
 
     def kill_agent(self, agent: str | ReadOnlyAgent) -> None:
@@ -43,7 +57,9 @@ class Context(ABC, WrapperObject):
         else:
             raise TypeError("Agent identifier must be a string or a ReadOnlyAgent, not: {}".format(type(agent)))
 
-    def kill_agents(self, agents: list[str] | object) -> None: # TODO: update to ReadOnlyAgentSet type hint
+    def kill_agents(self, agents: list[str] | ReadOnlyAgentSet) -> None:
+        if isinstance(agents, ReadOnlyAgentSet):
+            return self._java_object.killAgents(agents._java_object)
         return self._java_object.killAgents(agents)
 
     def get_this_attribute(self) -> Attribute:
