@@ -6,6 +6,7 @@ import jpype
 
 from python.src.modelarium.entities.agent import Agent, _Agent
 from python.src.modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
+from python.src.modelarium.utils.language_conversion import _java_list_to_list, _list_to_java_array_list
 from python.src.modelarium.utils.random_generator import RandomGenerator
 from python.src.modelarium.wrapper_object import WrapperObject
 
@@ -15,10 +16,9 @@ class AgentSet(Iterable[Agent], WrapperObject):
         if agents_list is None:
             super().__init__(jpype.JClass("modelarium.entities.agentsets.AgentSet")())
         else:
-            java_agents_list = jpype.JClass("java.util.ArrayList")()
-            for agent in agents_list:
-                java_agents_list.add(agent._java_object)
-            super().__init__(jpype.JClass("modelarium.entities.agentsets.AgentSet")(java_agents_list))
+            super().__init__(
+                jpype.JClass("modelarium.entities.agentsets.AgentSet")(_list_to_java_array_list(agents_list))
+            )
 
     def __iter__(self) -> Iterator[Agent]:
         for java_agent in self._java_object:
@@ -26,19 +26,13 @@ class AgentSet(Iterable[Agent], WrapperObject):
 
     def add(self, agent: Agent | list[Agent] | AgentSet) -> None:
         if isinstance(agent, list):
-            java_agents_list = jpype.JClass("java.util.ArrayList")()
-            for single_agent in agent:
-                java_agents_list.add(single_agent._java_object)
-            self._java_object.add(java_agents_list)
+            self._java_object.add(_list_to_java_array_list(agent))
         else:
             self._java_object.add(agent._java_object)
 
     def add_deep_copy(self, agent: Agent | list[Agent] | AgentSet) -> None:
         if isinstance(agent, list):
-            java_agents_list = jpype.JClass("java.util.ArrayList")()
-            for single_agent in agent:
-                java_agents_list.add(single_agent._java_object)
-            self._java_object.addDeepCopy(java_agents_list)
+            self._java_object.addDeepCopy(_list_to_java_array_list(agent))
         else:
             self._java_object.addDeepCopy(agent._java_object)
 
@@ -46,11 +40,7 @@ class AgentSet(Iterable[Agent], WrapperObject):
         return _Agent(self._java_object.get(agent_id))
 
     def get_as_list(self) -> list[Agent]:
-        java_agent_list = self._java_object.getAsList()
-        agent_list = []
-        for java_agent in java_agent_list:
-            agent_list.append(_Agent(java_agent))
-        return agent_list
+        return _java_list_to_list(self._java_object.getAsList(), _Agent)
 
     @property
     def size(self) -> int:

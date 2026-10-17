@@ -7,6 +7,7 @@ from python.src.modelarium.entities.attributes.events.event import Event
 from python.src.modelarium.entities.attributes.properties.property import Property
 from python.src.modelarium.entities.attributes.routines.routine import Routine
 from python.src.modelarium.entities.logging.attribute_set_log import AttributeSetLog
+from python.src.modelarium.utils.language_conversion import _list_to_java_array_list
 from python.src.modelarium.wrapper_object import WrapperObject
 
 
@@ -21,7 +22,10 @@ class AttributeSet(ABC, WrapperObject):
         for attribute in attributes:
             java_attributes.add(attribute._java_object)
 
-        super().__init__(jpype.JClass(java_class_name)(name, java_attributes))
+        super().__init__(jpype.JClass(java_class_name)(
+            name,
+            _list_to_java_array_list(attributes)
+        ))
 
     @property
     def name(self) -> str:

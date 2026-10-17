@@ -1,6 +1,6 @@
 import pandas as pd
 
-from python.src.modelarium.results.read_only import _java_map_to_dataframe
+from python.src.modelarium.utils.language_conversion import _java_map_to_dataframe, _java_list_to_list
 from python.src.modelarium.wrapper_object import WrapperObject
 
 
@@ -13,11 +13,7 @@ class ReadOnlyResultsForEnvironment(WrapperObject):
         return self._java_object.attributeLogCount(attribute_set_name)
 
     def attribute_logs(self, attribute_set_name: str, attribute_name: str) -> list[object]:
-        java_list = self._java_object.attributeLogs(attribute_set_name, attribute_name)
-        log_value_list = []
-        for log_value in java_list:
-            log_value_list.append(log_value)
-        return log_value_list
+        return _java_list_to_list(self._java_object.attributeLogs(attribute_set_name, attribute_name))
 
     def attribute_set_logs(self, attribute_set_name: str) -> pd.DataFrame:
         return _java_map_to_dataframe(
