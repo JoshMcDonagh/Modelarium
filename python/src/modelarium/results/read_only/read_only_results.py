@@ -3,6 +3,7 @@ from pathlib import Path
 import jpype
 
 from python.src.modelarium.results.read_only.read_only_results_for_agents import ReadOnlyResultsForAgents
+from python.src.modelarium.results.read_only.read_only_results_for_environment import ReadOnlyResultsForEnvironment
 from python.src.modelarium.wrapper_object import WrapperObject
 
 
@@ -10,8 +11,8 @@ class ReadOnlyResults(WrapperObject):
     def agents(self) -> ReadOnlyResultsForAgents:
         return ReadOnlyResultsForAgents(self._java_object.agents())
 
-    def environment(self) -> object: # TODO: Update with ReadOnlyResultsForEnvironment type hint
-        return self._java_object.environment()
+    def environment(self) -> ReadOnlyResultsForEnvironment:
+        return ReadOnlyResultsForEnvironment(self._java_object.environment())
 
     @staticmethod
     def _python_to_java_path(python_path: Path) -> object:
