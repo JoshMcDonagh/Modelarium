@@ -1,4 +1,4 @@
-package modelarium.entities.attributes.properties.functional.python;
+package modelarium.python.entities.attributes.properties.functional;
 
 /**
  * Interface for functional properties to be represented in Python.

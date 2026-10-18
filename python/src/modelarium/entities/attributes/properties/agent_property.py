@@ -21,7 +21,7 @@ class AgentProperty(ABC, Generic[PROPERTY_T], Property[PROPERTY_T], AgentAttribu
             is_logged,
             access_level,
             stored_type,
-            "modelarium.entities.attributes.properties.functional.python.PythonFunctionalAgentProperty",
+            "modelarium.python.entities.attributes.properties.functional.PythonFunctionalAgentProperty",
             "modelarium.entities.attributes.properties.functional.AgentPropertyGetterFunction",
             "modelarium.entities.attributes.properties.functional.AgentPropertySetterFunction",
             "modelarium.entities.attributes.properties.functional.AgentPropertyRunFunction"

@@ -21,7 +21,7 @@ class EnvironmentProperty(ABC, Generic[PROPERTY_T], Property[PROPERTY_T], Enviro
             is_logged,
             access_level,
             stored_type,
-            "modelarium.entities.attributes.properties.functional.python.PythonFunctionalEnvironmentProperty",
+            "modelarium.python.entities.attributes.properties.functional.PythonFunctionalEnvironmentProperty",
             "modelarium.entities.attributes.properties.functional.EnvironmentPropertyGetterFunction",
             "modelarium.entities.attributes.properties.functional.EnvironmentPropertySetterFunction",
             "modelarium.entities.attributes.properties.functional.EnvironmentPropertyRunFunction"

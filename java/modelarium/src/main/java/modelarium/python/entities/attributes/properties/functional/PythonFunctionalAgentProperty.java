@@ -1,21 +1,21 @@
-package modelarium.entities.attributes.properties.functional.python;
+package modelarium.python.entities.attributes.properties.functional;
 
 import modelarium.entities.attributes.AttributeAccessLevel;
-import modelarium.entities.attributes.properties.functional.EnvironmentPropertyGetterFunction;
-import modelarium.entities.attributes.properties.functional.EnvironmentPropertyRunFunction;
-import modelarium.entities.attributes.properties.functional.EnvironmentPropertySetterFunction;
-import modelarium.entities.attributes.properties.functional.FunctionalEnvironmentProperty;
+import modelarium.entities.attributes.properties.functional.AgentPropertyGetterFunction;
+import modelarium.entities.attributes.properties.functional.AgentPropertyRunFunction;
+import modelarium.entities.attributes.properties.functional.AgentPropertySetterFunction;
+import modelarium.entities.attributes.properties.functional.FunctionalAgentProperty;
 
 /**
- * Class for functional environment properties to be represented in Python.
+ * Class for functional agent properties to be represented in Python.
  */
-public class PythonFunctionalEnvironmentProperty<T>
-        extends FunctionalEnvironmentProperty<T>
+public class PythonFunctionalAgentProperty<T>
+        extends FunctionalAgentProperty<T>
         implements PythonFunctionalProperty {
     private final String pythonType;
 
     /**
-     * Constructs a new functional environment property with the specified logic functions.
+     * Constructs a new functional agent property with the specified logic functions.
      *
      * @param name        the name of the property, used to identify it within its attribute set
      * @param isLogged    whether the property's value is logged as the model progresses
@@ -26,14 +26,14 @@ public class PythonFunctionalEnvironmentProperty<T>
      * @param runLogic    the function defining the property's behaviour
      * @param pythonType  the stored python type
      */
-    public PythonFunctionalEnvironmentProperty(
+    public PythonFunctionalAgentProperty(
             String name,
             boolean isLogged,
             AttributeAccessLevel accessLevel,
             Class<T> type,
-            EnvironmentPropertyGetterFunction<T> getter,
-            EnvironmentPropertySetterFunction<T> setter,
-            EnvironmentPropertyRunFunction<T> runLogic,
+            AgentPropertyGetterFunction<T> getter,
+            AgentPropertySetterFunction<T> setter,
+            AgentPropertyRunFunction<T> runLogic,
             String pythonType
     ) {
         super(name, isLogged, accessLevel, type, getter, setter, runLogic);

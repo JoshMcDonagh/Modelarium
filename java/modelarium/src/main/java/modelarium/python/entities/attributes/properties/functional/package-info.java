@@ -5,4 +5,4 @@
  */
 
 @modelarium.internal.Internal
-package modelarium.entities.attributes.properties.functional.python;
+package modelarium.python.entities.attributes.properties.functional;

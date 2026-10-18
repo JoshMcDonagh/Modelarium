@@ -25,7 +25,7 @@ def _convert_to_python_agent_attribute(java_attribute: object) -> AgentAttribute
 
     if isinstance(
             java_attribute,
-            jpype.JClass("modelarium.entities.attributes.properties.functional.python.PythonFunctionalAgentProperty")
+            jpype.JClass("modelarium.python.entities.attributes.properties.functional.PythonFunctionalAgentProperty")
     ):
         return _AgentProperty(java_attribute)
 
@@ -48,7 +48,7 @@ def _convert_to_python_environment_attribute(java_attribute: object) -> Environm
     if isinstance(
             java_attribute,
             jpype.JClass(
-                "modelarium.entities.attributes.properties.functional.python.PythonFunctionalEnvironmentProperty")
+                "modelarium.python.entities.attributes.properties.functional.PythonFunctionalEnvironmentProperty")
     ):
         return _EnvironmentProperty(java_attribute)
 
