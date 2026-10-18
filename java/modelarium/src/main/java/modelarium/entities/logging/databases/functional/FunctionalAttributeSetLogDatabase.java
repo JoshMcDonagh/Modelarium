@@ -28,6 +28,22 @@ public class FunctionalAttributeSetLogDatabase extends AttributeSetLogDatabase {
         this.getAttributeColumnAsListLogic = getAttributeColumnAsListLogic;
     }
 
+    public FunctionalAttributeSetLogDatabase(
+            String databasePath,
+            Runnable connectLogic,
+            Runnable disconnectLogic,
+            BiConsumer<String, Object> addAttributeValueLogic,
+            BiConsumer<String, List<Object>> setAttributeColumnLogic,
+            Function<String, List<Object>> getAttributeColumnAsListLogic
+    ) {
+        super(databasePath);
+        this.connectLogic = connectLogic;
+        this.disconnectLogic = disconnectLogic;
+        this.addAttributeValueLogic = addAttributeValueLogic;
+        this.setAttributeColumnLogic = setAttributeColumnLogic;
+        this.getAttributeColumnAsListLogic = getAttributeColumnAsListLogic;
+    }
+
     @Override
     public void connect() {
         connectLogic.run();
@@ -44,7 +60,7 @@ public class FunctionalAttributeSetLogDatabase extends AttributeSetLogDatabase {
     }
 
     @Override
-    public void setAttributeColumn(String attributeName, List<Object> propertyValues) {
+    public void setAttributeColumn(String attributeName, List<Object> attributeValues) {
         setAttributeColumnLogic.accept(attributeName, propertyValues);
     }
 

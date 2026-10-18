@@ -78,9 +78,9 @@ public abstract class AttributeSetLogDatabase {
      * Replaces the named attribute's stored series with the given values. Must be implemented by subclasses.
      *
      * @param attributeName the name of the attribute the values belong to
-     * @param propertyValues the values to store as the attribute's series
+     * @param attributeValues the values to store as the attribute's series
      */
-    public abstract void setAttributeColumn(String attributeName, List<Object> propertyValues);
+    public abstract void setAttributeColumn(String attributeName, List<Object> attributeValues);
 
     /**
      * Retrieves the named attribute's stored series. Must be implemented by subclasses.

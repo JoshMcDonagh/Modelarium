@@ -19,7 +19,7 @@ def _timedelta_to_java_duration(duration: timedelta):
     )
 
 
-def _list_to_java_array_list(python_list: list) -> object:
+def _list_to_java_array_list(python_list: list) -> Iterable:
     java_array_list = jpype.JClass("java.util.ArrayList")()
     for item in python_list:
         if isinstance(item, WrapperObject):
