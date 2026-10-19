@@ -5,13 +5,15 @@ from datetime import timedelta
 
 import jpype
 
-from python.src.modelarium.entities.generators.agent_generator import AgentGenerator
-from python.src.modelarium.entities.generators.environment_generator import EnvironmentGenerator
-from python.src.modelarium.scheduler.scheduler import Scheduler
-from python.src.modelarium.utils.language_conversion import _timedelta_to_java_duration
+from python.src.modelarium.entities.generators.agent_generator import AgentGenerator, _AgentGenerator
+from python.src.modelarium.entities.generators.environment_generator import EnvironmentGenerator, _EnvironmentGenerator
+from python.src.modelarium.entities.logging.databases.factories.attribute_set_log_database_factory import \
+    AttributeSetLogDatabaseFactory, _AttributeSetLogDatabaseFactory
+from python.src.modelarium.scheduler.scheduler import Scheduler, _Scheduler
+from python.src.modelarium.utils.language_conversion import _timedelta_to_java_duration, _java_duration_to_timedelta
 
 
-def _config_to_java(config: Config):
+def _config_to_java_config(config: Config) -> object:
     return jpype.JClass("modelarium.Config")(
         config.population_size,
         config.tick_count,
@@ -26,6 +28,21 @@ def _config_to_java(config: Config):
     )
 
 
+def _java_config_to_config(java_config: object) -> Config:
+    return Config(
+        population_size=java_config.populationSize(),
+        tick_count=java_config.tickCount(),
+        thread_count=java_config.threadCount(),
+        thread_timeout=_java_duration_to_timedelta(java_config.threadTimeout()),
+        are_threads_synced=java_config.areThreadsSynced(),
+        agent_generator=_AgentGenerator(java_config.agentGenerator()),
+        environment_generator=_EnvironmentGenerator(java_config.environmentGenerator()),
+        scheduler=_Scheduler(java_config.scheduler()),
+        run_log_database_factory=_AttributeSetLogDatabaseFactory(java_config.runLogDatabaseFactory()),
+        seed=int(java_config.seed())
+    )
+
+
 @dataclass(frozen=True)
 class Config:
     population_size: int
@@ -36,5 +53,5 @@ class Config:
     agent_generator: AgentGenerator
     environment_generator: EnvironmentGenerator
     scheduler: Scheduler
-    run_log_database_factory: object # TODO: change to AttributeSetLogDatabaseFactory
+    run_log_database_factory: AttributeSetLogDatabaseFactory
     seed: int

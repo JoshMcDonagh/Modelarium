@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
+from typing import override
 
 import jpype
 
-from python.src.modelarium.entities.logging.databases.attribute_set_log_database import AttributeSetLogDatabase
+from python.src.modelarium.entities.logging.databases.attribute_set_log_database import AttributeSetLogDatabase, \
+    _AttributeSetLogDatabase
 from python.src.modelarium.wrapper_object import WrapperObject
 
 
@@ -21,3 +23,13 @@ class AttributeSetLogDatabaseFactory(ABC, WrapperObject):
     @abstractmethod
     def create(self) -> AttributeSetLogDatabase:
         pass
+
+
+class _AttributeSetLogDatabaseFactory(AttributeSetLogDatabaseFactory):
+    def __init__(self, java_object: object) -> None:
+        super().__init__()
+        self._java_obj = java_object
+
+    @override
+    def create(self) -> AttributeSetLogDatabase:
+        return _AttributeSetLogDatabase(self._java_object)

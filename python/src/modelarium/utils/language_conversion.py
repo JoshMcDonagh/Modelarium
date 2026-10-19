@@ -7,16 +7,20 @@ import pandas as pd
 from python.src.modelarium.wrapper_object import WrapperObject
 
 
-def _timedelta_to_java_duration(duration: timedelta):
+def _timedelta_to_java_duration(duration: timedelta) -> object:
     # Convert exactly to microseconds without floating-point arithmetic.
     total_microseconds = (duration.days * 86400 + duration.seconds) * 1_000_000 + duration.microseconds
 
     seconds, microseconds = divmod(total_microseconds, 1_000_000)
 
-    return jpype.JClass("java.time.Duration").ofSeconds(
-        jpype.JLong(seconds),
-        jpype.JLong(microseconds * 1000)
-    )
+    return jpype.JClass("java.time.Duration").ofSeconds(jpype.JLong(seconds), jpype.JLong(microseconds * 1000))
+
+
+def _java_duration_to_timedelta(duration) -> timedelta:
+    seconds = int(duration.getSeconds())
+    nanoseconds = int(duration.getNano())
+
+    return timedelta(seconds=seconds, microseconds=nanoseconds // 1_000)
 
 
 def _list_to_java_array_list(python_list: list) -> Iterable:

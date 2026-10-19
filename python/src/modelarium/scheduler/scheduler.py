@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import override
 
 import jpype
 
@@ -44,3 +45,26 @@ class Scheduler(ABC, WrapperObject):
             random: RandomGenerator
     ) -> None:
         pass
+
+
+class _Scheduler(Scheduler):
+    def __init__(self, java_object: object) -> None:
+        super().__init__()
+        self._java_obj = java_object
+
+    @override
+    def run_tick(
+            self,
+            thread_name: str,
+            clock: ReadOnlyClock,
+            environment: ReadOnlyEnvironment,
+            agent_set: AgentSet,
+            random: RandomGenerator
+    ) -> None:
+        self._java_object.runTick(
+            thread_name,
+            clock._java_object,
+            environment._java_object,
+            agent_set._java_object,
+            random._java_object
+        )
