@@ -1,5 +1,6 @@
 import jpype
 
+from python.src.modelarium import start_jvm
 from python.src.modelarium.config import Config, _config_to_java_config
 from python.src.modelarium.results.read_only.read_only_results import ReadOnlyResults
 from python.src.modelarium.wrapper_object import WrapperObject
@@ -7,6 +8,7 @@ from python.src.modelarium.wrapper_object import WrapperObject
 
 class Model(WrapperObject):
     def __init__(self, config: Config) -> None:
+        start_jvm()
         super().__init__(jpype.JClass("modelarium.Model")(_config_to_java_config(config)))
 
     def run(self) -> None:
