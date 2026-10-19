@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from imaplib import InternalDate
 
 import jpype
 
@@ -9,10 +8,10 @@ from python.src.modelarium.wrapper_object import WrapperObject
 
 
 class AttributeSetLogDatabase(ABC, WrapperObject):
-    def __init__(self, database_path: str | None = None):
+    def __init__(self, database_path: str | None = None) -> None:
         java_class = jpype.JClass("modelarium.entities.logging.databases.functional.FunctionalAttributeSetLogDatabase")
-        connect_logic = jpype.JProxy("java.lang.Runnable", dict={"run": self._connect})
-        disconnect_logic = jpype.JProxy("java.lang.Runnable", dict={"run": self._disconnect})
+        connect_logic = jpype.JProxy("java.lang.Runnable", dict={"run": self.connect})
+        disconnect_logic = jpype.JProxy("java.lang.Runnable", dict={"run": self.disconnect})
         add_attribute_value_logic = jpype.JProxy(
             "java.util.function.BiConsumer", dict={"accept": self._add_attribute_value}
         )
@@ -20,7 +19,7 @@ class AttributeSetLogDatabase(ABC, WrapperObject):
             "java.util.function.BiConsumer", dict={"accept": self._java_set_attribute_column}
         )
         get_attribute_value_logic = jpype.JProxy(
-            "java.util.function.Function", dict={"apply": self._java_get_attribute_value}
+            "java.util.function.Function", dict={"apply": self._java_get_attribute_column_as_list}
         )
 
         if database_path is None:
@@ -63,9 +62,9 @@ class AttributeSetLogDatabase(ABC, WrapperObject):
     def set_attribute_column(self, attribute_name: str, attribute_values: list[object]) -> None:
         pass
 
-    def _java_get_attribute_value(self, attribute_name: str) -> Iterable[object]:
-        return _list_to_java_array_list(self.get_attribute_value(attribute_name))
+    def _java_get_attribute_column_as_list(self, attribute_name: str) -> Iterable[object]:
+        return _list_to_java_array_list(self.get_attribute_column_as_list(attribute_name))
 
     @abstractmethod
-    def get_attribute_value(self, attribute_name: str) -> list[object]:
+    def get_attribute_column_as_list(self, attribute_name: str) -> list[object]:
         pass
