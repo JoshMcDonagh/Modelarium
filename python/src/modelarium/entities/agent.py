@@ -9,6 +9,7 @@ from modelarium.entities.attributes.properties.agent_property import AgentProper
 from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
 from modelarium.entities.attributes.routines.agent_routine import AgentRoutine, _AgentRoutine
 from modelarium.entities.entity import Entity
+from modelarium.wrapper_object import WrapperObject
 
 
 class Agent(Entity):
@@ -50,5 +51,4 @@ class Agent(Entity):
 
 class _Agent(Agent):
     def __init__(self, java_object: object) -> None:
-        super().__init__(None, None)
-        super()._java_obj = java_object
+        WrapperObject.__init__(self, java_object)

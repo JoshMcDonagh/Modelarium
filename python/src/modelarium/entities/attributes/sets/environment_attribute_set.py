@@ -8,6 +8,7 @@ from modelarium.entities.attributes.routines.environment_routine import _Environ
     EnvironmentRoutine
 from modelarium.entities.attributes.sets import _convert_to_python_environment_attribute
 from modelarium.entities.attributes.sets.attribute_set import AttributeSet
+from modelarium.wrapper_object import WrapperObject
 
 
 class EnvironmentAttributeSet(AttributeSet):
@@ -33,5 +34,4 @@ class EnvironmentAttributeSet(AttributeSet):
 
 class _EnvironmentAttributeSet(EnvironmentAttributeSet):
     def __init__(self, java_object: object) -> None:
-        super().__init__(None, None)
-        self._java_obj = java_object
+        WrapperObject.__init__(self, java_object)

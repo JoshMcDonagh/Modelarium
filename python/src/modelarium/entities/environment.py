@@ -12,6 +12,7 @@ from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironm
 from modelarium.entities.attributes.routines.environment_routine import EnvironmentRoutine, \
     _EnvironmentRoutine
 from modelarium.entities.entity import Entity
+from modelarium.wrapper_object import WrapperObject
 
 
 class Environment(Entity):
@@ -71,5 +72,4 @@ class Environment(Entity):
 
 class _Environment(Environment):
     def __init__(self, java_object: object) -> None:
-        super().__init__(None, None)
-        super()._java_obj = java_object
+        WrapperObject.__init__(self, java_object)

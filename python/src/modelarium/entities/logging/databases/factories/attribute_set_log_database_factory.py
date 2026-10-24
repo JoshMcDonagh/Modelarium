@@ -27,8 +27,7 @@ class AttributeSetLogDatabaseFactory(ABC, WrapperObject):
 
 class _AttributeSetLogDatabaseFactory(AttributeSetLogDatabaseFactory):
     def __init__(self, java_object: object) -> None:
-        super().__init__()
-        self._java_obj = java_object
+        WrapperObject.__init__(self, java_object)
 
     @override
     def create(self) -> AttributeSetLogDatabase:

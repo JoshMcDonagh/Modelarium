@@ -5,6 +5,7 @@ from modelarium.entities.attributes.agent_attribute import AgentAttribute
 from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 from modelarium.entities.attributes.routines.routine import Routine
 from modelarium.entities.contexts.agent_context import AgentContext
+from modelarium.wrapper_object import WrapperObject
 
 
 class AgentRoutine(ABC, Routine, AgentAttribute):
@@ -24,5 +25,4 @@ class AgentRoutine(ABC, Routine, AgentAttribute):
 
 class _AgentRoutine(AgentRoutine):
     def __init__(self, java_object: object) -> None:
-        super().__init__(None, None)
-        super()._java_obj = java_object
+        WrapperObject.__init__(self, java_object)

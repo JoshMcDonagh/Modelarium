@@ -5,6 +5,7 @@ from modelarium.entities.attributes.agent_attribute import AgentAttribute
 from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 from modelarium.entities.attributes.events.event import Event
 from modelarium.entities.contexts.agent_context import AgentContext
+from modelarium.wrapper_object import WrapperObject
 
 
 class AgentEvent(ABC, Event, AgentAttribute):
@@ -31,5 +32,4 @@ class AgentEvent(ABC, Event, AgentAttribute):
 
 class _AgentEvent(AgentEvent):
     def __init__(self, java_object: object) -> None:
-        super().__init__(None, None, None)
-        super()._java_obj = java_object
+        WrapperObject.__init__(self, java_object)

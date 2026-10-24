@@ -5,6 +5,7 @@ from modelarium.entities.attributes.attribute_access_level import AttributeAcces
 from modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
 from modelarium.entities.attributes.events.event import Event
 from modelarium.entities.contexts.environment_context import EnvironmentContext
+from modelarium.wrapper_object import WrapperObject
 
 
 class EnvironmentEvent(ABC, Event, EnvironmentAttribute):
@@ -31,5 +32,4 @@ class EnvironmentEvent(ABC, Event, EnvironmentAttribute):
 
 class _EnvironmentEvent(EnvironmentAttribute):
     def __init__(self, java_object: object) -> None:
-        super().__init__(None, None, None)
-        super()._java_obj = java_object
+        WrapperObject.__init__(self, java_object)

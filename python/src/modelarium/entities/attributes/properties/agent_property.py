@@ -6,6 +6,7 @@ from modelarium.entities.attributes.attribute_access_level import AttributeAcces
 from modelarium.entities.attributes.properties import _java_to_python, _python_to_java
 from modelarium.entities.attributes.properties.property import PROPERTY_T, Property
 from modelarium.entities.contexts.agent_context import AgentContext
+from modelarium.wrapper_object import WrapperObject
 
 
 class AgentProperty(ABC, Generic[PROPERTY_T], Property[PROPERTY_T], AgentAttribute):
@@ -45,5 +46,4 @@ class AgentProperty(ABC, Generic[PROPERTY_T], Property[PROPERTY_T], AgentAttribu
 
 class _AgentProperty(Generic[PROPERTY_T], AgentProperty[PROPERTY_T]):
     def __init__(self, java_object: object) -> None:
-        super().__init__(None, None, None, None)
-        super()._java_obj = java_object
+        WrapperObject.__init__(self, java_object)
