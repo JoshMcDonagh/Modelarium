@@ -72,7 +72,7 @@ class AgentSet(Iterable[Agent], WrapperObject):
             )}
         )
 
-        return AgentSet(self._java_object.getFilteredAgents(java_agent_filter, include_dead_agents))
+        return _AgentSet(self._java_object.getFilteredAgents(java_agent_filter, include_dead_agents))
 
     def get_random_iterator(self, random_generator: RandomGenerator) -> Iterator[Agent]:
         java_iterator = self._java_object.getRandomIterator(random_generator._java_object)
