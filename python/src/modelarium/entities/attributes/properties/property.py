@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
-from typing import Generic, override, Type
+from typing import Generic, override, Type, cast
 
 import jpype
 
+from modelarium._java import java_class
 from modelarium.entities.attributes.attribute import Attribute
 from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 from modelarium.entities.attributes.properties import PROPERTY_T, _type_to_string, _string_to_type
@@ -26,11 +27,11 @@ class Property(ABC, Attribute, Generic[PROPERTY_T]):
         setter = jpype.JProxy(java_setter_interface_name, dict={"set": self._java_set})
         run_logic = jpype.JProxy(java_run_logic_interface_name, dict={"run": self._java_run})
 
-        super().__init__(jpype.JClass(java_class_name)(
+        super().__init__(java_class(java_class_name)(
             name,
             is_logged,
             access_level._java_object,
-            jpype.JClass("java.lang.Object").class_,
+            java_class("java.lang.Object").class_,
             getter,
             setter,
             run_logic,
@@ -45,7 +46,7 @@ class Property(ABC, Attribute, Generic[PROPERTY_T]):
 
     @property
     def type(self) -> Type[PROPERTY_T]:
-        return _string_to_type(self._java_object.getPythonType())
+        return cast(Type[PROPERTY_T], _string_to_type(self._java_object.getPythonType()))
 
     @abstractmethod
     def _java_set(self, java_context: object, value: PROPERTY_T) -> None:

@@ -13,19 +13,19 @@ from modelarium.entities.attributes.routines.environment_routine import _Environ
 def _convert_to_python_agent_attribute(java_attribute: object) -> AgentAttribute:
     if isinstance(
             java_attribute,
-            jpype.JClass("modelarium.entities.attributes.events.functional.FunctionalAgentEvent")
+            java_class("modelarium.entities.attributes.events.functional.FunctionalAgentEvent")
     ):
         return _AgentEvent(java_attribute)
 
     if isinstance(
             java_attribute,
-            jpype.JClass("modelarium.entities.attributes.routines.functional.FunctionalAgentRoutine")
+            java_class("modelarium.entities.attributes.routines.functional.FunctionalAgentRoutine")
     ):
         return _AgentRoutine(java_attribute)
 
     if isinstance(
             java_attribute,
-            jpype.JClass("modelarium.python.entities.attributes.properties.functional.PythonFunctionalAgentProperty")
+            java_class("modelarium.python.entities.attributes.properties.functional.PythonFunctionalAgentProperty")
     ):
         return _AgentProperty(java_attribute)
 
@@ -35,19 +35,19 @@ def _convert_to_python_agent_attribute(java_attribute: object) -> AgentAttribute
 def _convert_to_python_environment_attribute(java_attribute: object) -> EnvironmentAttribute:
     if isinstance(
             java_attribute,
-            jpype.JClass("modelarium.entities.attributes.events.functional.FunctionalEnvironmentEvent")
+            java_class("modelarium.entities.attributes.events.functional.FunctionalEnvironmentEvent")
     ):
         return _EnvironmentEvent(java_attribute)
 
     if isinstance(
             java_attribute,
-            jpype.JClass("modelarium.entities.attributes.routines.functional.FunctionalEnvironmentRoutine")
+            java_class("modelarium.entities.attributes.routines.functional.FunctionalEnvironmentRoutine")
     ):
         return _EnvironmentRoutine(java_attribute)
 
     if isinstance(
             java_attribute,
-            jpype.JClass(
+            java_class(
                 "modelarium.python.entities.attributes.properties.functional.PythonFunctionalEnvironmentProperty")
     ):
         return _EnvironmentProperty(java_attribute)

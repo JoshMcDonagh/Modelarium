@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 from importlib import resources
 from pathlib import Path
+from typing import cast
 
 
 def bundled_jar_path() -> Path:
@@ -15,7 +16,7 @@ def bundled_jar_path() -> Path:
         raise FileNotFoundError("No bundled Modelarium JAR found.")
     # If there is exactly one, use it. Otherwise pick lexicographically last.
     jar = sorted(jars, key=lambda p: p.name)[-1]
-    return Path(jar)
+    return Path(cast(str | os.PathLike[str], cast(object, jar)))
 
 
 def get_jar_path() -> Path:
@@ -36,8 +37,10 @@ def get_classpath() -> list[Path]:
     jars_dir = resources.files("modelarium") / "_jars"
 
     dependencies = sorted(
-        (Path(jar) for jar in jars_dir.iterdir() if jar.name.endswith(".jar") and Path(jar) != core),
-        key=lambda jar: jar.name,
+        (Path(cast(str | os.PathLike[str], cast(object, jar)))
+         for jar in jars_dir.iterdir()
+         if jar.name.endswith(".jar") and Path(cast(str | os.PathLike[str], cast(object, jar))) != core)
+        , key=lambda jar: jar.name
     )
     return [core, *dependencies]
 

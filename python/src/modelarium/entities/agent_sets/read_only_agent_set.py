@@ -6,7 +6,7 @@ from typing import Callable
 import jpype
 
 from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
-from modelarium.utils.language_conversion import _java_list_to_list
+from modelarium._java.conversion import java_list_to_list
 from modelarium.utils.random_generator import RandomGenerator
 from modelarium.wrapper_object import WrapperObject
 
@@ -20,7 +20,7 @@ class ReadOnlyAgentSet(Iterable[ReadOnlyAgent], WrapperObject):
         return ReadOnlyAgent(self._java_object.get(agent_id))
 
     def get_as_list(self) -> list[ReadOnlyAgent]:
-        return _java_list_to_list(self._java_object.getAsList(), ReadOnlyAgent)
+        return java_list_to_list(self._java_object.getAsList(), ReadOnlyAgent)
 
     @property
     def size(self) -> int:

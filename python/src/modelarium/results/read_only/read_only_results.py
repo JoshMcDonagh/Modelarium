@@ -2,6 +2,7 @@ from pathlib import Path
 
 import jpype
 
+from modelarium._java import java_class
 from modelarium.results.read_only.read_only_results_for_agents import ReadOnlyResultsForAgents
 from modelarium.results.read_only.read_only_results_for_environment import ReadOnlyResultsForEnvironment
 from modelarium.wrapper_object import WrapperObject
@@ -16,7 +17,7 @@ class ReadOnlyResults(WrapperObject):
 
     @staticmethod
     def _python_to_java_path(python_path: Path) -> object:
-        return jpype.JClass("java.nio.file.Path").of(str(python_path))
+        return java_class("java.nio.file.Path").of(str(python_path))
 
     @staticmethod
     def _java_to_python_path(java_path: object) -> Path:

@@ -2,7 +2,7 @@ from abc import ABC
 from typing import override
 
 from modelarium.entities.logging.databases.attribute_set_log_database import AttributeSetLogDatabase
-from modelarium.utils.language_conversion import _list_to_java_array_list, _java_list_to_list
+from modelarium._java.conversion import list_to_java_array_list, java_list_to_list
 from modelarium.wrapper_object import WrapperObject
 
 
@@ -24,8 +24,8 @@ class JavaAttributeSetLogDatabase(ABC, AttributeSetLogDatabase):
 
     @override
     def set_attribute_column(self, attribute_name: str, attribute_values: list[object]) -> None:
-        self._java_object.setAttributeColumn(attribute_name, _list_to_java_array_list(attribute_values))
+        self._java_object.setAttributeColumn(attribute_name, list_to_java_array_list(attribute_values))
 
     @override
     def get_attribute_column_as_list(self, attribute_name: str) -> list[object]:
-        return _java_list_to_list(self._java_object.getAttributeColumnAsList(attribute_name))
+        return java_list_to_list(self._java_object.getAttributeColumnAsList(attribute_name))

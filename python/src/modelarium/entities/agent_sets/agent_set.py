@@ -4,9 +4,10 @@ from collections.abc import Iterable, Iterator, Callable
 
 import jpype
 
+from modelarium._java import java_class
 from modelarium.entities.agent import Agent, _Agent
 from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
-from modelarium.utils.language_conversion import _java_list_to_list, _list_to_java_array_list
+from modelarium._java.conversion import java_list_to_list, list_to_java_array_list
 from modelarium.utils.random_generator import RandomGenerator
 from modelarium.wrapper_object import WrapperObject
 
@@ -14,10 +15,10 @@ from modelarium.wrapper_object import WrapperObject
 class AgentSet(Iterable[Agent], WrapperObject):
     def __init__(self, agents_list : list[Agent] | None = None) -> None:
         if agents_list is None:
-            super().__init__(jpype.JClass("modelarium.entities.agentsets.AgentSet")())
+            super().__init__(java_class("modelarium.entities.agentsets.AgentSet")())
         else:
             super().__init__(
-                jpype.JClass("modelarium.entities.agentsets.AgentSet")(_list_to_java_array_list(agents_list))
+                java_class("modelarium.entities.agentsets.AgentSet")(list_to_java_array_list(agents_list))
             )
 
     def __iter__(self) -> Iterator[Agent]:
@@ -26,13 +27,13 @@ class AgentSet(Iterable[Agent], WrapperObject):
 
     def add(self, agent: Agent | list[Agent] | AgentSet) -> None:
         if isinstance(agent, list):
-            self._java_object.add(_list_to_java_array_list(agent))
+            self._java_object.add(list_to_java_array_list(agent))
         else:
             self._java_object.add(agent._java_object)
 
     def add_deep_copy(self, agent: Agent | list[Agent] | AgentSet) -> None:
         if isinstance(agent, list):
-            self._java_object.addDeepCopy(_list_to_java_array_list(agent))
+            self._java_object.addDeepCopy(list_to_java_array_list(agent))
         else:
             self._java_object.addDeepCopy(agent._java_object)
 
@@ -40,7 +41,7 @@ class AgentSet(Iterable[Agent], WrapperObject):
         return _Agent(self._java_object.get(agent_id))
 
     def get_as_list(self) -> list[Agent]:
-        return _java_list_to_list(self._java_object.getAsList(), _Agent)
+        return java_list_to_list(self._java_object.getAsList(), _Agent)
 
     @property
     def size(self) -> int:
@@ -87,5 +88,4 @@ class AgentSet(Iterable[Agent], WrapperObject):
 
 class _AgentSet(AgentSet):
     def __init__(self, java_object: object) -> None:
-        super().__init__(None)
-        super()._java_obj = java_object
+        WrapperObject.__init__(self, java_object)

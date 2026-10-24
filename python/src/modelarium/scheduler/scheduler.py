@@ -3,6 +3,7 @@ from typing import override
 
 import jpype
 
+from modelarium._java import java_class
 from modelarium.entities.agent_sets.agent_set import AgentSet, _AgentSet
 from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
 from modelarium.read_only_clock import ReadOnlyClock
@@ -17,7 +18,7 @@ class Scheduler(ABC, WrapperObject):
             dict={"runTick": self._java_run_tick}
         )
 
-        super().__init__(jpype.JClass("modelarium.scheduler.functional.FunctionalScheduler")(tick_function))
+        super().__init__(java_class("modelarium.scheduler.functional.FunctionalScheduler")(tick_function))
 
     def _java_run_tick(
             self,

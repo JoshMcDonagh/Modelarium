@@ -1,11 +1,12 @@
 import jpype
 
+from modelarium._java import java_class
 from modelarium.wrapper_object import WrapperObject
 
 
 class RandomGenerator(WrapperObject):
     def __init__(self, seed: int | None = None) -> None:
-        java_random_generator = jpype.JClass("java.util.Random")
+        java_random_generator = java_class("java.util.Random")
         if seed is None:
             super().__init__(java_random_generator())
         else:

@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 import jpype
 from typing_extensions import override
 
+from modelarium._java import java_class
 from modelarium.entities.attributes.attribute import Attribute
 from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 from modelarium.entities.contexts.context import Context
@@ -22,7 +23,7 @@ class Event(ABC, Attribute):
         run_logic = jpype.JProxy(java_run_logic_interface_name, dict={"run": self._java_run})
         trigger_logic = jpype.JProxy(java_trigger_logic_interface_name, dict={"isTriggered": self._java_is_triggered})
 
-        super().__init__(jpype.JClass(java_class_name)(
+        super().__init__(java_class(java_class_name)(
             name,
             is_logged,
             access_level._java_object,

@@ -1,4 +1,5 @@
 from abc import ABC
+from typing import Any
 
 
 class WrapperObject(ABC):
@@ -6,5 +7,5 @@ class WrapperObject(ABC):
         self._java_obj = java_obj
 
     @property
-    def _java_object(self) -> object:
+    def _java_object(self) -> Any:
         return self._java_obj

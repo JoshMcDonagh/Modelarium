@@ -28,5 +28,3 @@ class ReadOnlyProperty(ReadOnlyAttribute, Generic[PROPERTY_T]):
 
     def get(self) -> PROPERTY_T:
         return self._java_object.get()
-
-

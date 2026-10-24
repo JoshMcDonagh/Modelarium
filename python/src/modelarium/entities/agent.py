@@ -2,6 +2,7 @@ from typing import override
 
 import jpype
 
+from modelarium._java import java_class
 from modelarium.entities.attributes.sets.agent_attribute_set import AgentAttributeSet, _AgentAttributeSet
 from modelarium.entities.contexts.agent_context import AgentContext
 from modelarium.entities.attributes.events.agent_event import AgentEvent, _AgentEvent
@@ -14,10 +15,10 @@ from modelarium.wrapper_object import WrapperObject
 
 class Agent(Entity):
     def __init__(self, name: str, attribute_sets: list[AgentAttributeSet]) -> None:
-        java_attribute_sets = jpype.JClass("java.util.ArrayList")()
+        java_attribute_sets = java_class("java.util.ArrayList")()
         for attribute_set in attribute_sets:
             java_attribute_sets.add(attribute_set._java_object)
-        super().__init__(jpype.JClass("modelarium.entities.Agent")(name, java_attribute_sets))
+        super().__init__(java_class("modelarium.entities.Agent")(name, java_attribute_sets))
 
     @property
     @override

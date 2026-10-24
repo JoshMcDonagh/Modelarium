@@ -2,6 +2,7 @@ from typing import overload, override
 
 import jpype
 
+from modelarium._java import java_class
 from modelarium.entities.attributes.sets.environment_attribute_set import EnvironmentAttributeSet, \
     _EnvironmentAttributeSet
 from modelarium.entities.contexts.environment_context import EnvironmentContext
@@ -35,8 +36,8 @@ class Environment(Entity):
                 f"{type(attribute_sets).__name__}"
             )
 
-        java_object = jpype.JClass("modelarium.entities.Environment")
-        java_attribute_sets = jpype.JClass("java.util.ArrayList")()
+        java_object = java_class("modelarium.entities.Environment")
+        java_attribute_sets = java_class("java.util.ArrayList")()
 
         if attribute_sets is None:
             for attribute_set in name:

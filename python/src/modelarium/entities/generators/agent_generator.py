@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 import jpype
 
+from modelarium._java import java_class
 from modelarium.config import Config, _java_config_to_config
 from modelarium.entities.agent_sets.agent_set import AgentSet
 from modelarium.entities.generators.entity_generator import EntityGenerator
@@ -20,7 +21,7 @@ class AgentGenerator(ABC, EntityGenerator):
         config = _java_config_to_config(java_config)
         random = _RandomGenerator(java_random)
         agent_sets = self.generate_agents_for_each_thread(config, random)
-        java_agent_sets = jpype.JCLass("java.util.ArrayList")()
+        java_agent_sets = java_class("java.util.ArrayList")()
         for agent_set in agent_sets:
             java_agent_sets.add(agent_set._java_object)
         return java_agent_sets
