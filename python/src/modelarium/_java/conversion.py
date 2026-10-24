@@ -1,5 +1,6 @@
 from collections.abc import Sequence, Mapping, Iterable
 from datetime import timedelta
+from pathlib import Path
 from typing import cast, Any
 
 import jpype
@@ -75,3 +76,11 @@ def java_map_to_dataframe(java_map: object, column_names: Sequence[str]) -> pd.D
         df.columns.name = column_names[0]
 
     return df
+
+
+def python_to_java_path(python_path: Path) -> object:
+    return java_class("java.nio.file.Path").of(str(python_path))
+
+
+def java_to_python_path(java_path: object) -> Path:
+    return Path(str(java_path))
