@@ -94,4 +94,4 @@ class _AttributeSetLogDatabase(AttributeSetLogDatabase):
 
     @override
     def get_attribute_column_as_list(self, attribute_name: str) -> list[object]:
-        return java_list_to_list(self._java_object.getAttributeColumnAsList(attribute_name))
+        return java_list_to_list(self._java_object.getAttributeColumnAsList(attribute_name), convert_log_values=True)

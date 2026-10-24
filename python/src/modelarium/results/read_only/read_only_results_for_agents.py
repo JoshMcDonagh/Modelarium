@@ -16,7 +16,10 @@ class ReadOnlyResultsForAgents(WrapperObject):
         return self._java_object.attributeLogCount(agent_name, attribute_set_name)
 
     def attribute_logs(self, agent_name: str, attribute_set_name: str, attribute_name: str) -> list[object]:
-        return java_list_to_list(self._java_object.attributeLogs(agent_name, attribute_set_name, attribute_name))
+        return java_list_to_list(
+            self._java_object.attributeLogs(agent_name, attribute_set_name, attribute_name),
+            convert_log_values=True
+        )
 
     def attribute_set_logs(self, agent_name: str, attribute_set_name: str) -> pd.DataFrame:
         return java_map_to_dataframe(

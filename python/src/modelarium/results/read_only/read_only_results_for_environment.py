@@ -13,7 +13,10 @@ class ReadOnlyResultsForEnvironment(WrapperObject):
         return self._java_object.attributeLogCount(attribute_set_name)
 
     def attribute_logs(self, attribute_set_name: str, attribute_name: str) -> list[object]:
-        return java_list_to_list(self._java_object.attributeLogs(attribute_set_name, attribute_name))
+        return java_list_to_list(
+            self._java_object.attributeLogs(attribute_set_name, attribute_name),
+            convert_log_values=True
+        )
 
     def attribute_set_logs(self, attribute_set_name: str) -> pd.DataFrame:
         return java_map_to_dataframe(

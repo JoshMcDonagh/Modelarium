@@ -21,7 +21,7 @@ class AttributeSetLog(WrapperObject):
         return self._java_object.attributeLogEntryCount()
 
     def get_values(self, attribute_name: str) -> list[object]:
-        return java_list_to_list(self._java_object.getValues(attribute_name))
+        return java_list_to_list(self._java_object.getValues(attribute_name), convert_log_values=True)
 
     def disconnect_database(self) -> None:
         self._java_object.disconnectDatabase()

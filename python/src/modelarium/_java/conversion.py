@@ -7,6 +7,7 @@ import jpype
 import pandas as pd
 
 from modelarium._java import java_class
+from modelarium._java.results import java_log_value_to_python
 from modelarium.wrapper_object import WrapperObject
 
 
@@ -36,9 +37,11 @@ def list_to_java_array_list(python_list: list) -> Iterable:
     return java_array_list
 
 
-def java_list_to_list(java_list: Iterable, item_type: type | None = None) -> list:
+def java_list_to_list(java_list: Iterable, item_type: type | None = None, convert_log_values: bool = False) -> list:
     python_list = []
     for item in java_list:
+        if convert_log_values:
+            item = java_log_value_to_python(item)
         if item_type is not None:
             python_list.append(item_type(item))
         else:
@@ -56,7 +59,7 @@ def java_map_to_dataframe(java_map: object, column_names: Sequence[str]) -> pd.D
             if isinstance(value, Mapping) or hasattr(value, "entrySet"):
                 result.update(flatten(value, path))
             else:
-                result[path] = list(value)
+                result[path] = [java_log_value_to_python(item) for item in value]
 
         return result
 
