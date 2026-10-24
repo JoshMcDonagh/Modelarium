@@ -40,7 +40,7 @@ def _java_list_to_list(java_list: Iterable, item_type: type | None = None) -> li
             python_list.append(item_type(item))
         else:
             python_list.append(item)
-    return list(java_list)
+    return list(python_list)
 
 
 def _java_map_to_dataframe(java_map: object, column_names: Sequence[str]) -> pd.DataFrame:
