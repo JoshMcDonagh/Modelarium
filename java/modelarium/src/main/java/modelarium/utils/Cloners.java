@@ -13,6 +13,8 @@ import modelarium.entities.contexts.AgentSimulationContext;
 import modelarium.entities.contexts.EnvironmentSimulationContext;
 import modelarium.entities.logging.AttributeSetLog;
 import modelarium.internal.Internal;
+import modelarium.python.PythonObject;
+import modelarium.python.PythonValue;
 
 import java.util.List;
 import java.util.Map;
@@ -65,7 +67,8 @@ public final class Cloners {
                 EnvironmentPropertyRunFunction.class,
                 AgentEventIsTriggeredFunction.class, AgentEventRunFunction.class,
                 EnvironmentEventIsTriggeredFunction.class, EnvironmentEventRunFunction.class,
-                AgentRoutineRunFunction.class, EnvironmentRoutineRunFunction.class
+                AgentRoutineRunFunction.class, EnvironmentRoutineRunFunction.class,
+                PythonObject.class
         );
 
         IFastCloner listCloner = (o, dc, clones) ->
@@ -84,6 +87,14 @@ public final class Cloners {
         registerIfPresent(cloner, "java.util.ImmutableCollections$SetN", setCloner);
         registerIfPresent(cloner, "java.util.ImmutableCollections$Map1", mapCloner);
         registerIfPresent(cloner, "java.util.ImmutableCollections$MapN", mapCloner);
+
+        cloner.registerFastCloner(PythonValue.class, (
+                original,
+                clonerInstance,
+                clones
+                ) ->
+                        ((PythonValue) original).deepCopy()
+        );
 
         return cloner;
     }
