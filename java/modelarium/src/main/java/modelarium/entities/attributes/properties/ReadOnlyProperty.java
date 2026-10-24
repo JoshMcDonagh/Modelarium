@@ -1,6 +1,9 @@
 package modelarium.entities.attributes.properties;
 
 import modelarium.entities.attributes.ReadOnlyAttribute;
+import modelarium.internal.Internal;
+import modelarium.python.PythonObject;
+import modelarium.python.entities.attributes.properties.functional.PythonFunctionalProperty;
 import modelarium.utils.Cloners;
 
 /**
@@ -44,5 +47,22 @@ public final class ReadOnlyProperty<T> extends ReadOnlyAttribute<Property<T, ?>>
      */
     public T get() {
         return Cloners.standard().deepClone(getMutableAttribute()).get();
+    }
+
+    /**
+     * Returns the Python type associated with this property.
+     *
+     * <p>This method is intended for internal use and is only supported when the
+     * wrapped mutable property is backed by a Python functional property.
+     *
+     * @return the stored Python type for this property
+     * @throws UnsupportedOperationException if this property is not backed by a Python functional property
+     */
+    @Internal
+    public PythonObject getPythonType() {
+        if (getMutableAttribute() instanceof PythonFunctionalProperty pythonProperty)
+            return pythonProperty.getPythonType();
+
+        throw new UnsupportedOperationException("This is not a Python-backed property");
     }
 }

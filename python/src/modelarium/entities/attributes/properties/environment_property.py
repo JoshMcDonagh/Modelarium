@@ -29,12 +29,12 @@ class EnvironmentProperty(ABC, Generic[PROPERTY_T], Property[PROPERTY_T], Enviro
         )
 
     @override
-    def _java_set(self, java_context: object, value: PROPERTY_T) -> None:
+    def _java_set(self, java_context: object, value: PROPERTY_T | None) -> None:
         context = EnvironmentContext(java_context)
         return self._set(context, _java_to_python(self.type, value))
 
     @override
-    def _java_get(self, java_context: object) -> PROPERTY_T:
+    def _java_get(self, java_context: object) -> PROPERTY_T | None:
         context = EnvironmentContext(java_context)
         return _python_to_java(self.type, self._get(context))
 
