@@ -30,13 +30,13 @@ class Agent(Entity):
         return _AgentAttributeSet(super().get_attribute_set(attribute_set_id))
 
     def get_event(self, attribute_set_id: int | str, event_id: int | str) -> AgentEvent:
-        return _AgentEvent(self.get_attribute_set(attribute_set_id).get_event(event_id))
+        return self.get_attribute_set(attribute_set_id).get_event(event_id)
 
     def get_routine(self, attribute_set_id: int | str, routine_id: int | str) -> AgentRoutine:
-        return _AgentRoutine(self.get_attribute_set(attribute_set_id).get_routine(routine_id))
+        return self.get_attribute_set(attribute_set_id).get_routine(routine_id)
 
     def get_property(self, attribute_set_id: int | str, property_id: int | str) -> AgentProperty:
-        return _AgentProperty(self.get_attribute_set(attribute_set_id).get_property(property_id))
+        return self.get_attribute_set(attribute_set_id).get_property(property_id)
 
     def kill(self) -> None:
         self._java_object.kill()

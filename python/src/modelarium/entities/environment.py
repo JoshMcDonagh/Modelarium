@@ -58,13 +58,13 @@ class Environment(Entity):
         return _EnvironmentAttributeSet(super().get_attribute_set(attribute_set_id))
 
     def get_event(self, attribute_set_id: int | str, event_id: int | str) -> EnvironmentEvent:
-        return _EnvironmentEvent(self.get_attribute_set(attribute_set_id).get_event(event_id))
+        return self.get_attribute_set(attribute_set_id).get_event(event_id)
 
     def get_routine(self, attribute_set_id: int | str, routine_id: int | str) -> EnvironmentRoutine:
-        return _EnvironmentRoutine(self.get_attribute_set(attribute_set_id).get_routine(routine_id))
+        return self.get_attribute_set(attribute_set_id).get_routine(routine_id)
 
     def get_property(self, attribute_set_id: int | str, property_id: int | str) -> EnvironmentProperty:
-        return _EnvironmentProperty(self.get_attribute_set(attribute_set_id).get_property(property_id))
+        return self.get_attribute_set(attribute_set_id).get_property(property_id)
 
     @override
     def get_as_immutable(self) -> ReadOnlyEnvironment:
