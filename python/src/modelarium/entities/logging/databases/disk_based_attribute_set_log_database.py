@@ -1,4 +1,4 @@
-from python.src.modelarium.entities.logging.databases.java_attribute_set_log_database import JavaAttributeSetLogDatabase
+from modelarium.entities.logging.databases.java_attribute_set_log_database import JavaAttributeSetLogDatabase
 
 
 class DiskBasedAttributeSetLogDatabase(JavaAttributeSetLogDatabase):

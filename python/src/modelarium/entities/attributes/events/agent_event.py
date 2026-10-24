@@ -1,10 +1,10 @@
 from abc import ABC
 from typing import override
 
-from python.src.modelarium.entities.attributes.agent_attribute import AgentAttribute
-from python.src.modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
-from python.src.modelarium.entities.attributes.events.event import Event
-from python.src.modelarium.entities.contexts.agent_context import AgentContext
+from modelarium.entities.attributes.agent_attribute import AgentAttribute
+from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+from modelarium.entities.attributes.events.event import Event
+from modelarium.entities.contexts.agent_context import AgentContext
 
 
 class AgentEvent(ABC, Event, AgentAttribute):

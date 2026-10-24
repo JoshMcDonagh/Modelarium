@@ -2,9 +2,9 @@ from pathlib import Path
 
 import jpype
 
-from python.src.modelarium.results.read_only.read_only_results_for_agents import ReadOnlyResultsForAgents
-from python.src.modelarium.results.read_only.read_only_results_for_environment import ReadOnlyResultsForEnvironment
-from python.src.modelarium.wrapper_object import WrapperObject
+from modelarium.results.read_only.read_only_results_for_agents import ReadOnlyResultsForAgents
+from modelarium.results.read_only.read_only_results_for_environment import ReadOnlyResultsForEnvironment
+from modelarium.wrapper_object import WrapperObject
 
 
 class ReadOnlyResults(WrapperObject):

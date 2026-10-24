@@ -1,8 +1,8 @@
 from typing import override
 
-from python.src.modelarium.entities.attributes.sets.read_only.read_only_environment_attribute_set import \
+from modelarium.entities.attributes.sets.read_only.read_only_environment_attribute_set import \
     ReadOnlyEnvironmentAttributeSet
-from python.src.modelarium.entities.read_only.read_only_entity import ReadOnlyEntity
+from modelarium.entities.read_only.read_only_entity import ReadOnlyEntity
 
 
 class ReadOnlyEnvironment(ReadOnlyEntity):

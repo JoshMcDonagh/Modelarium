@@ -2,10 +2,10 @@ from abc import ABC, abstractmethod
 
 import jpype
 
-from python.src.modelarium.config import Config, _java_config_to_config
-from python.src.modelarium.entities.agent_sets.agent_set import AgentSet
-from python.src.modelarium.entities.generators.entity_generator import EntityGenerator
-from python.src.modelarium.utils.random_generator import RandomGenerator, _RandomGenerator
+from modelarium.config import Config, _java_config_to_config
+from modelarium.entities.agent_sets.agent_set import AgentSet
+from modelarium.entities.generators.entity_generator import EntityGenerator
+from modelarium.utils.random_generator import RandomGenerator, _RandomGenerator
 
 
 class AgentGenerator(ABC, EntityGenerator):

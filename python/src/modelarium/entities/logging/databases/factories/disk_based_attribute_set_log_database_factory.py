@@ -1,8 +1,8 @@
 from typing import override
 
-from python.src.modelarium.entities.logging.databases.disk_based_attribute_set_log_database import \
+from modelarium.entities.logging.databases.disk_based_attribute_set_log_database import \
     DiskBasedAttributeSetLogDatabase, _DiskBasedAttributeSetLogDatabase
-from python.src.modelarium.entities.logging.databases.factories.java_attribute_set_log_database_factory import \
+from modelarium.entities.logging.databases.factories.java_attribute_set_log_database_factory import \
     JavaAttributeSetLogDatabaseFactory
 
 

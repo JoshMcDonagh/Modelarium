@@ -1,7 +1,7 @@
 from typing import Generic, override, Type, get_args
 
-from python.src.modelarium.entities.attributes.properties.property import PROPERTY_T
-from python.src.modelarium.entities.attributes.read_only_attribute import ReadOnlyAttribute
+from modelarium.entities.attributes.properties.property import PROPERTY_T
+from modelarium.entities.attributes.read_only_attribute import ReadOnlyAttribute
 
 
 class ReadOnlyProperty(ReadOnlyAttribute, Generic[PROPERTY_T]):

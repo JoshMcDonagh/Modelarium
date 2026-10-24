@@ -3,16 +3,16 @@ from typing import Callable
 
 import jpype
 
-from python.src.modelarium.entities.agent import Agent
-from python.src.modelarium.entities.agent_sets.agent_set import AgentSet
-from python.src.modelarium.entities.agent_sets.read_only_agent_set import ReadOnlyAgentSet
-from python.src.modelarium.entities.attributes.attribute import Attribute
-from python.src.modelarium.entities.attributes.sets.attribute_set import AttributeSet
-from python.src.modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
-from python.src.modelarium.entities.entity import Entity
-from python.src.modelarium.read_only_clock import ReadOnlyClock
-from python.src.modelarium.utils.random_generator import RandomGenerator, _RandomGenerator
-from python.src.modelarium.wrapper_object import WrapperObject
+from modelarium.entities.agent import Agent
+from modelarium.entities.agent_sets.agent_set import AgentSet
+from modelarium.entities.agent_sets.read_only_agent_set import ReadOnlyAgentSet
+from modelarium.entities.attributes.attribute import Attribute
+from modelarium.entities.attributes.sets.attribute_set import AttributeSet
+from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
+from modelarium.entities.entity import Entity
+from modelarium.read_only_clock import ReadOnlyClock
+from modelarium.utils.random_generator import RandomGenerator, _RandomGenerator
+from modelarium.wrapper_object import WrapperObject
 
 
 class Context(ABC, WrapperObject):

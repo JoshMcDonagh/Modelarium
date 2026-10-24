@@ -1,6 +1,6 @@
 from typing import override
 
-from python.src.modelarium.entities.attributes.read_only_attribute import ReadOnlyAttribute
+from modelarium.entities.attributes.read_only_attribute import ReadOnlyAttribute
 
 
 class ReadOnlyEvent(ReadOnlyAttribute):

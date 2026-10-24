@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 from typing import override
 
-from python.src.modelarium.config import Config
-from python.src.modelarium.entities.agent import Agent
-from python.src.modelarium.entities.agent_sets.agent_set import AgentSet
-from python.src.modelarium.entities.generators.agent_generator import AgentGenerator
-from python.src.modelarium.utils.random_generator import RandomGenerator
+from modelarium.config import Config
+from modelarium.entities.agent import Agent
+from modelarium.entities.agent_sets.agent_set import AgentSet
+from modelarium.entities.generators.agent_generator import AgentGenerator
+from modelarium.utils.random_generator import RandomGenerator
 
 
 class DefaultAgentGenerator(ABC, AgentGenerator):

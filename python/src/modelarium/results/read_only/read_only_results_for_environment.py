@@ -1,7 +1,7 @@
 import pandas as pd
 
-from python.src.modelarium.utils.language_conversion import _java_map_to_dataframe, _java_list_to_list
-from python.src.modelarium.wrapper_object import WrapperObject
+from modelarium.utils.language_conversion import _java_map_to_dataframe, _java_list_to_list
+from modelarium.wrapper_object import WrapperObject
 
 
 class ReadOnlyResultsForEnvironment(WrapperObject):

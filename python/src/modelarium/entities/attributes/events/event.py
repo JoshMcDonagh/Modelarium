@@ -3,10 +3,10 @@ from abc import ABC, abstractmethod
 import jpype
 from typing_extensions import override
 
-from python.src.modelarium.entities.attributes.attribute import Attribute
-from python.src.modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
-from python.src.modelarium.entities.contexts.context import Context
-from python.src.modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
+from modelarium.entities.attributes.attribute import Attribute
+from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+from modelarium.entities.contexts.context import Context
+from modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
 
 
 class Event(ABC, Attribute):

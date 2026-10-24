@@ -3,9 +3,9 @@ from typing import override
 
 import jpype
 
-from python.src.modelarium.entities.logging.databases.attribute_set_log_database import AttributeSetLogDatabase, \
+from modelarium.entities.logging.databases.attribute_set_log_database import AttributeSetLogDatabase, \
     _AttributeSetLogDatabase
-from python.src.modelarium.wrapper_object import WrapperObject
+from modelarium.wrapper_object import WrapperObject
 
 
 class AttributeSetLogDatabaseFactory(ABC, WrapperObject):

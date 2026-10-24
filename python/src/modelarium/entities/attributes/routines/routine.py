@@ -3,9 +3,9 @@ from typing import override
 
 import jpype
 
-from python.src.modelarium.entities.attributes.attribute import Attribute
-from python.src.modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
-from python.src.modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
+from modelarium.entities.attributes.attribute import Attribute
+from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+from modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
 
 
 class Routine(ABC, Attribute):

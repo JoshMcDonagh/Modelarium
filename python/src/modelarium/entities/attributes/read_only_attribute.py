@@ -1,7 +1,7 @@
 from abc import ABC
 
-from python.src.modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
-from python.src.modelarium.wrapper_object import WrapperObject
+from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+from modelarium.wrapper_object import WrapperObject
 
 
 class ReadOnlyAttribute(ABC, WrapperObject):

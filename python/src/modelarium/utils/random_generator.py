@@ -1,6 +1,6 @@
 import jpype
 
-from python.src.modelarium.wrapper_object import WrapperObject
+from modelarium.wrapper_object import WrapperObject
 
 
 class RandomGenerator(WrapperObject):

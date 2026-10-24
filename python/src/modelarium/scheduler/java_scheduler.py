@@ -1,11 +1,11 @@
 from abc import ABC
 from typing import override
 
-from python.src.modelarium.entities.agent_sets.agent_set import AgentSet
-from python.src.modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
-from python.src.modelarium.read_only_clock import ReadOnlyClock
-from python.src.modelarium.scheduler.scheduler import Scheduler
-from python.src.modelarium.utils.random_generator import RandomGenerator
+from modelarium.entities.agent_sets.agent_set import AgentSet
+from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
+from modelarium.read_only_clock import ReadOnlyClock
+from modelarium.scheduler.scheduler import Scheduler
+from modelarium.utils.random_generator import RandomGenerator
 
 
 class JavaScheduler(ABC, Scheduler):

@@ -1,10 +1,10 @@
 from abc import ABC
 from typing import override
 
-from python.src.modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
-from python.src.modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
-from python.src.modelarium.entities.attributes.routines.routine import Routine
-from python.src.modelarium.entities.contexts.environment_context import EnvironmentContext
+from modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
+from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+from modelarium.entities.attributes.routines.routine import Routine
+from modelarium.entities.contexts.environment_context import EnvironmentContext
 
 
 class EnvironmentRoutine(ABC, Routine, EnvironmentAttribute):

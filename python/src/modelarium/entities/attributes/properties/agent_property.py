@@ -1,11 +1,11 @@
 from abc import ABC
 from typing import Generic, override
 
-from python.src.modelarium.entities.attributes.agent_attribute import AgentAttribute
-from python.src.modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
-from python.src.modelarium.entities.attributes.properties import _java_to_python, _python_to_java
-from python.src.modelarium.entities.attributes.properties.property import PROPERTY_T, Property
-from python.src.modelarium.entities.contexts.agent_context import AgentContext
+from modelarium.entities.attributes.agent_attribute import AgentAttribute
+from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+from modelarium.entities.attributes.properties import _java_to_python, _python_to_java
+from modelarium.entities.attributes.properties.property import PROPERTY_T, Property
+from modelarium.entities.contexts.agent_context import AgentContext
 
 
 class AgentProperty(ABC, Generic[PROPERTY_T], Property[PROPERTY_T], AgentAttribute):

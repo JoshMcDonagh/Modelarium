@@ -1,9 +1,9 @@
 from typing import override
 
-from python.src.modelarium.entities.attributes.sets.environment_attribute_set import EnvironmentAttributeSet, \
+from modelarium.entities.attributes.sets.environment_attribute_set import EnvironmentAttributeSet, \
     _EnvironmentAttributeSet
-from python.src.modelarium.entities.contexts.context import Context
-from python.src.modelarium.entities.environment import Environment, _Environment
+from modelarium.entities.contexts.context import Context
+from modelarium.entities.environment import Environment, _Environment
 
 
 class EnvironmentContext(Context):

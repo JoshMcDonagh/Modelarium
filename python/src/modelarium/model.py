@@ -1,9 +1,9 @@
 import jpype
 
-from python.src.modelarium import start_jvm
-from python.src.modelarium.config import Config, _config_to_java_config
-from python.src.modelarium.results.read_only.read_only_results import ReadOnlyResults
-from python.src.modelarium.wrapper_object import WrapperObject
+from modelarium import start_jvm
+from modelarium.config import Config, _config_to_java_config
+from modelarium.results.read_only.read_only_results import ReadOnlyResults
+from modelarium.wrapper_object import WrapperObject
 
 
 class Model(WrapperObject):

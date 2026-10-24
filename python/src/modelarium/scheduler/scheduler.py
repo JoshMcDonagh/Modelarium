@@ -3,11 +3,11 @@ from typing import override
 
 import jpype
 
-from python.src.modelarium.entities.agent_sets.agent_set import AgentSet, _AgentSet
-from python.src.modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
-from python.src.modelarium.read_only_clock import ReadOnlyClock
-from python.src.modelarium.utils.random_generator import RandomGenerator, _RandomGenerator
-from python.src.modelarium.wrapper_object import WrapperObject
+from modelarium.entities.agent_sets.agent_set import AgentSet, _AgentSet
+from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
+from modelarium.read_only_clock import ReadOnlyClock
+from modelarium.utils.random_generator import RandomGenerator, _RandomGenerator
+from modelarium.wrapper_object import WrapperObject
 
 
 class Scheduler(ABC, WrapperObject):

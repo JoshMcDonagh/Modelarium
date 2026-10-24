@@ -2,13 +2,13 @@ from abc import ABC, abstractmethod
 
 import jpype
 
-from python.src.modelarium.entities.attributes.attribute import Attribute
-from python.src.modelarium.entities.attributes.events.event import Event
-from python.src.modelarium.entities.attributes.properties.property import Property
-from python.src.modelarium.entities.attributes.routines.routine import Routine
-from python.src.modelarium.entities.logging.attribute_set_log import AttributeSetLog
-from python.src.modelarium.utils.language_conversion import _list_to_java_array_list
-from python.src.modelarium.wrapper_object import WrapperObject
+from modelarium.entities.attributes.attribute import Attribute
+from modelarium.entities.attributes.events.event import Event
+from modelarium.entities.attributes.properties.property import Property
+from modelarium.entities.attributes.routines.routine import Routine
+from modelarium.entities.logging.attribute_set_log import AttributeSetLog
+from modelarium.utils.language_conversion import _list_to_java_array_list
+from modelarium.wrapper_object import WrapperObject
 
 
 class AttributeSet(ABC, WrapperObject):

@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 
-from python.src.modelarium.config import Config, _java_config_to_config
-from python.src.modelarium.entities.environment import Environment
-from python.src.modelarium.entities.generators.entity_generator import EntityGenerator
-from python.src.modelarium.utils.random_generator import RandomGenerator, _RandomGenerator
+from modelarium.config import Config, _java_config_to_config
+from modelarium.entities.environment import Environment
+from modelarium.entities.generators.entity_generator import EntityGenerator
+from modelarium.utils.random_generator import RandomGenerator, _RandomGenerator
 
 
 class EnvironmentGenerator(ABC, EntityGenerator):

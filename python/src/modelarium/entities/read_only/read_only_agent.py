@@ -1,8 +1,8 @@
 from typing import override
 
-from python.src.modelarium.entities.attributes.sets.read_only.read_only_agent_attribute_set import \
+from modelarium.entities.attributes.sets.read_only.read_only_agent_attribute_set import \
     ReadOnlyAgentAttributeSet
-from python.src.modelarium.entities.read_only.read_only_entity import ReadOnlyEntity
+from modelarium.entities.read_only.read_only_entity import ReadOnlyEntity
 
 
 class ReadOnlyAgent(ReadOnlyEntity):

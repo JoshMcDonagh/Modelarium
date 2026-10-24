@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 
-from python.src.modelarium.entities.attributes.sets.attribute_set import AttributeSet
-from python.src.modelarium.entities.contexts.context import Context
-from python.src.modelarium.entities.logging.entity_log import EntityLog
-from python.src.modelarium.entities.read_only.read_only_entity import ReadOnlyEntity
-from python.src.modelarium.wrapper_object import WrapperObject
+from modelarium.entities.attributes.sets.attribute_set import AttributeSet
+from modelarium.entities.contexts.context import Context
+from modelarium.entities.logging.entity_log import EntityLog
+from modelarium.entities.read_only.read_only_entity import ReadOnlyEntity
+from modelarium.wrapper_object import WrapperObject
 
 
 class Entity(ABC, WrapperObject):

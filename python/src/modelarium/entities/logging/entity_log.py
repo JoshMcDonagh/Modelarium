@@ -1,5 +1,5 @@
-from python.src.modelarium.entities.logging.attribute_set_log import AttributeSetLog
-from python.src.modelarium.wrapper_object import WrapperObject
+from modelarium.entities.logging.attribute_set_log import AttributeSetLog
+from modelarium.wrapper_object import WrapperObject
 
 
 class EntityLog(WrapperObject):

@@ -4,8 +4,8 @@ from typing import override
 
 import jpype
 
-from python.src.modelarium.utils.language_conversion import _java_list_to_list, _list_to_java_array_list
-from python.src.modelarium.wrapper_object import WrapperObject
+from modelarium.utils.language_conversion import _java_list_to_list, _list_to_java_array_list
+from modelarium.wrapper_object import WrapperObject
 
 
 class AttributeSetLogDatabase(ABC, WrapperObject):

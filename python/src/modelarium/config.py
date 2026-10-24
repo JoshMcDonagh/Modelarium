@@ -5,12 +5,12 @@ from datetime import timedelta
 
 import jpype
 
-from python.src.modelarium.entities.generators.agent_generator import AgentGenerator, _AgentGenerator
-from python.src.modelarium.entities.generators.environment_generator import EnvironmentGenerator, _EnvironmentGenerator
-from python.src.modelarium.entities.logging.databases.factories.attribute_set_log_database_factory import \
+from modelarium.entities.generators.agent_generator import AgentGenerator, _AgentGenerator
+from modelarium.entities.generators.environment_generator import EnvironmentGenerator, _EnvironmentGenerator
+from modelarium.entities.logging.databases.factories.attribute_set_log_database_factory import \
     AttributeSetLogDatabaseFactory, _AttributeSetLogDatabaseFactory
-from python.src.modelarium.scheduler.scheduler import Scheduler, _Scheduler
-from python.src.modelarium.utils.language_conversion import _timedelta_to_java_duration, _java_duration_to_timedelta
+from modelarium.scheduler.scheduler import Scheduler, _Scheduler
+from modelarium.utils.language_conversion import _timedelta_to_java_duration, _java_duration_to_timedelta
 
 
 def _config_to_java_config(config: Config) -> object:

@@ -1,6 +1,6 @@
 from abc import ABC
 
-from python.src.modelarium.entities.logging.databases.factories.attribute_set_log_database_factory import \
+from modelarium.entities.logging.databases.factories.attribute_set_log_database_factory import \
     AttributeSetLogDatabaseFactory
 
 

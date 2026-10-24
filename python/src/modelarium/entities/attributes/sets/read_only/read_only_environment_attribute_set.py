@@ -1,13 +1,13 @@
 from typing import override
 
-from python.src.modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
-from python.src.modelarium.entities.attributes.events.environment_event import _EnvironmentEvent, EnvironmentEvent
-from python.src.modelarium.entities.attributes.properties.environment_property import EnvironmentProperty, \
+from modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
+from modelarium.entities.attributes.events.environment_event import _EnvironmentEvent, EnvironmentEvent
+from modelarium.entities.attributes.properties.environment_property import EnvironmentProperty, \
     _EnvironmentProperty
-from python.src.modelarium.entities.attributes.routines.environment_routine import EnvironmentRoutine, \
+from modelarium.entities.attributes.routines.environment_routine import EnvironmentRoutine, \
     _EnvironmentRoutine
-from python.src.modelarium.entities.attributes.sets import _convert_to_python_environment_attribute
-from python.src.modelarium.entities.attributes.sets.read_only.read_only_attribute_set import ReadOnlyAttributeSet
+from modelarium.entities.attributes.sets import _convert_to_python_environment_attribute
+from modelarium.entities.attributes.sets.read_only.read_only_attribute_set import ReadOnlyAttributeSet
 
 
 class ReadOnlyEnvironmentAttributeSet(ReadOnlyAttributeSet):

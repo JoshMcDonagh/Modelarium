@@ -1,13 +1,13 @@
 import jpype
 
-from python.src.modelarium.entities.attributes.agent_attribute import AgentAttribute
-from python.src.modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
-from python.src.modelarium.entities.attributes.events.agent_event import _AgentEvent
-from python.src.modelarium.entities.attributes.events.environment_event import _EnvironmentEvent
-from python.src.modelarium.entities.attributes.properties.agent_property import _AgentProperty
-from python.src.modelarium.entities.attributes.properties.environment_property import _EnvironmentProperty
-from python.src.modelarium.entities.attributes.routines.agent_routine import _AgentRoutine
-from python.src.modelarium.entities.attributes.routines.environment_routine import _EnvironmentRoutine
+from modelarium.entities.attributes.agent_attribute import AgentAttribute
+from modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
+from modelarium.entities.attributes.events.agent_event import _AgentEvent
+from modelarium.entities.attributes.events.environment_event import _EnvironmentEvent
+from modelarium.entities.attributes.properties.agent_property import _AgentProperty
+from modelarium.entities.attributes.properties.environment_property import _EnvironmentProperty
+from modelarium.entities.attributes.routines.agent_routine import _AgentRoutine
+from modelarium.entities.attributes.routines.environment_routine import _EnvironmentRoutine
 
 
 def _convert_to_python_agent_attribute(java_attribute: object) -> AgentAttribute:

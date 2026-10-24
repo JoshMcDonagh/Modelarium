@@ -4,11 +4,11 @@ from collections.abc import Iterable, Iterator, Callable
 
 import jpype
 
-from python.src.modelarium.entities.agent import Agent, _Agent
-from python.src.modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
-from python.src.modelarium.utils.language_conversion import _java_list_to_list, _list_to_java_array_list
-from python.src.modelarium.utils.random_generator import RandomGenerator
-from python.src.modelarium.wrapper_object import WrapperObject
+from modelarium.entities.agent import Agent, _Agent
+from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
+from modelarium.utils.language_conversion import _java_list_to_list, _list_to_java_array_list
+from modelarium.utils.random_generator import RandomGenerator
+from modelarium.wrapper_object import WrapperObject
 
 
 class AgentSet(Iterable[Agent], WrapperObject):

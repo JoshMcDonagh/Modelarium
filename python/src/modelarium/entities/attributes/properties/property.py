@@ -3,11 +3,11 @@ from typing import Generic, override, Type
 
 import jpype
 
-from python.src.modelarium.entities.attributes.attribute import Attribute
-from python.src.modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
-from python.src.modelarium.entities.attributes.properties import PROPERTY_T, _type_to_string, _string_to_type
-from python.src.modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
-from python.src.modelarium.entities.contexts.context import Context
+from modelarium.entities.attributes.attribute import Attribute
+from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+from modelarium.entities.attributes.properties import PROPERTY_T, _type_to_string, _string_to_type
+from modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
+from modelarium.entities.contexts.context import Context
 
 
 class Property(ABC, Attribute, Generic[PROPERTY_T]):

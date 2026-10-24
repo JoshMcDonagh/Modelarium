@@ -5,10 +5,10 @@ from typing import Callable
 
 import jpype
 
-from python.src.modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
-from python.src.modelarium.utils.language_conversion import _java_list_to_list
-from python.src.modelarium.utils.random_generator import RandomGenerator
-from python.src.modelarium.wrapper_object import WrapperObject
+from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
+from modelarium.utils.language_conversion import _java_list_to_list
+from modelarium.utils.random_generator import RandomGenerator
+from modelarium.wrapper_object import WrapperObject
 
 
 class ReadOnlyAgentSet(Iterable[ReadOnlyAgent], WrapperObject):

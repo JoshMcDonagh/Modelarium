@@ -4,7 +4,7 @@ from datetime import timedelta
 import jpype
 import pandas as pd
 
-from python.src.modelarium.wrapper_object import WrapperObject
+from modelarium.wrapper_object import WrapperObject
 
 
 def _timedelta_to_java_duration(duration: timedelta) -> object:

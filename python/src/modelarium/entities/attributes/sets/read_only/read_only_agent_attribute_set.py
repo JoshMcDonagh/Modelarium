@@ -1,11 +1,11 @@
 from typing import override
 
-from python.src.modelarium.entities.attributes.agent_attribute import AgentAttribute
-from python.src.modelarium.entities.attributes.events.agent_event import AgentEvent, _AgentEvent
-from python.src.modelarium.entities.attributes.properties.agent_property import AgentProperty, _AgentProperty
-from python.src.modelarium.entities.attributes.routines.agent_routine import AgentRoutine, _AgentRoutine
-from python.src.modelarium.entities.attributes.sets import _convert_to_python_agent_attribute
-from python.src.modelarium.entities.attributes.sets.read_only.read_only_attribute_set import ReadOnlyAttributeSet
+from modelarium.entities.attributes.agent_attribute import AgentAttribute
+from modelarium.entities.attributes.events.agent_event import AgentEvent, _AgentEvent
+from modelarium.entities.attributes.properties.agent_property import AgentProperty, _AgentProperty
+from modelarium.entities.attributes.routines.agent_routine import AgentRoutine, _AgentRoutine
+from modelarium.entities.attributes.sets import _convert_to_python_agent_attribute
+from modelarium.entities.attributes.sets.read_only.read_only_attribute_set import ReadOnlyAttributeSet
 
 
 class ReadOnlyAgentAttributeSet(ReadOnlyAttributeSet):
