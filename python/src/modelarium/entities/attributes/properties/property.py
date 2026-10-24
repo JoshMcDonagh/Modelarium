@@ -51,24 +51,29 @@ class Property(ABC, Attribute, Generic[PROPERTY_T]):
         return self._java_object.getPythonType()
 
     @abstractmethod
-    def _java_set(self, java_context: object, value: PROPERTY_T | None) -> None:
+    def _java_set(self, java_context: object, java_current_value: object, java_new_value: object) -> object:
         pass
 
     @abstractmethod
-    def _set(self, context: Context, value: PROPERTY_T | None) -> None:
+    def _set(self, context: Context, current_value: PROPERTY_T | None, new_value: PROPERTY_T | None) -> PROPERTY_T | None:
         pass
 
     @abstractmethod
-    def _java_get(self, java_context: object) -> PROPERTY_T | None:
+    def _java_get(self, java_context: object, java_current_value: object) -> object:
         pass
 
     @abstractmethod
-    def _get(self, context: Context) -> PROPERTY_T | None:
+    def _get(self, context: Context, current_value: PROPERTY_T | None) -> PROPERTY_T | None:
         pass
 
     @override
-    def _run(self, context: Context) -> None:
-        return
+    @abstractmethod
+    def _java_run(self, java_context: object, java_current_value: object) -> object:
+        pass
+
+    @override
+    def _run(self, context: Context, current_value: PROPERTY_T | None) -> PROPERTY_T | None:
+        pass
 
     @override
     def get_as_immutable(self) -> ReadOnlyProperty:
