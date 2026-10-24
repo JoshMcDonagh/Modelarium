@@ -5,9 +5,9 @@ from collections.abc import Iterable, Iterator, Callable
 import jpype
 
 from modelarium._java import java_class
+from modelarium._java.conversion import java_list_to_list, list_to_java_array_list
 from modelarium.entities.agent import Agent, _Agent
 from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
-from modelarium._java.conversion import java_list_to_list, list_to_java_array_list
 from modelarium.utils.random_generator import RandomGenerator
 from modelarium.wrapper_object import WrapperObject
 

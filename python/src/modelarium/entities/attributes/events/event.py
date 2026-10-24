@@ -1,13 +1,13 @@
 from abc import ABC, abstractmethod
+from typing_extensions import override
 
 import jpype
-from typing_extensions import override
 
 from modelarium._java import java_class
 from modelarium.entities.attributes.attribute import Attribute
 from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
-from modelarium.entities.contexts.context import Context
 from modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
+from modelarium.entities.contexts.context import Context
 
 
 class Event(ABC, Attribute):

@@ -1,5 +1,3 @@
-import jpype
-
 from modelarium._java import java_class
 from modelarium.scheduler.java_scheduler import JavaScheduler
 

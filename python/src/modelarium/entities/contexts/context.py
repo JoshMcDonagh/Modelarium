@@ -8,8 +8,8 @@ from modelarium.entities.agent_sets.agent_set import AgentSet
 from modelarium.entities.agent_sets.read_only_agent_set import ReadOnlyAgentSet
 from modelarium.entities.attributes.attribute import Attribute
 from modelarium.entities.attributes.sets.attribute_set import AttributeSet
-from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
 from modelarium.entities.entity import Entity
+from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
 from modelarium.read_only_clock import ReadOnlyClock
 from modelarium.utils.random_generator import RandomGenerator, _RandomGenerator
 from modelarium.wrapper_object import WrapperObject

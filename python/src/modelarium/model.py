@@ -1,5 +1,3 @@
-import jpype
-
 from modelarium import start_jvm
 from modelarium._java import java_class
 from modelarium.config import Config, _config_to_java_config

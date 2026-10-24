@@ -1,8 +1,8 @@
 from abc import ABC
 from typing import override
 
-from modelarium.entities.logging.databases.attribute_set_log_database import AttributeSetLogDatabase
 from modelarium._java.conversion import list_to_java_array_list, java_list_to_list
+from modelarium.entities.logging.databases.attribute_set_log_database import AttributeSetLogDatabase
 from modelarium.wrapper_object import WrapperObject
 
 

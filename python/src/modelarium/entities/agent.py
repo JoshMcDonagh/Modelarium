@@ -1,15 +1,13 @@
 from typing import override
 
-import jpype
-
 from modelarium._java import java_class
+from modelarium.entities.attributes.events.agent_event import AgentEvent
+from modelarium.entities.attributes.properties.agent_property import AgentProperty
+from modelarium.entities.attributes.routines.agent_routine import AgentRoutine
 from modelarium.entities.attributes.sets.agent_attribute_set import AgentAttributeSet, _AgentAttributeSet
 from modelarium.entities.contexts.agent_context import AgentContext
-from modelarium.entities.attributes.events.agent_event import AgentEvent, _AgentEvent
-from modelarium.entities.attributes.properties.agent_property import AgentProperty, _AgentProperty
-from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
-from modelarium.entities.attributes.routines.agent_routine import AgentRoutine, _AgentRoutine
 from modelarium.entities.entity import Entity
+from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
 from modelarium.wrapper_object import WrapperObject
 
 

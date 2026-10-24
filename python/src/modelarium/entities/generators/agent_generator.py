@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
 
-import jpype
-
 from modelarium._java import java_class
 from modelarium.config import Config, _java_config_to_config
 from modelarium.entities.agent_sets.agent_set import AgentSet

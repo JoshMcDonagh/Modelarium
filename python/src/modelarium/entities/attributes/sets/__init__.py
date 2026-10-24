@@ -1,5 +1,3 @@
-import jpype
-
 from modelarium.entities.attributes.agent_attribute import AgentAttribute
 from modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
 from modelarium.entities.attributes.events.agent_event import _AgentEvent

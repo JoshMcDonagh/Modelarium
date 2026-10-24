@@ -1,8 +1,8 @@
 from abc import ABC
 from typing import override
 
-from modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
 from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+from modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
 from modelarium.entities.attributes.routines.routine import Routine
 from modelarium.entities.contexts.environment_context import EnvironmentContext
 from modelarium.wrapper_object import WrapperObject

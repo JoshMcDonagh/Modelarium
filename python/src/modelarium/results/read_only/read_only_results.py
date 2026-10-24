@@ -1,7 +1,5 @@
 from pathlib import Path
 
-import jpype
-
 from modelarium._java import java_class
 from modelarium.results.read_only.read_only_results_for_agents import ReadOnlyResultsForAgents
 from modelarium.results.read_only.read_only_results_for_environment import ReadOnlyResultsForEnvironment

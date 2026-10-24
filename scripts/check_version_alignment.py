@@ -7,7 +7,6 @@ import tomllib
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 MAVEN_NAMESPACE = {"m": "http://maven.apache.org/POM/4.0.0"}
 

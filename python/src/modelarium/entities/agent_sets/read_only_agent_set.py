@@ -5,8 +5,8 @@ from typing import Callable
 
 import jpype
 
-from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
 from modelarium._java.conversion import java_list_to_list
+from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
 from modelarium.utils.random_generator import RandomGenerator
 from modelarium.wrapper_object import WrapperObject
 

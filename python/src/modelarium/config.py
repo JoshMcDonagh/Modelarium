@@ -7,12 +7,12 @@ from typing import Any
 import jpype
 
 from modelarium._java import java_class
+from modelarium._java.conversion import timedelta_to_java_duration, java_duration_to_timedelta
 from modelarium.entities.generators.agent_generator import AgentGenerator, _AgentGenerator
 from modelarium.entities.generators.environment_generator import EnvironmentGenerator, _EnvironmentGenerator
 from modelarium.entities.logging.databases.factories.attribute_set_log_database_factory import \
     AttributeSetLogDatabaseFactory, _AttributeSetLogDatabaseFactory
 from modelarium.scheduler.scheduler import Scheduler, _Scheduler
-from modelarium._java.conversion import timedelta_to_java_duration, java_duration_to_timedelta
 
 
 def _config_to_java_config(config: Config) -> object:
