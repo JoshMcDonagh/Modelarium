@@ -2,6 +2,9 @@ package modelarium.entities.logging.databases;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import modelarium.internal.Internal;
+import modelarium.python.PythonValue;
+import modelarium.python.PythonValueCodec;
 import modelarium.utils.Cloners;
 import modelarium.utils.RandomStringGenerator;
 
@@ -39,6 +42,8 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
 
     /** The name of the table attribute series are stored in */
     private static final String ATTRIBUTES_TABLE_NAME = "attributes_table";
+
+    private final PythonValueCodec pythonValueCodec;
 
     /**
      * Per-series class map for deserialisation.
@@ -100,15 +105,7 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
         return Paths.get(System.getProperty("java.io.tmpdir"), fileName).toString();
     }
 
-    /**
-     * Constructs a new disk-based attribute set log database backed by a file in the system's temporary directory.
-     *
-     * <p>The instance is registered for automatic disconnect on JVM shutdown, with the shutdown hook created the
-     * first time any instance is constructed.
-     */
-    public DiskBasedAttributeSetLogDatabase() {
-        super(createTempDatabasePath());
-
+    private void registerShutdownHook() {
         synchronized (activeDatabases) {
             if (!shutdownHookRegistered) {
                 Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -131,6 +128,25 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
                 shutdownHookRegistered = true;
             }
         }
+    }
+
+    /**
+     * Constructs a new disk-based attribute set log database backed by a file in the system's temporary directory.
+     *
+     * <p>The instance is registered for automatic disconnect on JVM shutdown, with the shutdown hook created the
+     * first time any instance is constructed.
+     */
+    public DiskBasedAttributeSetLogDatabase() {
+        super(createTempDatabasePath());
+        pythonValueCodec = null;
+        registerShutdownHook();
+    }
+
+    @Internal
+    public DiskBasedAttributeSetLogDatabase(PythonValueCodec pythonValueCodec) {
+        super(createTempDatabasePath());
+        this.pythonValueCodec = pythonValueCodec;
+        registerShutdownHook();
     }
 
     /**
@@ -329,23 +345,21 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
      * @param value the value to serialise and append
      * @param <T> the type of the value being appended
      */
+
     private <T> void addSeriesValue(String tableName, String seriesName, T value) {
+        String serialisedValue = serialiseValue(value);
         synchronized (dbLock) {
             ensureConnected();
-
             String sql = "INSERT INTO " + tableName + " (series_name, position_index, value_json) VALUES (?, ?, ?);";
-
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 int nextIndex = getNextPositionIndex(tableName, seriesName);
                 stmt.setString(1, seriesName);
                 stmt.setInt(2, nextIndex);
-                stmt.setString(3, serialiseValue(value));
+                stmt.setString(3, serialisedValue);
                 stmt.executeUpdate();
             } catch (SQLException e) {
-                throw new RuntimeException(
-                        "Error inserting value into '" + tableName + "' for series '" + seriesName + "': " + e.getMessage(),
-                        e
-                );
+                throw new RuntimeException("Error inserting value into '" + tableName + "' for series '" + seriesName +
+                        "': " + e.getMessage(), e);
             }
         }
     }
@@ -359,6 +373,10 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
      * @param values the values to serialise and store as the series
      */
     private void replaceSeries(String tableName, String seriesName, List<Object> values) {
+        List<String> serialisedValues = new ArrayList<>(values.size());
+        for (Object value : values)
+            serialisedValues.add(serialiseValue(value));
+
         synchronized (dbLock) {
             ensureConnected();
 
@@ -369,33 +387,42 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
             try {
                 originalAutoCommit = connection.getAutoCommit();
                 connection.setAutoCommit(false);
+            } catch (SQLException e) {
+                throw new RuntimeException("Failed to begin database transaction: " + e.getMessage(), e);
+            }
 
+            try {
                 try (PreparedStatement deleteStmt = connection.prepareStatement(deleteSql);
                      PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
 
                     deleteStmt.setString(1, seriesName);
                     deleteStmt.executeUpdate();
 
-                    for (int i = 0; i < values.size(); i++) {
+                    for (int i = 0; i < serialisedValues.size(); i++) {
                         insertStmt.setString(1, seriesName);
                         insertStmt.setInt(2, i);
-                        insertStmt.setString(3, serialiseValue(values.get(i)));
+                        insertStmt.setString(3, serialisedValues.get(i));
                         insertStmt.addBatch();
                     }
 
                     insertStmt.executeBatch();
-                    connection.commit();
-                } catch (SQLException e) {
-                    connection.rollback();
-                    throw e;
-                } finally {
-                    connection.setAutoCommit(originalAutoCommit);
                 }
-            } catch (SQLException e) {
-                throw new RuntimeException(
-                        "Error replacing series '" + seriesName + "' in '" + tableName + "': " + e.getMessage(),
-                        e
-                );
+
+                connection.commit();
+            } catch (SQLException | RuntimeException e) {
+                try {
+                    connection.rollback();
+                } catch (SQLException rollbackException) {
+                    e.addSuppressed(rollbackException);
+                }
+
+                throw new RuntimeException("Error replacing series '" + seriesName + "' in '" + tableName + "': " + e.getMessage(), e);
+            } finally {
+                try {
+                    connection.setAutoCommit(originalAutoCommit);
+                } catch (SQLException e) {
+                    throw new RuntimeException("Failed to restore auto-commit state: " + e.getMessage(), e);
+                }
             }
         }
     }
@@ -414,9 +441,8 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
             stmt.setString(1, seriesName);
 
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
+                if (rs.next())
                     return rs.getInt(1);
-                }
             }
         }
 
@@ -433,39 +459,36 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
      * @param type the class to deserialise each value to, or null to return the raw serialised strings
      * @return the series' values in position order
      */
+
     private List<Object> retrieveSeries(String tableName, String seriesName, Class<?> type) {
+        List<String> serialisedValues = new ArrayList<>();
+
         synchronized (dbLock) {
             ensureConnected();
-
             String sql =
                     "SELECT value_json " +
                             "FROM " + tableName + " " +
                             "WHERE series_name = ? " +
                             "ORDER BY position_index ASC;";
 
-            List<Object> results = new ArrayList<>();
-
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setString(1, seriesName);
-
                 try (ResultSet rs = stmt.executeQuery()) {
-                    while (rs.next()) {
-                        String value = rs.getString("value_json");
-                        if (value == null)
-                            results.add(null);
-                        else
-                            results.add(type != null ? deserialiseValue(value, type) : value);
-                    }
+                    while (rs.next())
+                        serialisedValues.add(rs.getString("value_json"));
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(
-                        "Error retrieving series '" + seriesName + "' from '" + tableName + "': " + e.getMessage(),
-                        e
-                );
+                throw new RuntimeException("Error retrieving series '" + seriesName + "' from '" + tableName + "':"
+                        + e.getMessage(), e);
             }
-
-            return results;
         }
+
+        List<Object> results = new ArrayList<>(serialisedValues.size());
+
+        for (String value : serialisedValues)
+            results.add(value == null || type == null ? value : deserialiseValue(value, type));
+
+        return results;
     }
 
     // === Utility ===
@@ -518,11 +541,23 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
      * @param value the value to serialise
      * @return the value's JSON string, or null if the value is null
      */
-    private static String serialiseValue(Object value) {
+    private String serialiseValue(Object value) {
         if (value == null)
             return null;
 
         try {
+            if (value instanceof PythonValue pythonValue) {
+                if (pythonValueCodec == null)
+                    throw new IllegalStateException("Python value codex is not configured");
+                String encoded = pythonValueCodec.encode(pythonValue);
+                return OBJECT_MAPPER.writeValueAsString(Map.of(
+                        "format",
+                        "modelarium-python-pickle-v1",
+                        "payload",
+                        encoded
+                ));
+            }
+
             return OBJECT_MAPPER.writeValueAsString(value);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Error serialising value: " + e.getMessage(), e);
@@ -544,6 +579,16 @@ public class DiskBasedAttributeSetLogDatabase extends AttributeSetLogDatabase {
             throw new IllegalArgumentException("Cannot deserialise: type is null");
 
         try {
+            if (type == PythonValue.class) {
+                if (pythonValueCodec == null)
+                    throw new IllegalStateException("Python value codex is not configured");
+                var json = OBJECT_MAPPER.readTree(value);
+                if (!json.isObject()
+                        || !json.path("format").asText().equals("modelarium-python-pickle-v1")
+                        || !json.path("payload").isTextual())
+                    throw new IllegalArgumentException("Invalid Python value encoding");
+                return pythonValueCodec.decode(json.get("payload").asText());
+            }
             return OBJECT_MAPPER.readValue(value, type);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(
