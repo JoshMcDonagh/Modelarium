@@ -1,39 +1,34 @@
-import importlib
-from typing import TypeVar, cast
+import copy
+from typing import TypeVar, cast, Any
 
 import jpype
+
+from modelarium._java import java_class
 
 PROPERTY_T = TypeVar("PROPERTY_T")
 
 
-def _type_to_string(value_type: type[PROPERTY_T]) -> str:
-    return f"{value_type.__module__}.{value_type.__qualname__}"
+class _PythonPayload:
+    def __init__(self, value: object) -> None:
+        self.value = value
 
 
-def _string_to_type(type_str: str) -> type:
-    parts = type_str.split(".")
+def _make_payload_proxy(value: object) -> object:
+    return jpype.JProxy("modelarium.python.PythonObject", inst=_PythonPayload(value), convert=True)
 
-    for i in range(len(parts), 0, -1):
-        module_name = ".".join(parts[:i])
 
-        try:
-            module = importlib.import_module(module_name)
-        except ModuleNotFoundError as exception:
-            if exception.name != module_name:
-                raise
-            continue
+def _copy_payload(payload: _PythonPayload) -> object:
+    return _make_payload_proxy(copy.deepcopy(payload.value))
 
-        result = module
 
-        for part in parts[i:]:
-            result = getattr(result, part)
+_copier_proxy = None
 
-        if not isinstance(result, type):
-            raise TypeError(f"{type_str!r} does not identify a Python class")
 
-        return result
-
-    raise ImportError(f"Could not resolve Python type {type_str!r}")
+def _get_copier_proxy() -> object:
+    global _copier_proxy
+    if _copier_proxy is None:
+        _copier_proxy = jpype.JProxy("modelarium.python.PythonValueCopier", dict={"copy": _copy_payload})
+    return _copier_proxy
 
 
 def _python_to_java(
@@ -44,27 +39,31 @@ def _python_to_java(
         return None
 
     if not isinstance(value, value_type):
-        raise TypeError(
-            f"Expected {value_type.__name__}, got {type(value).__name__}"
-        )
+        raise TypeError(f"Expected {value_type.__name__}, got {type(value).__name__}")
 
-    return jpype.JProxy(
-        "modelarium.python.PythonObject",
-        inst=value,
-        convert=True
-    )
+    return java_class("modelarium.python.PythonValue")(_make_payload_proxy(value), _get_copier_proxy())
 
 
 def _java_to_python(
     value_type: type[PROPERTY_T],
-    value: object
-) -> PROPERTY_T:
-    if value is None:
-        return cast(PROPERTY_T, None)
+    java_value: object
+) -> PROPERTY_T | None:
+    if java_value is None:
+        return None
+
+    java_PythonValue = java_class("modelarium.python.PythonValue")
+
+    if not isinstance(java_value, java_PythonValue):
+        raise TypeError("Expected a Java PythonValue")
+
+    payload = cast(Any, java_value).payload()
+
+    if not isinstance(payload, _PythonPayload):
+        raise TypeError("Invalid PythonValue payload")
+
+    value = payload.value
 
     if not isinstance(value, value_type):
-        raise TypeError(
-            f"Expected {value_type.__name__}, got {type(value).__name__}"
-        )
+        raise TypeError(f"Expected {value_type.__name__}, got {type(value).__name__}")
 
-    return cast(PROPERTY_T, value)
+    return value
