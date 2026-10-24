@@ -15,7 +15,7 @@ class AttributeSetLogDatabaseFactory(ABC, WrapperObject):
             "modelarium.entities.logging.databases.functional.factories"
             ".FunctionalAttributeSetLogDatabaseFactory"
         )
-        create_logic = jpype.JProxy("java.util.function.Supplier", dict={"create": self._java_create})
+        create_logic = jpype.JProxy("java.util.function.Supplier", dict={"get": self._java_create})
         super().__init__(java_cls(create_logic))
 
     def _java_create(self) -> object:

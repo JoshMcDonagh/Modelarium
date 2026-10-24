@@ -15,7 +15,7 @@ class AttributeSetLogDatabase(ABC, WrapperObject):
         connect_logic = jpype.JProxy("java.lang.Runnable", dict={"run": self.connect})
         disconnect_logic = jpype.JProxy("java.lang.Runnable", dict={"run": self.disconnect})
         add_attribute_value_logic = jpype.JProxy(
-            "java.util.function.BiConsumer", dict={"accept": self._add_attribute_value}
+            "java.util.function.BiConsumer", dict={"accept": self._java_add_attribute_value}
         )
         set_attribute_column_logic = jpype.JProxy(
             "java.util.function.BiConsumer", dict={"accept": self._java_set_attribute_column}
