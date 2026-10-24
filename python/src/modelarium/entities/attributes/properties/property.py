@@ -4,10 +4,10 @@ from typing import Generic, override, Type, cast
 import jpype
 
 from modelarium._java import java_class
+from modelarium._java.entities.attributes.properties import python_to_java, java_to_python
 from modelarium.entities.attributes.attribute import Attribute
 from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
-from modelarium.entities.attributes.properties import PROPERTY_T, _type_to_string, _string_to_type, _python_to_java, \
-    _java_to_python
+from modelarium.entities.attributes.properties import PROPERTY_T
 from modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
 from modelarium.entities.contexts.context import Context
 
@@ -33,18 +33,17 @@ class Property(ABC, Attribute, Generic[PROPERTY_T]):
             name,
             is_logged,
             access_level._java_object,
-            java_python_type,
             getter,
             setter,
             run_logic,
-            _type_to_string(stored_type)
+            java_python_type
         ))
 
     def set(self, value: PROPERTY_T | None) -> None:
-        self._java_object.set(_python_to_java(self.type, value))
+        self._java_object.set(python_to_java(self.type, value))
 
     def get(self) -> PROPERTY_T | None:
-        return _java_to_python(self.type, self._java_object.get())
+        return java_to_python(self.type, self._java_object.get())
 
     @property
     def type(self) -> Type[PROPERTY_T]:

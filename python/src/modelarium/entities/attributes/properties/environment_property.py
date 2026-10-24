@@ -1,9 +1,9 @@
 from abc import ABC
 from typing import Generic, override
 
+from modelarium._java.entities.attributes.properties import java_to_python, python_to_java
 from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 from modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
-from modelarium.entities.attributes.properties import _java_to_python, _python_to_java
 from modelarium.entities.attributes.properties.property import PROPERTY_T, Property
 from modelarium.entities.contexts.environment_context import EnvironmentContext
 from modelarium.wrapper_object import WrapperObject
@@ -31,21 +31,21 @@ class EnvironmentProperty(ABC, Generic[PROPERTY_T], Property[PROPERTY_T], Enviro
     @override
     def _java_set(self, java_context: object, java_current_value: object, java_new_value: object) -> object:
         context = EnvironmentContext(java_context)
-        current_value = _java_to_python(self.type, java_current_value)
-        new_value = _java_to_python(self.type, java_new_value)
-        return _python_to_java(self.type, self._set(context, current_value, new_value))
+        current_value = java_to_python(self.type, java_current_value)
+        new_value = java_to_python(self.type, java_new_value)
+        return python_to_java(self.type, self._set(context, current_value, new_value))
 
     @override
     def _java_get(self, java_context: object, java_current_value: object) -> object:
         context = EnvironmentContext(java_context)
-        current_value = _java_to_python(self.type, java_current_value)
-        return _python_to_java(self.type, self._get(context, current_value))
+        current_value = java_to_python(self.type, java_current_value)
+        return python_to_java(self.type, self._get(context, current_value))
 
     @override
     def _java_run(self, java_context: object, java_current_value: object) -> object:
         context = EnvironmentContext(java_context)
-        current_value = _java_to_python(self.type, java_current_value)
-        return _python_to_java(self.type, self._run(context, current_value))
+        current_value = java_to_python(self.type, java_current_value)
+        return python_to_java(self.type, self._run(context, current_value))
 
 
 class _EnvironmentProperty(Generic[PROPERTY_T], EnvironmentProperty[PROPERTY_T]):
