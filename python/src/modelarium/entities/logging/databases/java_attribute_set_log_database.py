@@ -3,12 +3,12 @@ from typing import override
 
 from modelarium.entities.logging.databases.attribute_set_log_database import AttributeSetLogDatabase
 from modelarium.utils.language_conversion import _list_to_java_array_list, _java_list_to_list
+from modelarium.wrapper_object import WrapperObject
 
 
 class JavaAttributeSetLogDatabase(ABC, AttributeSetLogDatabase):
     def __init__(self, java_obj: object) -> None:
-        super().__init__()
-        super()._java_obj = java_obj
+        WrapperObject.__init__(self, java_obj)
 
     @override
     def connect(self) -> None:
