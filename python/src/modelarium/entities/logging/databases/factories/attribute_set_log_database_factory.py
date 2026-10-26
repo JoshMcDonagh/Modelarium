@@ -32,4 +32,4 @@ class _AttributeSetLogDatabaseFactory(AttributeSetLogDatabaseFactory):
 
     @override
     def create(self) -> AttributeSetLogDatabase:
-        return _AttributeSetLogDatabase(self._java_object)
+        return _AttributeSetLogDatabase(self._java_object.create())
