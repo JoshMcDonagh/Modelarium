@@ -17,14 +17,7 @@ class AttributeSet(ABC, WrapperObject):
             attributes: list[Attribute],
             java_class_name: str
     ) -> None:
-        java_attributes = java_class("java.util.ArrayList")()
-        for attribute in attributes:
-            java_attributes.add(attribute._java_object)
-
-        super().__init__(java_class(java_class_name)(
-            name,
-            list_to_java_array_list(attributes)
-        ))
+        super().__init__(java_class(java_class_name)(name, list_to_java_array_list(attributes)))
 
     @property
     def name(self) -> str:
