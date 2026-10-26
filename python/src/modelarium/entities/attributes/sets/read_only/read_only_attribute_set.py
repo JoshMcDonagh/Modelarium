@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 
-from modelarium.entities.attributes.attribute import Attribute
-from modelarium.entities.attributes.events.event import Event
-from modelarium.entities.attributes.properties.property import Property
-from modelarium.entities.attributes.routines.routine import Routine
+from modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
+from modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
+from modelarium.entities.attributes.read_only_attribute import ReadOnlyAttribute
+from modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
 from modelarium.entities.logging.attribute_set_log import AttributeSetLog
 from modelarium.wrapper_object import WrapperObject
 
@@ -21,17 +21,17 @@ class ReadOnlyAttributeSet(ABC, WrapperObject):
         return AttributeSetLog(self._java_object.getLog())
 
     @abstractmethod
-    def get(self, attribute_id: int | str) -> Attribute:
+    def get(self, attribute_id: int | str) -> ReadOnlyAttribute:
         pass
 
     @abstractmethod
-    def get_event(self, event_id: int | str) -> Event:
+    def get_event(self, event_id: int | str) -> ReadOnlyEvent:
         pass
 
     @abstractmethod
-    def get_routine(self, routine_id: int | str) -> Routine:
+    def get_routine(self, routine_id: int | str) -> ReadOnlyRoutine:
         pass
 
     @abstractmethod
-    def get_property(self, property_id: int | str) -> Property:
+    def get_property(self, property_id: int | str) -> ReadOnlyProperty:
         pass
