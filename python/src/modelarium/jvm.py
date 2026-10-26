@@ -10,13 +10,16 @@ def bundled_jar_path() -> Path:
     """
     Returns the path to the JAR bundled inside this Python distribution.
     """
-    pkg = resources.files("modelarium") / "_jars"
-    jars = [p for p in pkg.iterdir() if p.name.endswith(".jar")]
-    if not jars:
-        raise FileNotFoundError("No bundled Modelarium JAR found.")
-    # If there is exactly one, use it. Otherwise pick lexicographically last.
-    jar = sorted(jars, key=lambda p: p.name)[-1]
-    return Path(cast(str | os.PathLike[str], cast(object, jar)))
+    modelarium_jar_name = "modelarium-2.1.0.jar"
+    jar = resources.files("modelarium").joinpath("_jars", modelarium_jar_name)
+
+    if not jar.is_file():
+        raise FileNotFoundError("Bundled Modelarium JAR ("+ modelarium_jar_name + ") not found.")
+
+    if not isinstance(jar, Path):
+        raise RuntimeError("The bundled JAR is not available as a filesystem path.")
+
+    return jar
 
 
 def get_jar_path() -> Path:
