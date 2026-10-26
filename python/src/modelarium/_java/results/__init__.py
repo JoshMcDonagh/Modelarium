@@ -1,13 +1,13 @@
 from typing import cast, Any
 
-import jpype
+from modelarium._java import java_class
 
 
 def java_log_value_to_python(value: object) -> object:
     if value is None:
         return None
 
-    PythonValue = jpype.JClass("modelarium.python.PythonValue")
+    PythonValue = java_class("modelarium.python.PythonValue")
 
     if isinstance(value, PythonValue):
         return cast(Any, value).payload().value

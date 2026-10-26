@@ -30,6 +30,23 @@ def get_copier_proxy() -> object:
     return _copier_proxy
 
 
+def string_of_payload(payload: PythonPayload) -> str:
+    return str(payload.value)
+
+
+_stringifier_proxy = None
+
+
+def get_stringifier_proxy() -> object:
+    global _stringifier_proxy
+    if _stringifier_proxy is None:
+        _stringifier_proxy = jpype.JProxy(
+            "modelarium.python.PythonValueStringifier",
+            dict={"stringOf": string_of_payload}
+        )
+    return _stringifier_proxy
+
+
 def python_to_java(
     value_type: type[PROPERTY_T],
     value: PROPERTY_T
@@ -40,7 +57,11 @@ def python_to_java(
     if not isinstance(value, value_type):
         raise TypeError(f"Expected {value_type.__name__}, got {type(value).__name__}")
 
-    return java_class("modelarium.python.PythonValue")(make_payload_proxy(value), get_copier_proxy())
+    return java_class("modelarium.python.PythonValue")(
+        make_payload_proxy(value),
+        get_copier_proxy(),
+        get_stringifier_proxy()
+    )
 
 
 def java_to_python(
