@@ -1,14 +1,14 @@
 from abc import ABC, abstractmethod
 
+from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 from modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
 from modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
 from modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
 from modelarium.entities.attributes.sets.read_only.read_only_attribute_set import ReadOnlyAttributeSet
 from modelarium.entities.logging.entity_log import EntityLog
-from modelarium.wrapper_object import WrapperObject
 
 
-class ReadOnlyEntity(ABC, WrapperObject):
+class ReadOnlyEntity(ABC, ProtectedConstructorWrapperObject):
     def name(self) -> str:
         return self._java_object.name()
 

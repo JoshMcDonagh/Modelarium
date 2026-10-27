@@ -6,7 +6,7 @@ from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironm
 from modelarium.read_only_clock import ReadOnlyClock
 from modelarium.scheduler.scheduler import Scheduler
 from modelarium.utils.random_generator import RandomGenerator
-from modelarium.wrapper_object import WrapperObject
+from modelarium._java.wrapper.wrapper_object import WrapperObject
 
 
 class JavaScheduler(ABC, Scheduler):

@@ -4,7 +4,7 @@ from collections.abc import Callable
 import jpype
 
 from modelarium._java import java_class
-from modelarium.wrapper_object import WrapperObject
+from modelarium._java.wrapper.wrapper_object import WrapperObject
 
 
 class EntityGenerator(ABC, WrapperObject):

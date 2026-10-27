@@ -3,6 +3,7 @@ from typing import Callable
 
 import jpype
 
+from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 from modelarium.entities.agent import Agent
 from modelarium.entities.agent_sets.agent_set import AgentSet
 from modelarium.entities.agent_sets.read_only_agent_set import ReadOnlyAgentSet
@@ -12,10 +13,9 @@ from modelarium.entities.entity import Entity
 from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
 from modelarium.read_only_clock import ReadOnlyClock
 from modelarium.utils.random_generator import RandomGenerator, _RandomGenerator
-from modelarium.wrapper_object import WrapperObject
 
 
-class Context(ABC, WrapperObject):
+class Context(ABC, ProtectedConstructorWrapperObject):
     def get_clock(self) -> ReadOnlyClock: #
         return ReadOnlyClock(self._java_object.getClock())
 

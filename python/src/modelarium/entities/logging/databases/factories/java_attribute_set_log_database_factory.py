@@ -2,7 +2,7 @@ from abc import ABC
 
 from modelarium.entities.logging.databases.factories.attribute_set_log_database_factory import \
     AttributeSetLogDatabaseFactory
-from modelarium.wrapper_object import WrapperObject
+from modelarium._java.wrapper.wrapper_object import WrapperObject
 
 
 class JavaAttributeSetLogDatabaseFactory(ABC, AttributeSetLogDatabaseFactory):

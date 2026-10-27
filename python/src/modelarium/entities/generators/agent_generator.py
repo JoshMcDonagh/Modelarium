@@ -27,9 +27,3 @@ class AgentGenerator(ABC, EntityGenerator):
     @abstractmethod
     def generate_agents_for_each_thread(self, config: Config, random: RandomGenerator) -> list[AgentSet]:
         pass
-
-
-class _AgentGenerator(AgentGenerator):
-    def __init__(self, java_object: object) -> None:
-        super().__init__()
-        self._java_obj = java_object

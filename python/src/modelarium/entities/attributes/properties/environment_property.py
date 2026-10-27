@@ -6,7 +6,6 @@ from modelarium.entities.attributes.attribute_access_level import AttributeAcces
 from modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
 from modelarium.entities.attributes.properties.property import PROPERTY_T, Property
 from modelarium.entities.contexts.environment_context import EnvironmentContext
-from modelarium.wrapper_object import WrapperObject
 
 
 class EnvironmentProperty(ABC, Generic[PROPERTY_T], Property[PROPERTY_T], EnvironmentAttribute):
@@ -46,8 +45,3 @@ class EnvironmentProperty(ABC, Generic[PROPERTY_T], Property[PROPERTY_T], Enviro
         context = EnvironmentContext(java_context)
         current_value = java_to_python(self.type, java_current_value)
         return python_to_java(self.type, self._run(context, current_value))
-
-
-class _EnvironmentProperty(Generic[PROPERTY_T], EnvironmentProperty[PROPERTY_T]):
-    def __init__(self, java_object: object) -> None:
-        WrapperObject.__init__(self, java_object)

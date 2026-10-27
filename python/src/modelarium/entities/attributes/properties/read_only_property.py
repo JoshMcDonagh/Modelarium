@@ -1,14 +1,11 @@
 from typing import Generic, override, Type, get_args
 
-from modelarium.entities.attributes.properties import _java_to_python
+from modelarium._java.entities.attributes.properties import java_to_python
 from modelarium.entities.attributes.properties.property import PROPERTY_T
 from modelarium.entities.attributes.read_only_attribute import ReadOnlyAttribute
 
 
-class ReadOnlyProperty(ReadOnlyAttribute, Generic[PROPERTY_T]):
-    def __init__(self, java_obj: object) -> None:
-        super().__init__(java_obj)
-
+class ReadOnlyProperty(Generic[PROPERTY_T], ReadOnlyAttribute):
     @override
     def __str__(self) -> str:
         return self._java_object.toString()
@@ -18,4 +15,4 @@ class ReadOnlyProperty(ReadOnlyAttribute, Generic[PROPERTY_T]):
         return self._java_object.getPythonType()
 
     def get(self) -> PROPERTY_T | None:
-        return _java_to_python(self.type, self._java_object.get())
+        return java_to_python(self.type, self._java_object.get())

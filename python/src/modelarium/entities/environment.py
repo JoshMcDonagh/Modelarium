@@ -9,7 +9,7 @@ from modelarium.entities.attributes.sets.environment_attribute_set import Enviro
 from modelarium.entities.contexts.environment_context import EnvironmentContext
 from modelarium.entities.entity import Entity
 from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
-from modelarium.wrapper_object import WrapperObject
+from modelarium._java.wrapper.wrapper_object import WrapperObject
 
 
 class Environment(Entity):
@@ -38,11 +38,11 @@ class Environment(Entity):
         if attribute_sets is None:
             for attribute_set in name:
                 java_attribute_sets.add(attribute_set._java_object)
-            super().__init__(java_object(java_attribute_sets))
+            WrapperObject.__init__(self, java_object(java_attribute_sets))
         else:
             for attribute_set in attribute_sets:
                 java_attribute_sets.add(attribute_set._java_object)
-            super().__init__(java_object(name, java_attribute_sets))
+            WrapperObject.__init__(self, java_object(name, java_attribute_sets))
 
     @property
     @override
@@ -65,8 +65,3 @@ class Environment(Entity):
     @override
     def get_as_immutable(self) -> ReadOnlyEnvironment:
         return ReadOnlyEnvironment(self._java_object.getAsImmutable())
-
-
-class _Environment(Environment):
-    def __init__(self, java_object: object) -> None:
-        WrapperObject.__init__(self, java_object)

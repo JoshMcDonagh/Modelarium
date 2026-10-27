@@ -8,7 +8,6 @@ from modelarium.entities.attributes.sets.agent_attribute_set import AgentAttribu
 from modelarium.entities.contexts.agent_context import AgentContext
 from modelarium.entities.entity import Entity
 from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
-from modelarium.wrapper_object import WrapperObject
 
 
 class Agent(Entity):
@@ -46,8 +45,3 @@ class Agent(Entity):
     @override
     def get_as_immutable(self) -> ReadOnlyAgent:
         return ReadOnlyAgent(self._java_object.getAsImmutable())
-
-
-class _Agent(Agent):
-    def __init__(self, java_object: object) -> None:
-        WrapperObject.__init__(self, java_object)

@@ -5,22 +5,20 @@ from collections.abc import Iterable, Iterator, Callable
 import jpype
 
 from modelarium._java import java_class
-from modelarium._java.conversion import java_list_to_list, list_to_java_array_list
-from modelarium.entities.agent import Agent, _Agent
+from modelarium._java.type_conversion import java_list_to_list, list_to_java_array_list
+from modelarium.entities.agent import Agent
 from modelarium.entities.agent_sets.read_only_agent_set import ReadOnlyAgentSet
 from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
 from modelarium.utils.random_generator import RandomGenerator
-from modelarium.wrapper_object import WrapperObject
+from modelarium._java.wrapper.wrapper_object import WrapperObject
 
 
 class AgentSet(Iterable[Agent], WrapperObject):
-    def __init__(self, agents_list : list[Agent] | None = None) -> None:
+    def __init__(self, agents_list: list[Agent] | None = None) -> None:
         if agents_list is None:
-            super().__init__(java_class("modelarium.entities.agentsets.AgentSet")())
+            WrapperObject.__init__(self, java_class("modelarium.entities.agentsets.AgentSet")())
         else:
-            super().__init__(
-                java_class("modelarium.entities.agentsets.AgentSet")(list_to_java_array_list(agents_list))
-            )
+            WrapperObject.__init__(self, java_class("modelarium.entities.agentsets.AgentSet")(list_to_java_array_list(agents_list)))
 
     def __iter__(self) -> Iterator[Agent]:
         for java_agent in self._java_object:
@@ -85,8 +83,3 @@ class AgentSet(Iterable[Agent], WrapperObject):
 
     def duplicate(self) -> AgentSet:
         return _AgentSet(self._java_object.duplicate())
-
-
-class _AgentSet(AgentSet):
-    def __init__(self, java_object: object) -> None:
-        WrapperObject.__init__(self, java_object)

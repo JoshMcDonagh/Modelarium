@@ -1,4 +1,4 @@
-from modelarium.wrapper_object import WrapperObject
+from modelarium._java.wrapper.wrapper_object import WrapperObject
 
 
 class ReadOnlyClock(WrapperObject):

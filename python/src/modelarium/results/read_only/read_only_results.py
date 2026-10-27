@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from modelarium._java.conversion import java_to_python_path, python_to_java_path
+from modelarium._java.type_conversion import java_to_python_path, python_to_java_path
 from modelarium.results.read_only.read_only_results_for_agents import ReadOnlyResultsForAgents
 from modelarium.results.read_only.read_only_results_for_environment import ReadOnlyResultsForEnvironment
-from modelarium.wrapper_object import WrapperObject
+from modelarium._java.wrapper.wrapper_object import WrapperObject
 
 
 class ReadOnlyResults(WrapperObject):

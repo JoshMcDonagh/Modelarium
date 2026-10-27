@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 from modelarium.entities.attributes.read_only_attribute import ReadOnlyAttribute
 from modelarium.entities.contexts.context import Context
-from modelarium.wrapper_object import WrapperObject
+from modelarium._java.wrapper.wrapper_object import WrapperObject
 
 
 class Attribute(ABC, WrapperObject):

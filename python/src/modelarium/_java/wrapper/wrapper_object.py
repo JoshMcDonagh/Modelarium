@@ -3,7 +3,7 @@ from typing import Any
 
 
 class WrapperObject(ABC):
-    def __init__(self, java_obj: object) -> None:
+    def __init__(self, java_obj) -> None:
         self._java_obj = java_obj
 
     @property

@@ -1,8 +1,8 @@
+from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 from modelarium.entities.logging.attribute_set_log import AttributeSetLog
-from modelarium.wrapper_object import WrapperObject
 
 
-class EntityLog(WrapperObject):
+class EntityLog(ProtectedConstructorWrapperObject):
     def get_entity_name(self) -> str:
         return self._java_object.getEntityName()
 

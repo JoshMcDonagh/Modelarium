@@ -5,13 +5,13 @@ from typing import Callable
 
 import jpype
 
-from modelarium._java.conversion import java_list_to_list
+from modelarium._java.type_conversion import java_list_to_list
+from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
 from modelarium.utils.random_generator import RandomGenerator
-from modelarium.wrapper_object import WrapperObject
 
 
-class ReadOnlyAgentSet(Iterable[ReadOnlyAgent], WrapperObject):
+class ReadOnlyAgentSet(Iterable[ReadOnlyAgent], ProtectedConstructorWrapperObject):
     def __iter__(self) -> Iterator[ReadOnlyAgent]:
         for java_agent in self._java_object:
             yield ReadOnlyAgent(java_agent)

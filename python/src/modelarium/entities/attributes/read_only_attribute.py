@@ -1,10 +1,10 @@
 from abc import ABC
 
+from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
-from modelarium.wrapper_object import WrapperObject
 
 
-class ReadOnlyAttribute(ABC, WrapperObject):
+class ReadOnlyAttribute(ABC, ProtectedConstructorWrapperObject):
     @property
     def name(self) -> str:
         return self._java_object.name()

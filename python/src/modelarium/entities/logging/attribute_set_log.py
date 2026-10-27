@@ -1,8 +1,8 @@
-from modelarium._java.conversion import java_list_to_list
-from modelarium.wrapper_object import WrapperObject
+from modelarium._java.type_conversion import java_list_to_list
+from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 
 
-class AttributeSetLog(WrapperObject):
+class AttributeSetLog(ProtectedConstructorWrapperObject):
     def get_owner_name(self) -> str:
         return self._java_object.getOwnerName()
 

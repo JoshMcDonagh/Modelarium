@@ -8,7 +8,7 @@ from modelarium.entities.agent_sets.agent_set import AgentSet, _AgentSet
 from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
 from modelarium.read_only_clock import ReadOnlyClock
 from modelarium.utils.random_generator import RandomGenerator, _RandomGenerator
-from modelarium.wrapper_object import WrapperObject
+from modelarium._java.wrapper.wrapper_object import WrapperObject
 
 
 class Scheduler(ABC, WrapperObject):

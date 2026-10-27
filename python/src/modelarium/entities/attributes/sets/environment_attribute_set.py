@@ -8,7 +8,7 @@ from modelarium.entities.attributes.routines.environment_routine import _Environ
     EnvironmentRoutine
 from modelarium.entities.attributes.sets import _convert_to_python_environment_attribute
 from modelarium.entities.attributes.sets.attribute_set import AttributeSet
-from modelarium.wrapper_object import WrapperObject
+from modelarium._java.wrapper.wrapper_object import WrapperObject
 
 
 class EnvironmentAttributeSet(AttributeSet):

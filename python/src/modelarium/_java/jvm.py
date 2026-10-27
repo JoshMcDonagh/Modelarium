@@ -11,7 +11,7 @@ def bundled_jar_path() -> Path:
     Returns the path to the JAR bundled inside this Python distribution.
     """
     modelarium_jar_name = "modelarium-2.1.0.jar"
-    jar = resources.files("modelarium").joinpath("_jars", modelarium_jar_name)
+    jar = resources.files("modelarium").joinpath("../_jars", modelarium_jar_name)
 
     if not jar.is_file():
         raise FileNotFoundError("Bundled Modelarium JAR ("+ modelarium_jar_name + ") not found.")

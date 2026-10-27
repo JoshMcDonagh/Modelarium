@@ -1,12 +1,11 @@
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import override
 
 import jpype
 
 from modelarium._java import java_class
-from modelarium._java.conversion import java_list_to_list, list_to_java_array_list
-from modelarium.wrapper_object import WrapperObject
+from modelarium._java.type_conversion import java_list_to_list, list_to_java_array_list
+from modelarium._java.wrapper.wrapper_object import WrapperObject
 
 
 class AttributeSetLogDatabase(ABC, WrapperObject):
@@ -70,28 +69,3 @@ class AttributeSetLogDatabase(ABC, WrapperObject):
     @abstractmethod
     def get_attribute_column_as_list(self, attribute_name: str) -> list[object]:
         pass
-
-
-class _AttributeSetLogDatabase(AttributeSetLogDatabase):
-    def __init__(self, java_object: object) -> None:
-        WrapperObject.__init__(self, java_object)
-
-    @override
-    def connect(self) -> None:
-        self._java_object.connect()
-
-    @override
-    def disconnect(self) -> None:
-        self._java_object.disconnect()
-
-    @override
-    def add_attribute_value(self, attribute_name: str, attribute_value: object) -> None:
-        self._java_object.addAttributeValue(attribute_name, attribute_value)
-
-    @override
-    def set_attribute_column(self, attribute_name: str, attribute_values: list[object]) -> None:
-        self._java_object.setAttributeColumn(attribute_name, list_to_java_array_list(attribute_values))
-
-    @override
-    def get_attribute_column_as_list(self, attribute_name: str) -> list[object]:
-        return java_list_to_list(self._java_object.getAttributeColumnAsList(attribute_name), convert_log_values=True)
