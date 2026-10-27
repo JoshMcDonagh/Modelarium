@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from modelarium._java.wrapper import to_python
 from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 from modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
 from modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
@@ -18,7 +19,7 @@ class ReadOnlyAttributeSet(ABC, ProtectedConstructorWrapperObject):
         return self._java_object.size()
 
     def get_log(self) -> AttributeSetLog:
-        return AttributeSetLog(self._java_object.getLog())
+        return to_python(AttributeSetLog, self._java_object.getLog())
 
     @abstractmethod
     def get(self, attribute_id: int | str) -> ReadOnlyAttribute:

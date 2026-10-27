@@ -1,7 +1,7 @@
-from modelarium._java.wrapper.wrapper_object import WrapperObject
+from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 
 
-class ReadOnlyClock(WrapperObject):
+class ReadOnlyClock(ProtectedConstructorWrapperObject):
     @property
     def current_tick(self) -> int:
         return self._java_object.currentTick()

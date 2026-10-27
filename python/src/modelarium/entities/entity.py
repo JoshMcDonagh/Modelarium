@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from modelarium._java.wrapper import to_python
 from modelarium.entities.attributes.sets.attribute_set import AttributeSet
 from modelarium.entities.contexts.context import Context
 from modelarium.entities.logging.entity_log import EntityLog
@@ -30,10 +31,10 @@ class Entity(ABC, WrapperObject):
         pass
 
     def get_log(self) -> EntityLog:
-        return EntityLog(self._java_object.getLog())
+        return to_python(EntityLog, self._java_object.getLog())
 
     def run(self) -> None:
-        self._java_object._run()
+        self._java_object.run()
 
     @abstractmethod
     def get_as_immutable(self) -> ReadOnlyEntity:

@@ -1,5 +1,6 @@
 from abc import ABC
 
+from modelarium._java.wrapper import to_python
 from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 
@@ -15,4 +16,4 @@ class ReadOnlyAttribute(ABC, ProtectedConstructorWrapperObject):
 
     @property
     def access_level(self) -> AttributeAccessLevel:
-        return AttributeAccessLevel.make_python_version(self._java_object.accessLevel())
+        return to_python(AttributeAccessLevel, self._java_object.accessLevel())

@@ -4,6 +4,7 @@ from typing_extensions import override
 import jpype
 
 from modelarium._java import java_class
+from modelarium._java.wrapper import to_python
 from modelarium.entities.attributes.attribute import Attribute
 from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 from modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
@@ -47,4 +48,4 @@ class Event(ABC, Attribute):
 
     @override
     def get_as_immutable(self) -> ReadOnlyEvent:
-        return ReadOnlyEvent(self._java_object.getAsImmutable())
+        return to_python(ReadOnlyEvent, self._java_object.getAsImmutable())

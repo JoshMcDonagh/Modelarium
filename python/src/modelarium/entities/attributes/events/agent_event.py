@@ -1,6 +1,7 @@
 from abc import ABC
 from typing import override
 
+from modelarium._java.wrapper import to_python
 from modelarium.entities.attributes.agent_attribute import AgentAttribute
 from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 from modelarium.entities.attributes.events.event import Event
@@ -20,13 +21,10 @@ class AgentEvent(ABC, Event, AgentAttribute):
 
     @override
     def _java_is_triggered(self, java_context: object) -> bool:
-        context = AgentContext(java_context)
+        context = to_python(AgentContext, java_context)
         return self._is_triggered(context)
 
     @override
     def _java_run(self, java_context: object) -> None:
-        context = AgentContext(java_context)
+        context = to_python(AgentContext, java_context)
         return self._run(context)
-
-
-

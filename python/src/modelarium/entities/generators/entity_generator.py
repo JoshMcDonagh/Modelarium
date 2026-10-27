@@ -12,7 +12,7 @@ class EntityGenerator(ABC, WrapperObject):
             self,
             generator_function: Callable[[object, object], object],
             java_class_name: str,
-            java_generate_method_to_call: str,
+            java_generate_method_to_call: str
     ) -> None:
         generator_function = jpype.JProxy(
             "java.util.function.BiFunction",

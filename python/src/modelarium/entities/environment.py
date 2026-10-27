@@ -1,6 +1,7 @@
 from typing import overload, override
 
 from modelarium._java import java_class
+from modelarium._java.wrapper import to_python
 from modelarium.entities.attributes.events.environment_event import EnvironmentEvent
 from modelarium.entities.attributes.properties.environment_property import EnvironmentProperty
 from modelarium.entities.attributes.routines.environment_routine import EnvironmentRoutine
@@ -47,11 +48,11 @@ class Environment(Entity):
     @property
     @override
     def context(self) -> EnvironmentContext:
-        return EnvironmentContext(self._java_object.context())
+        return to_python(EnvironmentContext, self._java_object.context())
 
     @override
     def get_attribute_set(self, attribute_set_id: int | str) -> EnvironmentAttributeSet:
-        return _EnvironmentAttributeSet(super().get_attribute_set(attribute_set_id))
+        return to_python(EnvironmentAttributeSet, super().get_attribute_set(attribute_set_id))
 
     def get_event(self, attribute_set_id: int | str, event_id: int | str) -> EnvironmentEvent:
         return self.get_attribute_set(attribute_set_id).get_event(event_id)
@@ -64,4 +65,4 @@ class Environment(Entity):
 
     @override
     def get_as_immutable(self) -> ReadOnlyEnvironment:
-        return ReadOnlyEnvironment(self._java_object.getAsImmutable())
+        return to_python(ReadOnlyEnvironment, self._java_object.getAsImmutable())

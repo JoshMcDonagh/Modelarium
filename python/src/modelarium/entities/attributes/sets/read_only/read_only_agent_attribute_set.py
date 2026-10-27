@@ -1,29 +1,30 @@
 from typing import override
 
-from modelarium.entities.attributes.events.agent_event import _AgentEvent
+from modelarium._java.wrapper import to_python
+from modelarium.entities.attributes.agent_attribute import AgentAttribute
+from modelarium.entities.attributes.events.agent_event import AgentEvent
 from modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
-from modelarium.entities.attributes.properties.agent_property import _AgentProperty
+from modelarium.entities.attributes.properties.agent_property import AgentProperty
 from modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
 from modelarium.entities.attributes.read_only_attribute import ReadOnlyAttribute
-from modelarium.entities.attributes.routines.agent_routine import _AgentRoutine
+from modelarium.entities.attributes.routines.agent_routine import AgentRoutine
 from modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
-from modelarium.entities.attributes.sets import _convert_to_python_agent_attribute
 from modelarium.entities.attributes.sets.read_only.read_only_attribute_set import ReadOnlyAttributeSet
 
 
 class ReadOnlyAgentAttributeSet(ReadOnlyAttributeSet):
     @override
     def get(self, attribute_id: int | str) -> ReadOnlyAttribute:
-        return _convert_to_python_agent_attribute(self._java_object.get(attribute_id)).get_as_immutable()
+        return to_python(AgentAttribute, self._java_object.get(attribute_id)).get_as_immutable()
 
     @override
     def get_event(self, event_id: int | str) -> ReadOnlyEvent:
-        return _AgentEvent(self._java_object.getEvent(event_id)).get_as_immutable()
+        return to_python(AgentEvent, self._java_object.getEvent(event_id)).get_as_immutable()
 
     @override
     def get_routine(self, routine_id: int | str) -> ReadOnlyRoutine:
-        return _AgentRoutine(self._java_object.getRoutine(routine_id)).get_as_immutable()
+        return to_python(AgentRoutine, self._java_object.getRoutine(routine_id)).get_as_immutable()
 
     @override
     def get_property(self, property_id: int | str) -> ReadOnlyProperty:
-        return _AgentProperty(self._java_object.getProperty(property_id)).get_as_immutable()
+        return to_python(AgentProperty, self._java_object.getProperty(property_id)).get_as_immutable()

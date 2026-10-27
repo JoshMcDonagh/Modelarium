@@ -6,6 +6,7 @@ import jpype
 
 from modelarium._java import java_class
 from modelarium._java.type_conversion import java_list_to_list, list_to_java_array_list
+from modelarium._java.wrapper import to_python, _Agent
 from modelarium.entities.agent import Agent
 from modelarium.entities.agent_sets.read_only_agent_set import ReadOnlyAgentSet
 from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
@@ -18,11 +19,13 @@ class AgentSet(Iterable[Agent], WrapperObject):
         if agents_list is None:
             WrapperObject.__init__(self, java_class("modelarium.entities.agentsets.AgentSet")())
         else:
-            WrapperObject.__init__(self, java_class("modelarium.entities.agentsets.AgentSet")(list_to_java_array_list(agents_list)))
+            WrapperObject.__init__(
+                self, java_class("modelarium.entities.agentsets.AgentSet")(list_to_java_array_list(agents_list))
+            )
 
     def __iter__(self) -> Iterator[Agent]:
         for java_agent in self._java_object:
-            yield _Agent(java_agent)
+            yield to_python(Agent, java_agent)
 
     def add(self, agent: Agent | list[Agent] | AgentSet) -> None:
         if isinstance(agent, list):
@@ -37,7 +40,7 @@ class AgentSet(Iterable[Agent], WrapperObject):
             self._java_object.addDeepCopy(agent._java_object)
 
     def get(self, agent_id: int | str) -> Agent:
-        return _Agent(self._java_object.get(agent_id))
+        return to_python(Agent, self._java_object.get(agent_id))
 
     def get_as_list(self) -> list[Agent]:
         return java_list_to_list(self._java_object.getAsList(), _Agent)
@@ -66,20 +69,18 @@ class AgentSet(Iterable[Agent], WrapperObject):
     ) -> AgentSet:
         java_agent_filter = jpype.JProxy(
             "java.util.function.Predicate",
-            dict={"test": lambda java_agent: agent_filter(
-                ReadOnlyAgent(java_agent)
-            )}
+            dict={"test": lambda java_agent: agent_filter(to_python(ReadOnlyAgent, java_agent))}
         )
 
-        return _AgentSet(self._java_object.getFilteredAgents(java_agent_filter, include_dead_agents))
+        return to_python(AgentSet, self._java_object.getFilteredAgents(java_agent_filter, include_dead_agents))
 
     def get_random_iterator(self, random_generator: RandomGenerator) -> Iterator[Agent]:
         java_iterator = self._java_object.getRandomIterator(random_generator._java_object)
         for java_agent in java_iterator:
-            yield _Agent(java_agent)
+            yield to_python(Agent, java_agent)
 
     def get_as_immutable(self) -> ReadOnlyAgentSet:
-        return ReadOnlyAgentSet(self._java_object.getAsImmutable())
+        return to_python(ReadOnlyAgentSet, self._java_object.getAsImmutable())
 
     def duplicate(self) -> AgentSet:
-        return _AgentSet(self._java_object.duplicate())
+        return to_python(AgentSet, self._java_object.duplicate())

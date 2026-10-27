@@ -1,10 +1,11 @@
 from typing import override
 
 from modelarium._java import java_class
+from modelarium._java.wrapper import to_python
 from modelarium.entities.attributes.events.agent_event import AgentEvent
 from modelarium.entities.attributes.properties.agent_property import AgentProperty
 from modelarium.entities.attributes.routines.agent_routine import AgentRoutine
-from modelarium.entities.attributes.sets.agent_attribute_set import AgentAttributeSet, _AgentAttributeSet
+from modelarium.entities.attributes.sets.agent_attribute_set import AgentAttributeSet
 from modelarium.entities.contexts.agent_context import AgentContext
 from modelarium.entities.entity import Entity
 from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
@@ -24,7 +25,7 @@ class Agent(Entity):
 
     @override
     def get_attribute_set(self, attribute_set_id: int | str) -> AgentAttributeSet:
-        return _AgentAttributeSet(super().get_attribute_set(attribute_set_id))
+        return to_python(AgentAttributeSet, super().get_attribute_set(attribute_set_id))
 
     def get_event(self, attribute_set_id: int | str, event_id: int | str) -> AgentEvent:
         return self.get_attribute_set(attribute_set_id).get_event(event_id)
@@ -44,4 +45,4 @@ class Agent(Entity):
 
     @override
     def get_as_immutable(self) -> ReadOnlyAgent:
-        return ReadOnlyAgent(self._java_object.getAsImmutable())
+        return to_python(ReadOnlyAgent, self._java_object.getAsImmutable())

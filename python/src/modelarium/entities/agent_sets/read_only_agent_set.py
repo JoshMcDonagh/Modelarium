@@ -6,6 +6,7 @@ from typing import Callable
 import jpype
 
 from modelarium._java.type_conversion import java_list_to_list
+from modelarium._java.wrapper import to_python, to_java
 from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
 from modelarium.utils.random_generator import RandomGenerator
@@ -14,10 +15,10 @@ from modelarium.utils.random_generator import RandomGenerator
 class ReadOnlyAgentSet(Iterable[ReadOnlyAgent], ProtectedConstructorWrapperObject):
     def __iter__(self) -> Iterator[ReadOnlyAgent]:
         for java_agent in self._java_object:
-            yield ReadOnlyAgent(java_agent)
+            yield to_python(ReadOnlyAgent, java_agent)
 
     def get(self, agent_id: int | str) -> ReadOnlyAgent:
-        return ReadOnlyAgent(self._java_object.get(agent_id))
+        return to_python(ReadOnlyAgent, self._java_object.get(agent_id))
 
     def get_as_list(self) -> list[ReadOnlyAgent]:
         return java_list_to_list(self._java_object.getAsList(), ReadOnlyAgent)
@@ -40,14 +41,12 @@ class ReadOnlyAgentSet(Iterable[ReadOnlyAgent], ProtectedConstructorWrapperObjec
     ) -> ReadOnlyAgentSet:
         java_agent_filter = jpype.JProxy(
             "java.util.function.Predicate",
-            dict={"test": lambda java_agent: agent_filter(
-                ReadOnlyAgent(java_agent)
-            )}
+            dict={"test": lambda java_agent: agent_filter(to_python(ReadOnlyAgent, java_agent))}
         )
 
-        return ReadOnlyAgentSet(self._java_object.getFilteredAgents(java_agent_filter, include_dead_agents))
+        return to_python(ReadOnlyAgentSet, self._java_object.getFilteredAgents(java_agent_filter, include_dead_agents))
 
     def get_random_iterator(self, random_generator: RandomGenerator) -> Iterator[ReadOnlyAgent]:
-        java_iterator = self._java_object.getRandomIterator(random_generator._java_object)
+        java_iterator = self._java_object.getRandomIterator(to_java(random_generator))
         for java_agent in java_iterator:
-            yield ReadOnlyAgent(java_agent)
+            yield to_python(ReadOnlyAgent, java_agent)

@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from modelarium._java import java_class
 from modelarium._java.type_conversion import list_to_java_array_list
+from modelarium._java.wrapper import to_python
 from modelarium.entities.attributes.attribute import Attribute
 from modelarium.entities.attributes.events.event import Event
 from modelarium.entities.attributes.properties.property import Property
@@ -44,4 +45,4 @@ class AttributeSet(ABC, WrapperObject):
         pass
 
     def get_log(self) -> AttributeSetLog:
-        return AttributeSetLog(self._java_object.getLog())
+        return to_python(AttributeSetLog, self._java_object.getLog())

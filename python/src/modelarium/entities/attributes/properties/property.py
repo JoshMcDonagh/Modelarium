@@ -5,6 +5,7 @@ import jpype
 
 from modelarium._java import java_class
 from modelarium._java.entities.attributes.properties import python_to_java, java_to_python
+from modelarium._java.wrapper import to_python
 from modelarium.entities.attributes.attribute import Attribute
 from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 from modelarium.entities.attributes.properties import PROPERTY_T
@@ -76,4 +77,4 @@ class Property(ABC, Attribute, Generic[PROPERTY_T]):
 
     @override
     def get_as_immutable(self) -> ReadOnlyProperty:
-        return ReadOnlyProperty[PROPERTY_T](self._java_object.getAsImmutable())
+        return to_python(ReadOnlyProperty[PROPERTY_T], self._java_object.getAsImmutable())

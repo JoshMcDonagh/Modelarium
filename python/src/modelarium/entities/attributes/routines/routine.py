@@ -4,6 +4,7 @@ from typing import override
 import jpype
 
 from modelarium._java import java_class
+from modelarium._java.wrapper import to_python
 from modelarium.entities.attributes.attribute import Attribute
 from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 from modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
@@ -26,4 +27,4 @@ class Routine(ABC, Attribute):
 
     @override
     def get_as_immutable(self) -> ReadOnlyRoutine:
-        return ReadOnlyRoutine(self._java_object.getAsImmutable())
+        return to_python(ReadOnlyRoutine, self._java_object.getAsImmutable())
