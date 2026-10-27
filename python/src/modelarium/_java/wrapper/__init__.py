@@ -14,6 +14,8 @@ from modelarium._java.wrapper.instantiatable.entities import _Agent, _Environmen
     _Attribute, _Entity, _Context, _ReadOnlyAttribute, _Event, _Property, _Routine, _AttributeSet, _ReadOnlyEntity, \
     _ReadOnlyAttributeSet, _AgentAttribute, _EnvironmentAttribute, _AgentAttributeSet, _EnvironmentAttributeSet
 from modelarium._java.wrapper.instantiatable.results import _ReadOnlyResults, _ReadOnlyResultsForAgents
+from modelarium._java.wrapper.instantiatable.scheduler import _Scheduler
+from modelarium._java.wrapper.instantiatable.utils import _RandomGenerator
 from modelarium._java.wrapper.wrapper_object import WrapperObject
 from modelarium.config import Config
 from modelarium.entities.agent import Agent
@@ -67,6 +69,7 @@ from modelarium.results.read_only.read_only_results import ReadOnlyResults
 from modelarium.results.read_only.read_only_results_for_agents import ReadOnlyResultsForAgents
 from modelarium.results.read_only.read_only_results_for_environment import ReadOnlyResultsForEnvironment
 from modelarium.scheduler.scheduler import Scheduler
+from modelarium.utils.random_generator import RandomGenerator
 
 WRAPPER_OBJECT_T = TypeVar("WRAPPER_OBJECT_T", bound=WrapperObject | Config)
 
@@ -121,7 +124,13 @@ _INSTANTIATABLE_WRAPPER_OBJECT_TYPES_DICT: dict[type[WrapperObject], type[Wrappe
     # Results
     ReadOnlyResults: _ReadOnlyResults,
     ReadOnlyResultsForAgents: _ReadOnlyResultsForAgents,
-    ReadOnlyResultsForEnvironment: _ReadOnlyResultsForAgents
+    ReadOnlyResultsForEnvironment: _ReadOnlyResultsForAgents,
+
+    # Scheduler
+    Scheduler: _Scheduler,
+
+    # Utils
+    RandomGenerator: _RandomGenerator
 }
 
 
@@ -132,10 +141,10 @@ def _config_to_python(java_config: Any) -> Config:
         thread_count=java_config.threadCount(),
         thread_timeout=java_duration_to_timedelta(java_config.threadTimeout()),
         are_threads_synced=java_config.areThreadsSynced(),
-        agent_generator=_AgentGenerator(java_config.agentGenerator()),
-        environment_generator=_EnvironmentGenerator(java_config.environmentGenerator()),
-        scheduler=to_python(Scheduler, java_config.scheduler()),
-        run_log_database_factory=_AttributeSetLogDatabaseFactory(java_config.runLogDatabaseFactory()),
+        agent_generator=_wrapper_object_to_python(AgentGenerator, java_config.agentGenerator()),
+        environment_generator=_wrapper_object_to_python(EnvironmentGenerator, java_config.environmentGenerator()),
+        scheduler=_wrapper_object_to_python(Scheduler, java_config.scheduler()),
+        run_log_database_factory=_wrapper_object_to_python(AttributeSetLogDatabaseFactory, java_config.runLogDatabaseFactory()),
         seed=int(java_config.seed())
     )
 
@@ -150,13 +159,16 @@ def _attribute_access_level_to_python(java_version: object) -> AttributeAccessLe
 
     raise ValueError(f"Java attribute access level {java_version!r} is not supported")
 
+def _wrapper_object_to_python(wrapper_type: type[WRAPPER_OBJECT_T], obj: object) -> WRAPPER_OBJECT_T:
+    return _INSTANTIATABLE_WRAPPER_OBJECT_TYPES_DICT[wrapper_type](obj)
+
 
 def to_python(wrapper_type: type[WRAPPER_OBJECT_T], obj: object) -> WRAPPER_OBJECT_T:
     if isinstance(wrapper_type, type) and wrapper_type == Config:
         return _config_to_python(obj)
     if isinstance(wrapper_type, type) and wrapper_type == AttributeAccessLevel:
         return _attribute_access_level_to_python(obj)
-    return _INSTANTIATABLE_WRAPPER_OBJECT_TYPES_DICT[cast(type[WrapperObject], wrapper_type)](obj)
+    return _wrapper_object_to_python(wrapper_type, obj)
 
 
 def _config_to_java(config: Config) -> object:
@@ -166,15 +178,19 @@ def _config_to_java(config: Config) -> object:
         config.thread_count,
         timedelta_to_java_duration(config.thread_timeout),
         config.are_threads_synced,
-        config.agent_generator._java_object,
-        config.environment_generator._java_object,
-        config.scheduler._java_object,
-        config.run_log_database_factory._java_object,
+        _wrapper_object_to_java(config.agent_generator),
+        _wrapper_object_to_java(config.environment_generator),
+        _wrapper_object_to_java(config.scheduler),
+        _wrapper_object_to_java(config.run_log_database_factory),
         jpype.JLong(config.seed)
     )
+
+
+def _wrapper_object_to_java(obj: WRAPPER_OBJECT_T) -> object:
+    return obj._java_object
 
 
 def to_java(obj: WRAPPER_OBJECT_T) -> object:
     if isinstance(obj, Config):
         return _config_to_java(obj)
-    return obj._java_object
+    return _wrapper_object_to_java(obj)

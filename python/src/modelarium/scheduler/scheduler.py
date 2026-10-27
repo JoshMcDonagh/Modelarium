@@ -4,10 +4,11 @@ from typing import override
 import jpype
 
 from modelarium._java import java_class
-from modelarium.entities.agent_sets.agent_set import AgentSet, _AgentSet
+from modelarium._java.wrapper import to_python
+from modelarium.entities.agent_sets.agent_set import AgentSet
 from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
 from modelarium.read_only_clock import ReadOnlyClock
-from modelarium.utils.random_generator import RandomGenerator, _RandomGenerator
+from modelarium.utils.random_generator import RandomGenerator
 from modelarium._java.wrapper.wrapper_object import WrapperObject
 
 
@@ -32,8 +33,8 @@ class Scheduler(ABC, WrapperObject):
             thread_name,
             ReadOnlyClock(java_clock),
             ReadOnlyEnvironment(java_environment),
-            _AgentSet(java_agent_set),
-            _RandomGenerator(java_random)
+            to_python(AgentSet, java_agent_set),
+            to_python(RandomGenerator, java_random)
         )
 
     @abstractmethod
@@ -46,26 +47,3 @@ class Scheduler(ABC, WrapperObject):
             random: RandomGenerator
     ) -> None:
         pass
-
-
-class _Scheduler(Scheduler):
-    def __init__(self, java_object: object) -> None:
-        super().__init__()
-        self._java_obj = java_object
-
-    @override
-    def run_tick(
-            self,
-            thread_name: str,
-            clock: ReadOnlyClock,
-            environment: ReadOnlyEnvironment,
-            agent_set: AgentSet,
-            random: RandomGenerator
-    ) -> None:
-        self._java_object.runTick(
-            thread_name,
-            clock._java_object,
-            environment._java_object,
-            agent_set._java_object,
-            random._java_object
-        )
