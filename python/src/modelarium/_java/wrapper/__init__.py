@@ -13,6 +13,7 @@ from modelarium._java.wrapper.instantiatable.entities import _Agent, _Environmen
     _MemoryBasedAttributeSetLogDatabase, _AttributeSetLogDatabaseFactory, _ReadOnlyAgent, _ReadOnlyEnvironment, \
     _Attribute, _Entity, _Context, _ReadOnlyAttribute, _Event, _Property, _Routine, _AttributeSet, _ReadOnlyEntity, \
     _ReadOnlyAttributeSet, _AgentAttribute, _EnvironmentAttribute, _AgentAttributeSet, _EnvironmentAttributeSet
+from modelarium._java.wrapper.instantiatable.results import _ReadOnlyResults, _ReadOnlyResultsForAgents
 from modelarium._java.wrapper.wrapper_object import WrapperObject
 from modelarium.config import Config
 from modelarium.entities.agent import Agent
@@ -62,6 +63,9 @@ from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
 from modelarium.entities.read_only.read_only_entity import ReadOnlyEntity
 from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
 from modelarium.read_only_clock import ReadOnlyClock
+from modelarium.results.read_only.read_only_results import ReadOnlyResults
+from modelarium.results.read_only.read_only_results_for_agents import ReadOnlyResultsForAgents
+from modelarium.results.read_only.read_only_results_for_environment import ReadOnlyResultsForEnvironment
 from modelarium.scheduler.scheduler import Scheduler
 
 WRAPPER_OBJECT_T = TypeVar("WRAPPER_OBJECT_T", bound=WrapperObject | Config)
@@ -112,7 +116,12 @@ _INSTANTIATABLE_WRAPPER_OBJECT_TYPES_DICT: dict[type[WrapperObject], type[Wrappe
     AttributeSetLogDatabaseFactory: _AttributeSetLogDatabaseFactory,
     ReadOnlyEntity: _ReadOnlyEntity,
     ReadOnlyAgent: _ReadOnlyAgent,
-    ReadOnlyEnvironment: _ReadOnlyEnvironment
+    ReadOnlyEnvironment: _ReadOnlyEnvironment,
+
+    # Results
+    ReadOnlyResults: _ReadOnlyResults,
+    ReadOnlyResultsForAgents: _ReadOnlyResultsForAgents,
+    ReadOnlyResultsForEnvironment: _ReadOnlyResultsForAgents
 }
 
 
