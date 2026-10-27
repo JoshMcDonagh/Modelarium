@@ -159,6 +159,7 @@ def _attribute_access_level_to_python(java_version: object) -> AttributeAccessLe
 
     raise ValueError(f"Java attribute access level {java_version!r} is not supported")
 
+
 def _wrapper_object_to_python(wrapper_type: type[WRAPPER_OBJECT_T], obj: object) -> WRAPPER_OBJECT_T:
     return _INSTANTIATABLE_WRAPPER_OBJECT_TYPES_DICT[wrapper_type](obj)
 
