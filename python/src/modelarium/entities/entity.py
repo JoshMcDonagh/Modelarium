@@ -4,13 +4,13 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 from modelarium._java.wrapper import to_python
-from modelarium.entities.attributes.sets.attribute_set import AttributeSet
-from modelarium.entities.logging.entity_log import EntityLog
-from modelarium.entities.read_only.read_only_entity import ReadOnlyEntity
 from modelarium._java.wrapper.wrapper_object import WrapperObject
 
 if TYPE_CHECKING:
+    from modelarium.entities.attributes.sets.attribute_set import AttributeSet
     from modelarium.entities.contexts.context import Context
+    from modelarium.entities.logging.entity_log import EntityLog
+    from modelarium.entities.read_only.read_only_entity import ReadOnlyEntity
 
 
 class Entity(ABC, WrapperObject):
@@ -36,6 +36,7 @@ class Entity(ABC, WrapperObject):
         pass
 
     def get_log(self) -> EntityLog:
+        from modelarium.entities.logging.entity_log import EntityLog
         return to_python(EntityLog, self._java_object.getLog())
 
     def run(self) -> None:

@@ -4,15 +4,15 @@ from typing import override, TYPE_CHECKING
 
 from modelarium._java import java_class
 from modelarium._java.wrapper import to_python
-from modelarium.entities.attributes.events.agent_event import AgentEvent
-from modelarium.entities.attributes.properties.agent_property import AgentProperty
-from modelarium.entities.attributes.routines.agent_routine import AgentRoutine
-from modelarium.entities.attributes.sets.agent_attribute_set import AgentAttributeSet
-from modelarium.entities.entity import Entity
-from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
 
 if TYPE_CHECKING:
+    from modelarium.entities.attributes.events.agent_event import AgentEvent
+    from modelarium.entities.attributes.properties.agent_property import AgentProperty
+    from modelarium.entities.attributes.routines.agent_routine import AgentRoutine
+    from modelarium.entities.attributes.sets.agent_attribute_set import AgentAttributeSet
     from modelarium.entities.contexts.agent_context import AgentContext
+    from modelarium.entities.entity import Entity
+    from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
 
 
 class Agent(Entity):
@@ -25,10 +25,12 @@ class Agent(Entity):
     @property
     @override
     def context(self) -> AgentContext:
-        return AgentContext(self._java_object.context())
+        from modelarium.entities.contexts.agent_context import AgentContext
+        return to_python(AgentContext, self._java_object.context())
 
     @override
     def get_attribute_set(self, attribute_set_id: int | str) -> AgentAttributeSet:
+        from modelarium.entities.attributes.sets.agent_attribute_set import AgentAttributeSet
         return to_python(AgentAttributeSet, super().get_attribute_set(attribute_set_id))
 
     def get_event(self, attribute_set_id: int | str, event_id: int | str) -> AgentEvent:
@@ -49,4 +51,5 @@ class Agent(Entity):
 
     @override
     def get_as_immutable(self) -> ReadOnlyAgent:
+        from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
         return to_python(ReadOnlyAgent, self._java_object.getAsImmutable())

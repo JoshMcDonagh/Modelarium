@@ -4,16 +4,16 @@ from typing import overload, override, TYPE_CHECKING
 
 from modelarium._java import java_class
 from modelarium._java.wrapper import to_python
-from modelarium.entities.attributes.events.environment_event import EnvironmentEvent
-from modelarium.entities.attributes.properties.environment_property import EnvironmentProperty
-from modelarium.entities.attributes.routines.environment_routine import EnvironmentRoutine
-from modelarium.entities.attributes.sets.environment_attribute_set import EnvironmentAttributeSet
-from modelarium.entities.entity import Entity
-from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
 from modelarium._java.wrapper.wrapper_object import WrapperObject
 
 if TYPE_CHECKING:
+    from modelarium.entities.attributes.events.environment_event import EnvironmentEvent
+    from modelarium.entities.attributes.properties.environment_property import EnvironmentProperty
+    from modelarium.entities.attributes.routines.environment_routine import EnvironmentRoutine
+    from modelarium.entities.attributes.sets.environment_attribute_set import EnvironmentAttributeSet
     from modelarium.entities.contexts.environment_context import EnvironmentContext
+    from modelarium.entities.entity import Entity
+    from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
 
 
 class Environment(Entity):
@@ -51,10 +51,12 @@ class Environment(Entity):
     @property
     @override
     def context(self) -> EnvironmentContext:
+        from modelarium.entities.contexts.environment_context import EnvironmentContext
         return to_python(EnvironmentContext, self._java_object.context())
 
     @override
     def get_attribute_set(self, attribute_set_id: int | str) -> EnvironmentAttributeSet:
+        from modelarium.entities.attributes.sets.environment_attribute_set import EnvironmentAttributeSet
         return to_python(EnvironmentAttributeSet, super().get_attribute_set(attribute_set_id))
 
     def get_event(self, attribute_set_id: int | str, event_id: int | str) -> EnvironmentEvent:
@@ -68,4 +70,5 @@ class Environment(Entity):
 
     @override
     def get_as_immutable(self) -> ReadOnlyEnvironment:
+        from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
         return to_python(ReadOnlyEnvironment, self._java_object.getAsImmutable())
