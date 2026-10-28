@@ -1,7 +1,7 @@
-from typing import Generic, override, Type, get_args
+from typing import Generic, override, Type
 
 from modelarium._java.entities.attributes.properties import java_to_python
-from modelarium.entities.attributes.properties.property import PROPERTY_T
+from modelarium.entities.attributes.properties import PROPERTY_T
 from modelarium.entities.attributes.read_only_attribute import ReadOnlyAttribute
 
 

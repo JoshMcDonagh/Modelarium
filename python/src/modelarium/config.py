@@ -2,12 +2,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import timedelta
+from typing import TYPE_CHECKING
 
-from modelarium.entities.generators.agent_generator import AgentGenerator
-from modelarium.entities.generators.environment_generator import EnvironmentGenerator
-from modelarium.entities.logging.databases.factories.attribute_set_log_database_factory import \
-    AttributeSetLogDatabaseFactory
-from modelarium.scheduler.scheduler import Scheduler
+if TYPE_CHECKING:
+    from modelarium.entities.generators.agent_generator import AgentGenerator
+    from modelarium.entities.generators.environment_generator import EnvironmentGenerator
+    from modelarium.entities.logging.databases.factories.attribute_set_log_database_factory import \
+        AttributeSetLogDatabaseFactory
+    from modelarium.scheduler.scheduler import Scheduler
 
 
 @dataclass(frozen=True)
