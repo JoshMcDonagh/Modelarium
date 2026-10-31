@@ -1,9 +1,9 @@
 from typing import cast, Any
 
-from modelarium._java import java_class
-
 
 def java_log_value_to_python(value: object) -> object:
+    from modelarium._java import java_class
+    
     if value is None:
         return None
 

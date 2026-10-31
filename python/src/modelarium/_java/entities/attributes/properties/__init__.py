@@ -1,10 +1,12 @@
+from __future__ import annotations
+
 import copy
-from typing import cast, Any
+from typing import cast, Any, TYPE_CHECKING
 
 import jpype
 
-from modelarium._java import java_class
-from modelarium.entities.attributes.properties import PROPERTY_T
+if TYPE_CHECKING:
+    from modelarium.entities.attributes.properties import PROPERTY_T
 
 
 class PythonPayload:
@@ -51,6 +53,8 @@ def python_to_java(
     value_type: type[PROPERTY_T],
     value: PROPERTY_T
 ) -> object:
+    from modelarium._java import java_class
+
     if value is None:
         return None
 
@@ -68,6 +72,8 @@ def java_to_python(
     value_type: type[PROPERTY_T],
     java_value: object
 ) -> PROPERTY_T | None:
+    from modelarium._java import java_class
+
     if java_value is None:
         return None
 

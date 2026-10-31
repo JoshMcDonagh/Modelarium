@@ -1,17 +1,20 @@
-from typing import override
+from __future__ import annotations
 
-from modelarium._java.wrapper import to_java
-from modelarium.entities.agent_sets.agent_set import AgentSet
-from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
-from modelarium.read_only_clock import ReadOnlyClock
+from typing import override, TYPE_CHECKING
+
 from modelarium.scheduler.scheduler import Scheduler
-from modelarium.utils.random_generator import RandomGenerator
+
+if TYPE_CHECKING:
+    from modelarium.entities.agent_sets.agent_set import AgentSet
+    from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
+    from modelarium.read_only_clock import ReadOnlyClock
+    from modelarium.utils.random_generator import RandomGenerator
 
 
 class _Scheduler(Scheduler):
     def __init__(self, java_object: object) -> None:
-        super().__init__()
-        self._java_obj = java_object
+        from modelarium._java.wrapper import WrapperObject
+        WrapperObject.__init__(self, java_object)
 
     @override
     def run_tick(
@@ -22,6 +25,7 @@ class _Scheduler(Scheduler):
             agent_set: AgentSet,
             random: RandomGenerator
     ) -> None:
+        from modelarium._java.wrapper import to_java
         self._java_object.runTick(
             thread_name,
             to_java(clock),

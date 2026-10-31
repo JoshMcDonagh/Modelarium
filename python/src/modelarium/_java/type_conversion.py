@@ -6,10 +6,6 @@ from typing import cast, Any
 import jpype
 import pandas as pd
 
-from modelarium._java import java_class
-from modelarium._java.results import java_log_value_to_python
-from modelarium._java.wrapper.wrapper_object import WrapperObject
-
 
 def timedelta_to_java_duration(duration: timedelta) -> object:
     # Convert exactly to microseconds without floating-point arithmetic.
@@ -17,6 +13,7 @@ def timedelta_to_java_duration(duration: timedelta) -> object:
 
     seconds, microseconds = divmod(total_microseconds, 1_000_000)
 
+    from modelarium._java import java_class
     return java_class("java.time.Duration").ofSeconds(jpype.JLong(seconds), jpype.JLong(microseconds * 1000))
 
 
@@ -28,7 +25,9 @@ def java_duration_to_timedelta(duration) -> timedelta:
 
 
 def list_to_java_array_list(python_list: list) -> Iterable:
+    from modelarium._java import java_class
     java_array_list = java_class("java.util.ArrayList")()
+    from modelarium._java.wrapper import WrapperObject
     for item in python_list:
         if isinstance(item, WrapperObject):
             java_array_list.add(item._java_object)
@@ -39,6 +38,7 @@ def list_to_java_array_list(python_list: list) -> Iterable:
 
 def java_list_to_list(java_list: Iterable, item_type: type | None = None, convert_log_values: bool = False) -> list:
     python_list = []
+    from modelarium._java.results import java_log_value_to_python
     for item in java_list:
         if convert_log_values:
             item = java_log_value_to_python(item)
@@ -52,15 +52,13 @@ def java_list_to_list(java_list: Iterable, item_type: type | None = None, conver
 def java_map_to_dataframe(java_map: object, column_names: Sequence[str]) -> pd.DataFrame:
     def flatten(mapping, prefix=()):
         result = {}
-
+        from modelarium._java.results import java_log_value_to_python
         for key, value in mapping.items():
             path = prefix + (str(key),)
-
             if isinstance(value, Mapping) or hasattr(value, "entrySet"):
                 result.update(flatten(value, path))
             else:
                 result[path] = [java_log_value_to_python(item) for item in value]
-
         return result
 
     data = flatten(cast(Any, java_map))
@@ -82,6 +80,7 @@ def java_map_to_dataframe(java_map: object, column_names: Sequence[str]) -> pd.D
 
 
 def python_to_java_path(python_path: Path) -> object:
+    from modelarium._java import java_class
     return java_class("java.nio.file.Path").of(str(python_path))
 
 
