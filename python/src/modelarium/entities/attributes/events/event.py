@@ -1,15 +1,17 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
 from typing_extensions import override
 
 import jpype
 
-from modelarium._java import java_class
-from modelarium._java.wrapper import to_python
 from modelarium.entities.attributes.attribute import Attribute
-from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
-from modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
-from modelarium.entities.contexts.context import Context
 
+if TYPE_CHECKING:
+    from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+    from modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
+    from modelarium.entities.contexts.context import Context
 
 class Event(ABC, Attribute):
     def __init__(
@@ -24,7 +26,9 @@ class Event(ABC, Attribute):
         run_logic = jpype.JProxy(java_run_logic_interface_name, dict={"run": self._java_run})
         trigger_logic = jpype.JProxy(java_trigger_logic_interface_name, dict={"isTriggered": self._java_is_triggered})
 
-        super().__init__(java_class(java_class_name)(
+        from modelarium._java import java_class
+        from modelarium._java.wrapper import WrapperObject
+        WrapperObject.__init__(self, java_class(java_class_name)(
             name,
             is_logged,
             access_level._java_object,
@@ -48,4 +52,6 @@ class Event(ABC, Attribute):
 
     @override
     def get_as_immutable(self) -> ReadOnlyEvent:
+        from modelarium._java.wrapper import to_python
+        from modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
         return to_python(ReadOnlyEvent, self._java_object.getAsImmutable())

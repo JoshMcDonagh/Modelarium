@@ -1,14 +1,16 @@
-from abc import ABC, abstractmethod
+from __future__ import annotations
 
-from modelarium._java import java_class
-from modelarium._java.type_conversion import list_to_java_array_list
-from modelarium._java.wrapper import to_python
-from modelarium.entities.attributes.attribute import Attribute
-from modelarium.entities.attributes.events.event import Event
-from modelarium.entities.attributes.properties.property import Property
-from modelarium.entities.attributes.routines.routine import Routine
-from modelarium.entities.logging.attribute_set_log import AttributeSetLog
+from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
+
 from modelarium._java.wrapper.wrapper_object import WrapperObject
+
+if TYPE_CHECKING:
+    from modelarium.entities.attributes.attribute import Attribute
+    from modelarium.entities.attributes.events.event import Event
+    from modelarium.entities.attributes.routines.routine import Routine
+    from modelarium.entities.attributes.properties.property import Property
+    from modelarium.entities.logging.attribute_set_log import AttributeSetLog
 
 
 class AttributeSet(ABC, WrapperObject):
@@ -18,6 +20,8 @@ class AttributeSet(ABC, WrapperObject):
             attributes: list[Attribute],
             java_class_name: str
     ) -> None:
+        from modelarium._java import java_class
+        from modelarium._java.type_conversion import list_to_java_array_list
         super().__init__(java_class(java_class_name)(name, list_to_java_array_list(attributes)))
 
     @property
@@ -45,4 +49,6 @@ class AttributeSet(ABC, WrapperObject):
         pass
 
     def get_log(self) -> AttributeSetLog:
+        from modelarium._java.wrapper import to_python
+        from modelarium.entities.logging.attribute_set_log import AttributeSetLog
         return to_python(AttributeSetLog, self._java_object.getLog())

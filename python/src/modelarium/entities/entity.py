@@ -3,8 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
-from modelarium._java.wrapper import to_python
-from modelarium._java.wrapper.wrapper_object import WrapperObject
+from modelarium._java.wrapper import WrapperObject, to_python
 
 if TYPE_CHECKING:
     from modelarium.entities.attributes.sets.attribute_set import AttributeSet

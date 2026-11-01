@@ -1,11 +1,13 @@
-from abc import ABC
-from typing import override
+from __future__ import annotations
 
-from modelarium._java.wrapper import to_python
-from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+from abc import ABC
+from typing import override, TYPE_CHECKING
+
 from modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
 from modelarium.entities.attributes.events.event import Event
-from modelarium.entities.contexts.environment_context import EnvironmentContext
+
+if TYPE_CHECKING:
+    from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 
 
 class EnvironmentEvent(ABC, Event, EnvironmentAttribute):
@@ -21,10 +23,14 @@ class EnvironmentEvent(ABC, Event, EnvironmentAttribute):
 
     @override
     def _java_is_triggered(self, java_context: object) -> bool:
+        from modelarium._java.wrapper import to_python
+        from modelarium.entities.contexts.environment_context import EnvironmentContext
         context = to_python(EnvironmentContext, java_context)
         return self.is_triggered(context)
 
     @override
     def _java_run(self, java_context: object) -> None:
+        from modelarium._java.wrapper import to_python
+        from modelarium.entities.contexts.environment_context import EnvironmentContext
         context = to_python(EnvironmentContext, java_context)
         return self._run(context)

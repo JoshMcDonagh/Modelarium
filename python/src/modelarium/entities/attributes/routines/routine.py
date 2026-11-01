@@ -1,13 +1,15 @@
+from __future__ import annotations
+
 from abc import ABC
-from typing import override
+from typing import override, TYPE_CHECKING
 
 import jpype
 
-from modelarium._java import java_class
-from modelarium._java.wrapper import to_python
 from modelarium.entities.attributes.attribute import Attribute
-from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
-from modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
+
+if TYPE_CHECKING:
+    from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+    from modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
 
 
 class Routine(ABC, Attribute):
@@ -19,7 +21,9 @@ class Routine(ABC, Attribute):
             java_run_logic_interface_name: str
     ) -> None:
         run_logic = jpype.JProxy(java_run_logic_interface_name, dict={"run": self._java_run})
-        super().__init__(java_class(java_class_name)(
+        from modelarium._java import java_class
+        from modelarium._java.wrapper import WrapperObject
+        WrapperObject.__init__(self, java_class(java_class_name)(
             name,
             access_level._java_object,
             run_logic
@@ -27,4 +31,6 @@ class Routine(ABC, Attribute):
 
     @override
     def get_as_immutable(self) -> ReadOnlyRoutine:
+        from modelarium._java.wrapper import to_python
+        from modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
         return to_python(ReadOnlyRoutine, self._java_object.getAsImmutable())

@@ -1,12 +1,13 @@
-from abc import ABC
-from typing import Generic, override
+from __future__ import annotations
 
-from modelarium._java.entities.attributes.properties import java_to_python, python_to_java
-from modelarium._java.wrapper import to_python
-from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+from abc import ABC
+from typing import Generic, override, TYPE_CHECKING
+
 from modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
 from modelarium.entities.attributes.properties.property import PROPERTY_T, Property
-from modelarium.entities.contexts.environment_context import EnvironmentContext
+
+if TYPE_CHECKING:
+    from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 
 
 class EnvironmentProperty(ABC, Generic[PROPERTY_T], Property[PROPERTY_T], EnvironmentAttribute):
@@ -30,6 +31,9 @@ class EnvironmentProperty(ABC, Generic[PROPERTY_T], Property[PROPERTY_T], Enviro
 
     @override
     def _java_set(self, java_context: object, java_current_value: object, java_new_value: object) -> object:
+        from modelarium._java.entities.attributes.properties import java_to_python, python_to_java
+        from modelarium._java.wrapper import to_python
+        from modelarium.entities.contexts.environment_context import EnvironmentContext
         context = to_python(EnvironmentContext, java_context)
         current_value = java_to_python(self.type, java_current_value)
         new_value = java_to_python(self.type, java_new_value)
@@ -37,12 +41,18 @@ class EnvironmentProperty(ABC, Generic[PROPERTY_T], Property[PROPERTY_T], Enviro
 
     @override
     def _java_get(self, java_context: object, java_current_value: object) -> object:
+        from modelarium._java.entities.attributes.properties import java_to_python, python_to_java
+        from modelarium._java.wrapper import to_python
+        from modelarium.entities.contexts.environment_context import EnvironmentContext
         context = to_python(EnvironmentContext, java_context)
         current_value = java_to_python(self.type, java_current_value)
         return python_to_java(self.type, self._get(context, current_value))
 
     @override
     def _java_run(self, java_context: object, java_current_value: object) -> object:
+        from modelarium._java.entities.attributes.properties import java_to_python, python_to_java
+        from modelarium._java.wrapper import to_python
+        from modelarium.entities.contexts.environment_context import EnvironmentContext
         context = to_python(EnvironmentContext, java_context)
         current_value = java_to_python(self.type, java_current_value)
         return python_to_java(self.type, self._run(context, current_value))

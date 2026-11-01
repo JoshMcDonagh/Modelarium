@@ -4,12 +4,11 @@ from abc import ABC, abstractmethod
 
 from typing import TYPE_CHECKING
 
-from modelarium._java.wrapper import to_python
-from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
-from modelarium.entities.attributes.read_only_attribute import ReadOnlyAttribute
 from modelarium._java.wrapper.wrapper_object import WrapperObject
 
 if TYPE_CHECKING:
+    from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+    from modelarium.entities.attributes.read_only_attribute import ReadOnlyAttribute
     from modelarium.entities.contexts.context import Context
 
 
@@ -24,6 +23,8 @@ class Attribute(ABC, WrapperObject):
 
     @property
     def access_level(self) -> AttributeAccessLevel:
+        from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+        from modelarium._java.wrapper import to_python
         return to_python(AttributeAccessLevel, self._java_object.accessLevel())
 
     def run(self) -> None:

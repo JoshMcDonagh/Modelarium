@@ -1,8 +1,12 @@
-from abc import ABC
+from __future__ import annotations
 
-from modelarium._java.wrapper import to_python
+from abc import ABC
+from typing import TYPE_CHECKING
+
 from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
-from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+
+if TYPE_CHECKING:
+    from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 
 
 class ReadOnlyAttribute(ABC, ProtectedConstructorWrapperObject):
@@ -16,4 +20,6 @@ class ReadOnlyAttribute(ABC, ProtectedConstructorWrapperObject):
 
     @property
     def access_level(self) -> AttributeAccessLevel:
+        from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+        from modelarium._java.wrapper import to_python
         return to_python(AttributeAccessLevel, self._java_object.accessLevel())

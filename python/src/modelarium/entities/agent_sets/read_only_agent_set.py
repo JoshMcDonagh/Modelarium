@@ -5,7 +5,6 @@ from typing import Callable, TYPE_CHECKING
 
 import jpype
 
-from modelarium._java.wrapper import to_python, to_java
 from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 
 if TYPE_CHECKING:
@@ -16,19 +15,24 @@ if TYPE_CHECKING:
 class ReadOnlyAgentSet(Iterable[ReadOnlyAgent], ProtectedConstructorWrapperObject):
     def __iter__(self) -> Iterator[ReadOnlyAgent]:
         from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
+        from modelarium._java.wrapper import to_python
         for java_agent in self._java_object:
             yield to_python(ReadOnlyAgent, java_agent)
 
     def get(self, agent_id: int | str) -> ReadOnlyAgent:
         from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
+        from modelarium._java.wrapper import to_python
         return to_python(ReadOnlyAgent, self._java_object.get(agent_id))
 
     def get_as_list(self) -> list[ReadOnlyAgent]:
         from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
         java_list = self._java_object.getAsList()
         python_list = []
+
+        from modelarium._java.wrapper import to_python
         for java_agent in java_list:
             python_list.append(to_python(ReadOnlyAgent, java_agent))
+
         return python_list
 
     @property
@@ -48,6 +52,7 @@ class ReadOnlyAgentSet(Iterable[ReadOnlyAgent], ProtectedConstructorWrapperObjec
             include_dead_agents: bool = False
     ) -> ReadOnlyAgentSet:
         from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
+        from modelarium._java.wrapper import to_python
 
         java_agent_filter = jpype.JProxy(
             "java.util.function.Predicate",
@@ -58,6 +63,9 @@ class ReadOnlyAgentSet(Iterable[ReadOnlyAgent], ProtectedConstructorWrapperObjec
 
     def get_random_iterator(self, random_generator: RandomGenerator) -> Iterator[ReadOnlyAgent]:
         from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
+        from modelarium._java.wrapper import to_java
         java_iterator = self._java_object.getRandomIterator(to_java(random_generator))
+
+        from modelarium._java.wrapper import to_python
         for java_agent in java_iterator:
             yield to_python(ReadOnlyAgent, java_agent)

@@ -1,16 +1,17 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
-from typing import Generic, override, Type, cast
+from typing import Generic, override, Type, TYPE_CHECKING
 
 import jpype
 
-from modelarium._java import java_class
-from modelarium._java.entities.attributes.properties import python_to_java, java_to_python
-from modelarium._java.wrapper import to_python
 from modelarium.entities.attributes.attribute import Attribute
-from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 from modelarium.entities.attributes.properties import PROPERTY_T
-from modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
-from modelarium.entities.contexts.context import Context
+
+if TYPE_CHECKING:
+    from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
+    from modelarium.entities.contexts.context import Context
+    from modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
 
 
 class Property(ABC, Attribute, Generic[PROPERTY_T]):
@@ -30,7 +31,9 @@ class Property(ABC, Attribute, Generic[PROPERTY_T]):
         setter = jpype.JProxy(java_setter_interface_name, dict={"set": self._java_set})
         run_logic = jpype.JProxy(java_run_logic_interface_name, dict={"run": self._java_run})
 
-        super().__init__(java_class(java_class_name)(
+        from modelarium._java import java_class
+        from modelarium._java.wrapper import WrapperObject
+        WrapperObject.__init__(self, java_class(java_class_name)(
             name,
             is_logged,
             access_level._java_object,
@@ -41,9 +44,11 @@ class Property(ABC, Attribute, Generic[PROPERTY_T]):
         ))
 
     def set(self, value: PROPERTY_T | None) -> None:
+        from modelarium._java.entities.attributes.properties import python_to_java
         self._java_object.set(python_to_java(self.type, value))
 
     def get(self) -> PROPERTY_T | None:
+        from modelarium._java.entities.attributes.properties import java_to_python
         return java_to_python(self.type, self._java_object.get())
 
     @property
@@ -77,4 +82,6 @@ class Property(ABC, Attribute, Generic[PROPERTY_T]):
 
     @override
     def get_as_immutable(self) -> ReadOnlyProperty:
+        from modelarium._java.wrapper import to_python
+        from modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
         return to_python(ReadOnlyProperty[PROPERTY_T], self._java_object.getAsImmutable())

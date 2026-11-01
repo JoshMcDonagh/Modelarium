@@ -2,9 +2,6 @@ from __future__ import annotations
 
 from typing import override, TYPE_CHECKING
 
-from modelarium._java import java_class
-from modelarium._java.wrapper import to_python
-
 if TYPE_CHECKING:
     from modelarium.entities.attributes.events.agent_event import AgentEvent
     from modelarium.entities.attributes.properties.agent_property import AgentProperty
@@ -17,6 +14,7 @@ if TYPE_CHECKING:
 
 class Agent(Entity):
     def __init__(self, name: str, attribute_sets: list[AgentAttributeSet]) -> None:
+        from modelarium._java import java_class
         java_attribute_sets = java_class("java.util.ArrayList")()
         for attribute_set in attribute_sets:
             java_attribute_sets.add(attribute_set._java_object)
@@ -26,11 +24,13 @@ class Agent(Entity):
     @override
     def context(self) -> AgentContext:
         from modelarium.entities.contexts.agent_context import AgentContext
+        from modelarium._java.wrapper import to_python
         return to_python(AgentContext, self._java_object.context())
 
     @override
     def get_attribute_set(self, attribute_set_id: int | str) -> AgentAttributeSet:
         from modelarium.entities.attributes.sets.agent_attribute_set import AgentAttributeSet
+        from modelarium._java.wrapper import to_python
         return to_python(AgentAttributeSet, super().get_attribute_set(attribute_set_id))
 
     def get_event(self, attribute_set_id: int | str, event_id: int | str) -> AgentEvent:
@@ -52,4 +52,5 @@ class Agent(Entity):
     @override
     def get_as_immutable(self) -> ReadOnlyAgent:
         from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
+        from modelarium._java.wrapper import to_python
         return to_python(ReadOnlyAgent, self._java_object.getAsImmutable())

@@ -1,12 +1,16 @@
-from abc import ABC, abstractmethod
+from __future__ import annotations
 
-from modelarium._java.wrapper import to_python
+from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
+
 from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
-from modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
-from modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
-from modelarium.entities.attributes.read_only_attribute import ReadOnlyAttribute
-from modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
-from modelarium.entities.logging.attribute_set_log import AttributeSetLog
+
+if TYPE_CHECKING:
+    from modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
+    from modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
+    from modelarium.entities.attributes.read_only_attribute import ReadOnlyAttribute
+    from modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
+    from modelarium.entities.logging.attribute_set_log import AttributeSetLog
 
 
 class ReadOnlyAttributeSet(ABC, ProtectedConstructorWrapperObject):
@@ -19,6 +23,8 @@ class ReadOnlyAttributeSet(ABC, ProtectedConstructorWrapperObject):
         return self._java_object.size()
 
     def get_log(self) -> AttributeSetLog:
+        from modelarium._java.wrapper import to_python
+        from modelarium.entities.logging.attribute_set_log import AttributeSetLog
         return to_python(AttributeSetLog, self._java_object.getLog())
 
     @abstractmethod

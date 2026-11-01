@@ -1,11 +1,13 @@
-from abc import ABC
-from typing import override
+from __future__ import annotations
 
-from modelarium._java.wrapper import to_python
+from abc import ABC
+from typing import override, TYPE_CHECKING
+
 from modelarium.entities.attributes.agent_attribute import AgentAttribute
-from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 from modelarium.entities.attributes.routines.routine import Routine
-from modelarium.entities.contexts.agent_context import AgentContext
+
+if TYPE_CHECKING:
+    from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 
 
 class AgentRoutine(ABC, Routine, AgentAttribute):
@@ -19,5 +21,7 @@ class AgentRoutine(ABC, Routine, AgentAttribute):
 
     @override
     def _java_run(self, java_context: object) -> None:
+        from modelarium._java.wrapper import to_python
+        from modelarium.entities.contexts.agent_context import AgentContext
         context = to_python(AgentContext, java_context)
         return self._run(context)
