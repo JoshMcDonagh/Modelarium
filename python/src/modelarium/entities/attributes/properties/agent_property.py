@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from abc import ABC
 from typing import Generic, override, TYPE_CHECKING
 
 from modelarium.entities.attributes.agent_attribute import AgentAttribute
@@ -11,7 +10,7 @@ if TYPE_CHECKING:
 
 
 
-class AgentProperty(ABC, Generic[PROPERTY_T], Property[PROPERTY_T], AgentAttribute):
+class AgentProperty(Generic[PROPERTY_T], Property[PROPERTY_T], AgentAttribute):
     def __init__(
             self,
             name: str,

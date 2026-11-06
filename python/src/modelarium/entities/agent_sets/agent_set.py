@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from modelarium.utils.random_generator import RandomGenerator
 
 
-class AgentSet(Iterable[Agent], WrapperObject):
+class AgentSet(Iterable["Agent"], WrapperObject):
     def __init__(self, agents_list: list[Agent] | None = None) -> None:
         from modelarium._java import java_class
         if agents_list is None:

@@ -2,13 +2,14 @@ from __future__ import annotations
 
 from typing import overload, override, TYPE_CHECKING
 
+from modelarium.entities.entity import Entity
+
 if TYPE_CHECKING:
     from modelarium.entities.attributes.events.environment_event import EnvironmentEvent
     from modelarium.entities.attributes.properties.environment_property import EnvironmentProperty
     from modelarium.entities.attributes.routines.environment_routine import EnvironmentRoutine
     from modelarium.entities.attributes.sets.environment_attribute_set import EnvironmentAttributeSet
     from modelarium.entities.contexts.environment_context import EnvironmentContext
-    from modelarium.entities.entity import Entity
     from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
 
 
@@ -36,7 +37,7 @@ class Environment(Entity):
         java_object = java_class("modelarium.entities.Environment")
         java_attribute_sets = java_class("java.util.ArrayList")()
 
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         if attribute_sets is None:
             for attribute_set in name:
                 java_attribute_sets.add(attribute_set._java_object)

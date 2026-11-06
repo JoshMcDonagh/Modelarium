@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import Generic, override, Type, TYPE_CHECKING
 
 import jpype
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
 
 
-class Property(ABC, Attribute, Generic[PROPERTY_T]):
+class Property(Attribute, Generic[PROPERTY_T]):
     def __init__(
             self,
             name: str,
@@ -32,7 +32,7 @@ class Property(ABC, Attribute, Generic[PROPERTY_T]):
         run_logic = jpype.JProxy(java_run_logic_interface_name, dict={"run": self._java_run})
 
         from modelarium._java import java_class
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_class(java_class_name)(
             name,
             is_logged,

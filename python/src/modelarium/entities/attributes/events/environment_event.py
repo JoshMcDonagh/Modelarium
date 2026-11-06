@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from abc import ABC
 from typing import override, TYPE_CHECKING
 
 from modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
@@ -10,7 +9,7 @@ if TYPE_CHECKING:
     from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 
 
-class EnvironmentEvent(ABC, Event, EnvironmentAttribute):
+class EnvironmentEvent(Event, EnvironmentAttribute):
     def __init__(self, name: str, is_logged: bool, access_level: AttributeAccessLevel) -> None:
         super().__init__(
             name,

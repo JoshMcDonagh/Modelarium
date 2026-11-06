@@ -1,7 +1,5 @@
-from abc import ABC
-
 from modelarium.entities.attributes.attribute import Attribute
 
 
-class EnvironmentAttribute(ABC, Attribute):
+class EnvironmentAttribute(Attribute):
     pass

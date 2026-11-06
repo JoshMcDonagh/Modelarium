@@ -27,7 +27,7 @@ def java_duration_to_timedelta(duration) -> timedelta:
 def list_to_java_array_list(python_list: list) -> Iterable:
     from modelarium._java import java_class
     java_array_list = java_class("java.util.ArrayList")()
-    from modelarium._java.wrapper import WrapperObject
+    from modelarium._java.wrapper.wrapper_object import WrapperObject
     for item in python_list:
         if isinstance(item, WrapperObject):
             java_array_list.add(item._java_object)

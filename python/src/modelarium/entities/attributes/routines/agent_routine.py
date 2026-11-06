@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from abc import ABC
 from typing import override, TYPE_CHECKING
 
 from modelarium.entities.attributes.agent_attribute import AgentAttribute
@@ -10,7 +9,7 @@ if TYPE_CHECKING:
     from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 
 
-class AgentRoutine(ABC, Routine, AgentAttribute):
+class AgentRoutine(Routine, AgentAttribute):
     def __init__(self, name: str, access_level:AttributeAccessLevel) -> None:
         super().__init__(
             name,

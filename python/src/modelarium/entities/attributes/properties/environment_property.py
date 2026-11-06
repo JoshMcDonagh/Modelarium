@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from abc import ABC
 from typing import Generic, override, TYPE_CHECKING
 
 from modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
@@ -10,7 +9,7 @@ if TYPE_CHECKING:
     from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 
 
-class EnvironmentProperty(ABC, Generic[PROPERTY_T], Property[PROPERTY_T], EnvironmentAttribute):
+class EnvironmentProperty(Generic[PROPERTY_T], Property[PROPERTY_T], EnvironmentAttribute):
     def __init__(
             self,
             name: str,

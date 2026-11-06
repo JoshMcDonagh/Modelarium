@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import TYPE_CHECKING
 
 from modelarium._java import java_class
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from modelarium.utils.random_generator import RandomGenerator
 
 
-class AgentGenerator(ABC, EntityGenerator):
+class AgentGenerator(EntityGenerator):
     def __init__(self) -> None:
         super().__init__(
             self._java_generate_agents_for_each_thread,

@@ -2,14 +2,7 @@ from __future__ import annotations
 
 from enum import Enum
 
-from modelarium._java.wrapper.wrapper_object import WrapperObject
 
-
-class AttributeAccessLevel(WrapperObject, Enum):
+class AttributeAccessLevel(Enum):
     PUBLIC = "public"
     PRIVATE = "private"
-
-    def __init__(self, value: str) -> None:
-        from modelarium._java import java_class
-        java_enum = java_class("modelarium.entities.attributes.AttributeAccessLevel")
-        WrapperObject.__init__(self, getattr(java_enum, value.upper()))

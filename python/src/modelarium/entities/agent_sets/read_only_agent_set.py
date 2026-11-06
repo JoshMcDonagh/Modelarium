@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from modelarium.utils.random_generator import RandomGenerator
 
 
-class ReadOnlyAgentSet(Iterable[ReadOnlyAgent], ProtectedConstructorWrapperObject):
+class ReadOnlyAgentSet(Iterable["ReadOnlyAgent"], ProtectedConstructorWrapperObject):
     def __iter__(self) -> Iterator[ReadOnlyAgent]:
         from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
         from modelarium._java.wrapper import to_python

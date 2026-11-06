@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from abc import ABC
 from typing import TYPE_CHECKING
 
 from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
@@ -9,7 +8,7 @@ if TYPE_CHECKING:
     from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 
 
-class ReadOnlyAttribute(ABC, ProtectedConstructorWrapperObject):
+class ReadOnlyAttribute(ProtectedConstructorWrapperObject):
     @property
     def name(self) -> str:
         return self._java_object.name()

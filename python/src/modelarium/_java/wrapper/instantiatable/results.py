@@ -5,17 +5,17 @@ from modelarium.results.read_only.read_only_results_for_environment import ReadO
 
 class _ReadOnlyResults(ReadOnlyResults):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _ReadOnlyResultsForAgents(ReadOnlyResultsForAgents):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _ReadOnlyResultsForEnvironment(ReadOnlyResultsForEnvironment):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)

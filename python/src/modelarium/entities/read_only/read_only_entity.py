@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import TYPE_CHECKING
 
 from modelarium._java.wrapper import to_python
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
 
 
-class ReadOnlyEntity(ABC, ProtectedConstructorWrapperObject):
+class ReadOnlyEntity(ProtectedConstructorWrapperObject):
     def name(self) -> str:
         return self._java_object.name()
 

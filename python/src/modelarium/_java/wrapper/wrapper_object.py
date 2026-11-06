@@ -1,8 +1,7 @@
-from abc import ABC
 from typing import Any
 
 
-class WrapperObject(ABC):
+class WrapperObject:
     def __init__(self, java_obj) -> None:
         self._java_obj = java_obj
 

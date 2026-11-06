@@ -55,7 +55,7 @@ if TYPE_CHECKING:
 
 class _Entity(Entity):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
     @override
@@ -75,31 +75,31 @@ class _Entity(Entity):
 
 class _Agent(Agent):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _Environment(Environment):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _AgentSet(AgentSet):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _ReadOnlyAgentSet(ReadOnlyAgentSet):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _Attribute(Attribute):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
     @override
@@ -110,97 +110,97 @@ class _Attribute(Attribute):
 
 class _ReadOnlyAttribute(ReadOnlyAttribute):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _AgentAttribute(AgentAttribute):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _EnvironmentAttribute(EnvironmentAttribute):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _Event(Event):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _AgentEvent(AgentEvent):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _EnvironmentEvent(EnvironmentAttribute):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _ReadOnlyEvent(ReadOnlyEvent):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _Property(Property, Generic[PROPERTY_T]):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _AgentProperty(Generic[PROPERTY_T], AgentProperty[PROPERTY_T]):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _EnvironmentProperty(Generic[PROPERTY_T], EnvironmentProperty[PROPERTY_T]):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _ReadOnlyProperty(Generic[PROPERTY_T], ReadOnlyProperty[PROPERTY_T]):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _Routine(Routine):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _AgentRoutine(AgentRoutine):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _EnvironmentRoutine(EnvironmentRoutine):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _ReadOnlyRoutine(ReadOnlyRoutine):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _AttributeSet(AttributeSet):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
     @override
@@ -226,19 +226,19 @@ class _AttributeSet(AttributeSet):
 
 class _AgentAttributeSet(AgentAttributeSet):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _EnvironmentAttributeSet(EnvironmentAttributeSet):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _ReadOnlyAttributeSet(ReadOnlyAttributeSet):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
     @override
@@ -264,19 +264,19 @@ class _ReadOnlyAttributeSet(ReadOnlyAttributeSet):
 
 class _ReadOnlyAgentAttributeSet(ReadOnlyAgentAttributeSet):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _ReadOnlyEnvironmentAttributeSet(ReadOnlyEnvironmentAttributeSet):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _Context(Context):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
     @override
@@ -292,19 +292,19 @@ class _Context(Context):
 
 class _AgentContext(AgentContext):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _EnvironmentContext(EnvironmentContext):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _AgentGenerator(AgentGenerator):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
     @override
@@ -323,7 +323,7 @@ class _AgentGenerator(AgentGenerator):
 
 class _DefaultAgentGenerator(DefaultAgentGenerator):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
     @override
@@ -338,7 +338,7 @@ class _DefaultAgentGenerator(DefaultAgentGenerator):
 
 class _EnvironmentGenerator(EnvironmentGenerator):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
     @override
@@ -349,19 +349,19 @@ class _EnvironmentGenerator(EnvironmentGenerator):
 
 class _AttributeSetLog(AttributeSetLog):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _EntityLog(EntityLog):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _AttributeSetLogDatabase(AttributeSetLogDatabase):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
     @override
@@ -389,19 +389,19 @@ class _AttributeSetLogDatabase(AttributeSetLogDatabase):
 
 class _DiskBasedAttributeSetLogDatabase(DiskBasedAttributeSetLogDatabase):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _MemoryBasedAttributeSetLogDatabase(MemoryBasedAttributeSetLogDatabase):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _AttributeSetLogDatabaseFactory(AttributeSetLogDatabaseFactory):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
     @override
@@ -411,7 +411,7 @@ class _AttributeSetLogDatabaseFactory(AttributeSetLogDatabaseFactory):
 
 class _ReadOnlyEntity(ReadOnlyEntity):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
     @override
@@ -422,11 +422,11 @@ class _ReadOnlyEntity(ReadOnlyEntity):
 
 class _ReadOnlyAgent(ReadOnlyAgent):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
 
 class _ReadOnlyEnvironment(ReadOnlyEnvironment):
     def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)

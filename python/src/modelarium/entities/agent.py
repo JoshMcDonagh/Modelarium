@@ -2,13 +2,14 @@ from __future__ import annotations
 
 from typing import override, TYPE_CHECKING
 
+from modelarium.entities.entity import Entity
+
 if TYPE_CHECKING:
     from modelarium.entities.attributes.events.agent_event import AgentEvent
     from modelarium.entities.attributes.properties.agent_property import AgentProperty
     from modelarium.entities.attributes.routines.agent_routine import AgentRoutine
     from modelarium.entities.attributes.sets.agent_attribute_set import AgentAttributeSet
     from modelarium.entities.contexts.agent_context import AgentContext
-    from modelarium.entities.entity import Entity
     from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
 
 

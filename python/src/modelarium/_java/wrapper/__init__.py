@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from functools import cache
-from typing import TypeVar, Any, cast, TYPE_CHECKING
+from typing import TypeVar, Any, TYPE_CHECKING
 
 import jpype
 
@@ -169,9 +169,9 @@ def _attribute_access_level_to_python(java_version: object) -> AttributeAccessLe
 
     from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
     if java_version == java_enum.PUBLIC:
-        return cast(AttributeAccessLevel, cast(object, AttributeAccessLevel.PUBLIC))
+        return AttributeAccessLevel.PUBLIC
     if java_version == java_enum.PRIVATE:
-        return cast(AttributeAccessLevel, cast(object, AttributeAccessLevel.PRIVATE))
+        return AttributeAccessLevel.PRIVATE
 
     raise ValueError(f"Java attribute access level {java_version!r} is not supported")
 
@@ -209,6 +209,18 @@ def _config_to_java(config: Config) -> object:
     )
 
 
+def _attribute_access_level_to_java(attribute_access_level: AttributeAccessLevel) -> object:
+    from modelarium._java import java_class
+    enum_java_class = java_class("modelarium.entities.attributes.AttributeAccessLevel")
+
+    if attribute_access_level == AttributeAccessLevel.PUBLIC:
+        return enum_java_class.PUBLIC
+    if attribute_access_level == AttributeAccessLevel.PRIVATE:
+        return enum_java_class.PRIVATE
+
+    raise ValueError(f"Attribute access level {attribute_access_level!r} is not supported")
+
+
 def _wrapper_object_to_java(obj: WrapperObject) -> object:
     return obj._java_object
 
@@ -217,6 +229,8 @@ def to_java(obj: T) -> object:
     from modelarium.config import Config
     if isinstance(obj, Config):
         return _config_to_java(obj)
+    if isinstance(obj, AttributeAccessLevel):
+        return _attribute_access_level_to_java(obj)
     if isinstance(obj, WrapperObject):
         return _wrapper_object_to_java(obj)
     raise ValueError(f"Cannot convert {obj!r} to Java object")

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import TYPE_CHECKING
 
 from modelarium._java.wrapper import to_python, to_java
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from modelarium.utils.random_generator import RandomGenerator
 
 
-class EnvironmentGenerator(ABC, EntityGenerator):
+class EnvironmentGenerator(EntityGenerator):
     def __init__(self) -> None:
         super().__init__(
             self._java_generate_environment,

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import override, TYPE_CHECKING
 
 from modelarium.entities.generators.agent_generator import AgentGenerator
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from modelarium.utils.random_generator import RandomGenerator
 
 
-class DefaultAgentGenerator(ABC, AgentGenerator):
+class DefaultAgentGenerator(AgentGenerator):
     def generate_agents(self, config: Config, random: RandomGenerator) -> AgentSet:
         from modelarium.entities.agent_sets.agent_set import AgentSet
         agents = AgentSet()

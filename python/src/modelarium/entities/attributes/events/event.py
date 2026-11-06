@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import TYPE_CHECKING
 from typing_extensions import override
 
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
     from modelarium.entities.contexts.context import Context
 
-class Event(ABC, Attribute):
+class Event(Attribute):
     def __init__(
             self,
             name: str,
@@ -27,7 +27,7 @@ class Event(ABC, Attribute):
         trigger_logic = jpype.JProxy(java_trigger_logic_interface_name, dict={"isTriggered": self._java_is_triggered})
 
         from modelarium._java import java_class
-        from modelarium._java.wrapper import WrapperObject
+        from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_class(java_class_name)(
             name,
             is_logged,
