@@ -1,15 +1,20 @@
-from abc import ABC, abstractmethod
-from typing import override
+from __future__ import annotations
 
-from modelarium.config import Config
-from modelarium.entities.agent import Agent
-from modelarium.entities.agent_sets.agent_set import AgentSet
+from abc import ABC, abstractmethod
+from typing import override, TYPE_CHECKING
+
 from modelarium.entities.generators.agent_generator import AgentGenerator
-from modelarium.utils.random_generator import RandomGenerator
+
+if TYPE_CHECKING:
+    from modelarium.entities.agent import Agent
+    from modelarium.entities.agent_sets.agent_set import AgentSet
+    from modelarium.config import Config
+    from modelarium.utils.random_generator import RandomGenerator
 
 
 class DefaultAgentGenerator(ABC, AgentGenerator):
     def generate_agents(self, config: Config, random: RandomGenerator) -> AgentSet:
+        from modelarium.entities.agent_sets.agent_set import AgentSet
         agents = AgentSet()
         for _ in range(config.population_size):
             agents.add(self.generate_agent(config, random))
@@ -26,6 +31,7 @@ class DefaultAgentGenerator(ABC, AgentGenerator):
         if num_of_threads == 1:
             return [agents]
 
+        from modelarium.entities.agent_sets.agent_set import AgentSet
         agents_for_each_thread = []
         for _ in range(num_of_threads):
             agents_for_each_thread.append(AgentSet())
