@@ -1,0 +1,2 @@
+class ConvertiblePythonObject:
+    pass

@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from datetime import timedelta
 from typing import TYPE_CHECKING
 
+from modelarium._java.convertible_python_object import ConvertiblePythonObject
+
 if TYPE_CHECKING:
     from modelarium.entities.generators.agent_generator import AgentGenerator
     from modelarium.entities.generators.environment_generator import EnvironmentGenerator
@@ -13,7 +15,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(frozen=True)
-class Config:
+class Config(ConvertiblePythonObject):
     population_size: int
     tick_count: int
     thread_count: int
