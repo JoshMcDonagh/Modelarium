@@ -1,12 +1,16 @@
-from abc import ABC
-from typing import override
+from __future__ import annotations
 
-from modelarium.entities.agent_sets.agent_set import AgentSet
-from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
-from modelarium.read_only_clock import ReadOnlyClock
-from modelarium.scheduler.scheduler import Scheduler
-from modelarium.utils.random_generator import RandomGenerator
+from abc import ABC
+from typing import override, TYPE_CHECKING
+
 from modelarium._java.wrapper.wrapper_object import WrapperObject
+from modelarium.scheduler.scheduler import Scheduler
+
+if TYPE_CHECKING:
+    from modelarium.read_only_clock import ReadOnlyClock
+    from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
+    from modelarium.entities.agent_sets.agent_set import AgentSet
+    from modelarium.utils.random_generator import RandomGenerator
 
 
 class JavaScheduler(ABC, Scheduler):
