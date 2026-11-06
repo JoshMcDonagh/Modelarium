@@ -1,12 +1,16 @@
-from typing import override
+from __future__ import annotations
+
+from typing import override, TYPE_CHECKING
 
 from modelarium._java import java_class
 from modelarium._java.entities.attributes.properties.python_value_codec import create_python_value_codec
 from modelarium._java.wrapper import to_python
-from modelarium.entities.logging.databases.disk_based_attribute_set_log_database import \
-    DiskBasedAttributeSetLogDatabase
 from modelarium.entities.logging.databases.factories.java_attribute_set_log_database_factory import \
     JavaAttributeSetLogDatabaseFactory
+
+if TYPE_CHECKING:
+    from modelarium.entities.logging.databases.disk_based_attribute_set_log_database import \
+        DiskBasedAttributeSetLogDatabase
 
 
 class DiskBasedAttributeSetLogDatabaseFactory(JavaAttributeSetLogDatabaseFactory):
@@ -21,4 +25,6 @@ class DiskBasedAttributeSetLogDatabaseFactory(JavaAttributeSetLogDatabaseFactory
 
     @override
     def create(self) -> DiskBasedAttributeSetLogDatabase:
+        from modelarium.entities.logging.databases.disk_based_attribute_set_log_database import \
+            DiskBasedAttributeSetLogDatabase
         return to_python(DiskBasedAttributeSetLogDatabase, self._java_object.create())

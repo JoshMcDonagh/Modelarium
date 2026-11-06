@@ -1,11 +1,16 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
 
 import jpype
 
 from modelarium._java import java_class
 from modelarium._java.wrapper import to_java
 from modelarium._java.wrapper.wrapper_object import WrapperObject
-from modelarium.entities.logging.databases.attribute_set_log_database import AttributeSetLogDatabase
+
+if TYPE_CHECKING:
+    from modelarium.entities.logging.databases.attribute_set_log_database import AttributeSetLogDatabase
 
 
 class AttributeSetLogDatabaseFactory(ABC, WrapperObject):
