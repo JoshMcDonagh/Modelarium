@@ -1,9 +1,15 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from modelarium import start_jvm
 from modelarium._java import java_class
-from modelarium._java.wrapper import to_java
-from modelarium.config import Config
-from modelarium.results.read_only.read_only_results import ReadOnlyResults
+from modelarium._java.wrapper import to_java, to_python
 from modelarium._java.wrapper.wrapper_object import WrapperObject
+
+if TYPE_CHECKING:
+    from modelarium.config import Config
+    from modelarium.results.read_only.read_only_results import ReadOnlyResults
 
 
 class Model(WrapperObject):
@@ -15,4 +21,5 @@ class Model(WrapperObject):
         self._java_object.run()
 
     def get_results(self) -> ReadOnlyResults:
-        return ReadOnlyResults(self._java_object.getResults())
+        from modelarium.results.read_only.read_only_results import ReadOnlyResults
+        return to_python(ReadOnlyResults, self._java_object.getResults())
