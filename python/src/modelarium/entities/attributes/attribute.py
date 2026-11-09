@@ -30,13 +30,5 @@ class Attribute(ABC, WrapperObject):
         self._java_object.run()
 
     @abstractmethod
-    def _java_run(self, java_context: object) -> None:
-        pass
-
-    @abstractmethod
-    def _run(self, context: Context) -> None:
-        pass
-
-    @abstractmethod
     def get_as_immutable(self) -> ReadOnlyAttribute:
         pass

@@ -72,12 +72,10 @@ class Property(Attribute, Generic[PROPERTY_T]):
     def _get(self, context: Context, current_value: PROPERTY_T | None) -> PROPERTY_T | None:
         pass
 
-    @override
     @abstractmethod
     def _java_run(self, java_context: object, java_current_value: object) -> object:
         pass
 
-    @override
     def _run(self, context: Context, current_value: PROPERTY_T | None) -> PROPERTY_T | None:
         pass
 

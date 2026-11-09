@@ -6,6 +6,7 @@ from typing_extensions import override
 
 import jpype
 
+from modelarium._java.wrapper import to_java
 from modelarium.entities.attributes.attribute import Attribute
 
 if TYPE_CHECKING:
@@ -31,13 +32,21 @@ class Event(Attribute):
         WrapperObject.__init__(self, java_class(java_class_name)(
             name,
             is_logged,
-            access_level._java_object,
+            to_java(access_level),
             run_logic,
             trigger_logic
         ))
 
     def __str__(self) -> str:
         return self._java_object.toString()
+
+    @abstractmethod
+    def _java_run(self, java_context: object) -> None:
+        pass
+
+    @abstractmethod
+    def _run(self, context: Context) -> None:
+        pass
 
     def is_triggered(self) -> bool:
         return self._java_object.isTriggered()

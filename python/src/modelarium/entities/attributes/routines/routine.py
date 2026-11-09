@@ -1,14 +1,17 @@
 from __future__ import annotations
 
+from abc import abstractmethod
 from typing import override, TYPE_CHECKING
 
 import jpype
 
+from modelarium._java.wrapper import to_java
 from modelarium.entities.attributes.attribute import Attribute
 
 if TYPE_CHECKING:
     from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
     from modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
+    from modelarium.entities.contexts.context import Context
 
 
 class Routine(Attribute):
@@ -24,9 +27,17 @@ class Routine(Attribute):
         from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_class(java_class_name)(
             name,
-            access_level._java_object,
+            to_java(access_level),
             run_logic
         ))
+
+    @abstractmethod
+    def _java_run(self, java_context: object) -> None:
+        pass
+
+    @abstractmethod
+    def _run(self, context: Context) -> None:
+        pass
 
     @override
     def get_as_immutable(self) -> ReadOnlyRoutine:
