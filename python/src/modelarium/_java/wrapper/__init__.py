@@ -184,14 +184,15 @@ def _wrapper_object_to_python(wrapper_type: type[WrapperObject], java_object: ob
 
 def to_python(wrapper_type: type[ConvertiblePythonObject], java_object: object) -> ConvertiblePythonObject:
     from modelarium.config import Config
-    if isinstance(wrapper_type, type) and wrapper_type == Config:
+    if issubclass(wrapper_type, type) and wrapper_type == Config:
         return _config_to_python(java_object)
 
     from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
-    if isinstance(wrapper_type, type) and wrapper_type == AttributeAccessLevel:
+    if issubclass(wrapper_type, type) and wrapper_type == AttributeAccessLevel:
         return _attribute_access_level_to_python(java_object)
 
-    if isinstance(wrapper_type, type) and wrapper_type is WrapperObject:
+    from modelarium._java.wrapper.wrapper_object import WrapperObject
+    if issubclass(wrapper_type, type) and wrapper_type is WrapperObject:
         return _wrapper_object_to_python(cast(type[WrapperObject], wrapper_type), java_object)
 
     raise ValueError(f"Cannot convert {java_object} to {wrapper_type}")
@@ -234,8 +235,13 @@ def to_java(python_object: ConvertiblePythonObject) -> object:
     from modelarium.config import Config
     if isinstance(python_object, Config):
         return _config_to_java(python_object)
+
+    from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
     if isinstance(python_object, AttributeAccessLevel):
         return _attribute_access_level_to_java(python_object)
+
+    from modelarium._java.wrapper.wrapper_object import WrapperObject
     if isinstance(python_object, WrapperObject):
         return _wrapper_object_to_java(python_object)
+
     raise ValueError(f"Cannot convert {python_object} to Java object")
