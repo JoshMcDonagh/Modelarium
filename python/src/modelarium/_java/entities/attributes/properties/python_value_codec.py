@@ -17,4 +17,4 @@ def decode(encoded: str) -> object:
 
 
 def create_python_value_codec() -> object:
-    return jpype.JProxy("modelarium.python.PythonValueCodex", dict = {"encode": encode, "decode": decode})
+    return jpype.JProxy("modelarium.python.PythonValueCodec", dict = {"encode": encode, "decode": decode})
