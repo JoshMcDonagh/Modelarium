@@ -5,6 +5,7 @@ from typing import Generic, override, Type, TYPE_CHECKING
 
 import jpype
 
+from modelarium._java.wrapper import to_java
 from modelarium.entities.attributes.attribute import Attribute
 from modelarium.entities.attributes.properties import PROPERTY_T
 
@@ -20,7 +21,7 @@ class Property(Attribute, Generic[PROPERTY_T]):
             name: str,
             is_logged: bool,
             access_level: AttributeAccessLevel,
-            stored_type: type[PROPERTY_T],
+            stored_type: Type[PROPERTY_T],
             java_class_name: str,
             java_getter_interface_name: str,
             java_setter_interface_name: str,
@@ -36,7 +37,7 @@ class Property(Attribute, Generic[PROPERTY_T]):
         WrapperObject.__init__(self, java_class(java_class_name)(
             name,
             is_logged,
-            access_level._java_object,
+            to_java(access_level),
             getter,
             setter,
             run_logic,
