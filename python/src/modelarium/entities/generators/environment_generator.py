@@ -16,8 +16,7 @@ class EnvironmentGenerator(EntityGenerator):
     def __init__(self) -> None:
         super().__init__(
             self._java_generate_environment,
-            "modelarium.entities.generators.FunctionalEnvironmentGenerator",
-            "generateEnvironment"
+            "modelarium.entities.generators.FunctionalEnvironmentGenerator"
         )
 
     def _java_generate_environment(self, java_config: object, java_random: object) -> object:

@@ -11,14 +11,13 @@ class EntityGenerator(ABC, WrapperObject):
     def __init__(
             self,
             generator_function: Callable[[object, object], object],
-            java_class_name: str,
-            java_generate_method_to_call: str
+            java_class_name: str
     ) -> None:
         generator_function = jpype.JProxy(
             "java.util.function.BiFunction",
-            dict={java_generate_method_to_call: generator_function}
+            dict={"apply": generator_function}
         )
-        reset_function = jpype.JProxy("java.lang.Runnable", dict={"reset": self.reset})
+        reset_function = jpype.JProxy("java.lang.Runnable", dict={"run": self.reset})
 
         super().__init__(java_class(java_class_name)(generator_function, reset_function))
 

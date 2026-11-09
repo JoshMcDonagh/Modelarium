@@ -17,8 +17,7 @@ class AgentGenerator(EntityGenerator):
     def __init__(self) -> None:
         super().__init__(
             self._java_generate_agents_for_each_thread,
-            "modelarium.entities.generators.FunctionalAgentGenerator",
-            "generateAgentsForEachThread"
+            "modelarium.entities.generators.FunctionalAgentGenerator"
         )
 
     def _java_generate_agents_for_each_thread(self, java_config: object, java_random: object) -> object:
