@@ -61,7 +61,7 @@ public class FunctionalAttributeSetLogDatabase extends AttributeSetLogDatabase {
 
     @Override
     public void setAttributeColumn(String attributeName, List<Object> attributeValues) {
-        setAttributeColumnLogic.accept(attributeName, propertyValues);
+        setAttributeColumnLogic.accept(attributeName, attributeValues);
     }
 
     @Override
