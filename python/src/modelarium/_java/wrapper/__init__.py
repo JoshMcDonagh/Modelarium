@@ -6,11 +6,12 @@ from typing import TypeVar, Any, TYPE_CHECKING, cast
 import jpype
 
 from modelarium._java.convertible_python_object import ConvertiblePythonObject
+from modelarium._java.wrapper.wrapper_object import WrapperObject
 
-T = TypeVar("T")
+CONVERTABLE_PYTHON_OBJECT_T = TypeVar("CONVERTABLE_PYTHON_OBJECT_T", bound=ConvertiblePythonObject)
+WRAPPER_OBJECT_T = TypeVar("WRAPPER_OBJECT_T", bound=WrapperObject)
 
 if TYPE_CHECKING:
-    from modelarium._java.wrapper.wrapper_object import WrapperObject
     from modelarium.config import Config
     from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 
@@ -178,11 +179,11 @@ def _attribute_access_level_to_python(java_version: object) -> AttributeAccessLe
     raise ValueError(f"Java attribute access level {java_version!r} is not supported")
 
 
-def _wrapper_object_to_python(wrapper_type: type[WrapperObject], java_object: object) -> WrapperObject:
+def _wrapper_object_to_python(wrapper_type: type[WRAPPER_OBJECT_T], java_object: object) -> WRAPPER_OBJECT_T:
     return _get_instantiatable_wrapper_object_types_dict()[wrapper_type](java_object)
 
 
-def to_python(wrapper_type: type[ConvertiblePythonObject], java_object: object) -> ConvertiblePythonObject:
+def to_python(wrapper_type: type[CONVERTABLE_PYTHON_OBJECT_T], java_object: object) -> CONVERTABLE_PYTHON_OBJECT_T:
     from modelarium.config import Config
     if issubclass(wrapper_type, type) and wrapper_type == Config:
         return _config_to_python(java_object)
