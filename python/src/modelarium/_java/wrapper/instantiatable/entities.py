@@ -162,11 +162,6 @@ class _Event(Event):
         from modelarium._java.wrapper import to_java
         return self._java_object.isTriggered(to_java(context))
 
-    @override
-    def get_as_immutable(self) -> ReadOnlyEvent:
-        from modelarium._java.wrapper import to_python
-        return to_python(ReadOnlyEvent, self._java_object.getAsImmutable())
-
 
 class _AgentEvent(AgentEvent):
     def __init__(self, java_object: object) -> None:
@@ -183,11 +178,6 @@ class _AgentEvent(AgentEvent):
         from modelarium._java.wrapper import to_java
         return self._java_object.isTriggered(to_java(context))
 
-    @override
-    def get_as_immutable(self) -> ReadOnlyEvent:
-        from modelarium._java.wrapper import to_python
-        return to_python(ReadOnlyEvent, self._java_object.getAsImmutable())
-
 
 class _EnvironmentEvent(EnvironmentEvent):
     def __init__(self, java_object: object) -> None:
@@ -203,11 +193,6 @@ class _EnvironmentEvent(EnvironmentEvent):
     def _is_triggered(self, context: Context) -> bool:
         from modelarium._java.wrapper import to_java
         return self._java_object.isTriggered(to_java(context))
-
-    @override
-    def get_as_immutable(self) -> ReadOnlyEvent:
-        from modelarium._java.wrapper import to_python
-        return to_python(ReadOnlyEvent, self._java_object.getAsImmutable())
 
 
 class _ReadOnlyEvent(ReadOnlyEvent):
@@ -244,7 +229,6 @@ class _Property(Property, Generic[PROPERTY_T]):
     ) -> PROPERTY_T | None:
         self.set(new_value)
         return new_value
-
 
     @override
     def _java_get(self, java_context: object, java_current_value: object) -> object:
@@ -331,17 +315,37 @@ class _Routine(Routine):
         from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
+    @override
+    def _java_run(self, java_context: object) -> None:
+        from modelarium._java.wrapper import to_python
+        self._run(to_python(Context, java_context))
+
+    @override
+    def _run(self, context: Context) -> None:
+        from modelarium._java.wrapper import to_java
+        self._java_object.run(to_java(context))
+
 
 class _AgentRoutine(AgentRoutine):
     def __init__(self, java_object: object) -> None:
         from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
+    @override
+    def _run(self, context: Context) -> None:
+        from modelarium._java.wrapper import to_java
+        self._java_object.run(to_java(context))
+
 
 class _EnvironmentRoutine(EnvironmentRoutine):
     def __init__(self, java_object: object) -> None:
         from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
+
+    @override
+    def _run(self, context: Context) -> None:
+        from modelarium._java.wrapper import to_java
+        self._java_object.run(to_java(context))
 
 
 class _ReadOnlyRoutine(ReadOnlyRoutine):
@@ -470,7 +474,7 @@ class _AgentGenerator(AgentGenerator):
 
     @override
     def reset(self) -> None:
-        self._java_object.reset()
+        self._java_object.internalReset()
 
 
 class _DefaultAgentGenerator(DefaultAgentGenerator):
@@ -485,7 +489,7 @@ class _DefaultAgentGenerator(DefaultAgentGenerator):
 
     @override
     def reset(self) -> None:
-        self._java_object.reset()
+        self._java_object.internalReset()
 
 
 class _EnvironmentGenerator(EnvironmentGenerator):
@@ -497,6 +501,10 @@ class _EnvironmentGenerator(EnvironmentGenerator):
     def generate_environment(self, config: Config, random: RandomGenerator) -> Environment:
         from modelarium._java.wrapper import to_java
         return _Environment(self._java_object.generateEnvironment(to_java(config), to_java(random)))
+
+    @override
+    def reset(self) -> None:
+        self._java_object.internalReset()
 
 
 class _AttributeSetLog(AttributeSetLog):
