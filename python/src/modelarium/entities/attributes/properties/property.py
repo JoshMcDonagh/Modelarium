@@ -83,4 +83,4 @@ class Property(Attribute, Generic[PROPERTY_T]):
     def get_as_immutable(self) -> ReadOnlyProperty:
         from modelarium._java.wrapper import to_python
         from modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
-        return to_python(ReadOnlyProperty[PROPERTY_T], self._java_object.getAsImmutable())
+        return to_python(ReadOnlyProperty, self._java_object.getAsImmutable())
