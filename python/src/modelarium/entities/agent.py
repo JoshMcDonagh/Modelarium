@@ -32,7 +32,7 @@ class Agent(Entity):
     def get_attribute_set(self, attribute_set_id: int | str) -> AgentAttributeSet:
         from modelarium.entities.attributes.sets.agent_attribute_set import AgentAttributeSet
         from modelarium._java.wrapper import to_python
-        return to_python(AgentAttributeSet, super().get_attribute_set(attribute_set_id))
+        return to_python(AgentAttributeSet, self._java_object.getAttributeSet(attribute_set_id))
 
     def get_event(self, attribute_set_id: int | str, event_id: int | str) -> AgentEvent:
         return self.get_attribute_set(attribute_set_id).get_event(event_id)

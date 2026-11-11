@@ -58,7 +58,7 @@ class Environment(Entity):
     def get_attribute_set(self, attribute_set_id: int | str) -> EnvironmentAttributeSet:
         from modelarium.entities.attributes.sets.environment_attribute_set import EnvironmentAttributeSet
         from modelarium._java.wrapper import to_python
-        return to_python(EnvironmentAttributeSet, super().get_attribute_set(attribute_set_id))
+        return to_python(EnvironmentAttributeSet, self._java_object.getAttributeSet(attribute_set_id))
 
     def get_event(self, attribute_set_id: int | str, event_id: int | str) -> EnvironmentEvent:
         return self.get_attribute_set(attribute_set_id).get_event(event_id)
