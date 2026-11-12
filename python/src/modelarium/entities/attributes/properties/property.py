@@ -77,7 +77,7 @@ class Property(Attribute, Generic[PROPERTY_T]):
         pass
 
     def _run(self, context: Context, current_value: PROPERTY_T | None) -> PROPERTY_T | None:
-        pass
+        return current_value
 
     @override
     def get_as_immutable(self) -> ReadOnlyProperty:
