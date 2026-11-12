@@ -25,7 +25,7 @@ class EnvironmentEvent(Event, EnvironmentAttribute):
         from modelarium._java.wrapper import to_python
         from modelarium.entities.contexts.environment_context import EnvironmentContext
         context = to_python(EnvironmentContext, java_context)
-        return self.is_triggered(context)
+        return self._is_triggered(context)
 
     @override
     def _java_run(self, java_context: object) -> None:
