@@ -1,4 +1,8 @@
-"""Verify that every subproject targets the same Modelarium Java core version."""
+"""
+Check that the Java projects and Python package agree with VERSION.
+
+Run with: python scripts/check_version_alignment.py
+"""
 
 from __future__ import annotations
 
@@ -19,33 +23,33 @@ def xml_text(path: Path, expression: str) -> str:
 
 
 def main() -> int:
-    core_version = xml_text(ROOT / "java" / "modelarium" / "pom.xml", "m:version")
-    examples_version = xml_text(
-        ROOT / "java" / "modelarium-examples" / "pom.xml",
-        "m:properties/m:modelarium.version",
-    )
+    version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
-    with (ROOT / "python" / "pyproject.toml").open("rb") as file:
-        python_configuration = tomllib.load(file)
-    python_java_version = python_configuration["tool"]["modelarium"]["java_version"]
+    with (ROOT / "python" / "pyproject.toml").open("rb") as handle:
+        python_config = tomllib.load(handle)
 
     versions = {
-        "Java core": core_version,
-        "Java examples dependency": examples_version,
-        "Python bundled Java core": python_java_version,
+        "VERSION": version,
+        "Maven aggregator": xml_text(ROOT / "pom.xml", "m:version"),
+        "Java core": xml_text(ROOT / "java/modelarium/pom.xml", "m:version"),
+        "Java examples": xml_text(ROOT / "java/modelarium-examples/pom.xml", "m:version"),
+        "Java examples dependency": xml_text(
+            ROOT / "java/modelarium-examples/pom.xml", "m:properties/m:modelarium.version"
+        ),
+        "Python package": python_config["project"]["version"],
+        "Python bundled Java core": python_config["tool"]["modelarium"]["java_version"],
     }
 
-    for label, version in versions.items():
-        print(f"{label}: {version}")
+    for label, found in versions.items():
+        print(f"{label}: {found}")
 
-    if len(set(versions.values())) != 1:
-        print("Modelarium Java core versions are not aligned.", file=sys.stderr)
+    if any(found != version for found in versions.values()):
+        print("Modelarium versions are not aligned.", file=sys.stderr)
         return 1
 
-    print("Modelarium Java core versions are aligned.")
+    print("All Modelarium versions are aligned.")
     return 0
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
