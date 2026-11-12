@@ -37,7 +37,7 @@ package-dir = { "" = "src" }
 where = ["src"]
 
 [tool.setuptools.package-data]
-modelarium = ["_jars/*.jar"]
+modelarium = ["_java/jars/*.jar"]
 
 [tool.modelarium]
 java_group_id = "dev.modelarium"

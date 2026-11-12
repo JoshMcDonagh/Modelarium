@@ -102,7 +102,7 @@ jobs:
       - name: Bundle the Java library and runtime dependencies
         shell: bash
         run: |
-          mkdir -p python/src/modelarium/_jars
+          mkdir -p python/src/modelarium/_java/jars
 
           JAR="$(find java/modelarium/target -maxdepth 1 -type f \
             -name 'modelarium-*.jar' \
@@ -115,11 +115,11 @@ jobs:
             exit 1
           fi
 
-          cp "$JAR" python/src/modelarium/_jars/
+          cp "$JAR" python/src/modelarium/_java/jars/
 
           mvn -B -f java/modelarium/pom.xml dependency:copy-dependencies \
             -DincludeScope=runtime \
-            -DoutputDirectory="$GITHUB_WORKSPACE/python/src/modelarium/_jars"
+            -DoutputDirectory="$GITHUB_WORKSPACE/python/src/modelarium/_java/jars"
 
       - name: Build and check distributions
         working-directory: python

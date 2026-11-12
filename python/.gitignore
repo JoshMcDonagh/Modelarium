@@ -207,4 +207,4 @@ marimo/_lsp/
 __marimo__/
 
 # Bundled Java jars (downloaded during release build)
-src/modelarium/_jars/*.jar
+src/modelarium/_java/jars/*.jar

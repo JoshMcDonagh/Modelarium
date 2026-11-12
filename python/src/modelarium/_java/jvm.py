@@ -5,20 +5,28 @@ from importlib import resources
 from pathlib import Path
 from typing import cast
 
+JARS_DIR = resources.files("modelarium._java").joinpath("jars")
+
 
 def bundled_jar_path() -> Path:
     """
     Returns the path to the JAR bundled inside this Python distribution.
     """
-    modelarium_jar_name = "modelarium-2.1.0.jar"
-    jar = resources.files("modelarium").joinpath("../_jars", modelarium_jar_name)
+    candidates = [
+        jar for jar in JARS_DIR.iterdir()
+        if jar.name.startswith("modelarium-")
+           and jar.name.endswith(".jar")
+           and not jar.name.endswith(("-sources.jar", "-javadoc.jar"))
+           and jar.is_file()
+    ]
 
-    if not jar.is_file():
-        raise FileNotFoundError("Bundled Modelarium JAR ("+ modelarium_jar_name + ") not found.")
+    if len(candidates) != 1:
+        raise RuntimeError(f"Expected exactly one bundled Modelarium core JAR in {JARS_DIR}, found {candidates}")
+
+    jar = candidates[0]
 
     if not isinstance(jar, Path):
-        raise RuntimeError("The bundled JAR is not available as a filesystem path.")
-
+        raise RuntimeError(f"Bundled JAR is not available as a filesystem path")
     return jar
 
 
@@ -37,11 +45,10 @@ def get_classpath() -> list[Path]:
     Return the core JAR and its bundled runtime dependencies.
     """
     core = get_jar_path()
-    jars_dir = resources.files("modelarium") / "_jars"
 
     dependencies = sorted(
         (Path(cast(str | os.PathLike[str], cast(object, jar)))
-         for jar in jars_dir.iterdir()
+         for jar in JARS_DIR.iterdir()
          if jar.name.endswith(".jar") and Path(cast(str | os.PathLike[str], cast(object, jar))) != core)
         , key=lambda jar: jar.name
     )

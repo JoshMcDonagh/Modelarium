@@ -1,1 +1,1 @@
-recursive-include src/modelarium/_jars *.jar
+recursive-include src/modelarium/_java/jars *.jar
