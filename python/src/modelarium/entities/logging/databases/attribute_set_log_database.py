@@ -52,6 +52,9 @@ class AttributeSetLogDatabase(ABC, WrapperObject):
     def disconnect(self) -> None:
         pass
 
+    def _java_add_attribute_value(self, attribute_name: str, java_attribute_value: object) -> None:
+        self.add_attribute_value(attribute_name, java_attribute_value)
+
     @abstractmethod
     def add_attribute_value(self, attribute_name: str, attribute_value: object) -> None:
         pass
