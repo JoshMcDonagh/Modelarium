@@ -15,8 +15,22 @@ if TYPE_CHECKING:
 class AgentContext(Context):
     @override
     def get_this_attribute(self) -> AgentAttribute:
-        from modelarium.entities.attributes.agent_attribute import AgentAttribute
-        return to_python(AgentAttribute, self._java_object.getThisAttribute())
+        if (self._java_class_name ==
+                "modelarium.entities.attributes.events.functional.FunctionalAgentEvent"):
+            from modelarium.entities.attributes.events.agent_event import AgentEvent
+            return to_python(AgentEvent, self._java_object.getThisAttribute())
+
+        if (self._java_class_name ==
+            "modelarium.python.entities.attributes.properties.functional.PythonFunctionalAgentProperty"):
+            from modelarium.entities.attributes.properties.agent_property import AgentProperty
+            return to_python(AgentProperty, self._java_object.getThisAttribute())
+
+        if (self._java_class_name ==
+            "modelarium.entities.attributes.routines.functional.FunctionalAgentRoutine"):
+            from modelarium.entities.attributes.routines.agent_routine import AgentRoutine
+            return to_python(AgentRoutine, self._java_object.getThisAttribute())
+
+        raise RuntimeError("Java attribute class type could not be converted to python object")
 
     @override
     def get_this_entity(self) -> Agent:

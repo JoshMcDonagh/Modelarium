@@ -13,3 +13,7 @@ class WrapperObject(ConvertiblePythonObject):
     @property
     def _java_object(self) -> Any:
         return self._java_obj
+
+    @property
+    def _java_class_name(self) -> str:
+        return str(self._java_obj.class_.getName())

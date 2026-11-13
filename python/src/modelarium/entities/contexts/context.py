@@ -87,8 +87,6 @@ class Context(ABC, ProtectedConstructorWrapperObject):
     @abstractmethod
     def get_this_attribute(self) -> Attribute:
         pass
-        from modelarium.entities.attributes.attribute import Attribute
-        return to_python(Attribute, self._java_object.getThisAttribute())
 
     @abstractmethod
     def get_this_entity(self) -> Entity:
