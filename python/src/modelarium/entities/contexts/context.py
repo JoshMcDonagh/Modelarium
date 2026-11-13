@@ -84,7 +84,9 @@ class Context(ABC, ProtectedConstructorWrapperObject):
             java_agents.add(agent_name)
         self._java_object.killAgents(java_agents)
 
+    @abstractmethod
     def get_this_attribute(self) -> Attribute:
+        pass
         from modelarium.entities.attributes.attribute import Attribute
         return to_python(Attribute, self._java_object.getThisAttribute())
 

@@ -7,11 +7,17 @@ from modelarium.entities.contexts.context import Context
 
 if TYPE_CHECKING:
     from modelarium.entities.agent import Agent
+    from modelarium.entities.attributes.agent_attribute import AgentAttribute
     from modelarium.entities.attributes.sets.agent_attribute_set import AgentAttributeSet
     from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
 
 
 class AgentContext(Context):
+    @override
+    def get_this_attribute(self) -> AgentAttribute:
+        from modelarium.entities.attributes.agent_attribute import AgentAttribute
+        return to_python(AgentAttribute, self._java_object.getThisAttribute())
+
     @override
     def get_this_entity(self) -> Agent:
         from modelarium.entities.agent import Agent

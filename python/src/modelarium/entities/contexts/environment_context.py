@@ -7,10 +7,16 @@ from modelarium.entities.contexts.context import Context
 
 if TYPE_CHECKING:
     from modelarium.entities.environment import Environment
+    from modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
     from modelarium.entities.attributes.sets.environment_attribute_set import EnvironmentAttributeSet
 
 
 class EnvironmentContext(Context):
+    @override
+    def get_this_attribute(self) -> EnvironmentAttribute:
+        from modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
+        return to_python(EnvironmentAttribute, self._java_object.getThisAttribute())
+
     @override
     def get_this_entity(self) -> Environment:
         from modelarium.entities.environment import Environment
