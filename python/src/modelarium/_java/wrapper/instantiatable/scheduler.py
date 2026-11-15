@@ -25,7 +25,7 @@ class _Scheduler(Scheduler):
             agent_set: AgentSet,
             random: RandomGenerator
     ) -> None:
-        from modelarium._java.wrapper import to_java
+        from modelarium._java import to_java
         self._java_object.runTick(
             thread_name,
             to_java(clock),

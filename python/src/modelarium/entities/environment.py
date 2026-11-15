@@ -51,13 +51,13 @@ class Environment(Entity):
     @override
     def context(self) -> EnvironmentContext:
         from modelarium.entities.contexts.environment_context import EnvironmentContext
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(EnvironmentContext, self._java_object.context())
 
     @override
     def get_attribute_set(self, attribute_set_id: int | str) -> EnvironmentAttributeSet:
         from modelarium.entities.attributes.sets.environment_attribute_set import EnvironmentAttributeSet
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(EnvironmentAttributeSet, self._java_object.getAttributeSet(attribute_set_id))
 
     def get_event(self, attribute_set_id: int | str, event_id: int | str) -> EnvironmentEvent:
@@ -72,5 +72,5 @@ class Environment(Entity):
     @override
     def get_as_immutable(self) -> ReadOnlyEnvironment:
         from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(ReadOnlyEnvironment, self._java_object.getAsImmutable())

@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 import jpype
 
 from modelarium._java import java_class
-from modelarium._java.wrapper import to_python
+from modelarium._java import to_python
 from modelarium._java.wrapper.wrapper_object import WrapperObject
 
 if TYPE_CHECKING:

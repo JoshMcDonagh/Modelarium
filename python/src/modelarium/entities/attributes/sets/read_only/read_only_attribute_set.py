@@ -23,7 +23,7 @@ class ReadOnlyAttributeSet(ABC, ProtectedConstructorWrapperObject):
         return self._java_object.size()
 
     def get_log(self) -> AttributeSetLog:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         from modelarium.entities.logging.attribute_set_log import AttributeSetLog
         return to_python(AttributeSetLog, self._java_object.getLog())
 

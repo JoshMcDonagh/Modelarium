@@ -1,7 +1,7 @@
 from collections.abc import Sequence, Mapping, Iterable
 from datetime import timedelta
 from pathlib import Path
-from typing import cast, Any
+from typing import cast, Any, TypeVar
 
 import jpype
 import pandas as pd
@@ -37,11 +37,11 @@ def list_to_java_array_list(python_list: list) -> Iterable:
 
 
 def java_list_to_list(java_list: Iterable, item_type: type | None = None, convert_log_values: bool = False) -> list:
+    from modelarium._java import to_python
     python_list = []
-    from modelarium._java.results import java_log_value_to_python
     for item in java_list:
         if convert_log_values:
-            item = java_log_value_to_python(item)
+            item = to_python(Any, item)
         if item_type is not None:
             python_list.append(item_type(item))
         else:
@@ -51,14 +51,14 @@ def java_list_to_list(java_list: Iterable, item_type: type | None = None, conver
 
 def java_map_to_dataframe(java_map: object, column_names: Sequence[str]) -> pd.DataFrame:
     def flatten(mapping, prefix=()):
+        from modelarium._java import to_python
         result = {}
-        from modelarium._java.results import java_log_value_to_python
         for key, value in mapping.items():
             path = prefix + (str(key),)
             if isinstance(value, Mapping) or hasattr(value, "entrySet"):
                 result.update(flatten(value, path))
             else:
-                result[path] = [java_log_value_to_python(item) for item in value]
+                result[path] = [to_python(Any, item) for item in value]
         return result
 
     data = flatten(cast(Any, java_map))

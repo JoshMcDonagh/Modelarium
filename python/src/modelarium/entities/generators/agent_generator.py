@@ -4,7 +4,7 @@ from abc import abstractmethod
 from typing import TYPE_CHECKING
 
 from modelarium._java import java_class
-from modelarium._java.wrapper import to_java, to_python
+from modelarium._java import to_java, to_python
 from modelarium.entities.generators.entity_generator import EntityGenerator
 
 if TYPE_CHECKING:

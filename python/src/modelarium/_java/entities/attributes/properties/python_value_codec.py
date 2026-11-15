@@ -11,9 +11,9 @@ def encode(java_value: object) -> str:
 
 
 def decode(encoded: str) -> object:
-    from modelarium._java.entities.attributes.properties import python_to_java
     value = pickle.loads(base64.b64decode(str(encoded), validate=True))
-    return python_to_java(type(value), value)
+    from modelarium._java import to_java
+    return to_java(value)
 
 
 def create_python_value_codec() -> object:

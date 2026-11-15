@@ -62,17 +62,17 @@ class _Entity(Entity):
     @property
     @override
     def context(self) -> Context:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(Context, self._java_object.context())
 
     @override
     def get_attribute_set(self, attribute_set_id: int | str) -> AttributeSet:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(AttributeSet, self._java_object.getAttributeSet(attribute_set_id))
 
     @override
     def get_as_immutable(self) -> ReadOnlyEntity:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(ReadOnlyEntity, self._java_object.getAsImmutable())
 
 class _Agent(Agent):
@@ -106,7 +106,7 @@ class _Attribute(Attribute):
 
     @override
     def get_as_immutable(self) -> ReadOnlyAttribute:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(ReadOnlyAttribute, self._java_object.getAsImmutable())
 
 
@@ -123,7 +123,7 @@ class _AgentAttribute(AgentAttribute):
 
     @override
     def get_as_immutable(self) -> ReadOnlyAttribute:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(ReadOnlyAttribute, self._java_object.getAsImmutable())
 
 
@@ -134,7 +134,7 @@ class _EnvironmentAttribute(EnvironmentAttribute):
 
     @override
     def get_as_immutable(self) -> ReadOnlyAttribute:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(ReadOnlyAttribute, self._java_object.getAsImmutable())
 
 
@@ -145,22 +145,22 @@ class _Event(Event):
 
     @override
     def _java_run(self, java_context: object) -> None:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         self._run(to_python(java_context))
 
     @override
     def _run(self, context: Context) -> None:
-        from modelarium._java.wrapper import to_java
+        from modelarium._java import to_java
         self._java_object.run(to_java(context))
 
     @override
     def _java_is_triggered(self, java_context: object) -> bool:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return self._is_triggered(to_python(Context, java_context))
 
     @override
     def _is_triggered(self, context: Context) -> bool:
-        from modelarium._java.wrapper import to_java
+        from modelarium._java import to_java
         return self._java_object.isTriggered(to_java(context))
 
 
@@ -171,12 +171,12 @@ class _AgentEvent(AgentEvent):
 
     @override
     def _run(self, context: Context) -> None:
-        from modelarium._java.wrapper import to_java
+        from modelarium._java import to_java
         self._java_object.run(to_java(context))
 
     @override
     def _is_triggered(self, context: Context) -> bool:
-        from modelarium._java.wrapper import to_java
+        from modelarium._java import to_java
         return self._java_object.isTriggered(to_java(context))
 
 
@@ -187,12 +187,12 @@ class _EnvironmentEvent(EnvironmentEvent):
 
     @override
     def _run(self, context: Context) -> None:
-        from modelarium._java.wrapper import to_java
+        from modelarium._java import to_java
         self._java_object.run(to_java(context))
 
     @override
     def _is_triggered(self, context: Context) -> bool:
-        from modelarium._java.wrapper import to_java
+        from modelarium._java import to_java
         return self._java_object.isTriggered(to_java(context))
 
 
@@ -209,15 +209,13 @@ class _Property(Property, Generic[PROPERTY_T]):
 
     @override
     def _java_set(self, java_context: object, java_current_value: object, java_new_value: object) -> object:
-        from modelarium._java.entities.attributes.properties import python_to_java
-        from modelarium._java.wrapper import to_python
-        from modelarium._java.entities.attributes.properties import java_to_python
-        return python_to_java(
-            self.type,
+        from modelarium._java import to_python
+        from modelarium._java import to_java
+        return to_java(
             self._set(
                 to_python(Context, java_context),
-                java_to_python(self.type, java_current_value),
-                java_to_python(self.type, java_new_value)
+                to_python(self.type, java_current_value),
+                to_python(self.type, java_new_value)
             )
         )
 
@@ -233,12 +231,10 @@ class _Property(Property, Generic[PROPERTY_T]):
 
     @override
     def _java_get(self, java_context: object, java_current_value: object) -> object:
-        from modelarium._java.entities.attributes.properties import python_to_java
-        from modelarium._java.wrapper import to_python
-        from modelarium._java.entities.attributes.properties import java_to_python
-        return python_to_java(
-            self.type,
-            self._get(to_python(Context, java_context), java_to_python(self.type, java_current_value))
+        from modelarium._java import to_python
+        from modelarium._java import to_java
+        return to_java(
+            self._get(to_python(Context, java_context), to_python(self.type, java_current_value))
         )
 
     @override
@@ -247,12 +243,10 @@ class _Property(Property, Generic[PROPERTY_T]):
 
     @override
     def _java_run(self, java_context: object, java_current_value: object) -> object:
-        from modelarium._java.entities.attributes.properties import python_to_java
-        from modelarium._java.wrapper import to_python
-        from modelarium._java.entities.attributes.properties import java_to_python
-        return python_to_java(
-            self.type,
-            self._run(to_python(Context, java_context), java_to_python(self.type, java_current_value))
+        from modelarium._java import to_python
+        from modelarium._java import to_java
+        return to_java(
+            self._run(to_python(Context, java_context), to_python(self.type, java_current_value))
         )
 
     @override
@@ -273,14 +267,14 @@ class _AgentProperty(Generic[PROPERTY_T], AgentProperty[PROPERTY_T]):
             current_value: PROPERTY_T | None,
             new_value: PROPERTY_T | None
     ) -> PROPERTY_T | None:
-        from modelarium._java.entities.attributes.properties import python_to_java
-        self._java_object.set(python_to_java(self.type, new_value))
+        from modelarium._java import to_java
+        self._java_object.set(to_java(new_value))
         return new_value
 
     @override
     def _get(self, context: Context, current_value: PROPERTY_T | None) -> PROPERTY_T | None:
-        from modelarium._java.entities.attributes.properties import java_to_python
-        return java_to_python(self.type, self._java_object.get())
+        from modelarium._java import to_python
+        return to_python(self.type, self._java_object.get())
 
 
 class _EnvironmentProperty(Generic[PROPERTY_T], EnvironmentProperty[PROPERTY_T]):
@@ -295,14 +289,14 @@ class _EnvironmentProperty(Generic[PROPERTY_T], EnvironmentProperty[PROPERTY_T])
             current_value: PROPERTY_T | None,
             new_value: PROPERTY_T | None
     ) -> PROPERTY_T | None:
-        from modelarium._java.entities.attributes.properties import python_to_java
-        self._java_object.set(python_to_java(self.type, new_value))
+        from modelarium._java import to_java
+        self._java_object.set(to_java(new_value))
         return new_value
 
     @override
     def _get(self, context: Context, current_value: PROPERTY_T | None) -> PROPERTY_T | None:
-        from modelarium._java.entities.attributes.properties import java_to_python
-        return java_to_python(self.type, self._java_object.get())
+        from modelarium._java import to_python
+        return to_python(self.type, self._java_object.get())
 
 
 class _ReadOnlyProperty(Generic[PROPERTY_T], ReadOnlyProperty[PROPERTY_T]):
@@ -318,12 +312,12 @@ class _Routine(Routine):
 
     @override
     def _java_run(self, java_context: object) -> None:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         self._run(to_python(Context, java_context))
 
     @override
     def _run(self, context: Context) -> None:
-        from modelarium._java.wrapper import to_java
+        from modelarium._java import to_java
         self._java_object.run(to_java(context))
 
 
@@ -334,7 +328,7 @@ class _AgentRoutine(AgentRoutine):
 
     @override
     def _run(self, context: Context) -> None:
-        from modelarium._java.wrapper import to_java
+        from modelarium._java import to_java
         self._java_object.run(to_java(context))
 
 
@@ -345,7 +339,7 @@ class _EnvironmentRoutine(EnvironmentRoutine):
 
     @override
     def _run(self, context: Context) -> None:
-        from modelarium._java.wrapper import to_java
+        from modelarium._java import to_java
         self._java_object.run(to_java(context))
 
 
@@ -362,22 +356,22 @@ class _AttributeSet(AttributeSet):
 
     @override
     def get(self, attribute_id: int | str) -> Attribute:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(Attribute, self._java_object.get(attribute_id))
 
     @override
     def get_event(self, event_id: int | str) -> Event:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(Event, self._java_object.getEvent(event_id))
 
     @override
     def get_routine(self, routine_id: int | str) -> Routine:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(Routine, self._java_object.getRoutine(routine_id))
 
     @override
     def get_property(self, property_id: int | str) -> Property:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(Property, self._java_object.getProperty(property_id))
 
 
@@ -400,22 +394,22 @@ class _ReadOnlyAttributeSet(ReadOnlyAttributeSet):
 
     @override
     def get(self, attribute_id: int | str) -> ReadOnlyAttribute:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(ReadOnlyAttribute, self._java_object.get(attribute_id))
 
     @override
     def get_event(self, event_id: int | str) -> ReadOnlyEvent:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(ReadOnlyEvent, self._java_object.getEvent(event_id))
 
     @override
     def get_routine(self, routine_id: int | str) -> ReadOnlyRoutine:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(ReadOnlyRoutine, self._java_object.getRoutine(routine_id))
 
     @override
     def get_property(self, property_id: int | str) -> ReadOnlyProperty:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(ReadOnlyProperty, self._java_object.getProperty(property_id))
 
 
@@ -438,12 +432,12 @@ class _Context(Context):
 
     @override
     def get_this_entity(self) -> Entity:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(Entity, self._java_object.getThisEntity())
 
     @override
     def get_this_attribute_set(self) -> AttributeSet:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(AttributeSet, self._java_object.getThisAttributeSet())
 
 
@@ -466,7 +460,7 @@ class _AgentGenerator(AgentGenerator):
 
     @override
     def generate_agents_for_each_thread(self, config: Config, random: RandomGenerator) -> list[AgentSet]:
-        from modelarium._java.wrapper import to_java, to_python
+        from modelarium._java import to_java, to_python
         java_list = self._java_object.generateAgentsForEachThread(to_java(config), to_java(random))
         python_list = []
         for item in java_list:
@@ -485,7 +479,7 @@ class _DefaultAgentGenerator(DefaultAgentGenerator):
 
     @override
     def generate_agent(self, config: Config, random: RandomGenerator) -> Agent:
-        from modelarium._java.wrapper import to_java
+        from modelarium._java import to_java
         return _Agent(self._java_object.generateAgent(to_java(config), to_java(random)))
 
     @override
@@ -500,7 +494,7 @@ class _EnvironmentGenerator(EnvironmentGenerator):
 
     @override
     def generate_environment(self, config: Config, random: RandomGenerator) -> Environment:
-        from modelarium._java.wrapper import to_java
+        from modelarium._java import to_java
         return _Environment(self._java_object.generateEnvironment(to_java(config), to_java(random)))
 
     @override
@@ -577,7 +571,7 @@ class _ReadOnlyEntity(ReadOnlyEntity):
 
     @override
     def get_attribute_set(self, attribute_set_id: int | str) -> ReadOnlyAttributeSet:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(ReadOnlyAttributeSet, self._java_object.getAttributeSet(attribute_set_id))
 
 

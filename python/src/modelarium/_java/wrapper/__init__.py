@@ -183,7 +183,7 @@ def _wrapper_object_to_python(wrapper_type: type[WRAPPER_OBJECT_T], java_object:
     return _get_instantiatable_wrapper_object_types_dict()[wrapper_type](java_object)
 
 
-def to_python(wrapper_type: type[CONVERTABLE_PYTHON_OBJECT_T], java_object: object) -> CONVERTABLE_PYTHON_OBJECT_T:
+def java_to_python_wrapper(wrapper_type: type[CONVERTABLE_PYTHON_OBJECT_T], java_object: object) -> CONVERTABLE_PYTHON_OBJECT_T:
     from modelarium._java.wrapper.wrapper_object import WrapperObject
 
     from modelarium.config import Config
@@ -233,7 +233,7 @@ def _wrapper_object_to_java(python_object: WrapperObject) -> object:
     return python_object._java_object
 
 
-def to_java(python_object: ConvertiblePythonObject) -> object:
+def python_wrapper_to_java(python_object: ConvertiblePythonObject) -> object:
     from modelarium.config import Config
     if isinstance(python_object, Config):
         return _config_to_java(python_object)

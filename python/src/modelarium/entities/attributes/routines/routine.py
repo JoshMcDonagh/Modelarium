@@ -5,7 +5,7 @@ from typing import override, TYPE_CHECKING
 
 import jpype
 
-from modelarium._java.wrapper import to_java
+from modelarium._java import to_java
 from modelarium.entities.attributes.attribute import Attribute
 
 if TYPE_CHECKING:
@@ -41,6 +41,6 @@ class Routine(Attribute):
 
     @override
     def get_as_immutable(self) -> ReadOnlyRoutine:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         from modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
         return to_python(ReadOnlyRoutine, self._java_object.getAsImmutable())

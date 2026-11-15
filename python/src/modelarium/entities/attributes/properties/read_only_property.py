@@ -14,5 +14,5 @@ class ReadOnlyProperty(Generic[PROPERTY_T], ReadOnlyAttribute):
         return self._java_object.getPythonType()
 
     def get(self) -> PROPERTY_T | None:
-        from modelarium._java.entities.attributes.properties import java_to_python
-        return java_to_python(self.type, self._java_object.get())
+        from modelarium._java import to_python
+        return to_python(self.type, self._java_object.get())

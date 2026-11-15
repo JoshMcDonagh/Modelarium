@@ -31,28 +31,28 @@ class AgentProperty(Generic[PROPERTY_T], Property[PROPERTY_T], AgentAttribute):
 
     @override
     def _java_set(self, java_context: object, java_current_value: object, java_new_value: object) -> object:
-        from modelarium._java.entities.attributes.properties import java_to_python, python_to_java
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         from modelarium.entities.contexts.agent_context import AgentContext
         context = to_python(AgentContext, java_context)
-        current_value = java_to_python(self.type, java_current_value)
-        new_value = java_to_python(self.type, java_new_value)
-        return python_to_java(self.type, self._set(context, current_value, new_value))
+        current_value = to_python(self.type, java_current_value)
+        new_value = to_python(self.type, java_new_value)
+        from modelarium._java import to_java
+        return to_java(self.type, self._set(context, current_value, new_value))
 
     @override
     def _java_get(self, java_context: object, java_current_value: object) -> object:
-        from modelarium._java.entities.attributes.properties import java_to_python, python_to_java
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         from modelarium.entities.contexts.agent_context import AgentContext
         context = to_python(AgentContext, java_context)
-        current_value = java_to_python(self.type, java_current_value)
-        return python_to_java(self.type, self._get(context, current_value))
+        current_value = to_python(self.type, java_current_value)
+        from modelarium._java import to_java
+        return to_java(self.type, self._get(context, current_value))
 
     @override
     def _java_run(self, java_context: object, java_current_value: object) -> object:
-        from modelarium._java.entities.attributes.properties import java_to_python, python_to_java
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         from modelarium.entities.contexts.agent_context import AgentContext
         context = to_python(AgentContext, java_context)
-        current_value = java_to_python(self.type, java_current_value)
-        return python_to_java(self.type, self._run(context, current_value))
+        current_value = to_python(self.type, java_current_value)
+        from modelarium._java import to_java
+        return to_java(self.type, self._run(context, current_value))

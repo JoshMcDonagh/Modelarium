@@ -17,24 +17,24 @@ class EnvironmentAttributeSet(AttributeSet):
     
     @override
     def get(self, attribute_id: int | str) -> EnvironmentAttribute:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         from modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
         return to_python(EnvironmentAttribute, self._java_object.get(attribute_id))
 
     @override
     def get_event(self, event_id: int | str) -> EnvironmentEvent:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         from modelarium.entities.attributes.events.environment_event import EnvironmentEvent
         return to_python(EnvironmentEvent, self._java_object.getEvent(event_id))
 
     @override
     def get_routine(self, routine_id: int | str) -> EnvironmentRoutine:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         from modelarium.entities.attributes.routines.environment_routine import EnvironmentRoutine
         return to_python(EnvironmentRoutine, self._java_object.getRoutine(routine_id))
 
     @override
     def get_property(self, property_id: int | str) -> EnvironmentProperty:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         from modelarium.entities.attributes.properties.environment_property import EnvironmentProperty
         return to_python(EnvironmentProperty, self._java_object.getProperty(property_id))

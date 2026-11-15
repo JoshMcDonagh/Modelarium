@@ -6,7 +6,7 @@ from typing_extensions import override
 
 import jpype
 
-from modelarium._java.wrapper import to_java
+from modelarium._java import to_java
 from modelarium.entities.attributes.attribute import Attribute
 
 if TYPE_CHECKING:
@@ -61,6 +61,6 @@ class Event(Attribute):
 
     @override
     def get_as_immutable(self) -> ReadOnlyEvent:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         from modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
         return to_python(ReadOnlyEvent, self._java_object.getAsImmutable())

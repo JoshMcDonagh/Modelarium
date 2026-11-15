@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import override, TYPE_CHECKING
 
-from modelarium._java.wrapper import to_python
+from modelarium._java import to_python
 from modelarium.entities.read_only.read_only_entity import ReadOnlyEntity
 
 if TYPE_CHECKING:

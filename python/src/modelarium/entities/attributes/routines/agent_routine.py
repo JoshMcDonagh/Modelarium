@@ -20,7 +20,7 @@ class AgentRoutine(Routine, AgentAttribute):
 
     @override
     def _java_run(self, java_context: object) -> None:
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         from modelarium.entities.contexts.agent_context import AgentContext
         context = to_python(AgentContext, java_context)
         return self._run(context)

@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from modelarium import start_jvm
 from modelarium._java import java_class
-from modelarium._java.wrapper import to_java, to_python
+from modelarium._java import to_java, to_python
 from modelarium._java.wrapper.wrapper_object import WrapperObject
 
 if TYPE_CHECKING:

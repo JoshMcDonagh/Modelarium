@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import TYPE_CHECKING
 
-from modelarium._java.wrapper import to_python, to_java
+from modelarium._java import to_python, to_java
 from modelarium.entities.generators.entity_generator import EntityGenerator
 
 if TYPE_CHECKING:

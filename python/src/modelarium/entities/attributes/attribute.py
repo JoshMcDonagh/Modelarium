@@ -22,7 +22,7 @@ class Attribute(ABC, WrapperObject):
     @property
     def access_level(self) -> AttributeAccessLevel:
         from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
-        from modelarium._java.wrapper import to_python
+        from modelarium._java import to_python
         return to_python(AttributeAccessLevel, self._java_object.accessLevel())
 
     def run(self) -> None:
