@@ -21,6 +21,5 @@ class EntityGenerator(ABC, WrapperObject):
 
         super().__init__(java_class(java_class_name)(generator_function, reset_function))
 
-    @abstractmethod
     def reset(self) -> None:
-        pass
+        pass    # No-op by default
