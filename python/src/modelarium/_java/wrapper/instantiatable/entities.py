@@ -59,6 +59,7 @@ class _Entity(Entity):
         from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
 
+    @property
     @override
     def context(self) -> Context:
         from modelarium._java.wrapper import to_python
