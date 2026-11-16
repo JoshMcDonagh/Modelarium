@@ -1,7 +1,7 @@
 from collections.abc import Sequence, Mapping, Iterable
 from datetime import timedelta
 from pathlib import Path
-from typing import cast, Any, TypeVar
+from typing import cast, Any
 
 import jpype
 import pandas as pd
