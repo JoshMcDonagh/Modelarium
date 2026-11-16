@@ -7,48 +7,6 @@ import jpype
 import pandas as pd
 
 
-def timedelta_to_java_duration(duration: timedelta) -> object:
-    # Convert exactly to microseconds without floating-point arithmetic.
-    total_microseconds = (duration.days * 86400 + duration.seconds) * 1_000_000 + duration.microseconds
-
-    seconds, microseconds = divmod(total_microseconds, 1_000_000)
-
-    from modelarium._java import java_class
-    return java_class("java.time.Duration").ofSeconds(jpype.JLong(seconds), jpype.JLong(microseconds * 1000))
-
-
-def java_duration_to_timedelta(duration) -> timedelta:
-    seconds = int(duration.getSeconds())
-    nanoseconds = int(duration.getNano())
-
-    return timedelta(seconds=seconds, microseconds=nanoseconds // 1_000)
-
-
-def list_to_java_array_list(python_list: list) -> Iterable:
-    from modelarium._java import java_class
-    java_array_list = java_class("java.util.ArrayList")()
-    from modelarium._java.wrapper.wrapper_object import WrapperObject
-    for item in python_list:
-        if isinstance(item, WrapperObject):
-            java_array_list.add(item._java_object)
-        else:
-            java_array_list.add(item)
-    return java_array_list
-
-
-def java_list_to_list(java_list: Iterable, item_type: type | None = None, convert_log_values: bool = False) -> list:
-    from modelarium._java import to_python
-    python_list = []
-    for item in java_list:
-        if convert_log_values:
-            item = to_python(Any, item)
-        if item_type is not None:
-            python_list.append(item_type(item))
-        else:
-            python_list.append(item)
-    return list(python_list)
-
-
 def java_map_to_dataframe(java_map: object, column_names: Sequence[str]) -> pd.DataFrame:
     def flatten(mapping, prefix=()):
         from modelarium._java import to_python
@@ -77,11 +35,6 @@ def java_map_to_dataframe(java_map: object, column_names: Sequence[str]) -> pd.D
         df.columns.name = column_names[0]
 
     return df
-
-
-def python_to_java_path(python_path: Path) -> object:
-    from modelarium._java import java_class
-    return java_class("java.nio.file.Path").of(str(python_path))
 
 
 def java_to_python_path(java_path: object) -> Path:
