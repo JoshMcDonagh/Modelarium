@@ -36,6 +36,3 @@ def java_map_to_dataframe(java_map: object, column_names: Sequence[str]) -> pd.D
 
     return df
 
-
-def java_to_python_path(java_path: object) -> Path:
-    return Path(str(java_path))

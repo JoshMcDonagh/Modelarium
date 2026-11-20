@@ -22,6 +22,11 @@ def to_python(python_type: type[PYTHON_OBJECT_T], java_object: object) -> PYTHON
         from modelarium._java.wrapper import java_to_python_wrapper
         return java_to_python_wrapper(python_type, java_object)
 
+    from modelarium._java.language_conversion.types import is_defined_python_type
+    if is_defined_python_type(python_type):
+        from modelarium._java.language_conversion.types.to_python import to_defined_python_type
+        return to_defined_python_type(python_type, java_object)
+
     from modelarium._java.language_conversion.values.to_python import value_to_python
     return value_to_python(python_type, java_object)
 
@@ -34,6 +39,11 @@ def to_java(python_object: PYTHON_OBJECT_T) -> object:
     if isinstance(python_object, ConvertiblePythonObject):
         from modelarium._java.wrapper import python_wrapper_to_java
         return python_wrapper_to_java(python_object)
+
+    from modelarium._java.language_conversion.types import is_instance_of_defined_python_type
+    if is_instance_of_defined_python_type(python_object):
+        from modelarium._java.language_conversion.types.to_java import to_defined_java_type
+        return to_defined_java_type(python_object)
 
     from modelarium._java.language_conversion.values.to_java import value_to_java
     return value_to_java(python_object)

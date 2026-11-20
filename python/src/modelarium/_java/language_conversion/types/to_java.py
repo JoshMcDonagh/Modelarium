@@ -28,6 +28,15 @@ def _python_list_to_java_array_list(python_list: list) -> Iterable:
     return java_array_list
 
 
+def _python_dict_to_java_hash_map(python_dict: dict) -> object:
+    from modelarium._java import java_class
+    java_hash_map = java_class("java.util.HashMap")()
+    for key, value in python_dict.items():
+        from modelarium._java import to_java
+        java_hash_map.put(to_java(key), to_java(value))
+    return java_hash_map
+
+
 def _python_path_to_java_path(python_path: Path) -> object:
     from modelarium._java import java_class
     return java_class("java.nio.file.Path").of(str(python_path))
@@ -39,6 +48,9 @@ def to_defined_java_type(python_object: PYTHON_OBJECT_T) -> object:
 
     if isinstance(python_object, list):
         return _python_list_to_java_array_list(python_object)
+
+    if isinstance(python_object, dict):
+        return _python_dict_to_java_hash_map(python_object)
 
     if isinstance(python_object, Path):
         return _python_path_to_java_path(python_object)
