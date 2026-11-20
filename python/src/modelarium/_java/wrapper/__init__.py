@@ -6,6 +6,13 @@ from typing import TypeVar, Any, TYPE_CHECKING, cast
 import jpype
 
 from modelarium._java.convertible_python_object import ConvertiblePythonObject
+from modelarium._java.wrapper.instantiatable.entities import _Agent, _Environment, _AgentSet, _ReadOnlyAgentSet, \
+    _ReadOnlyAttribute, _AgentEvent, _EnvironmentEvent, _ReadOnlyEvent, _AgentProperty, _EnvironmentProperty, \
+    _ReadOnlyProperty, _AgentRoutine, _EnvironmentRoutine, _ReadOnlyRoutine, _AgentAttributeSet, \
+    _EnvironmentAttributeSet, _ReadOnlyAgentAttributeSet, _ReadOnlyEnvironmentAttributeSet, _AgentContext, \
+    _EnvironmentContext, _AgentGenerator, _DefaultAgentGenerator, _EnvironmentGenerator, _AttributeSetLog, _EntityLog, \
+    _AttributeSetLogDatabase, _DiskBasedAttributeSetLogDatabase, _MemoryBasedAttributeSetLogDatabase, \
+    _AttributeSetLogDatabaseFactory, _ReadOnlyAgent, _ReadOnlyEnvironment
 from modelarium._java.wrapper.wrapper_object import WrapperObject
 
 CONVERTABLE_PYTHON_OBJECT_T = TypeVar("CONVERTABLE_PYTHON_OBJECT_T", bound=ConvertiblePythonObject)
@@ -19,15 +26,6 @@ if TYPE_CHECKING:
 @cache
 def _get_instantiatable_wrapper_object_types_dict() -> dict[type, type]:
     from modelarium._java.wrapper.instantiatable import _ReadOnlyClock
-    from modelarium._java.wrapper.instantiatable.entities import _Agent, _Environment, _AgentSet, _ReadOnlyAgentSet, \
-        _AgentEvent, _EnvironmentEvent, _ReadOnlyEvent, _AgentProperty, _EnvironmentProperty, _ReadOnlyProperty, \
-        _AgentRoutine, _EnvironmentRoutine, _ReadOnlyRoutine, _ReadOnlyAgentAttributeSet, \
-        _ReadOnlyEnvironmentAttributeSet, \
-        _AgentContext, _EnvironmentContext, _AgentGenerator, _DefaultAgentGenerator, _EnvironmentGenerator, \
-        _AttributeSetLog, _EntityLog, _AttributeSetLogDatabase, _DiskBasedAttributeSetLogDatabase, \
-        _MemoryBasedAttributeSetLogDatabase, _AttributeSetLogDatabaseFactory, _ReadOnlyAgent, _ReadOnlyEnvironment, \
-        _Attribute, _Entity, _Context, _ReadOnlyAttribute, _Event, _Property, _Routine, _AttributeSet, _ReadOnlyEntity, \
-        _ReadOnlyAttributeSet, _AgentAttribute, _EnvironmentAttribute, _AgentAttributeSet, _EnvironmentAttributeSet
     from modelarium._java.wrapper.instantiatable.results import _ReadOnlyResults, _ReadOnlyResultsForAgents, \
         _ReadOnlyResultsForEnvironment
     from modelarium._java.wrapper.instantiatable.scheduler import _Scheduler
@@ -88,34 +86,24 @@ def _get_instantiatable_wrapper_object_types_dict() -> dict[type, type]:
         ReadOnlyClock: _ReadOnlyClock,
 
         # Entities
-        Entity: _Entity,
         Agent: _Agent,
         Environment: _Environment,
         AgentSet: _AgentSet,
         ReadOnlyAgentSet: _ReadOnlyAgentSet,
-        Attribute: _Attribute,
         ReadOnlyAttribute: _ReadOnlyAttribute,
-        AgentAttribute: _AgentAttribute,
-        EnvironmentAttribute: _EnvironmentAttribute,
-        Event: _Event,
         AgentEvent: _AgentEvent,
         EnvironmentEvent: _EnvironmentEvent,
         ReadOnlyEvent: _ReadOnlyEvent,
-        Property: _Property,
         AgentProperty: _AgentProperty,
         EnvironmentProperty: _EnvironmentProperty,
         ReadOnlyProperty: _ReadOnlyProperty,
-        Routine: _Routine,
         AgentRoutine: _AgentRoutine,
         EnvironmentRoutine: _EnvironmentRoutine,
         ReadOnlyRoutine: _ReadOnlyRoutine,
-        AttributeSet: _AttributeSet,
         AgentAttributeSet: _AgentAttributeSet,
         EnvironmentAttributeSet: _EnvironmentAttributeSet,
-        ReadOnlyAttributeSet: _ReadOnlyAttributeSet,
         ReadOnlyAgentAttributeSet: _ReadOnlyAgentAttributeSet,
         ReadOnlyEnvironmentAttributeSet: _ReadOnlyEnvironmentAttributeSet,
-        Context: _Context,
         AgentContext: _AgentContext,
         EnvironmentContext: _EnvironmentContext,
         AgentGenerator: _AgentGenerator,
@@ -127,7 +115,6 @@ def _get_instantiatable_wrapper_object_types_dict() -> dict[type, type]:
         DiskBasedAttributeSetLogDatabase: _DiskBasedAttributeSetLogDatabase,
         MemoryBasedAttributeSetLogDatabase: _MemoryBasedAttributeSetLogDatabase,
         AttributeSetLogDatabaseFactory: _AttributeSetLogDatabaseFactory,
-        ReadOnlyEntity: _ReadOnlyEntity,
         ReadOnlyAgent: _ReadOnlyAgent,
         ReadOnlyEnvironment: _ReadOnlyEnvironment,
 
@@ -146,17 +133,18 @@ def _get_instantiatable_wrapper_object_types_dict() -> dict[type, type]:
 
 def _config_to_python(java_config: Any) -> Config:
     from modelarium.config import Config
-    from modelarium._java.type_conversion import java_duration_to_timedelta
     from modelarium.entities.generators.agent_generator import AgentGenerator
     from modelarium.entities.generators.environment_generator import EnvironmentGenerator
     from modelarium.scheduler.scheduler import Scheduler
     from modelarium.entities.logging.databases.factories.attribute_set_log_database_factory import \
         AttributeSetLogDatabaseFactory
+    from modelarium._java import to_python
+    from datetime import timedelta
     return Config(
         population_size=java_config.populationSize(),
         tick_count=java_config.tickCount(),
         thread_count=java_config.threadCount(),
-        thread_timeout=java_duration_to_timedelta(java_config.threadTimeout()),
+        thread_timeout=to_python(timedelta, java_config.threadTimeout()),
         are_threads_synced=java_config.areThreadsSynced(),
         agent_generator=_wrapper_object_to_python(AgentGenerator, java_config.agentGenerator()),
         environment_generator=_wrapper_object_to_python(EnvironmentGenerator, java_config.environmentGenerator()),
@@ -202,12 +190,12 @@ def java_to_python_wrapper(wrapper_type: type[CONVERTABLE_PYTHON_OBJECT_T], java
 
 def _config_to_java(config: Config) -> object:
     from modelarium._java import java_class
-    from modelarium._java.type_conversion import timedelta_to_java_duration
+    from modelarium._java import to_java
     return java_class("modelarium.Config")(
         config.population_size,
         config.tick_count,
         config.thread_count,
-        timedelta_to_java_duration(config.thread_timeout),
+        to_java(config.thread_timeout),
         config.are_threads_synced,
         _wrapper_object_to_java(config.agent_generator),
         _wrapper_object_to_java(config.environment_generator),

@@ -54,27 +54,6 @@ if TYPE_CHECKING:
     from modelarium.config import Config
 
 
-class _Entity(Entity):
-    def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper.wrapper_object import WrapperObject
-        WrapperObject.__init__(self, java_object)
-
-    @property
-    @override
-    def context(self) -> Context:
-        from modelarium._java import to_python
-        return to_python(Context, self._java_object.context())
-
-    @override
-    def get_attribute_set(self, attribute_set_id: int | str) -> AttributeSet:
-        from modelarium._java import to_python
-        return to_python(AttributeSet, self._java_object.getAttributeSet(attribute_set_id))
-
-    @override
-    def get_as_immutable(self) -> ReadOnlyEntity:
-        from modelarium._java import to_python
-        return to_python(ReadOnlyEntity, self._java_object.getAsImmutable())
-
 class _Agent(Agent):
     def __init__(self, java_object: object) -> None:
         from modelarium._java.wrapper.wrapper_object import WrapperObject
@@ -99,69 +78,10 @@ class _ReadOnlyAgentSet(ReadOnlyAgentSet):
         WrapperObject.__init__(self, java_object)
 
 
-class _Attribute(Attribute):
-    def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper.wrapper_object import WrapperObject
-        WrapperObject.__init__(self, java_object)
-
-    @override
-    def get_as_immutable(self) -> ReadOnlyAttribute:
-        from modelarium._java import to_python
-        return to_python(ReadOnlyAttribute, self._java_object.getAsImmutable())
-
-
 class _ReadOnlyAttribute(ReadOnlyAttribute):
     def __init__(self, java_object: object) -> None:
         from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
-
-
-class _AgentAttribute(AgentAttribute):
-    def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper.wrapper_object import WrapperObject
-        WrapperObject.__init__(self, java_object)
-
-    @override
-    def get_as_immutable(self) -> ReadOnlyAttribute:
-        from modelarium._java import to_python
-        return to_python(ReadOnlyAttribute, self._java_object.getAsImmutable())
-
-
-class _EnvironmentAttribute(EnvironmentAttribute):
-    def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper.wrapper_object import WrapperObject
-        WrapperObject.__init__(self, java_object)
-
-    @override
-    def get_as_immutable(self) -> ReadOnlyAttribute:
-        from modelarium._java import to_python
-        return to_python(ReadOnlyAttribute, self._java_object.getAsImmutable())
-
-
-class _Event(Event):
-    def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper.wrapper_object import WrapperObject
-        WrapperObject.__init__(self, java_object)
-
-    @override
-    def _java_run(self, java_context: object) -> None:
-        from modelarium._java import to_python
-        self._run(to_python(java_context))
-
-    @override
-    def _run(self, context: Context) -> None:
-        from modelarium._java import to_java
-        self._java_object.run(to_java(context))
-
-    @override
-    def _java_is_triggered(self, java_context: object) -> bool:
-        from modelarium._java import to_python
-        return self._is_triggered(to_python(Context, java_context))
-
-    @override
-    def _is_triggered(self, context: Context) -> bool:
-        from modelarium._java import to_java
-        return self._java_object.isTriggered(to_java(context))
 
 
 class _AgentEvent(AgentEvent):
@@ -200,59 +120,6 @@ class _ReadOnlyEvent(ReadOnlyEvent):
     def __init__(self, java_object: object) -> None:
         from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
-
-
-class _Property(Property, Generic[PROPERTY_T]):
-    def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper.wrapper_object import WrapperObject
-        WrapperObject.__init__(self, java_object)
-
-    @override
-    def _java_set(self, java_context: object, java_current_value: object, java_new_value: object) -> object:
-        from modelarium._java import to_python
-        from modelarium._java import to_java
-        return to_java(
-            self._set(
-                to_python(Context, java_context),
-                to_python(self.type, java_current_value),
-                to_python(self.type, java_new_value)
-            )
-        )
-
-    @override
-    def _set(
-            self,
-            context: Context,
-            current_value: PROPERTY_T | None,
-            new_value: PROPERTY_T | None
-    ) -> PROPERTY_T | None:
-        self.set(new_value)
-        return new_value
-
-    @override
-    def _java_get(self, java_context: object, java_current_value: object) -> object:
-        from modelarium._java import to_python
-        from modelarium._java import to_java
-        return to_java(
-            self._get(to_python(Context, java_context), to_python(self.type, java_current_value))
-        )
-
-    @override
-    def _get(self, context: Context, current_value: PROPERTY_T | None) -> PROPERTY_T | None:
-        return self.get()
-
-    @override
-    def _java_run(self, java_context: object, java_current_value: object) -> object:
-        from modelarium._java import to_python
-        from modelarium._java import to_java
-        return to_java(
-            self._run(to_python(Context, java_context), to_python(self.type, java_current_value))
-        )
-
-    @override
-    def _run(self, context: Context, current_value: PROPERTY_T | None) -> PROPERTY_T | None:
-        self.run()
-        return current_value
 
 
 class _AgentProperty(Generic[PROPERTY_T], AgentProperty[PROPERTY_T]):
@@ -305,22 +172,6 @@ class _ReadOnlyProperty(Generic[PROPERTY_T], ReadOnlyProperty[PROPERTY_T]):
         WrapperObject.__init__(self, java_object)
 
 
-class _Routine(Routine):
-    def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper.wrapper_object import WrapperObject
-        WrapperObject.__init__(self, java_object)
-
-    @override
-    def _java_run(self, java_context: object) -> None:
-        from modelarium._java import to_python
-        self._run(to_python(Context, java_context))
-
-    @override
-    def _run(self, context: Context) -> None:
-        from modelarium._java import to_java
-        self._java_object.run(to_java(context))
-
-
 class _AgentRoutine(AgentRoutine):
     def __init__(self, java_object: object) -> None:
         from modelarium._java.wrapper.wrapper_object import WrapperObject
@@ -349,32 +200,6 @@ class _ReadOnlyRoutine(ReadOnlyRoutine):
         WrapperObject.__init__(self, java_object)
 
 
-class _AttributeSet(AttributeSet):
-    def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper.wrapper_object import WrapperObject
-        WrapperObject.__init__(self, java_object)
-
-    @override
-    def get(self, attribute_id: int | str) -> Attribute:
-        from modelarium._java import to_python
-        return to_python(Attribute, self._java_object.get(attribute_id))
-
-    @override
-    def get_event(self, event_id: int | str) -> Event:
-        from modelarium._java import to_python
-        return to_python(Event, self._java_object.getEvent(event_id))
-
-    @override
-    def get_routine(self, routine_id: int | str) -> Routine:
-        from modelarium._java import to_python
-        return to_python(Routine, self._java_object.getRoutine(routine_id))
-
-    @override
-    def get_property(self, property_id: int | str) -> Property:
-        from modelarium._java import to_python
-        return to_python(Property, self._java_object.getProperty(property_id))
-
-
 class _AgentAttributeSet(AgentAttributeSet):
     def __init__(self, java_object: object) -> None:
         from modelarium._java.wrapper.wrapper_object import WrapperObject
@@ -387,32 +212,6 @@ class _EnvironmentAttributeSet(EnvironmentAttributeSet):
         WrapperObject.__init__(self, java_object)
 
 
-class _ReadOnlyAttributeSet(ReadOnlyAttributeSet):
-    def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper.wrapper_object import WrapperObject
-        WrapperObject.__init__(self, java_object)
-
-    @override
-    def get(self, attribute_id: int | str) -> ReadOnlyAttribute:
-        from modelarium._java import to_python
-        return to_python(ReadOnlyAttribute, self._java_object.get(attribute_id))
-
-    @override
-    def get_event(self, event_id: int | str) -> ReadOnlyEvent:
-        from modelarium._java import to_python
-        return to_python(ReadOnlyEvent, self._java_object.getEvent(event_id))
-
-    @override
-    def get_routine(self, routine_id: int | str) -> ReadOnlyRoutine:
-        from modelarium._java import to_python
-        return to_python(ReadOnlyRoutine, self._java_object.getRoutine(routine_id))
-
-    @override
-    def get_property(self, property_id: int | str) -> ReadOnlyProperty:
-        from modelarium._java import to_python
-        return to_python(ReadOnlyProperty, self._java_object.getProperty(property_id))
-
-
 class _ReadOnlyAgentAttributeSet(ReadOnlyAgentAttributeSet):
     def __init__(self, java_object: object) -> None:
         from modelarium._java.wrapper.wrapper_object import WrapperObject
@@ -423,22 +222,6 @@ class _ReadOnlyEnvironmentAttributeSet(ReadOnlyEnvironmentAttributeSet):
     def __init__(self, java_object: object) -> None:
         from modelarium._java.wrapper.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_object)
-
-
-class _Context(Context):
-    def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper.wrapper_object import WrapperObject
-        WrapperObject.__init__(self, java_object)
-
-    @override
-    def get_this_entity(self) -> Entity:
-        from modelarium._java import to_python
-        return to_python(Entity, self._java_object.getThisEntity())
-
-    @override
-    def get_this_attribute_set(self) -> AttributeSet:
-        from modelarium._java import to_python
-        return to_python(AttributeSet, self._java_object.getThisAttributeSet())
 
 
 class _AgentContext(AgentContext):
@@ -533,13 +316,13 @@ class _AttributeSetLogDatabase(AttributeSetLogDatabase):
 
     @override
     def set_attribute_column(self, attribute_name: str, attribute_values: list[object]) -> None:
-        from modelarium._java.type_conversion import list_to_java_array_list
-        self._java_object.setAttributeColumn(attribute_name, list_to_java_array_list(attribute_values))
+        from modelarium._java import to_java
+        self._java_object.setAttributeColumn(attribute_name, to_java(attribute_values))
 
     @override
     def get_attribute_column_as_list(self, attribute_name: str) -> list[object]:
-        from modelarium._java.type_conversion import java_list_to_list
-        return java_list_to_list(self._java_object.getAttributeColumnAsList(attribute_name), convert_log_values=True)
+        from modelarium._java import to_python
+        return to_python(list[object], self._java_object.getAttributeColumnAsList(attribute_name))
 
 
 class _DiskBasedAttributeSetLogDatabase(DiskBasedAttributeSetLogDatabase):
@@ -562,17 +345,6 @@ class _AttributeSetLogDatabaseFactory(AttributeSetLogDatabaseFactory):
     @override
     def create(self) -> AttributeSetLogDatabase:
         return _AttributeSetLogDatabase(self._java_object.create())
-
-
-class _ReadOnlyEntity(ReadOnlyEntity):
-    def __init__(self, java_object: object) -> None:
-        from modelarium._java.wrapper.wrapper_object import WrapperObject
-        WrapperObject.__init__(self, java_object)
-
-    @override
-    def get_attribute_set(self, attribute_set_id: int | str) -> ReadOnlyAttributeSet:
-        from modelarium._java import to_python
-        return to_python(ReadOnlyAttributeSet, self._java_object.getAttributeSet(attribute_set_id))
 
 
 class _ReadOnlyAgent(ReadOnlyAgent):

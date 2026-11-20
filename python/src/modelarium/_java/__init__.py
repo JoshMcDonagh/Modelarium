@@ -9,13 +9,27 @@ def java_class(java_class_name: str) -> Any:
     return cast(Any, jpype.JClass(java_class_name))
 
 
-def class_name_of(java_object: object) -> str:
+def java_class_name_of(java_object: object) -> str:
     return str(cast(Any, java_object).class_.getName())
+
+
+def java_parent_class_names_of(java_object: object) -> list[str]:
+    java_parent_class = cast(Any, java_object).class_.getSuperclass()
+    parent_class_names = []
+    while java_parent_class is not None:
+        parent_class_names.append(str(java_parent_class.getName()))
+        java_parent_class = java_parent_class.getSuperclass()
+    return parent_class_names
 
 
 def to_python(python_type: type[PYTHON_OBJECT_T], java_object: object) -> PYTHON_OBJECT_T:
     if java_object is None:
         return None
+
+    from modelarium._java.language_conversion.subclasses import subclass_needs_to_be_converted_from
+    if subclass_needs_to_be_converted_from(python_type):
+        from modelarium._java.language_conversion.subclasses.to_python import to_python_subclass_type
+        return to_python_subclass_type(python_type, java_object)
 
     from modelarium._java.convertible_python_object import ConvertiblePythonObject
     if issubclass(python_type, ConvertiblePythonObject):
