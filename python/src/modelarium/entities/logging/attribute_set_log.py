@@ -1,6 +1,4 @@
-from modelarium._java.type_conversion import java_list_to_list
-
-from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
+from modelarium._java.objects.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 
 
 class AttributeSetLog(ProtectedConstructorWrapperObject):
@@ -11,7 +9,8 @@ class AttributeSetLog(ProtectedConstructorWrapperObject):
         return self._java_object.getAttributeSetName()
 
     def get_attribute_names_list(self) -> list[str]:
-        return java_list_to_list(self._java_object.getAttributeNamesList(), str)
+        from modelarium._java import to_python
+        return to_python(list[str], self._java_object.getAttributeNamesList(), str)
 
     @property
     def attribute_log_count(self) -> int:
@@ -22,7 +21,8 @@ class AttributeSetLog(ProtectedConstructorWrapperObject):
         return self._java_object.attributeLogEntryCount()
 
     def get_values(self, attribute_name: str) -> list[object]:
-        return java_list_to_list(self._java_object.getValues(attribute_name), convert_log_values=True)
+        from modelarium._java import to_python
+        return to_python(list[str], self._java_object.getValues(attribute_name))
 
     def disconnect_database(self) -> None:
         self._java_object.disconnectDatabase()

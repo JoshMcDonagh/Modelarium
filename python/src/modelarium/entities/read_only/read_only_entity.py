@@ -3,8 +3,7 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import TYPE_CHECKING
 
-from modelarium._java import to_python
-from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
+from modelarium._java.objects.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 
 if TYPE_CHECKING:
     from modelarium.entities.attributes.sets.read_only.read_only_attribute_set import ReadOnlyAttributeSet
@@ -30,16 +29,20 @@ class ReadOnlyEntity(ProtectedConstructorWrapperObject):
 
     def get_log(self) -> EntityLog:
         from modelarium.entities.logging.entity_log import EntityLog
+        from modelarium._java import to_python
         return to_python(EntityLog, self._java_object.getLog())
 
     def get_event(self, attribute_set_name: str, event_name: str) -> ReadOnlyEvent:
         from modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
+        from modelarium._java import to_python
         return to_python(ReadOnlyEvent, self._java_object.getEvent(attribute_set_name, event_name))
 
     def get_routine(self, attribute_set_name: str, routine_name: str) -> ReadOnlyRoutine:
         from modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
+        from modelarium._java import to_python
         return to_python(ReadOnlyRoutine, self._java_object.getRoutine(attribute_set_name, routine_name))
 
     def get_property(self, attribute_set_name: str, property_name: str) -> ReadOnlyProperty:
         from modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
+        from modelarium._java import to_python
         return to_python(ReadOnlyProperty, self._java_object.getProperty(attribute_set_name, property_name))

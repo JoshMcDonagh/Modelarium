@@ -32,7 +32,7 @@ class Property(Attribute, Generic[PROPERTY_T]):
         run_logic = jpype.JProxy(java_run_logic_interface_name, dict={"run": self._java_run})
 
         from modelarium._java import java_class
-        from modelarium._java.wrapper.wrapper_object import WrapperObject
+        from modelarium._java.objects.wrapper_object import WrapperObject
         from modelarium._java import to_java
         WrapperObject.__init__(self, java_class(java_class_name)(
             name,

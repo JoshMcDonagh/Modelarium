@@ -9,7 +9,6 @@ if TYPE_CHECKING:
     from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
 
 
-
 class AgentProperty(Generic[PROPERTY_T], Property[PROPERTY_T], AgentAttribute):
     def __init__(
             self,
@@ -37,7 +36,7 @@ class AgentProperty(Generic[PROPERTY_T], Property[PROPERTY_T], AgentAttribute):
         current_value = to_python(self.type, java_current_value)
         new_value = to_python(self.type, java_new_value)
         from modelarium._java import to_java
-        return to_java(self.type, self._set(context, current_value, new_value))
+        return to_java(self._set(context, current_value, new_value))
 
     @override
     def _java_get(self, java_context: object, java_current_value: object) -> object:
@@ -46,7 +45,7 @@ class AgentProperty(Generic[PROPERTY_T], Property[PROPERTY_T], AgentAttribute):
         context = to_python(AgentContext, java_context)
         current_value = to_python(self.type, java_current_value)
         from modelarium._java import to_java
-        return to_java(self.type, self._get(context, current_value))
+        return to_java(self._get(context, current_value))
 
     @override
     def _java_run(self, java_context: object, java_current_value: object) -> object:
@@ -55,4 +54,4 @@ class AgentProperty(Generic[PROPERTY_T], Property[PROPERTY_T], AgentAttribute):
         context = to_python(AgentContext, java_context)
         current_value = to_python(self.type, java_current_value)
         from modelarium._java import to_java
-        return to_java(self.type, self._run(context, current_value))
+        return to_java(self._run(context, current_value))

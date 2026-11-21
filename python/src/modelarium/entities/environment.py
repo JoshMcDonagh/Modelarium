@@ -22,7 +22,11 @@ class Environment(Entity):
     def __init__(self, name: str, attribute_sets: list[EnvironmentAttributeSet]) -> None:
         ...
 
-    def __init__(self, name: str | list[EnvironmentAttributeSet], attribute_sets: list[EnvironmentAttributeSet] | None = None) -> None:
+    def __init__(
+            self,
+            name: str | list[EnvironmentAttributeSet],
+            attribute_sets: list[EnvironmentAttributeSet] | None = None
+    ) -> None:
         if not (
                 isinstance(name, str) and isinstance(attribute_sets, list)
                 or isinstance(name, list) and attribute_sets is None
@@ -35,17 +39,13 @@ class Environment(Entity):
 
         from modelarium._java import java_class
         java_object = java_class("modelarium.entities.Environment")
-        java_attribute_sets = java_class("java.util.ArrayList")()
 
-        from modelarium._java.wrapper.wrapper_object import WrapperObject
+        from modelarium._java.objects.wrapper_object import WrapperObject
+        from modelarium._java import to_java
         if attribute_sets is None:
-            for attribute_set in name:
-                java_attribute_sets.add(attribute_set._java_object)
-            WrapperObject.__init__(self, java_object(java_attribute_sets))
+            WrapperObject.__init__(self, java_object(to_java(name)))
         else:
-            for attribute_set in attribute_sets:
-                java_attribute_sets.add(attribute_set._java_object)
-            WrapperObject.__init__(self, java_object(name, java_attribute_sets))
+            WrapperObject.__init__(self, java_object(to_java(attribute_sets)))
 
     @property
     @override

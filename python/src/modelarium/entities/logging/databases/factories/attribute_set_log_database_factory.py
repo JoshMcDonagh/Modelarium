@@ -5,9 +5,7 @@ from typing import TYPE_CHECKING
 
 import jpype
 
-from modelarium._java import java_class
-from modelarium._java import to_java
-from modelarium._java.wrapper.wrapper_object import WrapperObject
+from modelarium._java.objects.wrapper_object import WrapperObject
 
 if TYPE_CHECKING:
     from modelarium.entities.logging.databases.attribute_set_log_database import AttributeSetLogDatabase
@@ -15,6 +13,7 @@ if TYPE_CHECKING:
 
 class AttributeSetLogDatabaseFactory(ABC, WrapperObject):
     def __init__(self):
+        from modelarium._java import java_class
         java_cls = java_class(
             "modelarium.entities.logging.databases.functional.factories"
             ".FunctionalAttributeSetLogDatabaseFactory"
@@ -23,6 +22,7 @@ class AttributeSetLogDatabaseFactory(ABC, WrapperObject):
         super().__init__(java_cls(create_logic))
 
     def _java_create(self) -> object:
+        from modelarium._java import to_java
         return to_java(self.create())
 
     @abstractmethod

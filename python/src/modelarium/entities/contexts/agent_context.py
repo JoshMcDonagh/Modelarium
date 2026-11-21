@@ -14,8 +14,8 @@ if TYPE_CHECKING:
 class AgentContext(Context):
     @override
     def get_this_attribute(self) -> AgentAttribute:
-        from modelarium._java.entities.attributes import java_agent_attribute_subclass_to_python
-        return java_agent_attribute_subclass_to_python(self._java_object.getAttribute())
+        from modelarium._java import to_python
+        return to_python(AgentAttribute, self._java_object.getAttribute())
 
     @override
     def get_this_entity(self) -> Agent:

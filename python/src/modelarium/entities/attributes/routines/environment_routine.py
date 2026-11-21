@@ -22,5 +22,4 @@ class EnvironmentRoutine(Routine, EnvironmentAttribute):
     def _java_run(self, java_context: object) -> None:
         from modelarium._java import to_python
         from modelarium.entities.contexts.environment_context import EnvironmentContext
-        context = to_python(EnvironmentContext, java_context)
-        return self._run(context)
+        return self._run(to_python(EnvironmentContext, java_context))

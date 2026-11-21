@@ -6,7 +6,6 @@ from typing_extensions import override
 
 import jpype
 
-from modelarium._java import to_java
 from modelarium.entities.attributes.attribute import Attribute
 
 if TYPE_CHECKING:
@@ -28,7 +27,8 @@ class Event(Attribute):
         trigger_logic = jpype.JProxy(java_trigger_logic_interface_name, dict={"isTriggered": self._java_is_triggered})
 
         from modelarium._java import java_class
-        from modelarium._java.wrapper.wrapper_object import WrapperObject
+        from modelarium._java.objects.wrapper_object import WrapperObject
+        from modelarium._java import to_java
         WrapperObject.__init__(self, java_class(java_class_name)(
             name,
             is_logged,

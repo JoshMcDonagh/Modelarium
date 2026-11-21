@@ -1,15 +1,15 @@
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
+from typing import cast
 
 import jpype
-from modelarium._java.type_conversion import java_list_to_list, list_to_java_array_list
 
-from modelarium._java import java_class
-from modelarium._java.wrapper.wrapper_object import WrapperObject
+from modelarium._java.objects.wrapper_object import WrapperObject
 
 
 class AttributeSetLogDatabase(ABC, WrapperObject):
     def __init__(self, database_path: str | None = None) -> None:
+        from modelarium._java import java_class
         java_cls = java_class("modelarium.entities.logging.databases.functional.FunctionalAttributeSetLogDatabase")
         connect_logic = jpype.JProxy("java.lang.Runnable", dict={"run": self.connect})
         disconnect_logic = jpype.JProxy("java.lang.Runnable", dict={"run": self.disconnect})
@@ -60,14 +60,16 @@ class AttributeSetLogDatabase(ABC, WrapperObject):
         pass
 
     def _java_set_attribute_column(self, attribute_name: str, java_attribute_values: Iterable[object]) -> None:
-        self.set_attribute_column(attribute_name, java_list_to_list(java_attribute_values))
+        from modelarium._java import to_python
+        self.set_attribute_column(attribute_name, to_python(list[object], java_attribute_values))
 
     @abstractmethod
     def set_attribute_column(self, attribute_name: str, attribute_values: list[object]) -> None:
         pass
 
     def _java_get_attribute_column_as_list(self, attribute_name: str) -> Iterable[object]:
-        return list_to_java_array_list(self.get_attribute_column_as_list(attribute_name))
+        from modelarium._java import to_java
+        return cast(Iterable[object], to_java(self.get_attribute_column_as_list(attribute_name)))
 
     @abstractmethod
     def get_attribute_column_as_list(self, attribute_name: str) -> list[object]:

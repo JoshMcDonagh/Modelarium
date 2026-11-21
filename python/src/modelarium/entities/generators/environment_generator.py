@@ -3,7 +3,6 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import TYPE_CHECKING
 
-from modelarium._java import to_python, to_java
 from modelarium.entities.generators.entity_generator import EntityGenerator
 
 if TYPE_CHECKING:
@@ -21,9 +20,11 @@ class EnvironmentGenerator(EntityGenerator):
 
     def _java_generate_environment(self, java_config: object, java_random: object) -> object:
         from modelarium.config import Config
+        from modelarium._java import to_python
         config = to_python(Config, java_config)
         from modelarium.utils.random_generator import RandomGenerator
         random = to_python(RandomGenerator, java_random)
+        from modelarium._java import to_java
         return to_java(self.generate_environment(config, random))
 
     @abstractmethod

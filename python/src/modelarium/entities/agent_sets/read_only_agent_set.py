@@ -5,7 +5,7 @@ from typing import Callable, TYPE_CHECKING
 
 import jpype
 
-from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
+from modelarium._java.objects.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 
 if TYPE_CHECKING:
     from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
@@ -26,14 +26,8 @@ class ReadOnlyAgentSet(Iterable["ReadOnlyAgent"], ProtectedConstructorWrapperObj
 
     def get_as_list(self) -> list[ReadOnlyAgent]:
         from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
-        java_list = self._java_object.getAsList()
-        python_list = []
-
         from modelarium._java import to_python
-        for java_agent in java_list:
-            python_list.append(to_python(ReadOnlyAgent, java_agent))
-
-        return python_list
+        return to_python(list[ReadOnlyAgent], self._java_object.getAsList())
 
     @property
     def size(self) -> int:

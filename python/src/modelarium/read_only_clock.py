@@ -1,4 +1,4 @@
-from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
+from modelarium._java.objects.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 
 
 class ReadOnlyClock(ProtectedConstructorWrapperObject):

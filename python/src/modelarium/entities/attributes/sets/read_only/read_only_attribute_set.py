@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
-from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
+from modelarium._java.objects.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 
 if TYPE_CHECKING:
     from modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent

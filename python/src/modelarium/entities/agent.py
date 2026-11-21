@@ -16,10 +16,8 @@ if TYPE_CHECKING:
 class Agent(Entity):
     def __init__(self, name: str, attribute_sets: list[AgentAttributeSet]) -> None:
         from modelarium._java import java_class
-        java_attribute_sets = java_class("java.util.ArrayList")()
-        for attribute_set in attribute_sets:
-            java_attribute_sets.add(attribute_set._java_object)
-        super().__init__(java_class("modelarium.entities.Agent")(name, java_attribute_sets))
+        from modelarium._java import to_java
+        super().__init__(java_class("modelarium.entities.Agent")(name, to_java(attribute_sets)))
 
     @property
     @override

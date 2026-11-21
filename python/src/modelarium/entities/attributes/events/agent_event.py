@@ -24,12 +24,10 @@ class AgentEvent(Event, AgentAttribute):
     def _java_is_triggered(self, java_context: object) -> bool:
         from modelarium._java import to_python
         from modelarium.entities.contexts.agent_context import AgentContext
-        context = to_python(AgentContext, java_context)
-        return self._is_triggered(context)
+        return self._is_triggered(to_python(AgentContext, java_context))
 
     @override
     def _java_run(self, java_context: object) -> None:
         from modelarium._java import to_python
         from modelarium.entities.contexts.agent_context import AgentContext
-        context = to_python(AgentContext, java_context)
-        return self._run(context)
+        return self._run(to_python(AgentContext, java_context))

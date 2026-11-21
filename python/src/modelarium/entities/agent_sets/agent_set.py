@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 import jpype
 
-from modelarium._java.wrapper.wrapper_object import WrapperObject
+from modelarium._java.objects.wrapper_object import WrapperObject
 
 if TYPE_CHECKING:
     from modelarium.entities.agent import Agent
@@ -20,10 +20,8 @@ class AgentSet(Iterable["Agent"], WrapperObject):
         if agents_list is None:
             WrapperObject.__init__(self, java_class("modelarium.entities.agentsets.AgentSet")())
         else:
-            from modelarium._java.type_conversion import list_to_java_array_list
-            WrapperObject.__init__(
-                self, java_class("modelarium.entities.agentsets.AgentSet")(list_to_java_array_list(agents_list))
-            )
+            from modelarium._java import to_java
+            WrapperObject.__init__(self, java_class("modelarium.entities.agentsets.AgentSet")(to_java(agents_list)))
 
     def __iter__(self) -> Iterator[Agent]:
         from modelarium.entities.agent import Agent
@@ -32,20 +30,12 @@ class AgentSet(Iterable["Agent"], WrapperObject):
             yield to_python(Agent, java_agent)
 
     def add(self, agent: Agent | list[Agent] | AgentSet) -> None:
-        if isinstance(agent, list):
-            from modelarium._java.type_conversion import list_to_java_array_list
-            self._java_object.add(list_to_java_array_list(agent))
-        else:
-            from modelarium._java import to_java
-            self._java_object.add(to_java(agent))
+        from modelarium._java import to_java
+        self._java_object.add(to_java(agent))
 
     def add_deep_copy(self, agent: Agent | list[Agent] | AgentSet) -> None:
-        if isinstance(agent, list):
-            from modelarium._java.type_conversion import list_to_java_array_list
-            self._java_object.addDeepCopy(list_to_java_array_list(agent))
-        else:
-            from modelarium._java import to_java
-            self._java_object.addDeepCopy(to_java(agent))
+        from modelarium._java import to_java
+        self._java_object.addDeepCopy(to_java(agent))
 
     def get(self, agent_id: int | str) -> Agent:
         from modelarium.entities.agent import Agent
@@ -54,12 +44,8 @@ class AgentSet(Iterable["Agent"], WrapperObject):
 
     def get_as_list(self) -> list[Agent]:
         from modelarium.entities.agent import Agent
-        java_list = self._java_object.getAsList()
-        python_list = []
-        for java_agent in java_list:
-            from modelarium._java import to_python
-            python_list.append(to_python(Agent, java_agent))
-        return python_list
+        from modelarium._java import to_python
+        return to_python(list[Agent], self._java_object.getAsList())
 
     @property
     def size(self) -> int:

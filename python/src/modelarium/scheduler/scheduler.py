@@ -5,9 +5,7 @@ from typing import TYPE_CHECKING
 
 import jpype
 
-from modelarium._java import java_class
-from modelarium._java import to_python
-from modelarium._java.wrapper.wrapper_object import WrapperObject
+from modelarium._java.objects.wrapper_object import WrapperObject
 
 if TYPE_CHECKING:
     from modelarium.read_only_clock import ReadOnlyClock
@@ -23,6 +21,7 @@ class Scheduler(ABC, WrapperObject):
             dict={"runTick": self._java_run_tick}
         )
 
+        from modelarium._java import java_class
         super().__init__(java_class("modelarium.scheduler.functional.FunctionalScheduler")(tick_function))
 
     def _java_run_tick(
@@ -37,6 +36,7 @@ class Scheduler(ABC, WrapperObject):
         from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
         from modelarium.entities.agent_sets.agent_set import AgentSet
         from modelarium.utils.random_generator import RandomGenerator
+        from modelarium._java import to_python
         self.run_tick(
             thread_name,
             to_python(ReadOnlyClock, java_clock),

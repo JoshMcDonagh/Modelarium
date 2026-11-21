@@ -3,8 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
-from modelarium._java import to_python
-from modelarium._java.wrapper.wrapper_object import WrapperObject
+from modelarium._java.objects.wrapper_object import WrapperObject
 
 if TYPE_CHECKING:
     from modelarium.entities.attributes.sets.attribute_set import AttributeSet
@@ -37,6 +36,7 @@ class Entity(ABC, WrapperObject):
 
     def get_log(self) -> EntityLog:
         from modelarium.entities.logging.entity_log import EntityLog
+        from modelarium._java import to_python
         return to_python(EntityLog, self._java_object.getLog())
 
     def run(self) -> None:

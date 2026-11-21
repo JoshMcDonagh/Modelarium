@@ -2,8 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from modelarium._java import to_python
-from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
+from modelarium._java.objects.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 
 if TYPE_CHECKING:
     from modelarium.entities.logging.attribute_set_log import AttributeSetLog
@@ -15,6 +14,7 @@ class EntityLog(ProtectedConstructorWrapperObject):
 
     def get(self, attribute_set_id: int | str) -> AttributeSetLog:
         from modelarium.entities.logging.attribute_set_log import AttributeSetLog
+        from modelarium._java import to_python
         return to_python(AttributeSetLog, self._java_object.get(attribute_set_id))
 
     @property

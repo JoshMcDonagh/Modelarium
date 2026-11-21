@@ -1,13 +1,11 @@
 from typing import override
 
-from modelarium._java.type_conversion import list_to_java_array_list, java_list_to_list
-
-from modelarium._java.wrapper.wrapper_object import WrapperObject
 from modelarium.entities.logging.databases.attribute_set_log_database import AttributeSetLogDatabase
 
 
 class JavaAttributeSetLogDatabase(AttributeSetLogDatabase):
     def __init__(self, java_obj: object) -> None:
+        from modelarium._java.objects.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_obj)
 
     @override
@@ -24,8 +22,10 @@ class JavaAttributeSetLogDatabase(AttributeSetLogDatabase):
 
     @override
     def set_attribute_column(self, attribute_name: str, attribute_values: list[object]) -> None:
-        self._java_object.setAttributeColumn(attribute_name, list_to_java_array_list(attribute_values))
+        from modelarium._java import to_java
+        self._java_object.setAttributeColumn(attribute_name, to_java(attribute_values))
 
     @override
     def get_attribute_column_as_list(self, attribute_name: str) -> list[object]:
-        return java_list_to_list(self._java_object.getAttributeColumnAsList(attribute_name), convert_log_values=True)
+        from modelarium._java import to_python
+        return to_python(list[object], self._java_object.getAttributeColumnAsList(attribute_name))

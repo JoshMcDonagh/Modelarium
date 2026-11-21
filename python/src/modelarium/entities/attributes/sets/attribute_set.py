@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
-from modelarium._java.wrapper.wrapper_object import WrapperObject
+from modelarium._java.objects.wrapper_object import WrapperObject
 
 if TYPE_CHECKING:
     from modelarium.entities.attributes.attribute import Attribute
@@ -21,8 +21,8 @@ class AttributeSet(ABC, WrapperObject):
             java_class_name: str
     ) -> None:
         from modelarium._java import java_class
-        from modelarium._java.type_conversion import list_to_java_array_list
-        super().__init__(java_class(java_class_name)(name, list_to_java_array_list(attributes)))
+        from modelarium._java import to_java
+        super().__init__(java_class(java_class_name)(name, to_java(attributes)))
 
     @property
     def name(self) -> str:

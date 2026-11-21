@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import override, TYPE_CHECKING
 
-from modelarium._java.wrapper.wrapper_object import WrapperObject
 from modelarium.scheduler.scheduler import Scheduler
 
 if TYPE_CHECKING:
@@ -14,6 +13,7 @@ if TYPE_CHECKING:
 
 class JavaScheduler(Scheduler):
     def __init__(self, java_obj: object):
+        from modelarium._java.objects.wrapper_object import WrapperObject
         WrapperObject.__init__(self, java_obj)
 
     @override

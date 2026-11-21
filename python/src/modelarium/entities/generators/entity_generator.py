@@ -3,8 +3,7 @@ from collections.abc import Callable
 
 import jpype
 
-from modelarium._java import java_class
-from modelarium._java.wrapper.wrapper_object import WrapperObject
+from modelarium._java.objects.wrapper_object import WrapperObject
 
 
 class EntityGenerator(ABC, WrapperObject):
@@ -19,6 +18,7 @@ class EntityGenerator(ABC, WrapperObject):
         )
         reset_function = jpype.JProxy("java.lang.Runnable", dict={"run": self.reset})
 
+        from modelarium._java import java_class
         super().__init__(java_class(java_class_name)(generator_function, reset_function))
 
     def reset(self) -> None:

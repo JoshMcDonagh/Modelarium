@@ -1,7 +1,6 @@
 import pandas as pd
-from modelarium._java.type_conversion import java_map_to_dataframe, java_list_to_list
 
-from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
+from modelarium._java.objects.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 
 
 class ReadOnlyResultsForEnvironment(ProtectedConstructorWrapperObject):
@@ -13,19 +12,22 @@ class ReadOnlyResultsForEnvironment(ProtectedConstructorWrapperObject):
         return self._java_object.attributeLogCount(attribute_set_name)
 
     def attribute_logs(self, attribute_set_name: str, attribute_name: str) -> list[object]:
-        return java_list_to_list(
-            self._java_object.attributeLogs(attribute_set_name, attribute_name),
-            convert_log_values=True
+        from modelarium._java import to_python
+        return to_python(
+            list[object],
+            self._java_object.attributeLogs(attribute_set_name, attribute_name)
         )
 
     def attribute_set_logs(self, attribute_set_name: str) -> pd.DataFrame:
-        return java_map_to_dataframe(
-            self._java_object.attributeSetLogs(attribute_set_name),
-            ["attribute"]
-        )
+        from modelarium._java import to_python
+        return pd.DataFrame(to_python(
+            dict[str, list[object]],
+            self._java_object.attributeSetLogs(attribute_set_name)
+        ))
 
     def environment_logs(self) -> pd.DataFrame:
-        return java_map_to_dataframe(
-            self._java_object.environmentLogs(),
-            ["attribute_set", "attribute"]
-        )
+        from modelarium._java import to_python
+        return pd.DataFrame(to_python(
+            dict[str, dict[str, list[object]]],
+            self._java_object.environmentLogs()
+        ))

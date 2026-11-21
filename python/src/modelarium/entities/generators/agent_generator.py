@@ -3,8 +3,6 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import TYPE_CHECKING
 
-from modelarium._java import java_class
-from modelarium._java import to_java, to_python
 from modelarium.entities.generators.entity_generator import EntityGenerator
 
 if TYPE_CHECKING:
@@ -22,14 +20,12 @@ class AgentGenerator(EntityGenerator):
 
     def _java_generate_agents_for_each_thread(self, java_config: object, java_random: object) -> object:
         from modelarium.config import Config
+        from modelarium._java import to_python
         config = to_python(Config, java_config)
         from modelarium.utils.random_generator import RandomGenerator
         random = to_python(RandomGenerator, java_random)
-        agent_sets = self.generate_agents_for_each_thread(config, random)
-        java_agent_sets = java_class("java.util.ArrayList")()
-        for agent_set in agent_sets:
-            java_agent_sets.add(to_java(agent_set))
-        return java_agent_sets
+        from modelarium._java import to_java
+        return to_java(self.generate_agents_for_each_thread(config, random))
 
     @abstractmethod
     def generate_agents_for_each_thread(self, config: Config, random: RandomGenerator) -> list[AgentSet]:
