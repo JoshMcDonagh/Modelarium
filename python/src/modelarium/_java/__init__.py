@@ -61,3 +61,9 @@ def to_java(python_object: PYTHON_OBJECT_T) -> object:
 
     from modelarium._java.language_conversion.values.to_java import value_to_java
     return value_to_java(python_object)
+
+
+def create_python_value_codec() -> object:
+    from modelarium._java.python_value_codec import encode
+    from modelarium._java.python_value_codec import decode
+    return jpype.JProxy("modelarium.python.PythonValueCodec", dict = {"encode": encode, "decode": decode})

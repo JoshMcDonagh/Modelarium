@@ -2,8 +2,6 @@ import base64
 import pickle
 from typing import cast, Any
 
-import jpype
-
 
 def encode(java_value: object) -> str:
     serialised = pickle.dumps(cast(Any, java_value).payload().value, protocol=pickle.HIGHEST_PROTOCOL)
@@ -14,7 +12,3 @@ def decode(encoded: str) -> object:
     value = pickle.loads(base64.b64decode(str(encoded), validate=True))
     from modelarium._java import to_java
     return to_java(value)
-
-
-def create_python_value_codec() -> object:
-    return jpype.JProxy("modelarium.python.PythonValueCodec", dict = {"encode": encode, "decode": decode})

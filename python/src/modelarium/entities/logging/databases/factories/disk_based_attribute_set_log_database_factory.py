@@ -4,7 +4,7 @@ from typing import override, TYPE_CHECKING
 
 from modelarium._java import java_class
 from modelarium._java import to_python
-from modelarium._java.entities.attributes.properties.python_value_codec import create_python_value_codec
+from modelarium._java.python_value_codec import create_python_value_codec
 from modelarium.entities.logging.databases.factories.java_attribute_set_log_database_factory import \
     JavaAttributeSetLogDatabaseFactory
 
