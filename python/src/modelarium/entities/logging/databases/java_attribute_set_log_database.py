@@ -1,6 +1,7 @@
 from typing import override
 
 from modelarium._java.type_conversion import list_to_java_array_list, java_list_to_list
+
 from modelarium._java.wrapper.wrapper_object import WrapperObject
 from modelarium.entities.logging.databases.attribute_set_log_database import AttributeSetLogDatabase
 

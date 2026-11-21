@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable
 
 import jpype
+from modelarium._java.type_conversion import java_list_to_list, list_to_java_array_list
 
 from modelarium._java import java_class
-from modelarium._java.type_conversion import java_list_to_list, list_to_java_array_list
 from modelarium._java.wrapper.wrapper_object import WrapperObject
 
 

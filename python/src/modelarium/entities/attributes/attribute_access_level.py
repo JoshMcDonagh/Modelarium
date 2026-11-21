@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from enum import Enum
 
-from modelarium._java.convertible_python_object import ConvertiblePythonObject
+from modelarium._java.objects.convertible_python_object import ConvertiblePythonObject
 
 
 class AttributeAccessLevel(ConvertiblePythonObject, Enum):

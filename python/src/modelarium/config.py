@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import timedelta
 from typing import TYPE_CHECKING
 
-from modelarium._java.convertible_python_object import ConvertiblePythonObject
+from modelarium._java.objects.convertible_python_object import ConvertiblePythonObject
 
 if TYPE_CHECKING:
     from modelarium.entities.generators.agent_generator import AgentGenerator

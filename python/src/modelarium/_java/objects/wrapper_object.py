@@ -1,6 +1,6 @@
 from typing import Any
 
-from modelarium._java.convertible_python_object import ConvertiblePythonObject
+from modelarium._java.objects.convertible_python_object import ConvertiblePythonObject
 
 
 class WrapperObject(ConvertiblePythonObject):

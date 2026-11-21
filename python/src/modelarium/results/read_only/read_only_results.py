@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from modelarium._java.type_conversion import java_to_python_path, python_to_java_path
+
 from modelarium._java import to_python
 from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 

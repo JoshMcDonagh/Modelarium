@@ -5,15 +5,15 @@ from typing import TypeVar, Any, TYPE_CHECKING, cast
 
 import jpype
 
-from modelarium._java.convertible_python_object import ConvertiblePythonObject
-from modelarium._java.wrapper.instantiatable.entities import _Agent, _Environment, _AgentSet, _ReadOnlyAgentSet, \
+from modelarium._java.objects.convertible_python_object import ConvertiblePythonObject
+from modelarium._java.language_conversion.instantiatable_wrappers.entities import _Agent, _Environment, _AgentSet, _ReadOnlyAgentSet, \
     _ReadOnlyAttribute, _AgentEvent, _EnvironmentEvent, _ReadOnlyEvent, _AgentProperty, _EnvironmentProperty, \
     _ReadOnlyProperty, _AgentRoutine, _EnvironmentRoutine, _ReadOnlyRoutine, _AgentAttributeSet, \
     _EnvironmentAttributeSet, _ReadOnlyAgentAttributeSet, _ReadOnlyEnvironmentAttributeSet, _AgentContext, \
     _EnvironmentContext, _AgentGenerator, _DefaultAgentGenerator, _EnvironmentGenerator, _AttributeSetLog, _EntityLog, \
     _AttributeSetLogDatabase, _DiskBasedAttributeSetLogDatabase, _MemoryBasedAttributeSetLogDatabase, \
     _AttributeSetLogDatabaseFactory, _ReadOnlyAgent, _ReadOnlyEnvironment
-from modelarium._java.wrapper.wrapper_object import WrapperObject
+from modelarium._java.objects.wrapper_object import WrapperObject
 
 CONVERTABLE_PYTHON_OBJECT_T = TypeVar("CONVERTABLE_PYTHON_OBJECT_T", bound=ConvertiblePythonObject)
 WRAPPER_OBJECT_T = TypeVar("WRAPPER_OBJECT_T", bound=WrapperObject)
@@ -25,41 +25,31 @@ if TYPE_CHECKING:
 
 @cache
 def _get_instantiatable_wrapper_object_types_dict() -> dict[type, type]:
-    from modelarium._java.wrapper.instantiatable import _ReadOnlyClock
-    from modelarium._java.wrapper.instantiatable.results import _ReadOnlyResults, _ReadOnlyResultsForAgents, \
+    from modelarium._java.language_conversion.instantiatable_wrappers.modelarium import _ReadOnlyClock
+    from modelarium._java.language_conversion.instantiatable_wrappers.results import _ReadOnlyResults, _ReadOnlyResultsForAgents, \
         _ReadOnlyResultsForEnvironment
-    from modelarium._java.wrapper.instantiatable.scheduler import _Scheduler
-    from modelarium._java.wrapper.instantiatable.utils import _RandomGenerator
+    from modelarium._java.language_conversion.instantiatable_wrappers.scheduler import _Scheduler
+    from modelarium._java.language_conversion.instantiatable_wrappers.utils import _RandomGenerator
     from modelarium.entities.agent import Agent
     from modelarium.entities.agent_sets.agent_set import AgentSet
     from modelarium.entities.agent_sets.read_only_agent_set import ReadOnlyAgentSet
-    from modelarium.entities.attributes.agent_attribute import AgentAttribute
-    from modelarium.entities.attributes.attribute import Attribute
-    from modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
     from modelarium.entities.attributes.events.agent_event import AgentEvent
     from modelarium.entities.attributes.events.environment_event import EnvironmentEvent
-    from modelarium.entities.attributes.events.event import Event
     from modelarium.entities.attributes.events.read_only_event import ReadOnlyEvent
     from modelarium.entities.attributes.properties.agent_property import AgentProperty
     from modelarium.entities.attributes.properties.environment_property import EnvironmentProperty
-    from modelarium.entities.attributes.properties.property import Property
     from modelarium.entities.attributes.properties.read_only_property import ReadOnlyProperty
     from modelarium.entities.attributes.read_only_attribute import ReadOnlyAttribute
     from modelarium.entities.attributes.routines.agent_routine import AgentRoutine
     from modelarium.entities.attributes.routines.environment_routine import EnvironmentRoutine
     from modelarium.entities.attributes.routines.read_only_routine import ReadOnlyRoutine
-    from modelarium.entities.attributes.routines.routine import Routine
     from modelarium.entities.attributes.sets.agent_attribute_set import AgentAttributeSet
-    from modelarium.entities.attributes.sets.attribute_set import AttributeSet
     from modelarium.entities.attributes.sets.environment_attribute_set import EnvironmentAttributeSet
     from modelarium.entities.attributes.sets.read_only.read_only_agent_attribute_set import ReadOnlyAgentAttributeSet
-    from modelarium.entities.attributes.sets.read_only.read_only_attribute_set import ReadOnlyAttributeSet
     from modelarium.entities.attributes.sets.read_only.read_only_environment_attribute_set import \
         ReadOnlyEnvironmentAttributeSet
     from modelarium.entities.contexts.agent_context import AgentContext
-    from modelarium.entities.contexts.context import Context
     from modelarium.entities.contexts.environment_context import EnvironmentContext
-    from modelarium.entities.entity import Entity
     from modelarium.entities.environment import Environment
     from modelarium.entities.generators.agent_generator import AgentGenerator
     from modelarium.entities.generators.default_agent_generator import DefaultAgentGenerator
@@ -74,7 +64,6 @@ def _get_instantiatable_wrapper_object_types_dict() -> dict[type, type]:
         MemoryBasedAttributeSetLogDatabase
     from modelarium.entities.logging.entity_log import EntityLog
     from modelarium.entities.read_only.read_only_agent import ReadOnlyAgent
-    from modelarium.entities.read_only.read_only_entity import ReadOnlyEntity
     from modelarium.entities.read_only.read_only_environment import ReadOnlyEnvironment
     from modelarium.read_only_clock import ReadOnlyClock
     from modelarium.results.read_only.read_only_results import ReadOnlyResults
@@ -172,7 +161,7 @@ def _wrapper_object_to_python(wrapper_type: type[WRAPPER_OBJECT_T], java_object:
 
 
 def java_to_python_wrapper(wrapper_type: type[CONVERTABLE_PYTHON_OBJECT_T], java_object: object) -> CONVERTABLE_PYTHON_OBJECT_T:
-    from modelarium._java.wrapper.wrapper_object import WrapperObject
+    from modelarium._java.objects.wrapper_object import WrapperObject
 
     from modelarium.config import Config
     if wrapper_type is Config:
@@ -230,7 +219,7 @@ def python_wrapper_to_java(python_object: ConvertiblePythonObject) -> object:
     if isinstance(python_object, AttributeAccessLevel):
         return _attribute_access_level_to_java(python_object)
 
-    from modelarium._java.wrapper.wrapper_object import WrapperObject
+    from modelarium._java.objects.wrapper_object import WrapperObject
     if isinstance(python_object, WrapperObject):
         return _wrapper_object_to_java(python_object)
 

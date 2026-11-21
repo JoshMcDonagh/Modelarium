@@ -1,6 +1,6 @@
 import pandas as pd
-
 from modelarium._java.type_conversion import java_map_to_dataframe, java_list_to_list
+
 from modelarium._java.wrapper.protected_constructor_wrapper_object import ProtectedConstructorWrapperObject
 
 
