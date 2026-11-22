@@ -26,6 +26,10 @@ def to_python(python_type: type[PYTHON_OBJECT_T], java_object: object) -> PYTHON
     if java_object is None:
         return None
 
+    from modelarium._java.language_conversion.types.directly_compatible import is_directly_compatible_type
+    if is_directly_compatible_type(python_type):
+        return java_object
+
     from modelarium._java.language_conversion.subclasses import subclass_needs_to_be_converted_from
     if subclass_needs_to_be_converted_from(python_type):
         from modelarium._java.language_conversion.subclasses.to_python import to_python_subclass_type
@@ -48,6 +52,10 @@ def to_python(python_type: type[PYTHON_OBJECT_T], java_object: object) -> PYTHON
 def to_java(python_object: PYTHON_OBJECT_T) -> object:
     if python_object is None:
         return None
+
+    from modelarium._java.language_conversion.types.directly_compatible import is_directly_compatible_object
+    if is_directly_compatible_object(python_object):
+        return python_object
 
     from modelarium._java.objects.convertible_python_object import ConvertiblePythonObject
     if isinstance(python_object, ConvertiblePythonObject):
