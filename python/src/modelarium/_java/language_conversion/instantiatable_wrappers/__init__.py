@@ -198,6 +198,7 @@ def _attribute_access_level_to_java(attribute_access_level: AttributeAccessLevel
     from modelarium._java import java_class
     enum_java_class = java_class("modelarium.entities.attributes.AttributeAccessLevel")
 
+    from modelarium.entities.attributes.attribute_access_level import AttributeAccessLevel
     if attribute_access_level == AttributeAccessLevel.PUBLIC:
         return enum_java_class.PUBLIC
     if attribute_access_level == AttributeAccessLevel.PRIVATE:

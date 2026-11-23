@@ -216,36 +216,47 @@ def _java_read_only_entity_subclass_to_python(java_read_only_entity: object) -> 
 
 
 def to_python_subclass_type(python_type: type[PYTHON_OBJECT_T], java_object: object) -> PYTHON_OBJECT_T:
+    from modelarium.entities.entity import Entity
     if python_type is Entity:
         return _java_entity_subclass_to_python(java_object)
 
+    from modelarium.entities.attributes.agent_attribute import AgentAttribute
     if python_type is AgentAttribute:
         return _java_agent_attribute_subclass_to_python(java_object)
 
+    from modelarium.entities.attributes.environment_attribute import EnvironmentAttribute
     if python_type is EnvironmentAttribute:
         return _java_environment_attribute_subclass_to_python(java_object)
 
+    from modelarium.entities.attributes.attribute import Attribute
     if python_type is Attribute:
         return _java_attribute_subclass_to_python(java_object)
 
+    from modelarium.entities.attributes.events.event import Event
     if python_type is Event:
         return _java_event_subclass_to_python(java_object)
 
+    from modelarium.entities.attributes.properties.property import Property
     if python_type is Property:
         return _java_property_subclass_to_python(java_object)
 
+    from modelarium.entities.attributes.routines.routine import Routine
     if python_type is Routine:
         return _java_routine_subclass_to_python(java_object)
 
+    from modelarium.entities.attributes.sets.attribute_set import AttributeSet
     if python_type is AttributeSet:
         return _java_attribute_set_subclass_to_python(java_object)
 
+    from modelarium.entities.attributes.sets.read_only.read_only_attribute_set import ReadOnlyAttributeSet
     if python_type is ReadOnlyAttributeSet:
         return _java_read_only_attribute_set_subclass_to_python(java_object)
 
+    from modelarium.entities.contexts.context import Context
     if python_type is Context:
         return _java_context_subclass_to_python(java_object)
 
+    from modelarium.entities.read_only.read_only_entity import ReadOnlyEntity
     if python_type is ReadOnlyEntity:
         return _java_read_only_entity_subclass_to_python(java_object)
 
