@@ -1,7 +1,7 @@
 from collections.abc import Iterable
 from datetime import timedelta
 from pathlib import Path
-from typing import cast, Any, TypeVar, get_args
+from typing import cast, Any, TypeVar, get_args, get_origin
 
 from modelarium._java.language_conversion import PYTHON_OBJECT_T
 
@@ -46,16 +46,18 @@ def _java_path_to_python_path(java_path: object) -> Path:
 
 
 def to_defined_python_type(python_type: type[PYTHON_OBJECT_T], java_object: object) -> PYTHON_OBJECT_T:
-    if python_type is timedelta:
+    origin_python_type = get_origin(python_type) or python_type
+
+    if origin_python_type is timedelta:
         return _java_duration_to_python_timedelta(java_object)
 
-    if python_type is list:
+    if origin_python_type is list:
         return _java_list_to_python_list(python_type, cast(Iterable, java_object))
 
-    if python_type is dict:
+    if origin_python_type is dict:
         return _java_map_to_python_dict(python_type, java_object)
 
-    if python_type is Path:
+    if origin_python_type is Path:
         return _java_path_to_python_path(java_object)
 
     raise TypeError(f"{python_type} is not a supported Python type")

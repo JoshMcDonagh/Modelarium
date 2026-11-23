@@ -36,7 +36,7 @@ def to_python(python_type: type[PYTHON_OBJECT_T], java_object: object) -> PYTHON
         return to_python_subclass_type(python_type, java_object)
 
     from modelarium._java.objects.convertible_python_object import ConvertiblePythonObject
-    if issubclass(python_type, ConvertiblePythonObject):
+    if isinstance(python_type, type) and issubclass(python_type, ConvertiblePythonObject):
         from modelarium._java.language_conversion.instantiatable_wrappers import java_to_python_wrapper
         return java_to_python_wrapper(python_type, java_object)
 
