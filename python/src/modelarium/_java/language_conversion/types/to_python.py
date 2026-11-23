@@ -18,7 +18,10 @@ _PYTHON_LIST_VALUE_T = TypeVar("_PYTHON_LIST_VALUE_T")
 
 def _java_list_to_python_list(list_type: type[list[_PYTHON_LIST_VALUE_T]], java_list: Iterable) -> list:
     from modelarium._java import to_python
-    item_type = get_args(list_type)[0]
+    if len(get_args(list_type)) > 0:
+        item_type = get_args(list_type)[0]
+    else:
+        item_type = Any
     python_list = []
     for item in java_list:
         python_list.append(to_python(item_type, item))
@@ -34,7 +37,10 @@ def _java_map_to_python_dict(
         java_map: object
 ) -> dict[_PYTHON_DICT_KEY_T, _PYTHON_DICT_VALUE_T]:
     from modelarium._java import to_python
-    key_type, value_type = get_args(dict_type)
+    if len(get_args(dict_type)) > 1:
+        key_type, value_type = get_args(dict_type)
+    else:
+        key_type, value_type = Any, Any
     python_dict ={}
     for key, value in cast(Any, java_map).items():
         python_dict[to_python(key_type, key)] = to_python(value_type, value)
